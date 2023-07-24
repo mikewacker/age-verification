@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor("org.immutables:value:2.9.3")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.15.2")
 
     testImplementation("com.google.guava:guava-testlib:32.1.1-jre")
 }
