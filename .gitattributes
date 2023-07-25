@@ -1,2 +1,6 @@
 /gradlew text eol=lf
 *.bat text eol=crlf
+
+# Ignore files in the resources folder.
+*.pem linguist-generated
+*.bin linguist-generated
