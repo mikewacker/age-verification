@@ -197,4 +197,126 @@ Notes:
     - CheckMyAge never sees the ID stored on Pop (`5L3siUtZ...`).
     - Pop never sees the ID stored on CheckMyAge (`KB0b9pDo...`).
 
+## Requirements
+
+In the real world, you need to show an ID to buy alcohol. And of course, some underage people find ways to bypass that,
+such as using a fake ID. But should we abandon ID checks altogether because they are not 100% effective? Of course not.
+
+Even for critical systems, software engineers do not aim for 100%. Instead, they will talk about the "number of 9s."
+E.g., five 9s means that the system works 99.999% of the time.
+
+In general, 100% and/or perfection is not a goal.
+
+### High-Level Idea
+
+A key consideration for age verification is protecting the anonymity of social media accounts. Here are the goals:
+
+- For protecting the anonymity of users, we want an "A" grade.
+- For stopping kids from bypassing the system, we want a "B" or "C" grade.
+
+It certainly could be possible to do better; these grades are used to show how we will weigh any tradeoffs involved.
+
+### High-Level Requirements
+
+**Type of Site**
+
+We will focus on social media sites (i.e., not on adult content sites):
+
+- To post on social media sites, users typically have to log in to an account.
+- While sharing a Netflix account is fairly common, it's not really a viable option to share a social media account.
+- While minors are allowed, we will need to verify both their age and who their parents(/guardians) are.
+
+(That's not to say that age verification cannot be done for adult content sites,
+but the requirements&mdash;and thus the solution&mdash;will be different.)
+
+**First-Party or Third-Party**
+
+For this proof-of-concept, we will assume that a social media site uses a third-party age verification service.
+
+It suffices to say that you may not want Facebook or Twitter to collect even more personal information from you,
+only to use it for other purposes. Instead, it would be better to provide such information to a trusted third party
+that has a singular purpose: age verification.
+
+(If a site does build a first-party age verification service, they could establish internal firewalls
+that separates the team running that service from the rest of the company.)
+
+**Workflows**
+
+For a third-party age verification service, there are two workflows to consider:
+
+1. A person registers and verifies their identity on the third-party age verification service.
+2. A person uses that age verification service to verify their account on a social media site.
+
+We will discuss both workflows, but the focus will be on the second workflow.
+Likewise, all the code written was for the second workflow.
+
+The second workflow is more challenging: the age verification service needs to communicate
+with a social media site&mdash;without revealing information that could de-anonymize a user.
+
+### Detailed Requirements
+
+**Effectiveness**
+
+Let's address this talking point: ...but kids will find ways to bypass age verification.
+
+That statement is technically true, but practically useless. Is it a mere 0.5% of kids that bypass age verification,
+or is it 50%?
+
+We certainly do not need five 9s here, and we may not even need one 9.
+E.g., if you can "only" reduce the number of minors on social media without parental supervision by 75%,
+that would be a fantastic result. (Nonetheless, a certain class of experts will endlessly harp
+about the 25% of kids who do bypass the system.)
+
+**Anonymity**
+
+Anonymity will be extremely important for privacy, legal, and historical reasons.
+
+Anonymous speech does have some [legal protection][anonymous-1a] under the First Amendment,
+and the US has a long history of anonymous speech dating back to the *Federalist Papers*&mdash;which
+were written by three Founding Fathers (Alexander Hamilton, James Madison, and John Jay)
+under the pseudonym Publius. Thus, the bar will be set very high.
+
+Nonetheless, perfection is not a goal. While the identity of Publius was a closely guarded secret back then,
+surely there was a non-zero risk that the identity of Publius could be revealed.
+If the odds of de-anonymizing an account today are much lower than the odds of de-anonymizing Publius back then,
+then I'd say that we have done an excellent job.
+
+**Extra Work**
+
+How much extra work will be involved in verifying a social media account? That boils down to two question:
+
+1. How much work is involved in verifying a social media account?
+2. How often do you have to verify that account?
+
+Let's focus on that second question:
+
+- If an account has to be verified every year or every six months, that's fine.
+  E.g., some websites will make you change your password once a year.
+- We would like to avoid making a user verify their account every time they log in.
+- Making users verify their account on a more frequent basis (e.g., weekly, every other week, monthly)
+  can be considered, depending on the benefits.
+
+**Data Breaches**
+
+With any breach, there are two risks to consider:
+
+- exposing sensitive personal information about a person
+- revealing information that can be used to de-anonymize a social media account
+
+Let's just stipulate that if your account can get de-anonymized if(/when) a data breach occurs, that's a fatal flaw.
+
+However, there is some nuance to this conversation. In short, there are two types of breaches to consider:
+
+- data breach: a breach that exposes user data
+- key breach: a breach that exposes secret keys for your site
+
+(E.g., here is a mostly correct explanation of what happens when you visit `https://www.amazon.com`;
+the `s` in `https` stands for secure. Your web browser will use Amazon's public key
+to encrypt any data that is sent to Amazon. To decrypt that data,
+you would need to use Amazon's private key&mdash;which only Amazon knows.)
+
+Data breaches are fare more common than key breaches, and most cybersecurity incidents in the news are data breaches.
+We will mostly focus on mitigating the impact of a data breach, though we will consider both types of breaches.
+
 [rstreet-dne]: https://www.rstreet.org/commentary/the-technology-to-verify-your-age-without-violating-your-privacy-does-not-exist/
+[anonymous-1a]: https://www.mtsu.edu/first-amendment/article/32/anonymous-speech
