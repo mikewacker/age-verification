@@ -420,5 +420,108 @@ To mitigate this problem, we can make a few additions to the age certificate:
 - an expiration; certificates past the expiration will be rejected.
     - The expiration can be set to, e.g., 5 minutes after the certificate is generated.
 
+### v3: Adding IDs (Not Real Names or Usernames) to an Age Certificate
+
+**Problem: Sharing Age Certificates**
+
+While we did limit the impact of sharing (or stealing) a single age certificate,
+John Smith could easily work around that by downloading a second age certificate from CheckMyAge.
+
+**Problem: Verifying Guardian Relationships**
+
+Let's say that John Smith's son, Bobby Smith, also verifies his age on Pop.
+In this case, we also need to verify that John Smith is Bobby Smith's parent. How do we do that?
+
+**Problem Analysis: Authentication or Deduplication?**
+
+At first glance, the first problem may seem to be an authentication problem.
+If John Smith downloaded an age certificate from CheckMyAge,
+Pop needs to verify that the person who uploads that certificate is John Smith.
+
+But what if we instead viewed it as a deduplication problem? If Pop receives three age certificates,
+how can it tell whether they came from three people who each downloaded one age certificate,
+or from one person who downloaded three age certificates&mdash;and shared two of them with two of his friends?
+
+**Solution: Use IDs (Instead of Real Names or Usernames)**
+
+CheckMyAge can assign an ID (e.g., `uhzmISXl...`) to each person, and include that ID on the age certificate.
+Since each person only has a single account on CheckMyAge, that also means that each person only has a single ID.
+(A few accounts on CheckMyAge may be duplicate accounts, but this happens less than 1% or even 0.1% of the time.)
+
+If John Smith downloads three age certificates&mdash;one for himself and two for two of his friends&mdash;Pop
+will receive three age certificates with the same ID.
+
+Likewise, we can use IDs to specify that one user is the guardian of another user.
+Instead of saying that John Smith is the guardian of Bobby Smith,
+we can say that the user with ID `uhzmISXl...` is the guardian of the user with ID `KB0b9pDo...`.
+For minors, their age certificate would also include the IDs of any guardians.
+
+**Solution: ID Design**
+
+We also need to think carefully about how CheckMyAge assigns IDs, with two privacy/security considerations in mind:
+
+- The IDs should not reveal any information about a person.
+- The IDs should be resistant to brute-force attacks (i.e., an attack where you try every single ID).
+
+Here are some examples of how not to assign IDs:
+
+- Assign IDs sequentially (1, 2, 3, ...). That would reveal some information about when a person created their account.
+- Use a Social Security number as an ID. Since there are only 1,000,000,000 possible IDs,
+  any brute-force attack that tries every possible ID is feasible.
+
+If you looked closely at the IDs in the demo, you may have noticed a few things:
+
+- An ID has 43 characters.
+- A single character has 64 possible values: lowercase letters (26), uppercase letters (26), numbers (10), `-`, and `_`.
+
+It's mostly correct to say that an ID is 43 randomly chosen characters.
+There are approximately 10<sup>77</sup> possible IDs (i.e., 1 followed by 77 0s).
+By comparison, scientists estimate that there are 10<sup>80</sup> atoms in the universe.
+It suffices to say that any brute-force attack that tries every possible ID would be infeasible.
+
+**[Technical] Solution: ID Design, Continued**
+
+An ID is actually 256 randomly generated bits; we use a URL-friendly base64 encoding to convert it to text.
+
+Any time you randomly generate bits, you should use a cryptographically strong random number generator
+(e.g., Java's [`SecureRandom`][secure-random]), not a normal random number generator.
+
+**Tradeoff: Deduplication vs. Authentication**
+
+If John Smith does not have (and will not want) an account of his own on Pop, he could use his account on CheckMyAge
+to let one and only one friend verify their account on Pop.
+
+In terms of stopping kids from bypassing the system, this solution may not be an "A" solution for that reason,
+but it still would receive a good grade. Its key advantage, though, is that it uses an anonymous ID&mdash;as
+opposed to a real name or username.
+
+**Other Considerations: Mitigating a Smaller Authentication Problem**
+
+Are there any incremental fixes to mitigate that authentication problem, and bump an already good grade up even more?
+
+Let's say that John Smith does not have (and will not want) an account of his own Pop.
+Let's also say that there's a misbehaved person, Bobby Tables. Bobby Tables wants to use John Smith's age certificate
+to verify Bobby Table's account on Pop (`injector`). We'll consider two variants of that scenario:
+
+1. John Smith colludes with Bobby Tables.
+2. Bobby Tables is a hacker who is targeting John Smith.
+
+We can break this problem down into three sub-problems. We will briefly analyze each sub-problem:
+
+1. Bobby Tables logs into John Smith's account on CheckMyAge.
+    - Offering or even requiring two-factor authentication can keep hackers out of John Smith's account&mdash;and
+      makes it harder for him to let others use his account.
+    - Other mitigations are possible, but we would have to weigh the privacy tradeoffs&mdash;especially
+      with respect to what additional information is stored on CheckMyAge.
+        - On the plus side, CheckMyAge doesn't share additional information with Pop.
+          If it believes that the person is not John Smith, it simply would not issue an age certificate.
+2. John Smith downloads an age certificate, which he shares with Bobby Tables. (Or, Bobby Tables steals it.)
+    - (We will solve this problem in the next version.)
+3. Bobby Tables shares the password for `injector` with John Smith, so that John Smith can verify his account.
+    - Pop could periodically make users re-verify their account.
+      John Smith may be willing to do this once for Bobby Tables, but not on a reoccurring basis.
+        - There will be a tradeoff, though; making users re-verify too frequently could become a major inconvenience.
+
 [rstreet-dne]: https://www.rstreet.org/commentary/the-technology-to-verify-your-age-without-violating-your-privacy-does-not-exist/
 [anonymous-1a]: https://www.mtsu.edu/first-amendment/article/32/anonymous-speech
+[secure-random]: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/SecureRandom.html
