@@ -4,4 +4,5 @@ include(
         "data",
         "demo",
         "testing",
+        "verification-poc",
 )
