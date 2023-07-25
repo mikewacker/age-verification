@@ -318,5 +318,107 @@ you would need to use Amazon's private key&mdash;which only Amazon knows.)
 Data breaches are fare more common than key breaches, and most cybersecurity incidents in the news are data breaches.
 We will mostly focus on mitigating the impact of a data breach, though we will consider both types of breaches.
 
+## Detailed Design
+
+### Format
+
+There's a saying that you can learn a lot from a wrong answer&mdash;if you understand why it is wrong.
+
+With that in mind, we will use the following format for the detailed design:
+
+- First, we will nail down the requirements for age verification. (We have already done this.)
+- Then, we will start with a naive, v0 (version 0) solution for age verification.
+    - You can think of the v0 solution as an "intentionally wrong" answer.
+- We will incrementally improve this solution, creating v1, v2, v3, etc. For each version:
+    - We will identify a problem (or problems) with the current version.
+    - To create the next version, we will develop a solution to said problem.
+    - At each step, we will also discuss any tradeoffs incurred, and any other relevant considerations.
+
+This detailed design will teach you how to think about age verification, not just tell you what to think.
+
+I have tried to make this explanation fairly accessible for a non-technical audience;
+sections aimed at a more technical audience will be tagged as [Technical].
+
+### v0: Naive Age Verification
+
+Let's discuss how these two workflows would work in a naive solution.
+(For the sake of clarity, we will use the fictional names from the demo here.)
+
+Registering on CheckMyAge:
+
+- John Smith creates an account on CheckMyAge.
+- John Smith uploads photocopies of documents (e.g., a driver's license) to CheckMyAge.
+    - These documents are stored forever on CheckMyAge.
+- CheckMyAge uses these documents to verify John Smith's identity and age.
+
+Verifying an account on Pop:
+
+- John Smith downloads a signed age certificate from CheckMyAge. Contents of certificate:
+    - Age: 40
+- John Smith logs in as `publius` on Pop.
+- John Smith uploads the age certificate to Pop.
+- Pop verifies that the age certificate is signed by CheckMyAge.
+- Pop has now verified the age of `publius`.
+
+### v1: Setting a Data Retention Policy
+
+**Problem: Stored Documents and Data Breaches**
+
+CheckMyAge stores documents it receives forever, but does it need to do so?
+If a data breach occurs, a lot of documents and sensitive information can be stolen from CheckMyAge.
+
+**Solution: Data Minimization**
+
+Once John Smith's identity is verified, documents or sensitive information (e.g., a Social Security number)
+should not be retained indefinitely. At most, they should be retained for a short time (e.g., one week).
+
+We only need to retain some basic information that can establish John Smith's identity: full name, date of birth, etc.
+While we won't get into granular specifics here, we can describe the primary purpose of retaining data&mdash;which
+will guide any data minimization efforts.
+
+In short, John Smith should not be able to create two accounts on CheckMyAge.
+We should only retain enough data to detect when two accounts are actually the same person.
+We don't need to be 100% perfect here, but if the percentage of accounts that are not duplicates
+can be measured with two or even three 9s, that would be an achievable goal.
+
+**Tradeoff: Re-Verifying Users**
+
+If CheckMyAge needs to re-verify the identity of John Smith, he will need to re-upload those documents.
+It's a minor inconvenience, but it's a small price to pay for data minimization.
+
+**Other Consideration: Auditing**
+
+What if an auditor wants to come in and check that CheckMyAge isn't fraudulently verifying accounts?
+There are a couple of ways to accommodate auditors:
+
+- If we have a short retention window for documents, auditors can audit any accounts that were recently verified.
+- We could retain metadata about which documents were used. Auditors could then randomly select users,
+  and ask them to re-verify their account with the same documents.
+
+Here, CheckMyAge should set the expectation that users may need to re-verify their account&mdash;and
+that noncompliance with such requests will un-verify their account.
+A small percentage of users may still be unresponsive to requests to re-verify their account,
+but if that percentage gets too large, that would be a red flag for auditors.
+
+### v2: Hardening Age Certificates
+
+**Problem: Sharing or Stealing Age Certificates**
+
+What if John Smith decides to share his age certificate with someone else?
+(Or, what if hackers steal an age certificate from John Smith?)
+
+Anyone can use that age certificate to verify their account, not just John Smith.
+
+**Solution: Nonces and Expirations**
+
+To mitigate this problem, we can make a few additions to the age certificate:
+
+- a nonce (number used once), which will ensure that a certificate can only be used once on a single site.
+    - Each certificate will have a difference nonce.
+    - If a site receives two certificates with the same nonce, it would know that one certificate has been used twice.
+    - (However, a single certificate can be used for multiple sites&mdash;but only one time for each site.)
+- an expiration; certificates past the expiration will be rejected.
+    - The expiration can be set to, e.g., 5 minutes after the certificate is generated.
+
 [rstreet-dne]: https://www.rstreet.org/commentary/the-technology-to-verify-your-age-without-violating-your-privacy-does-not-exist/
 [anonymous-1a]: https://www.mtsu.edu/first-amendment/article/32/anonymous-speech
