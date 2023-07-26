@@ -120,7 +120,7 @@ Part I
     - Request ID: 7-DQzGbLlaMeQkwMWE_AGDXgFnbWfRR_P0UkwYEGbZk
     - Site: Pop
     - Expiration: July 25, 2023, 12:47:56 PM MDT
-- [#1] CheckMyAge stores the verification request.
+- [#1] CheckMyAge stores a copy of the verification request.
 - CheckMyAge sends the verification request back to Pop.
 - [#2] Pop links the request ID (7-DQzGbL...) to "publius-jr".
 - Pop opens the following URL in a new window on Bobby Smith's browser:
@@ -138,8 +138,7 @@ Part II
 - CheckMyAge responds to the web request by displaying a login page.
 - Bobby Smith logs in to CheckMyAge.
 - CheckMyAge links the request ID (7-DQzGbL...) to Bobby Smith.
-- CheckMyAge asks Bobby Smith if he wants to verify an account on Pop.
-- Bobby Smith confirms that he wants to verify an account on Pop.
+- CheckMyAge confirms that Bobby Smith wants to verify an account on Pop.
 - CheckMyAge retrieves the user data for Bobby Smith:
     - ID: KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4
     - Age: 13
@@ -488,40 +487,216 @@ Any time you randomly generate bits, you should use a cryptographically strong r
 
 **Tradeoff: Deduplication vs. Authentication**
 
-If John Smith does not have (and will not want) an account of his own on Pop, he could use his account on CheckMyAge
-to let one and only one friend verify their account on Pop.
+If John Smith does not have his own account on Pop, his account on CheckMyAge could be used
+to verify someone else's account on Pop&mdash;although it can still only be used to verify one account.
+That problem is an authentication problem.
 
 In terms of stopping kids from bypassing the system, this solution may not be an "A" solution for that reason,
 but it still would receive a good grade. Its key advantage, though, is that it uses an anonymous ID&mdash;as
-opposed to a real name or username.
+opposed to a real name or a username.
 
-**Other Considerations: Mitigating a Smaller Authentication Problem**
+Likewise, since this problem occurs under a much narrower set of conditions,
+we can pursue more incremental fixes to mitigate the problem going forward.
+Since we already have a good grade, we only need to find the incremental fixes that slightly increase that grade.
 
-Are there any incremental fixes to mitigate that authentication problem, and bump an already good grade up even more?
+**Other Consideration: Mitigating a Smaller Authentication Problem**
 
-Let's say that John Smith does not have (and will not want) an account of his own Pop.
-Let's also say that there's a misbehaved person, Bobby Tables. Bobby Tables wants to use John Smith's age certificate
-to verify Bobby Table's account on Pop (`injector`). We'll consider two variants of that scenario:
+Let's assume that John Smith does not have his own account on Pop.
+Let's also assume that there's a misbehaved kid, Bobby Tables, who wants to verify his account on Pop (`injector`)
+using John Smith's age certificate. We'll consider two variants of that scenario:
 
-1. John Smith colludes with Bobby Tables.
-2. Bobby Tables is a hacker who is targeting John Smith.
+1. John Smith is willing to help Bobby Tables bypass age verification.
+2. Bobby Tables is willing to resort to subterfuge.
 
 We can break this problem down into three sub-problems. We will briefly analyze each sub-problem:
 
-1. Bobby Tables logs into John Smith's account on CheckMyAge.
-    - Offering or even requiring two-factor authentication can keep hackers out of John Smith's account&mdash;and
-      makes it harder for him to let others use his account.
+1. Bobby Tables logs into John Smith's account on CheckMyAge, either with or without his permission.
+    - Offering or even requiring two-factor authentication can keep unauthorized users out of John Smith's
+      account&mdash;and makes it harder for him to let others use his account.
     - Other mitigations are possible, but we would have to weigh the privacy tradeoffs&mdash;especially
       with respect to what additional information is stored on CheckMyAge.
         - On the plus side, CheckMyAge doesn't share additional information with Pop.
           If it believes that the person is not John Smith, it simply would not issue an age certificate.
 2. John Smith downloads an age certificate, which he shares with Bobby Tables. (Or, Bobby Tables steals it.)
-    - (We will solve this problem in the next version.)
-3. Bobby Tables shares the password for `injector` with John Smith, so that John Smith can verify his account.
     - Pop could periodically make users re-verify their account.
-      John Smith may be willing to do this once for Bobby Tables, but not on a reoccurring basis.
+        - John Smith may be willing to help Bobby Tables once, but not on a reoccurring basis.
+        - Bobby Smith might successfully employ subterfuge once, but could he do so on a reoccurring basis?
         - There will be a tradeoff, though; making users re-verify too frequently could become a major inconvenience.
+    - (In the next version, we will trade this problem for a similar but different problem that is easier to mitigate.) 
+3. Bobby Tables shares the password for `injector` with John Smith, so that John Smith can verify his account.
+    - As before, Pop could periodically make users re-verify their account.
+
+### v4: Directly Transmitting Age Certificates to Sites
+
+**Problem: Phishing for Age Certificates&mdash;and for IDs**
+
+John Smith opens his email and sees an urgent email: "PLEASE RE-VERIFY YOUR AGE ON POP OR WE WILL DELETE YOUR ACCOUNT!"
+He clicks the link and is redirected to a site that looks like Pop. He uploads his age certificate to that site.
+That site, however, was a fake site that looks like Pop.
+
+This was a successful phishing attempt; a scammer just obtained John Smith's ID.
+Moreover, when John clicked the link, his email was passed onto the fake site; his ID is now linked to an email.
+This fake site may have also asked John to provide additional personal information as well.
+
+Alternatively, if a hacker steals John's password for CheckMyAge, he could log in and download an age certificate.
+Now he has John Smith's ID, and that ID is linked to his real name.
+
+**Problem: Sharing Age Certificates**
+
+If John Smith downloads an age certificate from CheckMyAge, how do we stop him from sharing it with someone else?
+
+**Problem: Age and Data Minimization**
+
+CheckMyAge shares John Smith's exact age (40) with Pop, but does Pop need to know his exact age?
+Pop only needs to know that John Smith is 18 or older.
+
+**Solution: Directly Transmit the Certificate to the Site**
+
+We will set up a workflow where CheckMyAge directly transmits an age certificate to Pop.
+
+First, Pop will need to register with CheckMyAge. As part of this registration, it will tell CheckMyAge:
+
+- the age ranges that Pop cares about
+    - Let's say that Pop cares about these ranges: 12-, 13-17, 18+.
+    - CheckMyAge will include an age range on the age certificate, instead of the exact age.
+- a URL (starting with `https://`) that CheckMyAge can use to securely transmit certificates to Pop
+
+The new age verification protocol will be described below. While it's more complex,
+most of the work is handled by CheckMyAge and Pop; there's less work for John Smith.
+
+---
+
+This protocol will rely on a "verification request"; this request is needed to create an age certificate.
+Here are the contents of the verification request from the demo:
+
+- Request ID: `7-DQzGbLlaMeQkwMWE_AGDXgFnbWfRR_P0UkwYEGbZk`
+- Site: Pop
+- Expiration: July 25, 2023, 12:47:56 PM MDT
+
+CheckMyAge and Pop will share this verification request with each other; they will not share real names or usernames.
+
+---
+
+Let's start with the process to create a verification request.
+
+- John Smith starts the age verification process for `publius` on Pop.
+- Pop asks CheckMyAge to generate a new verification request.
+    - (Since Pop has to register with CheckMyAge, we can set up a way for Pop to authenticate itself with CheckMyAge.)
+- CheckMyAge generates a verification request with the "Site" set to Pop. 
+    - CheckMyAge controls both the "Request ID" and the "Expiration".
+- CheckMyAge stores a copy of the verification request.
+- CheckMyAge sends the verification request back to Pop.
+- Pop links the verification request to `publius`.
+
+Notes:
+
+- Only Pop can create a verification request (with some assistance from CheckMyAge).
+- Once created, the verification request has a short lifespan; in the demo, it was valid for 5 minutes.
+- Only Pop knows that the verification request is linked to `publius`.
+
+---
+
+We now need to transfer this verification request to CheckMyAge. How can we do that?
+
+- Since CheckMyAge stored a copy of that request, we only need to transfer the request ID.
+- Pop can open CheckMyAge in a new window in John Smith's browser; the URL will include the request ID.
+
+Here's a sample URL: `https://www.checkmyage.com/verify/7-DQzGbLlaMeQkwMWE_AGDXgFnbWfRR_P0UkwYEGbZk`
+
+Notes:
+
+- There are also ways to make this work with a mobile app.
+- Could people share this URL, similar to how they shared age certificates?
+    - In short, this problem is easier to mitigate, though the explanation is a bit more technical.
+    - The verification request is also time-limited; this also will serve as a mitigation.
+
+---
+
+Next, let's track this verification request on CheckMyAge.
+
+- CheckMyAge uses the request ID in the URL to retrieve the full verification request.
+- CheckMyAge checks that the verification request is not expired.
+- Once John Smith logs in to CheckMyAge, CheckMyAge links the verification request to John Smith.
+- CheckMyAge confirms that John Smith wants to verify an account on Pop.
+- CheckMyAge creates an age certificate with two pieces of information:
+    - the verification request
+        - Request ID: `7-DQzGbLlaMeQkwMWE_AGDXgFnbWfRR_P0UkwYEGbZk`
+        - Site: Pop
+        - Expiration: July 25, 2023, 12:47:56 PM MDT
+    - the user data for John Smith (with the age anonymized into an age range)
+        - ID: `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`
+        - Age: 18+
+- CheckMyAge digitally signs the age certificate and securely transmits it to Pop.
+
+Notes:
+
+- Only CheckMyAge knows that the verification request is linked to John Smith.
+- After it transmits the age certificate to Pop, CheckMyAge should not retain the age certificate.
+- CheckMyAge also should not retain any records of where users have verified their age.
+
+---
+
+What does Pop do when it receives the age certificate? Recall that it linked the verification request to `publius`.
+
+- Pop verifies the signature, recipient, and expiration on the age certificate.
+- Pop matches the verification request in the age certificate to `publius`.
+- Pop extracts the user data from the age certificate:
+    - ID: `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`
+    - Age: 18+
+- Pop checks that no other accounts have same ID (`uhzmISXl...`).
+- Pop stores this user data for `publius`. `publius` is now verified!
+
+Notes:
+
+- Once age verification is complete, Pop should not retain the age certificate.
+- John Smith never sees the age certificate; you can't phish for something he does not have.
+
+**Tradeoff: Knowing the Recipient of an Age Certificate**
+
+Previously, CheckMyAge did not know who the recipient of an age certificate was.
+Now, it knows the recipient of an age certificate.
+
+As we stipulated earlier, CheckMyAge should not retain any records of where users have verified their age;
+retaining such records introduces a de-anonymization risk.
+CheckMyAge can include this provision in its privacy policy; a federal/state law could also mandate this.
+(Interestingly enough, the proposed [federal age verification bill][federal-avs] includes a pilot program
+for a federal age verification service. One requirement is that the pilot program should
+"[k]eep no records of the social media platforms where users have verified their identity.")
+
+Once you add in the aforementioned stipulation, though, this is a great tradeoff&mdash;especially
+when you consider the extra privacy and security benefits that come with this version.
+
+**[Technical] Solution: Mobile Apps**
+
+What if CheckMyAge has a mobile app? When Pop redirects John Smith to a URL for CheckMyAge,
+developers can use App Links (Android) or Universal Links (iPhone) to open that URL in the app instead of the browser.
+(If John Smith does not have the CheckMyAge app, the URL would open in a browser as usual.)
+
+**[Technical] Solution: TLS 1.3**
+
+When CheckMyAge securely transmits a certificate to Pop, it would ideally use TLS 1.3.
+TLS 1.3 provides forward secrecy; even if a hacker stole Pop's private key,
+it could not decrypt past communication between CheckMyAge and Pop.
+
+**[Technical] Solution: CSRF**
+
+CheckMyAge should also protect against cross-site request forgery (CSRF) attacks.
+Any actions that generates an age certificate should use a CSRF token.
+
+**[Technical] Solution: Sharing URLs**
+
+When CheckMyAge receives an HTTP request with a verification request ID in the URL,
+it could create a token for that request ID, and store that token in a first-party cookie as part of the HTTP response.
+(On subsequent HTTP requests with the same request ID, it will not generate a token.)
+Without that token, it will not be possible to create an age certificate.
+
+Now, if John Smith shares that URL with Bobby Tables, the URL won't work for Bobby Tables.
+Of course, there are ways to work around this, but if you have to, e.g., use a browser's developer tools&mdash;as
+opposed to copy-and-pasting a URL&mdash;fewer people will use that workaround.
+
+There probably are other possible mitigations as well, though that is beyond the scope of a proof-of-concept.
 
 [rstreet-dne]: https://www.rstreet.org/commentary/the-technology-to-verify-your-age-without-violating-your-privacy-does-not-exist/
 [anonymous-1a]: https://www.mtsu.edu/first-amendment/article/32/anonymous-speech
 [secure-random]: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/SecureRandom.html
+[federal-avs]: https://www.congress.gov/bill/118th-congress/senate-bill/1291/text#id3801b799928248d18e235e369f524988
