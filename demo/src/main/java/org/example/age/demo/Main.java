@@ -154,7 +154,7 @@ public final class Main {
         println("- %s asks %s to create a new verification request.", siteName, avsName);
         println("- %s generates the following verification request:", avsName);
         displayVerificationRequest(request);
-        println("- [#1] %s stores the verification request.", avsName);
+        println("- [#1] %s stores a copy of the verification request.", avsName);
         println("- %s sends the verification request back to %s.", avsName, siteName);
         println("- [#2] %s links the request ID (%s) to \"%s\".", siteName, shortId(request.id()), username);
         println("- %s opens the following URL in a new window on %s's browser:", siteName, realName);
@@ -171,8 +171,7 @@ public final class Main {
         println("- %s responds to the web request by displaying a login page.", avsName);
         println("- %s logs in to %s.", realName, avsName);
         println("- %s links the request ID (%s) to %s.", avsName, shortId(request.id()), realName);
-        println("- %s asks %s if he wants to verify an account on %s.", avsName, realName, siteName);
-        println("- %s confirms that he wants to verify an account on %s.", realName, siteName);
+        println("- %s confirms that %s wants to verify an account on %s.", avsName, realName, siteName);
         println("- %s retrieves the user data for %s:", avsName, realName);
         displayVerifiedUser(avsUser);
         println(
