@@ -696,6 +696,98 @@ opposed to copy-and-pasting a URL&mdash;fewer people will use that workaround.
 
 There probably are other possible mitigations as well, though that is beyond the scope of a proof-of-concept.
 
+### v5: Different IDs for Different Sites
+
+**Problem: Data Breaches**
+
+What if a data breach occurs on CheckMyAge, revealing the IDs of all its users? Now, we can link a real name to an ID.
+Moreover, the same ID is used on every social media site. That's a severe de-anonymization risk.
+
+**Solution: ID Transformation**
+
+What if the ID on the age certificate is different than the one stored on my CheckMyAge?
+
+Through some cryptographic magic, CheckMyAge can generate a secret key, and use it to transform the ID:
+
+- It is impossible to figure out the new ID from the original ID, unless you know the secret key.
+- It is impossible to figure out the original ID from the new ID (even if you know the secret key).
+
+Moreover, since sites now have to register which CheckMyAge, as part of that registration process,
+CheckMyAge can generate a secret key for each site. (This key is not shared with the site.)
+Since each site has a different key, this transformation produces a different ID for each site.
+
+A couple of example may help here:
+
+---
+
+Creating an age certificate for Crackle:
+
+- John Smith's ID on CheckMyAge is `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`.
+- CheckMyAge's secret key for Crackle is `pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY`.
+- John Smith's ID and CheckMyAge's key are used create a new ID: `keXeY3kiQDgOhenFw9GMFv3zUFSCSsqrcsmwf3DvpdA`.
+
+Creating an age certificate for Pop:
+
+- John Smith's ID on CheckMyAge is `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`.
+- CheckMyAge's secret key for Pop is `W1zah29NMWEOEsd8VNFX6E3Vo8Z-HLNQ5cDH3-9KyVg`.
+- John Smith's ID and CheckMyAge's key are used create a new ID: `iaDG-BXou0kKr5gg2j0BJj0RKsa00bVvnpbRCiEism4`.
+
+---
+
+Now, CheckMyAge, Crackle, and Pop each store a different ID.
+
+This solution has some strong security guarantees:
+
+- To figure out that John Smith is `publius` on Pop, you would need to...
+    - steal the real name and ID that is stored on CheckMyAge via a data breach, and
+    - steal CheckMyAge's secret key for Pop (i.e., a key breach).
+- By itself, stealing `publius`'s ID from Pop does not help.
+    - You cannot reverse this transformation to obtain the corresponding ID for CheckMyAge&mdash;even
+      if you know CheckMyAge's secret key for Pop.
+
+**[Technical] Solution: ID Transformation, Continued**
+
+Let's recall the requirements for this transformation:
+
+- It is impossible to figure out the new ID from the original ID, unless you know the secret key.
+- It is impossible to figure out the original ID from the new ID (even if you know the secret key).
+
+A hash function has the latter property, but what has both properties? An HMAC.
+
+While we do not need a message authentication code (MAC), we do need one of the security properties of an HMAC:
+it is impossible to compute the HMAC of a message if you do not know the key.
+Ergo, if the new ID is the HMAC of the original ID, then it is impossible to compute the new ID from the original ID
+if you do not know the key.
+
+If an HMAC-SHA256 is used, the new ID will also conveniently have the same number of bits as the original ID.
+
+**Tradeoff: Changing Keys**
+
+If you store any long-term keys, you should change them at a regular but infrequent interval;
+rotating in a new key once a year is a common option.
+
+However, since the new ID depends on the original ID and the key, if you change the key, you also change the new ID.
+Thus, whenever the key for Pop changes, Pop will need to make every account re-verify to get an updated ID&mdash;though
+it can establish a grace period of, e.g., one week.
+
+Since this is a very infrequence occurrence, though, that tradeoff is fine.
+
+**Other Consideration: Surreptitious Forwarding**
+
+There is another reason why the age certificate should include the recipient (e.g., Pop).
+
+What if somebody tries to take an age certificate for Crackle, and use it for Pop instead?
+If Crackle decides to go rogue, this becomes a legitimate concern.
+Moreover, since a person now has different IDs on Crackle and Pop, they could use an age certificate for Crackle,
+even if they had already verified their account on Pop.
+
+Of course, there's an easy fix here: put the recipient on the age certificate.
+Pop will reject an age certificate if it sees that the recipient is Crackle.
+
+This is a specific case of a more general security principle: you should not digitally sign a document
+if the document does not say who the recipient is. Otherwise, tricksters can gain someone's trust
+by saying that you signed the document (which is true), but they could lie about who is the recipient of said document.
+
 [rstreet-dne]: https://www.rstreet.org/commentary/the-technology-to-verify-your-age-without-violating-your-privacy-does-not-exist/
 [anonymous-1a]: https://www.mtsu.edu/first-amendment/article/32/anonymous-speech
 [secure-random]: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/SecureRandom.html
