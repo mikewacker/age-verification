@@ -258,7 +258,7 @@ with a social media site&mdash;without revealing information that could de-anony
 
 Let's address this talking point: ...but kids will find ways to bypass age verification.
 
-That statement is technically true, but practically useless. Is it a mere 0.5% of kids that bypass age verification,
+That statement is technically correct, but practically useless. Is it a mere 0.5% of kids that bypass age verification,
 or is it 50%?
 
 We certainly do not need five 9s here, and we may not even need one 9.
@@ -366,7 +366,7 @@ Verifying an account on Pop:
 The proof-of-concept uses an Ed25519 key pair to digitally sign an age certificate,
 though other excellent choices exist, such as NIST P-256.
 
-(For the real thing, you would also need to a digital certificate to prove that CheckMyAge owns the public key.)
+(For the real thing, you would also need a digital certificate to prove that CheckMyAge owns the public key.)
 
 ### v1: Setting a Data Retention Policy
 
@@ -443,7 +443,7 @@ In this case, we also need to verify that John Smith is Bobby Smith's parent. Ho
 **Problem Analysis: Authentication or Deduplication?**
 
 At first glance, the first problem may seem to be an authentication problem.
-If John Smith downloaded an age certificate from CheckMyAge,
+If John Smith downloads an age certificate from CheckMyAge,
 Pop needs to verify that the person who uploads that certificate is John Smith.
 
 But what if we instead viewed it as a deduplication problem? If Pop receives three age certificates,
@@ -652,7 +652,7 @@ What does Pop do when it receives the age certificate? Recall that it linked the
 - Pop extracts the user data from the age certificate:
     - ID: `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`
     - Age: 18+
-- Pop checks that no other accounts have same ID (`uhzmISXl...`).
+- Pop checks that no other accounts have the same ID (`uhzmISXl...`).
 - Pop stores this user data for `publius`. `publius` is now verified!
 
 Notes:
@@ -683,9 +683,9 @@ developers can use App Links (Android) or Universal Links (iPhone) to open that 
 
 **[Technical] Solution: TLS 1.3**
 
-When CheckMyAge securely transmits a certificate to Pop, it would ideally use TLS 1.3.
+When CheckMyAge securely transmits an age certificate to Pop, it would ideally use TLS 1.3.
 TLS 1.3 provides forward secrecy; even if a hacker stole Pop's private key,
-it could not decrypt past communication between CheckMyAge and Pop.
+it could not decrypt past communications between CheckMyAge and Pop.
 
 **[Technical] Solution: CSRF**
 
@@ -801,7 +801,7 @@ by saying that you signed the document (which is true), but they could lie about
 
 On the micro level, there probably is not a single point of failure; stealing a key would be very difficult,
 and multiple things would have to go wrong for that to happen. On the macro level, there is a single point of failure:
-the security of this solution entirely depends on CheckMyAge.
+the security of this solution depends entirely on CheckMyAge.
 
 We could also use a layer of security that Pop controls.
 This problem can be viewed as both a technical problem and a political problem:
@@ -821,7 +821,8 @@ it would never let the security of its own systems be compromised. Thus, the ano
 When CheckMyAge generates an age certificate for Pop, it does see the ID that will be stored on Pop.
 (That ID is quickly forgotten, though; CheckMyAge never stores it.)
 
-Ideally, CheckMyAge should not the ID that is stored on Pop&mdash;though this is pretty far down the list of problems.
+Ideally, CheckMyAge should not see the ID that is stored on Pop&mdash;though
+this is pretty far down the list of problems.
 
 **Solution: Local ID Transformation**
 
@@ -850,7 +851,7 @@ De-anonymizing Publius back in the 18th century would probably be a much easier 
 
 ## Postscript
 
-**"But what about this problem?"** Before you point out any potential problems, you should ask yourself these questions:
+**"But what about this problem?"** Before you point out any problems, you should ask yourself these questions:
 
 1. What is the practical impact of this problem? (E.g., what percentage of kids can bypass this system? 0.5%? 50%?)
 2. Are there ways to fix or mitigate this problem?
@@ -859,9 +860,9 @@ De-anonymizing Publius back in the 18th century would probably be a much easier 
 In the detailed design, we did a pretty good job of spotting problems,
 but we did an even better job of finding ways to fix or mitigate those problems.
 (And I'm certainly not the only one capable of doing that; others may also find ways to improve this design.)
-While this proof-of-concept solution is not perfect, it is good enough to prove that the concept is possible.
+While this proof-of-concept solution is not perfect, it is certainly good enough to prove that the concept is possible.
 
-By contrast, a common problem with the "expert analysis" here is that it lists potential problems with age verification,
+By contrast, a common problem with the "expert analysis" here is that it lists problems with age verification,
 and then it jumps to an (often predetermined) conclusion that age verification and privacy cannot coexist.
 Such analysis does not make a serious effort to answer those three questions.
 
