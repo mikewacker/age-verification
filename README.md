@@ -208,7 +208,7 @@ In general, 100% and/or perfection is not a goal.
 
 ### High-Level Idea
 
-A key consideration for age verification is protecting the anonymity of social media accounts. Here are the goals:
+Many social media accounts are anonymous; protecting the anonymity of such accounts ia a key consideration.
 
 - For protecting the anonymity of users, we want an "A" grade.
 - For stopping kids from bypassing the system, we want a "B" or "C" grade.
@@ -304,6 +304,8 @@ With any breach, there are two risks to consider:
 
 Let's just stipulate that if your account can get de-anonymized if(/when) a data breach occurs, that's a fatal flaw.
 
+---
+
 However, there is some nuance to this conversation. In short, there are two types of breaches to consider:
 
 - data breach: a breach that exposes user data
@@ -314,7 +316,7 @@ the `s` in `https` stands for secure. Your web browser will use Amazon's public 
 to encrypt any data that is sent to Amazon. To decrypt that data,
 you would need to use Amazon's private key&mdash;which only Amazon knows.)
 
-Data breaches are fare more common than key breaches, and most cybersecurity incidents in the news are data breaches.
+Data breaches are far more common than key breaches, and most cybersecurity incidents in the news are data breaches.
 We will mostly focus on mitigating the impact of a data breach, though we will consider both types of breaches.
 
 ## Detailed Design
@@ -358,6 +360,13 @@ Verifying an account on Pop:
 - John Smith uploads the age certificate to Pop.
 - Pop verifies that the age certificate is signed by CheckMyAge.
 - Pop has now verified the age of `publius`.
+
+**[Technical] Signing Key**
+
+The proof-of-concept uses an Ed25519 key pair to digitally sign an age certificate,
+though other excellent choices exist, such as NIST P-256.
+
+(For the real thing, you would also need to a digital certificate to prove that CheckMyAge owns the public key.)
 
 ### v1: Setting a Data Retention Policy
 
@@ -531,8 +540,8 @@ We can break this problem down into three sub-problems. We will briefly analyze 
 **Problem: Phishing for Age Certificates&mdash;and for IDs**
 
 John Smith opens his email and sees an urgent email: "PLEASE RE-VERIFY YOUR AGE ON POP OR WE WILL DELETE YOUR ACCOUNT!"
-He clicks the link and is redirected to a site that looks like Pop. He uploads his age certificate to that site.
-That site, however, was a fake site that looks like Pop.
+He clicks the link in that email, which takes him to a site that looks like Pop.
+He uploads his age certificate to that site. That site, however, was a fake site that looks like Pop.
 
 This was a successful phishing attempt; a scammer just obtained John Smith's ID.
 Moreover, when John clicked the link, his email was passed onto the fake site; his ID is now linked to an email.
@@ -550,7 +559,7 @@ If John Smith downloads an age certificate from CheckMyAge, how do we stop him f
 CheckMyAge shares John Smith's exact age (40) with Pop, but does Pop need to know his exact age?
 Pop only needs to know that John Smith is 18 or older.
 
-**Solution: Directly Transmit the Certificate to the Site**
+**Solution: Directly Transmit the Age Certificate to the Site**
 
 We will set up a workflow where CheckMyAge directly transmits an age certificate to Pop.
 
@@ -581,9 +590,7 @@ Let's start with the process to create a verification request.
 
 - John Smith starts the age verification process for `publius` on Pop.
 - Pop asks CheckMyAge to generate a new verification request.
-    - (Since Pop has to register with CheckMyAge, we can set up a way for Pop to authenticate itself with CheckMyAge.)
-- CheckMyAge generates a verification request with the "Site" set to Pop. 
-    - CheckMyAge controls both the "Request ID" and the "Expiration".
+- CheckMyAge generates a verification request with the "Site" set to Pop.
 - CheckMyAge stores a copy of the verification request.
 - CheckMyAge sends the verification request back to Pop.
 - Pop links the verification request to `publius`.
@@ -591,6 +598,8 @@ Let's start with the process to create a verification request.
 Notes:
 
 - Only Pop can create a verification request (with some assistance from CheckMyAge).
+    - Since Pop has to register with CheckMyAge, we can set up a way for Pop to authenticate itself with CheckMyAge.
+    - CheckMyAge controls both the "Request ID" and the "Expiration".
 - Once created, the verification request has a short lifespan; in the demo, it was valid for 5 minutes.
 - Only Pop knows that the verification request is linked to `publius`.
 
@@ -606,7 +615,7 @@ Here's a sample URL: `https://www.checkmyage.com/verify/7-DQzGbLlaMeQkwMWE_AGDXg
 Notes:
 
 - There are also ways to make this work with a mobile app.
-- Could people share this URL, similar to how they shared age certificates?
+- Could people share this URL, similar to how they shared an age certificate?
     - In short, this problem is easier to mitigate, though the explanation is a bit more technical.
     - The verification request is also time-limited; this also will serve as a mitigation.
 
@@ -681,7 +690,7 @@ it could not decrypt past communication between CheckMyAge and Pop.
 **[Technical] Solution: CSRF**
 
 CheckMyAge should also protect against cross-site request forgery (CSRF) attacks.
-Any actions that generates an age certificate should use a CSRF token.
+When CheckMyAge confirms that John Smith wants to verify an account on Pop, it should use a CSRF token.
 
 **[Technical] Solution: Sharing URLs**
 
@@ -690,7 +699,7 @@ it could create a token for that request ID, and store that token in a first-par
 (On subsequent HTTP requests with the same request ID, it will not generate a token.)
 Without that token, it will not be possible to create an age certificate.
 
-Now, if John Smith shares that URL with Bobby Tables, the URL won't work for Bobby Tables.
+Now, if John Smith shares that URL with Bobby Tables, the URL won't work for Bobby Tables in his browser.
 Of course, there are ways to work around this, but if you have to, e.g., use a browser's developer tools&mdash;as
 opposed to copy-and-pasting a URL&mdash;fewer people will use that workaround.
 
@@ -705,7 +714,7 @@ Moreover, the same ID is used on every social media site. That's a severe de-ano
 
 **Solution: ID Transformation**
 
-What if the ID on the age certificate is different than the one stored on my CheckMyAge?
+What if the ID on the age certificate is different than the one stored on CheckMyAge?
 
 Through some cryptographic magic, CheckMyAge can generate a secret key, and use it to transform the ID:
 
@@ -716,9 +725,9 @@ Moreover, since sites now have to register which CheckMyAge, as part of that reg
 CheckMyAge can generate a secret key for each site. (This key is not shared with the site.)
 Since each site has a different key, this transformation produces a different ID for each site.
 
-A couple of example may help here:
-
 ---
+
+A couple of examples may help here.
 
 Creating an age certificate for Crackle:
 
@@ -739,7 +748,7 @@ Now, CheckMyAge, Crackle, and Pop each store a different ID.
 This solution has some strong security guarantees:
 
 - To figure out that John Smith is `publius` on Pop, you would need to...
-    - steal the real name and ID that is stored on CheckMyAge via a data breach, and
+    - steal John Smith's real name and ID from CheckMyAge via a data breach, and
     - steal CheckMyAge's secret key for Pop (i.e., a key breach).
 - By itself, stealing `publius`'s ID from Pop does not help.
     - You cannot reverse this transformation to obtain the corresponding ID for CheckMyAge&mdash;even
@@ -755,9 +764,9 @@ Let's recall the requirements for this transformation:
 A hash function has the latter property, but what has both properties? An HMAC.
 
 While we do not need a message authentication code (MAC), we do need one of the security properties of an HMAC:
-it is impossible to compute the HMAC of a message if you do not know the key.
+it is impossible to compute the HMAC of a message if you do not know the secret key.
 Ergo, if the new ID is the HMAC of the original ID, then it is impossible to compute the new ID from the original ID
-if you do not know the key.
+if you do not know the secret key.
 
 If an HMAC-SHA256 is used, the new ID will also conveniently have the same number of bits as the original ID.
 
@@ -770,25 +779,100 @@ However, since the new ID depends on the original ID and the key, if you change 
 Thus, whenever the key for Pop changes, Pop will need to make every account re-verify to get an updated ID&mdash;though
 it can establish a grace period of, e.g., one week.
 
-Since this is a very infrequence occurrence, though, that tradeoff is fine.
+Since this is a very infrequent occurrence, that tradeoff is fine.
 
 **Other Consideration: Surreptitious Forwarding**
 
-There is another reason why the age certificate should include the recipient (e.g., Pop).
-
-What if somebody tries to take an age certificate for Crackle, and use it for Pop instead?
+What if somebody tries to take his age certificate for Crackle, and use it for Pop instead?
 If Crackle decides to go rogue, this becomes a legitimate concern.
-Moreover, since a person now has different IDs on Crackle and Pop, they could use an age certificate for Crackle,
-even if they had already verified their account on Pop.
+And since a person now has a different ID on each site, one person could verify multiple accounts on Pop:
+one using his age certificate for Pop, and another using his age certificate for Crackle.
 
-Of course, there's an easy fix here: put the recipient on the age certificate.
+Of course, there's an easy fix here: put the recipient on the age certificate. (We already do this.)
 Pop will reject an age certificate if it sees that the recipient is Crackle.
 
 This is a specific case of a more general security principle: you should not digitally sign a document
 if the document does not say who the recipient is. Otherwise, tricksters can gain someone's trust
 by saying that you signed the document (which is true), but they could lie about who is the recipient of said document.
 
+### v6: Local Security Measures for a Site
+
+**Problem: Single Point of Failure**
+
+On the micro level, there probably is not a single point of failure; stealing a key would be very difficult,
+and multiple things would have to go wrong for that to happen. On the macro level, there is a single point of failure:
+the security of this solution entirely depends on CheckMyAge.
+
+We could also use a layer of security that Pop controls.
+This problem can be viewed as both a technical problem and a political problem:
+
+- Technically speaking, defense-in-depth is good. Another layer of security
+  that is controlled by a different entity would certainly help.
+- Politically speaking, if Pop wants to lobby against an age verification law, it will argue
+  that CheckMyAge (or any third-party age verification service) is untrustworthy&mdash;and
+  that it opposes age verification because it genuinely cares about the privacy of its users.
+
+However, if there is a layer of security that is entirely controlled by Pop,
+that political argument would land very differently. Since Pop genuinely cares about the privacy of its users,
+it would never let the security of its own systems be compromised. Thus, the anonymity of Pop's users will be protected.
+
+**Problem: Hiding IDs**
+
+When CheckMyAge generates an age certificate for Pop, it does see the ID that will be stored on Pop.
+(That ID is quickly forgotten, though; CheckMyAge never stores it.)
+
+Ideally, CheckMyAge should not the ID that is stored on Pop&mdash;though this is pretty far down the list of problems.
+
+**Solution: Local ID Transformation**
+
+What if we applied the same ID transformation locally on Pop?
+
+When Pop receives an age certificate, it will not store the IDs on that certificate.
+Instead, Pop will have its own secret key, and it will use that key to transform the IDs.
+
+Now, the ID on the age certificate becomes an ephemeral, intermediate ID.
+CheckMyAge does not see the ID stored on Pop, and Pop does not see the ID stored on CheckMyAge.
+
+---
+
+As an example, here is the chain of IDs that are used to verify `publius` on Pop:
+
+- John Smith's ID on CheckMyAge: `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`.
+- ID on the age certificate: `iaDG-BXou0kKr5gg2j0BJj0RKsa00bVvnpbRCiEism4`.
+    - This ID is created from the ID stored on CheckMyAge (`uhzmISXl...`) and CheckMyAge's secret key for Pop.
+- `publius`'s ID on Pop: `Uum6yHO7tgND6ffCHsidSpghQz8Eq7PlkmWHzkVL2DE`
+    - This ID is created from the ID on the age certificate (`iaDG-BXo...`) and Pop's secret key.
+
+---
+
+To de-anonymize `publius`, you would need to steal a key from both CheckMyAge and Pop.
+De-anonymizing Publius back in the 18th century would probably be a much easier task.
+
+## Postscript
+
+**"But what about this problem?"** Before you point out any potential problems, you should ask yourself these questions:
+
+1. What is the practical impact of this problem? (E.g., what percentage of kids can bypass this system? 0.5%? 50%?)
+2. Are there ways to fix or mitigate this problem?
+3. If this problem cannot be fixed, is it a fatal flaw, or is it a minor issue?
+
+In the detailed design, we did a pretty good job of spotting problems,
+but we did an even better job of finding ways to fix or mitigate those problems.
+(And I'm certainly not the only one capable of doing that; others may also find ways to improve this design.)
+While this proof-of-concept solution is not perfect, it is good enough to prove that the concept is possible.
+
+By contrast, a common problem with the "expert analysis" here is that it lists potential problems with age verification,
+and then it jumps to an (often predetermined) conclusion that age verification and privacy cannot coexist.
+Such analysis does not make a serious effort to answer those three questions.
+
+---
+
+Privacy-conscious age verification for social media can be done.
+We need to stop listening to the experts who [write six-part series][rstreet-series] on how it cannot be done,
+and start listening to the experts who find six ways to make it better.
+
 [rstreet-dne]: https://www.rstreet.org/commentary/the-technology-to-verify-your-age-without-violating-your-privacy-does-not-exist/
 [anonymous-1a]: https://www.mtsu.edu/first-amendment/article/32/anonymous-speech
 [secure-random]: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/SecureRandom.html
 [federal-avs]: https://www.congress.gov/bill/118th-congress/senate-bill/1291/text#id3801b799928248d18e235e369f524988
+[rstreet-series]: https://www.rstreet.org/commentary/the-fundamental-problems-with-social-media-age-verification-legislation/
