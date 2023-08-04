@@ -1,7 +1,6 @@
 # Proof-of-Concept: Privacy-Conscious Age Verification
 
-*(To take a quick look, you can look at the overview and the high-level workflow for the demo&mdash;and
-maybe the entire demo.)*
+*(To take a quick look, you can look at the overview and the demo.)*
 
 ## Overview
 
@@ -21,8 +20,6 @@ Any tradeoffs were weighed heavily in favor of privacy. The system is not design
 but it will still be very effective&mdash;while protecting the anonymity of users.
 
 ## Demo
-
-### High-Level Workflow
 
 Since it's easier to show than tell, let's run a demo.
 This demo will run the code, and it will display some text to explain what is happening.
@@ -99,7 +96,56 @@ Each person also has a different ID for CheckMyAge, Crackle, and Pop:
 
 (If one engineer could accomplish this, imagine what a team of engineers with even more expertise could accomplish.)
 
-### Detailed Workflow
+## Design Summary (and Extended Demo)
+
+### Goals
+
+Many social media accounts are anonymous; protecting the anonymity of such accounts ia a key consideration.
+
+- For protecting the anonymity of users, we want an "A" grade.
+- For stopping kids from bypassing the system, we want a "B" or "C" grade.
+
+It certainly could be possible to do better; these grades are used to show how we will weigh any tradeoffs involved.
+
+### Problem: Chain of Custody
+
+- **Q:** Assume that we can verify someone's age with 100% accuracy before we generate a digital age certificate.
+  Does that solve our problem?
+- **A:** It does not. You still need to consider the chain of custody after the age certificate is generated.
+
+Let's say that we generate an age certificate for John Smith:
+
+- Does John Smith maintain custody of his age certificate, or does someone else obtain it?
+- Does he use it to verify his own account, or does he use it to verify someone else's account?
+
+How do we solve this problem?
+
+- If the age certificate only contains an age, we don't know whether the chain of custody was maintained.
+- If we put John Smith's real name on that age certificate, we're revealing his identity to a social media site.
+
+### Solution: Use IDs
+
+*(We'll use the fictional names from the demo here.)*
+
+CheckMyAge can randomly assign each person an ID (e.g., `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`);
+an ID doesn't reveal any personal information. One ID can only be used to verify one account for each social media site.
+(There's more to it than that, but that's the high-level idea.)
+
+- If John Smith verifies his own account on Pop, he can't verify anyone else's account on Pop.
+- If John Smith does not have an account on Pop, he can only verify one other person's account on Pop.
+
+It's not an "A" solution, but it's still quite effective&mdash;while protecting the anonymity of users.
+
+---
+
+And what about the part of the problem that we did not solve?
+
+- Again, our goal is not to be 100% effective.
+- We are already dealing with a much smaller problem.
+
+Thus, instead of making it impossible to verify someone else's account, we can feasibly make it harder to do that.
+
+### Extended Demo
 
 The third part of the demo looks at the workflow to verify an account in more detail:
 
