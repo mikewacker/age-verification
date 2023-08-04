@@ -111,7 +111,7 @@ It certainly could be possible to do better; these grades are used to show how w
 
 - **Q:** Assume that we can verify someone's age with 100% accuracy before we generate a digital age certificate.
   Does that solve our problem?
-- **A:** It does not. You still need to consider the chain of custody after the age certificate is generated.
+- **A:** No. You still need to consider the chain of custody after the age certificate is generated.
 
 Let's say that we generate an age certificate for John Smith:
 
@@ -125,7 +125,7 @@ How do we solve this problem?
 
 ### Solution: Use IDs
 
-*(We'll use the fictional names from the demo here.)*
+*(For the sake of clarity, we will use the fictional names from the demo here.)*
 
 CheckMyAge can randomly assign each person an ID (e.g., `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`);
 an ID doesn't reveal any personal information. One ID can only be used to verify one account for each social media site.
@@ -136,9 +136,7 @@ an ID doesn't reveal any personal information. One ID can only be used to verify
 
 It's not an "A" solution, but it's still quite effective&mdash;while protecting the anonymity of users.
 
----
-
-And what about the part of the problem that we did not solve?
+So what do we do about the part of the problem that we did not solve?
 
 - Again, our goal is not to be 100% effective.
 - We are already dealing with a much smaller problem.
