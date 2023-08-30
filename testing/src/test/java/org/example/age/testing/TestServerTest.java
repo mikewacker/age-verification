@@ -57,9 +57,7 @@ public final class TestServerTest {
     }
 
     private void error_ServerNotStarted(ThrowableAssert.ThrowingCallable callable) {
-        assertThatThrownBy(callable)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("server has not started");
+        assertThatThrownBy(callable).isInstanceOf(IllegalStateException.class).hasMessage("server has not started");
     }
 
     /** HTTP handler that sends a stub response. */
