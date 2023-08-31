@@ -7,7 +7,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
- * Dagger module that publishes a binding for {@code @Named("html") HttpHandler}, which serves static HTML files.
+ * Dagger module that publishes a binding for <code>@Named("html") {@link HttpHandler}</code>,
+ * which serves static HTML files.
  *
  * <p>It depends on an unbound {@code @Named("html") Class<?>},
  * a class in the same project as the {@code "resources"} folder that contains the static HTML files.
