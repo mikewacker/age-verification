@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class HtmlHttpHandlerTest {
 
     @RegisterExtension
-    private static final TestServer server = TestServer.create(HtmlHttpHandlerTest::createHandler);
+    private static final TestServer server = TestServer.create(TestComponent::createHandler);
 
     @Test
     public void getHtmlFile() throws IOException {
@@ -31,18 +31,16 @@ public final class HtmlHttpHandlerTest {
         assertThat(response.body().string()).isEqualTo("<p>test</p>");
     }
 
-    private static HttpHandler createHandler() {
-        TestComponent component = TestComponent.create(HtmlHttpHandlerTest.class);
-        return component.handler();
-    }
-
-    /** Component that provides a {@code @Named("html") HttpHandler}. */
+    /** Dagger component that provides an {@link HttpHandler}. */
     @Component(modules = HtmlModule.class)
     @Singleton
     interface TestComponent {
 
-        static TestComponent create(Class<?> clazz) {
-            return DaggerHtmlHttpHandlerTest_TestComponent.factory().create(clazz);
+        static HttpHandler createHandler() {
+            Class<?> clazz = HtmlHttpHandlerTest.class;
+            TestComponent component =
+                    DaggerHtmlHttpHandlerTest_TestComponent.factory().create(clazz);
+            return component.handler();
         }
 
         @Named("html")

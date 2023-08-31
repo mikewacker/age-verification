@@ -15,4 +15,7 @@ public class TestClient {
 
         public static OkHttpClient INSTANCE = new OkHttpClient();
     }
+
+    // static class
+    private TestClient() {}
 }
