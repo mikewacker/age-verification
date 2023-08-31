@@ -14,4 +14,5 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler:2.47")
 
     testImplementation(project(":testing"))
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 }
