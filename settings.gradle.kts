@@ -1,10 +1,9 @@
 rootProject.name = "age-verification"
 
 include(
-        "client",
+        "common",
         "data",
         "demo",
-        "html",
         "testing",
         "verification-poc",
 )
