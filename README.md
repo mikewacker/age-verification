@@ -86,7 +86,7 @@ The IDs serve three purposes:
 
 1. They provide anonymity; CheckMyAge only shares IDs and age ranges (e.g., 13-17, 18+) with Crackle and Pop.
 2. They verify that one user is the guardian of another user&mdash;without revealing the identity of those users.
-3. They ensure that one person cannot verify multiple accounts on a single site.
+3. They ensure that one person can only verify one account for each site.
 
 Each person also has a different ID for CheckMyAge, Crackle, and Pop:
 
@@ -96,52 +96,50 @@ Each person also has a different ID for CheckMyAge, Crackle, and Pop:
 
 (If one engineer could accomplish this, imagine what a team of engineers with even more expertise could accomplish.)
 
-## Design Summary (and Extended Demo)
+## Design Principles (and Extended Demo)
 
-### Goals
+The design is based on three keys:
 
-Many social media accounts are anonymous; protecting the anonymity of such accounts ia a key consideration.
+- a key consideration: protecting the anonymity of users
+- a key problem: maintaining the chain of custody for a digital age certificate
+- a key insight: that we can build a good enough solution if we view this as deduplication problem
+
+### Key Consideration
+
+Many social media accounts are anonymous. Preserving their anonymity is key&mdash;especially
+because anonymous speech does have some protection under the First Amendment.
 
 - For protecting the anonymity of users, we want an "A" grade.
-- For stopping kids from bypassing the system, we want a "B" or "C" grade.
+- For stopping kids from bypassing the system, we want a "B/C" grade.
 
-It certainly could be possible to do better; these grades are used to show how we will weigh any tradeoffs involved.
+That "B/C" grade is certainly not a ceiling, though; these grades are primarily used to express tradeoffs.
 
-### Problem: Chain of Custody
+### Key Problem
 
-- **Q:** Assume that we can verify someone's age with 100% accuracy before we generate a digital age certificate.
-  Does that solve our problem?
-- **A:** No. You still need to consider the chain of custody after the age certificate is generated.
+Let’s say that John Smith uses a digital age certificate to verify his social media account:
 
-Let's say that we generate an age certificate for John Smith:
+1. How do we verify that the person who requested a digital age certificate is John Smith?
+2. How do we verify that the person who used that age certificate is John Smith?
+3. How do we verify that John Smith used that age certificate for his own social media account?
 
-- Does John Smith maintain custody of his age certificate, or does someone else obtain it?
-- Does he use it to verify his own account, or does he use it to verify someone else's account?
+A lot of the focus is on the first question, but we need to consider the entire chain of custody.
+For example, even if John Smith verified his identity before he received an age certificate,
+that means little if he can share that age certificate with someone else&mdash;and nothing stops them from using it.
 
-How do we solve this problem?
+### Key Insight
 
-- If the age certificate only contains an age, we don't know whether the chain of custody was maintained.
-- If we put John Smith's real name on that age certificate, we're revealing his identity to a social media site.
+What if we viewed this problem as a deduplication problem?
+How can we ensure that John Smith can only verify one account for each site?
 
-### Solution: Use IDs
+Even when we cannot fully guarantee the chain of custody, if one person can only verify one account,
+that means that they cannot verify both their own account and someone else’s account.
+(At most, if they did not have an account of their own, they could verify one and only one other person’s account.)
 
-*(For the sake of clarity, we will use the fictional names from the demo here.)*
+The deduplication problem is easier to solve in a privacy-conscious way,
+and it is a good enough solution to earn that "B/C" grade for effectiveness.
 
-CheckMyAge can randomly assign each person an ID (e.g., `uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4`);
-an ID doesn't reveal any personal information. One ID can only be used to verify one account for each social media site.
-(There's more to it than that, but that's the high-level idea.)
-
-- If John Smith verifies his own account on Pop, he can't verify anyone else's account on Pop.
-- If John Smith does not have an account on Pop, he can only verify one other person's account on Pop.
-
-It's not an "A" solution, but it's still quite effective&mdash;while protecting the anonymity of users.
-
-So what do we do about the part of the problem that we did not solve?
-
-- Again, our goal is not to be 100% effective.
-- We are already dealing with a much smaller problem.
-
-Thus, instead of making it impossible to verify someone else's account, we can feasibly make it harder to do that.
+(From there, we can pursue more incremental improvements that bump up that grade for effectiveness.
+The goal here is not to make it impossible to bypass the system; the goal is simply to make it harder.)
 
 ### Extended Demo
 
