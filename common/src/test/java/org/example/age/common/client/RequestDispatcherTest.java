@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.function.Supplier;
 import javax.inject.Singleton;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -45,53 +43,46 @@ public final class RequestDispatcherTest {
 
     @Test
     public void exchange() throws IOException {
-        MockResponse backendResponse = new MockResponse().setBody("test");
-        Response response = sendFrontendRequest(backendResponse);
+        stubBackendServer.enqueue(new MockResponse().setBody("test"));
+        Response response = TestClient.get(frontendServer.getRootUrl());
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.body().string()).isEqualTo("test");
     }
 
     @Test
     public void backendError_4xx() throws IOException {
-        MockResponse backendResponse = new MockResponse().setResponseCode(400);
-        Response response = sendFrontendRequest(backendResponse);
+        stubBackendServer.enqueue(new MockResponse().setResponseCode(400));
+        Response response = TestClient.get(frontendServer.getRootUrl());
         assertThat(response.code()).isEqualTo(500);
     }
 
     @Test
     public void backendError_5xx() throws IOException {
-        MockResponse backendResponse = new MockResponse().setResponseCode(500);
-        Response response = sendFrontendRequest(backendResponse);
+        stubBackendServer.enqueue(new MockResponse().setResponseCode(500));
+        Response response = TestClient.get(frontendServer.getRootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
     public void backendError_DisconnectAfterRequest() throws IOException {
-        MockResponse backendResponse = new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST);
-        Response response = sendFrontendRequest(backendResponse);
+        stubBackendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+        Response response = TestClient.get(frontendServer.getRootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
     public void backendError_DisconnectDuringResponseBody() throws IOException {
-        MockResponse backendResponse =
-                new MockResponse().setBody("test").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY);
-        Response response = sendFrontendRequest(backendResponse);
+        stubBackendServer.enqueue(
+                new MockResponse().setBody("test").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
+        Response response = TestClient.get(frontendServer.getRootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
     public void frontendError_CallbackException() throws IOException {
-        MockResponse backendResponse = new MockResponse().setBody("error"); // special exception trigger
-        Response response = sendFrontendRequest(backendResponse);
+        stubBackendServer.enqueue(new MockResponse().setBody("error")); // special exception trigger
+        Response response = TestClient.get(frontendServer.getRootUrl());
         assertThat(response.code()).isEqualTo(500);
-    }
-
-    private Response sendFrontendRequest(MockResponse backendResponse) throws IOException {
-        OkHttpClient client = TestClient.getInstance();
-        stubBackendServer.enqueue(backendResponse);
-        Request request = new Request.Builder().url(frontendServer.getRootUrl()).build();
-        return client.newCall(request).execute();
     }
 
     /** Dagger module that publishes a binding for {@link HttpHandler}, which uses a {@link RequestDispatcher}. */
