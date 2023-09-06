@@ -3,8 +3,6 @@ package org.example.age.adult.server;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.testing.TestClient;
 import org.example.age.testing.TestServer;
@@ -18,9 +16,7 @@ public final class AdultServerTest {
 
     @Test
     public void exchange() throws IOException {
-        OkHttpClient client = TestClient.getInstance();
-        Request request = new Request.Builder().url(server.getRootUrl()).build();
-        Response response = client.newCall(request).execute();
+        Response response = TestClient.get(server.getRootUrl());
         assertThat(response.code()).isEqualTo(303);
     }
 }

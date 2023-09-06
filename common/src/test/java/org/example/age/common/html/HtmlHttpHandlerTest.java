@@ -8,8 +8,6 @@ import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.testing.TestClient;
 import org.example.age.testing.TestServer;
@@ -23,9 +21,7 @@ public final class HtmlHttpHandlerTest {
 
     @Test
     public void getHtmlFile() throws IOException {
-        OkHttpClient client = TestClient.getInstance();
-        Request request = new Request.Builder().url(server.getRootUrl()).build();
-        Response response = client.newCall(request).execute();
+        Response response = TestClient.get(server.getRootUrl());
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.header("Content-Type")).endsWith("text/html");
         assertThat(response.body().string()).isEqualTo("<p>test</p>");

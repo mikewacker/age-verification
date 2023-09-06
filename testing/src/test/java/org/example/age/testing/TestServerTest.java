@@ -6,8 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import java.io.IOException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
@@ -20,9 +18,7 @@ public final class TestServerTest {
 
     @Test
     public void exchange() throws IOException {
-        OkHttpClient client = TestClient.getInstance();
-        Request request = new Request.Builder().url(server.getRootUrl()).build();
-        Response response = client.newCall(request).execute();
+        Response response = TestClient.get(server.getRootUrl());
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.header("Content-Type")).isEqualTo("text/plain");
         assertThat(response.body().string()).isEqualTo("test");
