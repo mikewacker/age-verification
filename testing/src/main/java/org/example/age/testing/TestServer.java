@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-/** Undertow server that tests a custom handler. Starts before all tests and stops after all tests. */
+/** Undertow server that tests a custom handler, or a full server. Starts before all tests and stops after all tests. */
 public class TestServer implements BeforeAllCallback, AfterAllCallback {
 
     private static final Logger log = Logger.getLogger(TestServer.class.getName());
@@ -19,7 +19,7 @@ public class TestServer implements BeforeAllCallback, AfterAllCallback {
     private static final int NUM_ATTEMPTS = 3;
     private static final Random RANDOM = new Random();
 
-    private final Supplier<HttpHandler> handlerFactory;
+    private final Factory serverFactory;
 
     private Undertow server = null;
     private int port = 0;
@@ -36,7 +36,12 @@ public class TestServer implements BeforeAllCallback, AfterAllCallback {
      * <p>Used when creating the handler is not a trivial task.</p>
      */
     public static TestServer create(Supplier<HttpHandler> handlerFactory) {
-        return new TestServer(handlerFactory);
+        return create((int port) -> TestServer.createServer(handlerFactory, port));
+    }
+
+    /** Creates a test server using the provided factory. */
+    public static TestServer create(Factory serverFactory) {
+        return new TestServer(serverFactory);
     }
 
     /** Gets the port of the server. */
@@ -80,14 +85,19 @@ public class TestServer implements BeforeAllCallback, AfterAllCallback {
         }
     }
 
-    /** Starts the server. */
-    private void startServer() {
+    /** Creates a server with a handler that's provided by the factory. */
+    private static Undertow createServer(Supplier<HttpHandler> handlerFactory, int port) {
         HttpHandler handler = handlerFactory.get();
-        port = RANDOM.nextInt(1024, 65536);
-        server = Undertow.builder()
+        return Undertow.builder()
                 .addHttpListener(port, "localhost")
                 .setHandler(handler)
                 .build();
+    }
+
+    /** Starts the server. */
+    private void startServer() {
+        port = RANDOM.nextInt(1024, 65536);
+        server = serverFactory.create(port);
         server.start();
 
         // Only set rootUrl after the server has started.
@@ -108,7 +118,14 @@ public class TestServer implements BeforeAllCallback, AfterAllCallback {
         }
     }
 
-    private TestServer(Supplier<HttpHandler> handlerFactory) {
-        this.handlerFactory = handlerFactory;
+    private TestServer(Factory serverFactory) {
+        this.serverFactory = serverFactory;
+    }
+
+    /** Creates a server that listens on the specified port. */
+    @FunctionalInterface
+    public interface Factory {
+
+        Undertow create(int port);
     }
 }

@@ -13,7 +13,8 @@ public class TestClient {
     /** Holder for the singleton instance. */
     private static final class Holder {
 
-        public static OkHttpClient INSTANCE = new OkHttpClient();
+        public static OkHttpClient INSTANCE =
+                new OkHttpClient.Builder().followRedirects(false).build();
     }
 
     // static class
