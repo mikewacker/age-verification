@@ -6,6 +6,7 @@ plugins {
 dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler:2.47")
 
+    implementation(project(":data"))
     implementation("com.google.dagger:dagger:2.47")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("io.undertow:undertow-core:2.3.8.Final")
