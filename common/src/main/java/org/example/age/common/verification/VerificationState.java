@@ -1,5 +1,6 @@
 package org.example.age.common.verification;
 
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import org.example.age.data.VerifiedUser;
 
@@ -43,6 +44,20 @@ public final class VerificationState {
     /** Gets the time when the user's verified status expired or will expire. */
     public ZonedDateTime expiration() {
         return checkAttributeSet(expiration);
+    }
+
+    /** Updates the state based on the current time, returning the updated state. */
+    public VerificationState update() {
+        if (status != VerificationStatus.VERIFIED) {
+            return this;
+        }
+
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        if (now.isBefore(expiration)) {
+            return this;
+        }
+
+        return VerificationState.expired(expiration);
     }
 
     /** Checks that the attribute is set for the current status. */

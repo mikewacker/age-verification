@@ -3,6 +3,7 @@ package org.example.age.common.verification;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import org.assertj.core.api.ThrowableAssert;
@@ -40,6 +41,30 @@ public final class VerificationStateTest {
     public void invalidated() {
         VerificationState state = VerificationState.invalidated();
         assertThat(state.status()).isEqualTo(VerificationStatus.INVALIDATED);
+    }
+
+    @Test
+    public void update_Unverified() {
+        VerificationState state = VerificationState.unverified();
+        VerificationState updatedState = state.update();
+        assertThat(updatedState).isSameAs(state);
+    }
+
+    @Test
+    public void update_VerifiedAndNotExpired() {
+        ZonedDateTime future = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
+        VerificationState state = VerificationState.verified(VERIFIED_USER, future);
+        VerificationState updatedState = state.update();
+        assertThat(updatedState).isSameAs(state);
+    }
+
+    @Test
+    public void update_VerifiedButExpired() {
+        ZonedDateTime past = ZonedDateTime.now(ZoneOffset.UTC).minus(Duration.ofMinutes(5));
+        VerificationState state = VerificationState.verified(VERIFIED_USER, past);
+        VerificationState updatedState = state.update();
+        assertThat(updatedState.status()).isEqualTo(VerificationStatus.EXPIRED);
+        assertThat(updatedState.expiration()).isEqualTo(past);
     }
 
     @Test
