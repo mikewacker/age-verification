@@ -3,7 +3,7 @@ package org.example.age.data;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
-import org.example.age.PackageImplementation;
+import org.example.age.internal.PackageImplementation;
 import org.immutables.value.Value;
 
 /**
