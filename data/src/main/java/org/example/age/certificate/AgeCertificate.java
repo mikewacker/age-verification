@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import org.example.age.PackageImplementation;
 import org.example.age.data.VerifiedUser;
+import org.example.age.internal.PackageImplementation;
 import org.immutables.value.Value;
 
 /**

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import org.example.age.PackageImplementation;
 import org.example.age.data.SecureId;
+import org.example.age.internal.PackageImplementation;
 import org.immutables.value.Value;
 
 /** Request to verify an account on a social media site. */

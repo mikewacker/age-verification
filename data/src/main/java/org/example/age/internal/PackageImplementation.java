@@ -1,4 +1,4 @@
-package org.example.age;
+package org.example.age.internal;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
