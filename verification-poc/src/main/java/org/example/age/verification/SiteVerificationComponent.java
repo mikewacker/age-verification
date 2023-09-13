@@ -19,7 +19,7 @@ import org.example.age.data.VerifiedUser;
 public final class SiteVerificationComponent implements SiteUi, SiteApi, VerifiedUserStore {
 
     private final String siteId;
-    private final SecureId localIdKey;
+    private final SecureId localPseudonymKey;
     private final AvsApi avsApi;
 
     private final Map<String, VerifiedUser> users = new HashMap<>();
@@ -27,8 +27,8 @@ public final class SiteVerificationComponent implements SiteUi, SiteApi, Verifie
     private final Map<SecureId, String> verifiedUsernames = new HashMap<>();
 
     /** Creates the age verification component for a site. */
-    public static SiteVerificationComponent create(String siteId, SecureId localIdKey, AvsApi avsApi) {
-        return new SiteVerificationComponent(siteId, localIdKey, avsApi);
+    public static SiteVerificationComponent create(String siteId, SecureId localPseudonymKey, AvsApi avsApi) {
+        return new SiteVerificationComponent(siteId, localPseudonymKey, avsApi);
     }
 
     @Override
@@ -50,7 +50,7 @@ public final class SiteVerificationComponent implements SiteUi, SiteApi, Verifie
     @Override
     public List<String> getGuardians(String username) {
         VerifiedUser user = retrieveVerifiedUser(username);
-        return user.guardianIds().stream()
+        return user.guardianPseudonyms().stream()
                 .map(verifiedUsernames::get)
                 .map(Optional::ofNullable)
                 .flatMap(Optional::stream)
@@ -80,7 +80,7 @@ public final class SiteVerificationComponent implements SiteUi, SiteApi, Verifie
                 AgeCertificate.verifyForSite(signedCertificate, avsApi.getPublicSigningKey(), siteId);
         String username = matchVerificationRequestToUsername(certificate.verificationRequest());
         VerifiedUser localUser = localizeVerifiedUser(certificate.verifiedUser());
-        checkNoDuplicateVerifiedUserIds(username, localUser);
+        checkNoDuplicatePseudonyms(username, localUser);
         storeVerifiedUser(username, localUser);
     }
 
@@ -96,12 +96,12 @@ public final class SiteVerificationComponent implements SiteUi, SiteApi, Verifie
 
     /** Localizes a verified user for this site. */
     private VerifiedUser localizeVerifiedUser(VerifiedUser user) {
-        return user.localize(localIdKey);
+        return user.localize(localPseudonymKey);
     }
 
-    /** Checks that the same verified user ID is not used to verify multiple accounts. */
-    private void checkNoDuplicateVerifiedUserIds(String username, VerifiedUser localUser) {
-        Optional<String> maybeVerifiedUsername = Optional.ofNullable(verifiedUsernames.get(localUser.id()));
+    /** Checks that the same pseudonym is not used to verify multiple accounts. */
+    private void checkNoDuplicatePseudonyms(String username, VerifiedUser localUser) {
+        Optional<String> maybeVerifiedUsername = Optional.ofNullable(verifiedUsernames.get(localUser.pseudonym()));
         if (maybeVerifiedUsername.isEmpty()) {
             return;
         }
@@ -115,12 +115,12 @@ public final class SiteVerificationComponent implements SiteUi, SiteApi, Verifie
     /** Stores a verified user. */
     private void storeVerifiedUser(String username, VerifiedUser localUser) {
         users.put(username, localUser);
-        verifiedUsernames.put(localUser.id(), username);
+        verifiedUsernames.put(localUser.pseudonym(), username);
     }
 
-    private SiteVerificationComponent(String siteId, SecureId localIdKey, AvsApi avsApi) {
+    private SiteVerificationComponent(String siteId, SecureId localPseudonymKey, AvsApi avsApi) {
         this.siteId = siteId;
-        this.localIdKey = localIdKey;
+        this.localPseudonymKey = localPseudonymKey;
         this.avsApi = avsApi;
     }
 }

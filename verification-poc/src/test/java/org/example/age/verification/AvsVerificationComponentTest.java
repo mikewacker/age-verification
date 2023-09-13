@@ -28,7 +28,7 @@ public final class AvsVerificationComponentTest {
     private Supplier<AgeCertificate> mockSiteCertificateStore;
 
     private AgeThresholds ageThresholds;
-    private SecureId remoteSiteIdKey;
+    private SecureId remotePseudonymKey;
 
     @BeforeEach
     public void setUpComponents() {
@@ -51,8 +51,8 @@ public final class AvsVerificationComponentTest {
 
         // Register the site with the age verification service.
         ageThresholds = AgeThresholds.of(18);
-        remoteSiteIdKey = TestKeyStore.remoteSiteIdKey();
-        avs.registerSite(siteId, mockSite, ageThresholds, remoteSiteIdKey);
+        remotePseudonymKey = TestKeyStore.remotePseudonymKey();
+        avs.registerSite(siteId, mockSite, ageThresholds, remotePseudonymKey);
     }
 
     @Test
@@ -70,7 +70,7 @@ public final class AvsVerificationComponentTest {
         AgeCertificate certificate = mockSiteCertificateStore.get();
         VerifiedUser avsUser = avsUserStore.retrieveVerifiedUser(REAL_NAME);
         VerifiedUser expectedCertificateUser =
-                avsUser.anonymizeAge(ageThresholds).localize(remoteSiteIdKey);
+                avsUser.anonymizeAge(ageThresholds).localize(remotePseudonymKey);
         assertThat(certificate.verifiedUser()).isEqualTo(expectedCertificateUser);
     }
 

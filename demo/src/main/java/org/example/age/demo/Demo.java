@@ -100,12 +100,12 @@ public final class Demo {
     private void registerPeople(AvsVerificationComponent avs) throws IOException {
         Path dataDir = Path.of("data", AVS_NAME);
 
-        SecureId parentId = Resources.loadSecureId(dataDir.resolve("parent-id.bin"));
-        VerifiedUser parent = VerifiedUser.of(parentId, PARENT_AGE);
+        SecureId parentPseudonym = Resources.loadSecureId(dataDir.resolve("parent-pseudonym.bin"));
+        VerifiedUser parent = VerifiedUser.of(parentPseudonym, PARENT_AGE);
         avs.registerPerson(PARENT_REAL_NAME, parent);
 
-        SecureId childId = Resources.loadSecureId(dataDir.resolve("child-id.bin"));
-        VerifiedUser child = VerifiedUser.of(childId, CHILD_AGE, List.of(parentId));
+        SecureId childPseudonym = Resources.loadSecureId(dataDir.resolve("child-pseudonym.bin"));
+        VerifiedUser child = VerifiedUser.of(childPseudonym, CHILD_AGE, List.of(parentPseudonym));
         avs.registerPerson(CHILD_REAL_NAME, child);
     }
 
@@ -113,8 +113,8 @@ public final class Demo {
     private SiteVerificationComponent createSite(String siteId, AvsApi avsApi) throws IOException {
         Path keysDir = Path.of("keys", siteId);
 
-        SecureId localIdKey = Resources.loadSecureId(keysDir.resolve("id.bin"));
-        SiteVerificationComponent site = SiteVerificationComponent.create(siteId, localIdKey, avsApi);
+        SecureId localPseudonymKey = Resources.loadSecureId(keysDir.resolve("pseudonym.bin"));
+        SiteVerificationComponent site = SiteVerificationComponent.create(siteId, localPseudonymKey, avsApi);
         siteUis.put(siteId, site);
         userStores.put(siteId, site);
         return site;
@@ -126,8 +126,8 @@ public final class Demo {
         Path keysDir = Path.of("keys", AVS_NAME, "sites", siteId);
 
         SiteApi mitm = new CertificateStoreMitm(siteApi, siteId, avs, certificateStore);
-        SecureId remoteSiteIdKey = Resources.loadSecureId(keysDir.resolve("id.bin"));
-        avs.registerSite(siteId, mitm, ageThresholds, remoteSiteIdKey);
+        SecureId remotePseudonymKey = Resources.loadSecureId(keysDir.resolve("pseudonym.bin"));
+        avs.registerSite(siteId, mitm, ageThresholds, remotePseudonymKey);
     }
 
     /**

@@ -32,7 +32,7 @@ public final class SiteVerificationComponentTest {
     private AvsApi mockAvsApi;
     private VerifiedUserStore mockAvsCertificateUserStore;
 
-    private SecureId localSiteIdKey;
+    private SecureId localPseudonymKey;
 
     @BeforeEach
     public void setUpComponents() {
@@ -47,12 +47,12 @@ public final class SiteVerificationComponentTest {
         mockAvs.registerPerson(PARENT_REAL_NAME, certificateParent);
 
         VerifiedUser certificateChild =
-                VerifiedUser.of(SecureId.generate(), AgeRange.of(13, 18), List.of(certificateParent.id()));
+                VerifiedUser.of(SecureId.generate(), AgeRange.of(13, 18), List.of(certificateParent.pseudonym()));
         mockAvs.registerPerson(CHILD_REAL_NAME, certificateChild);
 
         // Set up the site.
-        localSiteIdKey = TestKeyStore.localSiteIdKey();
-        SiteVerificationComponent site = SiteVerificationComponent.create("MySite", localSiteIdKey, mockAvs);
+        localPseudonymKey = TestKeyStore.localPseudonymKey();
+        SiteVerificationComponent site = SiteVerificationComponent.create("MySite", localPseudonymKey, mockAvs);
         siteUi = site;
         siteUserStore = site;
         assertThat(siteUserStore.getName()).isEqualTo("MySite");
@@ -105,7 +105,7 @@ public final class SiteVerificationComponentTest {
         mockAvsUi.processVerificationRequest(CHILD_REAL_NAME, request.id());
         VerifiedUser certificateUser = mockAvsCertificateUserStore.retrieveVerifiedUser(CHILD_REAL_NAME);
         VerifiedUser siteUser = siteUserStore.retrieveVerifiedUser(CHILD_USERNAME);
-        VerifiedUser expectedSiteUser = certificateUser.localize(localSiteIdKey);
+        VerifiedUser expectedSiteUser = certificateUser.localize(localPseudonymKey);
         assertThat(siteUser).isEqualTo(expectedSiteUser);
     }
 

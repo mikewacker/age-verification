@@ -177,7 +177,7 @@ public final class Main {
         println(
                 "- %s anonymizes the age that it will share with %s: %s",
                 avsName, siteName, certificate.verifiedUser().ageRange());
-        println("- %s creates new IDs from the original IDs and its secret key for %s.", avsName, siteName);
+        println("- %s changes the pseudonyms using its secret key for %s.", avsName, siteName);
         println("- Updated user data:");
         displayVerifiedUser(certificate.verifiedUser());
         println("- %s creates the age certificate:", avsName);
@@ -196,10 +196,12 @@ public final class Main {
         println("- [#2] %s matches the request ID (%s) to \"%s\".", siteName, shortId(request.id()), username);
         println("- %s extracts the user data from the age certificate:", siteName);
         displayVerifiedUser(certificate.verifiedUser());
-        println("- %s creates new IDs from the original IDs and a secret key.", siteName);
+        println("- %s changes the pseudonyms using a secret key.", siteName);
         println("- Updated user data:");
         displayVerifiedUser(siteUser);
-        println("- %s checks that no other accounts have the same user ID (%s).", siteName, shortId(siteUser.id()));
+        println(
+                "- %s checks that no other accounts have the same pseudonym (%s).",
+                siteName, shortId(siteUser.pseudonym()));
         println("- %s stores this user data for \"%s\". \"%s\" is now verified!", siteName, username, username);
         println();
     }
@@ -219,11 +221,11 @@ public final class Main {
 
     /** Displays a verified user. */
     private static void displayVerifiedUser(VerifiedUser user) {
-        println("    - ID: %s", user.id());
+        println("    - Pseudonym: %s", user.pseudonym());
         println("    - Age: %s", user.ageRange());
-        if (!user.guardianIds().isEmpty()) {
-            SecureId guardianId = user.guardianIds().get(0);
-            println("    - Guardian ID: %s", guardianId);
+        if (!user.guardianPseudonyms().isEmpty()) {
+            SecureId guardianPseudonym = user.guardianPseudonyms().get(0);
+            println("    - Guardian Pseudonym: %s", guardianPseudonym);
         }
     }
 

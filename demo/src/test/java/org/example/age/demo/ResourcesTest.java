@@ -25,7 +25,7 @@ public final class ResourcesTest {
 
     @Test
     public void loadSecureId() throws IOException {
-        Path path = Path.of("keys", "Crackle", "id.bin");
+        Path path = Path.of("keys", "Crackle", "pseudonym.bin");
         SecureId key = Resources.loadSecureId(path);
         assertThat(key).isNotNull();
     }

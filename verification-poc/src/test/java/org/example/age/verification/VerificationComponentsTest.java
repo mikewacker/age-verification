@@ -26,8 +26,8 @@ public class VerificationComponentsTest {
     private VerifiedUserStore avsUserStore;
     private VerifiedUserStore siteUserStore;
     private AgeThresholds ageThresholds;
-    private SecureId remoteSiteIdKey;
-    private SecureId localSiteIdKey;
+    private SecureId remotePseudonymKey;
+    private SecureId localPseudonymKey;
 
     @BeforeEach
     public void setUpComponents() {
@@ -40,19 +40,19 @@ public class VerificationComponentsTest {
         VerifiedUser avsParent = VerifiedUser.of(SecureId.generate(), 40);
         avs.registerPerson(PARENT_REAL_NAME, avsParent);
 
-        VerifiedUser avsChild = VerifiedUser.of(SecureId.generate(), 13, List.of(avsParent.id()));
+        VerifiedUser avsChild = VerifiedUser.of(SecureId.generate(), 13, List.of(avsParent.pseudonym()));
         avs.registerPerson(CHILD_REAL_NAME, avsChild);
 
         // Set up the site.
-        localSiteIdKey = TestKeyStore.localSiteIdKey();
-        SiteVerificationComponent site = SiteVerificationComponent.create("MySite", localSiteIdKey, avs);
+        localPseudonymKey = TestKeyStore.localPseudonymKey();
+        SiteVerificationComponent site = SiteVerificationComponent.create("MySite", localPseudonymKey, avs);
         siteUi = site;
         siteUserStore = site;
 
         // Register the site with the age verification service.
         ageThresholds = AgeThresholds.of(13, 18);
-        remoteSiteIdKey = TestKeyStore.remoteSiteIdKey();
-        avs.registerSite(site.getName(), site, ageThresholds, remoteSiteIdKey);
+        remotePseudonymKey = TestKeyStore.remotePseudonymKey();
+        avs.registerSite(site.getName(), site, ageThresholds, remotePseudonymKey);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class VerificationComponentsTest {
         VerifiedUser avsUser = avsUserStore.retrieveVerifiedUser(CHILD_REAL_NAME);
         VerifiedUser siteUser = siteUserStore.retrieveVerifiedUser(CHILD_USERNAME);
         VerifiedUser expectedSiteUser =
-                avsUser.anonymizeAge(ageThresholds).localize(remoteSiteIdKey).localize(localSiteIdKey);
+                avsUser.anonymizeAge(ageThresholds).localize(remotePseudonymKey).localize(localPseudonymKey);
         assertThat(siteUser).isEqualTo(expectedSiteUser);
     }
 
