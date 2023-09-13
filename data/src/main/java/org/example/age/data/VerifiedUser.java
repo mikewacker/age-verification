@@ -18,45 +18,45 @@ import org.immutables.value.Value;
 public interface VerifiedUser {
 
     /** Creates a verified user. */
-    static VerifiedUser of(SecureId id, AgeRange ageRange, List<SecureId> guardianIds) {
+    static VerifiedUser of(SecureId pseudonym, AgeRange ageRange, List<SecureId> guardianPseudonyms) {
         return ImmutableVerifiedUser.builder()
-                .id(id)
+                .pseudonym(pseudonym)
                 .ageRange(ageRange)
-                .guardianIds(guardianIds)
+                .guardianPseudonyms(guardianPseudonyms)
                 .build();
     }
 
     /** Creates a verified user without guardians. */
-    static VerifiedUser of(SecureId id, int age) {
-        return of(id, age, List.of());
+    static VerifiedUser of(SecureId pseudonym, int age) {
+        return of(pseudonym, age, List.of());
     }
 
     /** Creates a verified user with guardians. */
-    static VerifiedUser of(SecureId id, int age, List<SecureId> guardianIds) {
+    static VerifiedUser of(SecureId pseudonym, int age, List<SecureId> guardianPseudonyms) {
         AgeRange ageRange = AgeRange.at(age);
-        return of(id, ageRange, guardianIds);
+        return of(pseudonym, ageRange, guardianPseudonyms);
     }
 
-    /** ID of the user. */
-    SecureId id();
+    /** Pseudonym to identify the user. */
+    SecureId pseudonym();
 
     /** Age range of the user. */
     AgeRange ageRange();
 
-    /** IDs of the guardians, if the user is a minor. */
-    List<SecureId> guardianIds();
+    /** Pseudonyms of the guardians, if the user is a minor. */
+    List<SecureId> guardianPseudonyms();
 
-    /** Produces a new set of IDs using the key. */
+    /** Changes the pseudonym using the key. */
     default VerifiedUser localize(SecureId key) {
-        SecureId localId = id().localize(key);
-        List<SecureId> localGuardianIds =
-                guardianIds().stream().map(id -> id.localize(key)).toList();
-        return of(localId, ageRange(), localGuardianIds);
+        SecureId localPseudonym = pseudonym().localize(key);
+        List<SecureId> localGuardianPseudonyms =
+                guardianPseudonyms().stream().map(id -> id.localize(key)).toList();
+        return of(localPseudonym, ageRange(), localGuardianPseudonyms);
     }
 
     /** Anonymizes the age based on the age thresholds. */
     default VerifiedUser anonymizeAge(AgeThresholds ageThresholds) {
         AgeRange anonymizedAgeRange = ageThresholds.anonymize(ageRange());
-        return of(id(), anonymizedAgeRange, guardianIds());
+        return of(pseudonym(), anonymizedAgeRange, guardianPseudonyms());
     }
 }

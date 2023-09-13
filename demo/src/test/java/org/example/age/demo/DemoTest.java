@@ -61,11 +61,11 @@ public class DemoTest {
 
         // Retrieve the parent.
         VerifiedUser parent = userStore.retrieveVerifiedUser(parentUsername);
-        assertThat(parent.guardianIds()).isEmpty();
+        assertThat(parent.guardianPseudonyms()).isEmpty();
 
         // Retrieve the child.
         VerifiedUser child = userStore.retrieveVerifiedUser(childUsername);
-        assertThat(child.guardianIds()).containsExactly(parent.id());
+        assertThat(child.guardianPseudonyms()).containsExactly(parent.pseudonym());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class DemoTest {
         AgeCertificate parentCertificate = demo.ageCertificate(parentRequest.id());
         assertThat(parentCertificate.verificationRequest()).isEqualTo(parentRequest);
         assertThat(parentCertificate.verifiedUser().ageRange()).isEqualTo(AgeRange.atOrAbove(18));
-        assertThat(parentCertificate.verifiedUser().guardianIds()).isEmpty();
+        assertThat(parentCertificate.verifiedUser().guardianPseudonyms()).isEmpty();
 
         // Get the certificate for the child.
         VerificationRequest childRequest = siteUi.createVerificationRequest(childUsername);
@@ -93,7 +93,7 @@ public class DemoTest {
         AgeCertificate childCertificate = demo.ageCertificate(childRequest.id());
         assertThat(childCertificate.verificationRequest()).isEqualTo(childRequest);
         assertThat(childCertificate.verifiedUser().ageRange()).isEqualTo(AgeRange.of(13, 18));
-        assertThat(childCertificate.verifiedUser().guardianIds())
-                .containsExactly(parentCertificate.verifiedUser().id());
+        assertThat(childCertificate.verifiedUser().guardianPseudonyms())
+                .containsExactly(parentCertificate.verifiedUser().pseudonym());
     }
 }

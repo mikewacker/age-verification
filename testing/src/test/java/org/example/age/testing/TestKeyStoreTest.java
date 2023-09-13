@@ -19,8 +19,8 @@ public final class TestKeyStoreTest {
     }
 
     @Test
-    public void getIdKeys() {
-        assertThat(TestKeyStore.remoteSiteIdKey()).isNotNull();
-        assertThat(TestKeyStore.localSiteIdKey()).isNotNull();
+    public void getPseudonymKeys() {
+        assertThat(TestKeyStore.remotePseudonymKey()).isNotNull();
+        assertThat(TestKeyStore.localPseudonymKey()).isNotNull();
     }
 }

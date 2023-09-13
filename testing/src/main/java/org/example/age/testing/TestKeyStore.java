@@ -7,19 +7,19 @@ import org.example.age.data.SecureId;
 public final class TestKeyStore {
 
     private static KeyPair avsSigningKeyPair = TestKeys.generateEd25519KeyPair();
-    private static SecureId remotedSiteIdKey = SecureId.generate();
-    private static SecureId localSiteIdKey = SecureId.generate();
+    private static SecureId remotePseudonymKey = SecureId.generate();
+    private static SecureId localPseudonymKey = SecureId.generate();
 
     public static KeyPair avsSigningKeyPair() {
         return avsSigningKeyPair;
     }
 
-    public static SecureId remoteSiteIdKey() {
-        return remotedSiteIdKey;
+    public static SecureId remotePseudonymKey() {
+        return remotePseudonymKey;
     }
 
-    public static SecureId localSiteIdKey() {
-        return localSiteIdKey;
+    public static SecureId localPseudonymKey() {
+        return localPseudonymKey;
     }
 
     // static class
