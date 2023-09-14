@@ -6,7 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /** Shared HTTP client for testing. */
-public class TestClient {
+public final class TestClient {
 
     /** Issues a simple, synchronous HTTP GET request using the shared client, returning the response. */
     public static Response get(String url) throws IOException {

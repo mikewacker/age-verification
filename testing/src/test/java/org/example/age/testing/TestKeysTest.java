@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
+import javax.crypto.SecretKey;
 import org.junit.jupiter.api.Test;
 
 public final class TestKeysTest {
@@ -16,5 +17,14 @@ public final class TestKeysTest {
         byte[] signature = TestSigning.signEd25519(MESSAGE, keyPair.getPrivate());
         boolean wasVerified = TestSigning.verifyEd25519(MESSAGE, signature, keyPair.getPublic());
         assertThat(wasVerified).isTrue();
+    }
+
+    @Test
+    public void generateAes256Key() throws Exception {
+        SecretKey key = TestKeys.generateAes256Key();
+        byte[] iv = TestEncrypting.createGcmIv();
+        byte[] ciphertext = TestEncrypting.encryptAesGcm(MESSAGE, key, iv);
+        byte[] plaintext = TestEncrypting.decryptAesGcm(ciphertext, key, iv);
+        assertThat(plaintext).isEqualTo(MESSAGE);
     }
 }
