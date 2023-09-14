@@ -2,7 +2,6 @@ package org.example.age.certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.nio.charset.StandardCharsets;
 import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.BeforeAll;

@@ -2,7 +2,6 @@ package org.example.age.certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

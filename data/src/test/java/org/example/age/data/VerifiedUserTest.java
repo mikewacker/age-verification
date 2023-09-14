@@ -2,7 +2,6 @@ package org.example.age.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
