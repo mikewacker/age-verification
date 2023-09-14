@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.ThrowableAssert;
 import org.example.age.certificate.AgeCertificate;
+import org.example.age.certificate.AuthToken;
 import org.example.age.certificate.VerificationRequest;
 import org.example.age.data.AgeRange;
 import org.example.age.data.SecureId;
@@ -190,7 +191,7 @@ public final class SiteVerificationComponentTest {
         public void processVerificationRequest(String realName, SecureId requestId) {
             VerificationRequest request = retrievePendingVerificationRequest(requestId);
             VerifiedUser user = retrieveVerifiedUser(realName);
-            AgeCertificate certificate = AgeCertificate.of(request, user);
+            AgeCertificate certificate = AgeCertificate.of(request, user, AuthToken.empty());
             byte[] signedCertificate = certificate.sign(signingKeyPair.getPrivate());
             siteApi.processAgeCertificate(signedCertificate);
         }

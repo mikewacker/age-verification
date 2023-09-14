@@ -10,7 +10,7 @@ import org.example.age.internal.SerializationUtils;
 import org.immutables.value.Value;
 
 /**
- * Certificate that verifies the age and guardians (if applicable) of a user.
+ * Certificate that pseudonymously verifies the age (and guardians, if applicable) of a person.
  *
  * <p>Only Ed25519 keys are supported.</p>
  */
@@ -21,10 +21,11 @@ import org.immutables.value.Value;
 public interface AgeCertificate {
 
     /** Creates an unsigned age certificate to fulfill a verification request for a verified user. */
-    static AgeCertificate of(VerificationRequest request, VerifiedUser user) {
+    static AgeCertificate of(VerificationRequest request, VerifiedUser user, AuthToken token) {
         return ImmutableAgeCertificate.builder()
                 .verificationRequest(request)
                 .verifiedUser(user)
+                .authToken(token)
                 .build();
     }
 
@@ -52,6 +53,9 @@ public interface AgeCertificate {
 
     /** Verified user. */
     VerifiedUser verifiedUser();
+
+    /** Authentication data, which is encrypted using an ephemeral key. */
+    AuthToken authToken();
 
     /** Signs the certificate. */
     default byte[] sign(PrivateKey privateKey) {

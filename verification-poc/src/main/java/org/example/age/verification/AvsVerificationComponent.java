@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.example.age.certificate.AgeCertificate;
+import org.example.age.certificate.AuthToken;
 import org.example.age.certificate.VerificationRequest;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.SecureId;
@@ -114,7 +115,7 @@ public final class AvsVerificationComponent implements AvsUi, AvsApi, VerifiedUs
     /** Creates an age certificate to verify an account on the site. */
     private AgeCertificate createAgeCertificateForSite(VerifiedUser user, VerificationRequest request, Site site) {
         VerifiedUser localUser = user.anonymizeAge(site.ageThresholds()).localize(site.remotePseudonymKey());
-        return AgeCertificate.of(request, localUser);
+        return AgeCertificate.of(request, localUser, AuthToken.empty());
     }
 
     /** Transmits an age certificate to the site. */

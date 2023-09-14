@@ -1,6 +1,7 @@
 package org.example.age.certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
 import org.example.age.internal.SerializationUtils;
@@ -25,5 +26,19 @@ public final class AuthTokenTest {
         AuthToken deserializedToken = SerializationUtils.deserialize(bytes, AuthToken.class);
         byte[] decryptedData = deserializedToken.decrypt(key);
         assertThat(decryptedData).isEqualTo(DATA);
+    }
+
+    @Test
+    public void empty() {
+        AuthToken token = AuthToken.empty();
+        assertThat(token.isEmpty()).isTrue();
+    }
+
+    @Test
+    public void error_Decrypt_EmptyToken() {
+        AuthToken token = AuthToken.empty();
+        assertThatThrownBy(() -> token.decrypt(key))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("token is empty");
     }
 }
