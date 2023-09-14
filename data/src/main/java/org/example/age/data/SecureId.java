@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.example.age.internal.ImmutableBytes;
@@ -17,12 +16,9 @@ import org.example.age.internal.StaticFromStringDeserializer;
 @JsonDeserialize(using = SecureId.Deserializer.class)
 public final class SecureId extends ImmutableBytes {
 
-    private static final SecureRandom random = new SecureRandom();
-
     /** Generates a new ID. */
     public static SecureId generate() {
-        byte[] bytes = generate256Bits();
-        return new SecureId(bytes);
+        return new SecureId();
     }
 
     /** Creates an ID from a copy of the raw bytes. */
@@ -52,12 +48,7 @@ public final class SecureId extends ImmutableBytes {
         return 32;
     }
 
-    /** Randomly generates 256 bits. */
-    private static byte[] generate256Bits() {
-        byte[] bytes = new byte[32];
-        random.nextBytes(bytes);
-        return bytes;
-    }
+    private SecureId() {}
 
     private SecureId(byte[] bytes) {
         super(bytes);

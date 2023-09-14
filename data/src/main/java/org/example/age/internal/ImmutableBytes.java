@@ -1,6 +1,7 @@
 package org.example.age.internal;
 
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -18,6 +19,7 @@ public abstract class ImmutableBytes {
 
     private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
     private static final Base64.Decoder decoder = Base64.getUrlDecoder();
+    private static final SecureRandom random = new SecureRandom();
 
     protected final byte[] bytes;
 
@@ -31,6 +33,16 @@ public abstract class ImmutableBytes {
     protected ImmutableBytes(String value) {
         this.bytes = decoder.decode(value);
         checkLength();
+    }
+
+    /** Generates immutable bytes using a cryptographically strong random number generator. */
+    protected ImmutableBytes() {
+        if (expectedLength() == 0) {
+            throw new IllegalStateException("expected length must be set");
+        }
+
+        bytes = new byte[expectedLength()];
+        random.nextBytes(bytes);
     }
 
     /** Gets a copy of the raw bytes. */

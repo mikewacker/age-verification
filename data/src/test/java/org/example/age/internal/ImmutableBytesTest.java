@@ -34,6 +34,13 @@ public final class ImmutableBytesTest {
     }
 
     @Test
+    public void generate() {
+        TestObject o = TestObject.generate();
+        assertThat(o.bytes()).hasSize(32);
+        assertThat(o.bytes()).isNotEqualTo(new byte[32]);
+    }
+
+    @Test
     public void serializeThenDeserialize() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         TestObject o = TestObject.ofBytes(BYTES);
@@ -93,6 +100,13 @@ public final class ImmutableBytesTest {
                 .hasMessage("expected 256 bits");
     }
 
+    @Test
+    public void error_Generate_WithoutLength() {
+        assertThatThrownBy(() -> new ImmutableBytes() {})
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("expected length must be set");
+    }
+
     /** Serializable test object that's backed by 256 bits. */
     @JsonSerialize(using = ToStringSerializer.class)
     @JsonDeserialize(using = TestObject.Deserializer.class)
@@ -104,6 +118,10 @@ public final class ImmutableBytesTest {
 
         public static TestObject fromString(String value) {
             return new TestObject(value);
+        }
+
+        public static TestObject generate() {
+            return new TestObject();
         }
 
         @Override
@@ -118,6 +136,8 @@ public final class ImmutableBytesTest {
         private TestObject(String value) {
             super(value);
         }
+
+        private TestObject() {}
 
         /** JSON {@code fromString()} deserializer. */
         static final class Deserializer extends StaticFromStringDeserializer<TestObject> {
