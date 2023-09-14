@@ -70,6 +70,6 @@ public final class AgeCertificateTest {
 
     private static AgeCertificate createCertificate(VerificationRequest request) {
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        return AgeCertificate.of(request, user);
+        return AgeCertificate.of(request, user, AuthToken.empty());
     }
 }
