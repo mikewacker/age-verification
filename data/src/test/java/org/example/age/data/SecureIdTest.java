@@ -3,8 +3,7 @@ package org.example.age.data;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class SecureIdTest {
@@ -24,11 +23,10 @@ public final class SecureIdTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         SecureId id = SecureId.generate();
-        String json = mapper.writeValueAsString(id);
-        SecureId deserializedId = mapper.readValue(json, SecureId.class);
+        byte[] bytes = SerializationUtils.serialize(id);
+        SecureId deserializedId = SerializationUtils.deserialize(bytes, SecureId.class);
         assertThat(deserializedId).isEqualTo(id);
     }
 

@@ -3,9 +3,8 @@ package org.example.age.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
+import org.example.age.internal.SerializationUtils;
 import org.example.age.testing.TestEncrypting;
 import org.junit.jupiter.api.Test;
 
@@ -29,11 +28,10 @@ public final class AuthKeyTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         AuthKey key = AuthKey.generate();
-        String json = mapper.writeValueAsString(key);
-        AuthKey deserializedKey = mapper.readValue(json, AuthKey.class);
+        byte[] bytes = SerializationUtils.serialize(key);
+        AuthKey deserializedKey = SerializationUtils.deserialize(bytes, AuthKey.class);
         assertThat(deserializedKey).isEqualTo(key);
     }
 

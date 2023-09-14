@@ -2,29 +2,18 @@ package org.example.age.certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import org.assertj.core.data.TemporalUnitWithinOffset;
-import org.junit.jupiter.api.BeforeAll;
+import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {
 
     private static final String SITE_ID = "MySite";
     private static final Duration EXPIRES_IN = Duration.ofMinutes(5);
-
-    private static ObjectMapper mapper;
-
-    @BeforeAll
-    public static void createMapper() {
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-    }
 
     @Test
     public void generateForSite() {
@@ -61,10 +50,10 @@ public final class VerificationRequestTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws JsonProcessingException {
+    public void serializeThenDeserialize() {
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
-        String json = mapper.writeValueAsString(request);
-        VerificationRequest deserializedRequest = mapper.readValue(json, VerificationRequest.class);
+        byte[] bytes = SerializationUtils.serialize(request);
+        VerificationRequest deserializedRequest = SerializationUtils.deserialize(bytes, VerificationRequest.class);
         assertThat(deserializedRequest).isEqualTo(request);
     }
 }
