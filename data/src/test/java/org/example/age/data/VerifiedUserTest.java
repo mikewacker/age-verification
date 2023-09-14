@@ -3,21 +3,11 @@ package org.example.age.data;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
+import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class VerifiedUserTest {
-
-    private static ObjectMapper mapper;
-
-    @BeforeAll
-    public static void createMapper() {
-        mapper = new ObjectMapper();
-        mapper.registerModule(new GuavaModule());
-    }
 
     @Test
     public void localize() {
@@ -46,10 +36,10 @@ public final class VerifiedUserTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws JsonProcessingException {
+    public void serializeThenDeserialize() {
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        String json = mapper.writeValueAsString(user);
-        VerifiedUser deserializedUser = mapper.readValue(json, VerifiedUser.class);
+        byte[] bytes = SerializationUtils.serialize(user);
+        VerifiedUser deserializedUser = SerializationUtils.deserialize(bytes, VerifiedUser.class);
         assertThat(deserializedUser).isEqualTo(user);
     }
 }

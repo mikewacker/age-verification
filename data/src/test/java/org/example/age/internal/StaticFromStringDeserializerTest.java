@@ -3,7 +3,6 @@ package org.example.age.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -12,11 +11,10 @@ import org.junit.jupiter.api.Test;
 public final class StaticFromStringDeserializerTest {
 
     @Test
-    public void serializeThenDeserialize() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         TestObject o = TestObject.fromString("test");
-        String json = mapper.writeValueAsString(o);
-        TestObject deserializedO = mapper.readValue(json, TestObject.class);
+        byte[] bytes = SerializationUtils.serialize(o);
+        TestObject deserializedO = SerializationUtils.deserialize(bytes, TestObject.class);
         assertThat(deserializedO.toString()).isEqualTo(o.toString());
     }
 

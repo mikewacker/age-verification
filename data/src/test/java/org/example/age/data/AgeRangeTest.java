@@ -3,20 +3,11 @@ package org.example.age.data;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.testing.EqualsTester;
-import org.junit.jupiter.api.BeforeAll;
+import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {
-
-    private static ObjectMapper mapper;
-
-    @BeforeAll
-    public static void createMapper() {
-        mapper = new ObjectMapper();
-    }
 
     @Test
     public void of() {
@@ -89,32 +80,32 @@ public final class AgeRangeTest {
     }
 
     @Test
-    public void serializeThenDeserialize_Of() throws JsonProcessingException {
+    public void serializeThenDeserialize_Of() {
         AgeRange ageRange = AgeRange.of(13, 18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_At() throws JsonProcessingException {
+    public void serializeThenDeserialize_At() {
         AgeRange ageRange = AgeRange.at(18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_AtOrAbove() throws JsonProcessingException {
+    public void serializeThenDeserialize_AtOrAbove() {
         AgeRange ageRange = AgeRange.atOrAbove(18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_Below() throws JsonProcessingException {
+    public void serializeThenDeserialize_Below() {
         AgeRange ageRange = AgeRange.below(13);
         serializeThenDeserialize(ageRange);
     }
 
-    private void serializeThenDeserialize(AgeRange ageRange) throws JsonProcessingException {
-        String json = mapper.writeValueAsString(ageRange);
-        AgeRange deserializedAgeRange = mapper.readValue(json, AgeRange.class);
+    private void serializeThenDeserialize(AgeRange ageRange) {
+        byte[] bytes = SerializationUtils.serialize(ageRange);
+        AgeRange deserializedAgeRange = SerializationUtils.deserialize(bytes, AgeRange.class);
         assertThat(deserializedAgeRange).isEqualTo(ageRange);
     }
 

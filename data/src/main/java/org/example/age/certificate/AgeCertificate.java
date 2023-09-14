@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.VerifiedUser;
 import org.example.age.internal.PackageImplementation;
+import org.example.age.internal.SerializationUtils;
 import org.immutables.value.Value;
 
 /**
@@ -33,8 +34,8 @@ public interface AgeCertificate {
      */
     static AgeCertificate verifyForSite(byte[] signedCertificate, PublicKey publicKey, String siteId) {
         int certificateLength = SignatureUtils.verify(signedCertificate, publicKey);
-        AgeCertificate certificate =
-                SerializationUtils.deserialize(signedCertificate, SignatureUtils.MESSAGE_OFFSET, certificateLength);
+        AgeCertificate certificate = SerializationUtils.deserialize(
+                signedCertificate, SignatureUtils.MESSAGE_OFFSET, certificateLength, AgeCertificate.class);
         if (!certificate.verificationRequest().isIntendedRecipient(siteId)) {
             throw new IllegalArgumentException("wrong recipient");
         }
