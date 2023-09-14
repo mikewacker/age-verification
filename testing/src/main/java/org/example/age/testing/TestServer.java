@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /** Undertow server that tests a custom handler, or a full server. Starts before all tests and stops after all tests. */
-public class TestServer implements BeforeAllCallback, AfterAllCallback {
+public final class TestServer implements BeforeAllCallback, AfterAllCallback {
 
     private static final Logger log = Logger.getLogger(TestServer.class.getName());
 
