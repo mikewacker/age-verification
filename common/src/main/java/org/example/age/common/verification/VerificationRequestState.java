@@ -1,5 +1,7 @@
 package org.example.age.common.verification;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import org.example.age.certificate.AuthToken;
 import org.example.age.certificate.VerificationRequest;
 
@@ -38,6 +40,20 @@ public class VerificationRequestState {
     /** Gets the local authentication token, if the verification request is pending. */
     public AuthToken localAuthToken() {
         return checkAttributeSet(localToken);
+    }
+
+    /** Updates the state based on the current time, returning the updated state. */
+    public VerificationRequestState update() {
+        if (status != VerificationRequestStatus.PENDING) {
+            return this;
+        }
+
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        if (now.isBefore(request.expiration())) {
+            return this;
+        }
+
+        return VerificationRequestState.expired(request);
     }
 
     /** Checks that the attribute is set for the current status. */

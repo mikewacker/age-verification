@@ -37,6 +37,29 @@ public final class VerificationRequestStateTest {
     }
 
     @Test
+    public void update_Inactive() {
+        VerificationRequestState state = VerificationRequestState.inactive();
+        VerificationRequestState updatedState = state.update();
+        assertThat(updatedState).isSameAs(state);
+    }
+
+    @Test
+    public void update_PendingAndNotExpired() {
+        VerificationRequestState state = VerificationRequestState.pending(REQUEST, TOKEN);
+        VerificationRequestState updatedState = state.update();
+        assertThat(updatedState).isSameAs(state);
+    }
+
+    @Test
+    public void update_PendingButExpired() {
+        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(-1));
+        VerificationRequestState state = VerificationRequestState.pending(request, TOKEN);
+        VerificationRequestState updatedState = state.update();
+        assertThat(updatedState.status()).isEqualTo(VerificationRequestStatus.EXPIRED);
+        assertThat(updatedState.verificationRequest()).isSameAs(state.verificationRequest());
+    }
+
+    @Test
     public void error_AttributeNotSet_Inactive() {
         String message = "attribute not set when the status is INACTIVE";
         VerificationRequestState state = VerificationRequestState.inactive();
