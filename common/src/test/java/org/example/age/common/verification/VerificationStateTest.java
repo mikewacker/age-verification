@@ -3,9 +3,6 @@ package org.example.age.common.verification;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.Duration;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import org.assertj.core.api.ThrowableAssert;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
@@ -14,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public final class VerificationStateTest {
 
     private static final VerifiedUser VERIFIED_USER = VerifiedUser.of(SecureId.generate(), 18);
-    private static final ZonedDateTime EXPIRATION = ZonedDateTime.now(ZoneOffset.UTC);
+    private static final long EXPIRATION = System.currentTimeMillis() / 1000;
 
     @Test
     public void unverified() {
@@ -52,7 +49,7 @@ public final class VerificationStateTest {
 
     @Test
     public void update_VerifiedAndNotExpired() {
-        ZonedDateTime future = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
+        long future = EXPIRATION + 10;
         VerificationState state = VerificationState.verified(VERIFIED_USER, future);
         VerificationState updatedState = state.update();
         assertThat(updatedState).isSameAs(state);
@@ -60,7 +57,7 @@ public final class VerificationStateTest {
 
     @Test
     public void update_VerifiedButExpired() {
-        ZonedDateTime past = ZonedDateTime.now(ZoneOffset.UTC).minus(Duration.ofMinutes(5));
+        long past = EXPIRATION - 10;
         VerificationState state = VerificationState.verified(VERIFIED_USER, past);
         VerificationState updatedState = state.update();
         assertThat(updatedState.status()).isEqualTo(VerificationStatus.EXPIRED);
