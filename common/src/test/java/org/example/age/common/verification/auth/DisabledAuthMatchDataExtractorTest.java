@@ -27,6 +27,7 @@ public final class DisabledAuthMatchDataExtractorTest {
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
     }
 
+    /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
     @Component(modules = DisabledAuthMatchModule.class)
     @Singleton
     interface TestComponent {
