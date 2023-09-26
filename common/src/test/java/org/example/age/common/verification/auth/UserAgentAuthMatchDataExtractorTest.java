@@ -25,26 +25,26 @@ public final class UserAgentAuthMatchDataExtractorTest {
 
     @Test
     public void match_UserAgentsMatch() {
-        HttpServerExchange localExchange = createExchange("user agent");
-        HttpServerExchange remoteExchange = createExchange("user agent");
+        HttpServerExchange localExchange = createStubExchange("user agent");
+        HttpServerExchange remoteExchange = createStubExchange("user agent");
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
     }
 
     @Test
     public void match_UserAgentsDoNotMatch() {
-        HttpServerExchange localExchange = createExchange("user agent 1");
-        HttpServerExchange remoteExchange = createExchange("user agent 2");
+        HttpServerExchange localExchange = createStubExchange("user agent 1");
+        HttpServerExchange remoteExchange = createStubExchange("user agent 2");
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, false);
     }
 
     @Test
     public void match_UserAgentNotPresent() {
-        HttpServerExchange localExchange = createExchange(null);
-        HttpServerExchange remoteExchange = createExchange(null);
+        HttpServerExchange localExchange = createStubExchange(null);
+        HttpServerExchange remoteExchange = createStubExchange(null);
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
     }
 
-    private static HttpServerExchange createExchange(String userAgent) {
+    private static HttpServerExchange createStubExchange(String userAgent) {
         HeaderMap headerMap = new HeaderMap();
         headerMap.put(Headers.USER_AGENT, userAgent);
         HttpServerExchange exchange = mock(HttpServerExchange.class);
@@ -52,6 +52,7 @@ public final class UserAgentAuthMatchDataExtractorTest {
         return exchange;
     }
 
+    /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
     @Component(modules = UserAgentAuthMatchModule.class)
     @Singleton
     interface TestComponent {
