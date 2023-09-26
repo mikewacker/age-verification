@@ -1,6 +1,7 @@
 package org.example.age.demo;
 
 import com.google.errorprone.annotations.FormatMethod;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -141,7 +142,7 @@ public final class Main {
         String siteName = siteUi.getName();
 
         println("Detailed workflow to verify \"%s\" on %s:", username, siteName);
-        println("- The current time is %s.", time(ZonedDateTime.now(ZoneId.systemDefault())));
+        println("- The current time is %s.", time(System.currentTimeMillis() / 1000));
         println("- [#1], [#2] is used to denote when data is stored that will be used later.");
         println();
         println("For a proof-of-concept, everything runs on a single machine;");
@@ -250,10 +251,10 @@ public final class Main {
         return String.format("%s...", idText.substring(0, 8));
     }
 
-    /** Formats a time. */
-    private static String time(ZonedDateTime dateTime) {
-        ZonedDateTime localExpiration = dateTime.withZoneSameInstant(ZoneId.systemDefault());
-        return localExpiration.format(DateTimeFormatter.ofPattern("LLLL d, yyyy, h:mm:ss a z"));
+    /** Formats an epoch time. */
+    private static String time(long epoch) {
+        ZonedDateTime localTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault());
+        return localTime.format(DateTimeFormatter.ofPattern("LLLL d, yyyy, h:mm:ss a z"));
     }
 
     /** Displays a border. */

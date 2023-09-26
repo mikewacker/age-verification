@@ -3,10 +3,7 @@ package org.example.age.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import org.assertj.core.data.TemporalUnitWithinOffset;
+import org.assertj.core.data.Offset;
 import org.example.age.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +17,9 @@ public final class VerificationRequestTest {
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
         assertThat(request.id()).isNotNull();
         assertThat(request.siteId()).isEqualTo(SITE_ID);
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
-        assertThat(request.expiration())
-                .isCloseTo(now.plus(EXPIRES_IN), new TemporalUnitWithinOffset(1, ChronoUnit.SECONDS));
+        long now = System.currentTimeMillis() / 1000;
+        long expectedExpiration = now + EXPIRES_IN.toSeconds();
+        assertThat(request.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
     }
 
     @Test

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import org.example.age.data.SecureId;
 import org.example.age.internal.PackageImplementation;
 import org.immutables.value.Value;
@@ -18,7 +16,7 @@ import org.immutables.value.Value;
 public interface VerificationRequest {
 
     /** Creates a verification request. */
-    static VerificationRequest of(SecureId id, String siteId, ZonedDateTime expiration) {
+    static VerificationRequest of(SecureId id, String siteId, long expiration) {
         return ImmutableVerificationRequest.builder()
                 .id(id)
                 .siteId(siteId)
@@ -29,8 +27,8 @@ public interface VerificationRequest {
     /** Generates a verification request for the site. */
     static VerificationRequest generateForSite(String siteId, Duration expiresIn) {
         SecureId id = SecureId.generate();
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC).withNano(0);
-        ZonedDateTime expiration = now.plus(expiresIn);
+        long now = System.currentTimeMillis() / 1000;
+        long expiration = now + expiresIn.toSeconds();
         return of(id, siteId, expiration);
     }
 
@@ -40,8 +38,8 @@ public interface VerificationRequest {
     /** ID of the site. */
     String siteId();
 
-    /** Time when the request expires. */
-    ZonedDateTime expiration();
+    /** Epoch time when the request expires. */
+    long expiration();
 
     /** Determines if the request is intended for a site. */
     default boolean isIntendedRecipient(String siteId) {
@@ -51,7 +49,7 @@ public interface VerificationRequest {
     /** Determines if the request is expired. */
     @JsonIgnore
     default boolean isExpired() {
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-        return expiration().isBefore(now);
+        long now = System.currentTimeMillis() / 1000;
+        return expiration() < now;
     }
 }

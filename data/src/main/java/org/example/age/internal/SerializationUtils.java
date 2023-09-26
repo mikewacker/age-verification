@@ -3,7 +3,6 @@ package org.example.age.internal;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 
 /** Utilities for serializing and deserializing objects to and from bytes. */
@@ -39,7 +38,6 @@ public final class SerializationUtils {
     /** Creates a mapper for serialization and deserialization. */
     private static ObjectMapper createMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new GuavaModule());
         return mapper;
     }

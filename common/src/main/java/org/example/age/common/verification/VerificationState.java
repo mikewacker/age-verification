@@ -1,7 +1,5 @@
 package org.example.age.common.verification;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import org.example.age.data.VerifiedUser;
 
 /** Current state for age verification. Some fields may be conditionally present based on the status. */
@@ -9,7 +7,7 @@ public final class VerificationState {
 
     private final VerificationStatus status;
     private final VerifiedUser verifiedUser;
-    private final ZonedDateTime expiration;
+    private final Long expiration;
 
     /** Creates an unverified state. */
     public static VerificationState unverified() {
@@ -17,12 +15,12 @@ public final class VerificationState {
     }
 
     /** Creates a verified state. */
-    public static VerificationState verified(VerifiedUser verifiedUser, ZonedDateTime expiration) {
+    public static VerificationState verified(VerifiedUser verifiedUser, long expiration) {
         return new VerificationState(VerificationStatus.VERIFIED, verifiedUser, expiration);
     }
 
     /** Creates an expired state. */
-    public static VerificationState expired(ZonedDateTime expiration) {
+    public static VerificationState expired(long expiration) {
         return new VerificationState(VerificationStatus.EXPIRED, null, expiration);
     }
 
@@ -41,8 +39,8 @@ public final class VerificationState {
         return checkAttributeSet(verifiedUser);
     }
 
-    /** Gets the time when the user's verified status expired or will expire. */
-    public ZonedDateTime expiration() {
+    /** Gets the epoch time when the user's verified status expired or will expire. */
+    public long expiration() {
         return checkAttributeSet(expiration);
     }
 
@@ -52,8 +50,8 @@ public final class VerificationState {
             return this;
         }
 
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-        if (now.isBefore(expiration)) {
+        long now = System.currentTimeMillis() / 1000;
+        if (now < expiration) {
             return this;
         }
 
@@ -70,7 +68,7 @@ public final class VerificationState {
         return attribute;
     }
 
-    private VerificationState(VerificationStatus status, VerifiedUser verifiedUser, ZonedDateTime expiration) {
+    private VerificationState(VerificationStatus status, VerifiedUser verifiedUser, Long expiration) {
         this.status = status;
         this.verifiedUser = verifiedUser;
         this.expiration = expiration;
