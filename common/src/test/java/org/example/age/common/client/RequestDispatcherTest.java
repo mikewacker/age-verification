@@ -8,43 +8,29 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
-import java.net.URL;
 import java.util.function.Supplier;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
+import org.example.age.testing.MockServer;
 import org.example.age.testing.TestClient;
-import org.example.age.testing.TestServer;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.example.age.testing.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class RequestDispatcherTest {
 
     @RegisterExtension
-    private static final TestServer frontendServer = TestServer.create(TestComponent::createHandler);
+    private static final TestUndertowServer frontendServer = TestUndertowServer.create(TestComponent::createHandler);
 
-    private static MockWebServer stubBackendServer;
-
-    @BeforeEach
-    public void startBackedServer() throws IOException {
-        stubBackendServer = new MockWebServer();
-        stubBackendServer.start();
-    }
-
-    @AfterEach
-    public void stopBackendServer() throws IOException {
-        stubBackendServer.shutdown();
-        stubBackendServer = null;
-    }
+    @RegisterExtension
+    private static MockServer stubBackendServer = MockServer.create();
 
     @Test
     public void exchange() throws IOException {
         stubBackendServer.enqueue(new MockResponse().setBody("test"));
-        Response response = TestClient.get(frontendServer.getRootUrl());
+        Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.body().string()).isEqualTo("test");
     }
@@ -52,21 +38,21 @@ public final class RequestDispatcherTest {
     @Test
     public void backendError_4xx() throws IOException {
         stubBackendServer.enqueue(new MockResponse().setResponseCode(400));
-        Response response = TestClient.get(frontendServer.getRootUrl());
+        Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(500);
     }
 
     @Test
     public void backendError_5xx() throws IOException {
         stubBackendServer.enqueue(new MockResponse().setResponseCode(500));
-        Response response = TestClient.get(frontendServer.getRootUrl());
+        Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
     public void backendError_DisconnectAfterRequest() throws IOException {
         stubBackendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
-        Response response = TestClient.get(frontendServer.getRootUrl());
+        Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
@@ -74,14 +60,14 @@ public final class RequestDispatcherTest {
     public void backendError_DisconnectDuringResponseBody() throws IOException {
         stubBackendServer.enqueue(
                 new MockResponse().setBody("test").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
-        Response response = TestClient.get(frontendServer.getRootUrl());
+        Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
     public void frontendError_CallbackException() throws IOException {
         stubBackendServer.enqueue(new MockResponse().setBody("error")); // special exception trigger
-        Response response = TestClient.get(frontendServer.getRootUrl());
+        Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(500);
     }
 
@@ -94,8 +80,8 @@ public final class RequestDispatcherTest {
 
         @Provides
         @Singleton
-        static Supplier<URL> provideUrlSupplier() {
-            return () -> stubBackendServer.url("").url();
+        static Supplier<String> provideUrlSupplier() {
+            return stubBackendServer::rootUrl;
         }
     }
 

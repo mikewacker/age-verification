@@ -10,18 +10,18 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.testing.TestClient;
-import org.example.age.testing.TestServer;
+import org.example.age.testing.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class HtmlHttpHandlerTest {
 
     @RegisterExtension
-    private static final TestServer server = TestServer.create(TestComponent::createHandler);
+    private static final TestUndertowServer server = TestUndertowServer.create(TestComponent::createHandler);
 
     @Test
     public void getHtmlFile() throws IOException {
-        Response response = TestClient.get(server.getRootUrl());
+        Response response = TestClient.get(server.rootUrl());
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.header("Content-Type")).endsWith("text/html");
         assertThat(response.body().string()).isEqualTo("<p>test</p>");

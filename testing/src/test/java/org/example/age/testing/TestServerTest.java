@@ -1,64 +1,42 @@
 package org.example.age.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import java.io.IOException;
-import okhttp3.Response;
-import org.assertj.core.api.ThrowableAssert;
+import com.google.common.net.HostAndPort;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class TestServerTest {
-
-    @RegisterExtension
-    private static final TestServer server = TestServer.create(TestServerTest::stubHandle);
+public class TestServerTest {
 
     @Test
-    public void exchange() throws IOException {
-        Response response = TestClient.get(server.getRootUrl());
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.header("Content-Type")).isEqualTo("text/plain");
-        assertThat(response.body().string()).isEqualTo("test");
+    public void url() {
+        StubServer server = StubServer.create();
+        String expectedUrl = "http://localhost/path";
+        assertThat(server.url("/path")).isEqualTo(expectedUrl);
+        assertThat(server.url("path")).isEqualTo(expectedUrl);
     }
 
-    @Test
-    public void getPort() {
-        assertThat(server.getPort()).isBetween(1024, 65535);
-    }
+    /** Stub test server with a root URL. */
+    private static final class StubServer implements TestServer<Void> {
 
-    @Test
-    public void getRootUrl() {
-        int port = server.getPort();
-        String expectedUrl = String.format("http://localhost:%d", port);
-        assertThat(server.getRootUrl()).isEqualTo(expectedUrl);
-    }
+        public static StubServer create() {
+            return new StubServer();
+        }
 
-    @Test
-    public void getUrl() {
-        int port = server.getPort();
-        String expectedUrl = String.format("http://localhost:%d/test.html", port);
-        assertThat(server.getUrl("/test.html")).isEqualTo(expectedUrl);
-        assertThat(server.getUrl("test.html")).isEqualTo(expectedUrl);
-    }
+        @Override
+        public Void get() {
+            throw new UnsupportedOperationException();
+        }
 
-    @Test
-    public void error_ServerNotStarted() {
-        TestServer inactiveServer = TestServer.create(TestServerTest::stubHandle);
-        error_ServerNotStarted(inactiveServer::getPort);
-        error_ServerNotStarted(inactiveServer::getRootUrl);
-        error_ServerNotStarted(() -> inactiveServer.getUrl("/test.html"));
-    }
+        @Override
+        public HostAndPort hostAndPort() {
+            throw new UnsupportedOperationException();
+        }
 
-    private void error_ServerNotStarted(ThrowableAssert.ThrowingCallable callable) {
-        assertThatThrownBy(callable).isInstanceOf(IllegalStateException.class).hasMessage("server has not started");
-    }
+        @Override
+        public String rootUrl() {
+            return "http://localhost";
+        }
 
-    /** HTTP handler that sends a stub response. */
-    private static void stubHandle(HttpServerExchange exchange) {
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-        exchange.getResponseSender().send("test");
+        private StubServer() {}
     }
 }

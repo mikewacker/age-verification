@@ -2,7 +2,6 @@ package org.example.age.common.client;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 import javax.inject.Inject;
@@ -19,10 +18,10 @@ import okhttp3.Response;
 final class TestProxyHandler implements HttpHandler {
 
     private final RequestDispatcher requestDispatcher;
-    private final Supplier<URL> urlSupplier;
+    private final Supplier<String> urlSupplier;
 
     @Inject
-    TestProxyHandler(RequestDispatcher requestDispatcher, Supplier<URL> urlSupplier) {
+    TestProxyHandler(RequestDispatcher requestDispatcher, Supplier<String> urlSupplier) {
         this.requestDispatcher = requestDispatcher;
         this.urlSupplier = urlSupplier;
     }
