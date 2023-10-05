@@ -13,6 +13,7 @@ import org.example.age.certificate.AuthKey;
 import org.example.age.certificate.VerificationSession;
 import org.example.age.common.verification.auth.AuthMatchData;
 import org.example.age.common.verification.auth.AuthMatchDataExtractor;
+import org.example.age.common.verification.internal.PendingStore;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 

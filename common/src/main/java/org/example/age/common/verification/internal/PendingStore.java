@@ -1,4 +1,4 @@
-package org.example.age.common.verification;
+package org.example.age.common.verification.internal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.xnio.XnioExecutor;
  *
  * <p>Keys are expected to be unique; no two values should have the same key.</p>
  */
-final class PendingStore<K, V> {
+public final class PendingStore<K, V> {
 
     private final Map<K, V> store = new HashMap<>();
     private final Map<K, XnioExecutor.Key> expirationKeys = new HashMap<>();
