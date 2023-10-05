@@ -22,9 +22,13 @@ public final class DisabledAuthMatchDataExtractorTest {
 
     @Test
     public void match() {
-        HttpServerExchange localExchange = mock(HttpServerExchange.class);
-        HttpServerExchange remoteExchange = mock(HttpServerExchange.class);
+        HttpServerExchange localExchange = createStubExchange();
+        HttpServerExchange remoteExchange = createStubExchange();
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
+    }
+
+    private static HttpServerExchange createStubExchange() {
+        return mock(HttpServerExchange.class);
     }
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */

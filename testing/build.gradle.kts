@@ -10,4 +10,5 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("io.undertow:undertow-core:2.3.8.Final")
     implementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    implementation("org.mockito:mockito-core:5.5.0")
 }
