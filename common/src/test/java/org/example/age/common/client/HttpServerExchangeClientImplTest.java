@@ -2,13 +2,11 @@ package org.example.age.common.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import io.undertow.server.HttpServerExchange;
-import io.undertow.server.ServerConnection;
 import okhttp3.OkHttpClient;
+import org.example.age.testing.TestExchanges;
 import org.junit.jupiter.api.Test;
-import org.xnio.XnioWorker;
 
 public final class HttpServerExchangeClientImplTest {
 
@@ -22,11 +20,8 @@ public final class HttpServerExchangeClientImplTest {
     }
 
     private static HttpServerExchange createStubExchange() {
-        XnioWorker worker = mock(XnioWorker.class);
-        ServerConnection connection = mock(ServerConnection.class);
-        when(connection.getWorker()).thenReturn(worker);
         HttpServerExchange exchange = mock(HttpServerExchange.class);
-        when(exchange.getConnection()).thenReturn(connection);
+        TestExchanges.addStubWorker(exchange);
         return exchange;
     }
 }

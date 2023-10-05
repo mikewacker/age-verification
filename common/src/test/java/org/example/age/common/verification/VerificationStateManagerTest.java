@@ -1,18 +1,15 @@
 package org.example.age.common.verification;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import dagger.Component;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.StatusCodes;
 import java.time.Duration;
+import java.util.Map;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.certificate.AgeCertificate;
@@ -25,11 +22,10 @@ import org.example.age.common.verification.auth.AuthMatchDataExtractor;
 import org.example.age.common.verification.auth.UserAgentAuthMatchModule;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
+import org.example.age.testing.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.xnio.XnioExecutor;
-import org.xnio.XnioIoThread;
 
 public final class VerificationStateManagerTest {
 
@@ -95,7 +91,7 @@ public final class VerificationStateManagerTest {
 
     @Test
     public void getStateWithoutAccount() {
-        HttpServerExchange exchange = createStubExchange(null);
+        HttpServerExchange exchange = createStubExchange("");
         VerificationState initialState = stateManager.getVerificationState(exchange);
         assertThat(initialState.status()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
@@ -135,7 +131,7 @@ public final class VerificationStateManagerTest {
 
     @Test
     public void failToVerify_AccountNotFound() {
-        HttpServerExchange exchange = createStubExchange(null);
+        HttpServerExchange exchange = createStubExchange("");
         VerificationSession session = createSession();
         int statusCode = stateManager.onVerificationSessionReceived(session, exchange);
         assertThat(statusCode).isEqualTo(StatusCodes.NOT_FOUND);
@@ -168,19 +164,10 @@ public final class VerificationStateManagerTest {
     }
 
     private static HttpServerExchange createStubExchange(String accountId, String userAgent) {
-        // Create the request headers.
-        HeaderMap headerMap = new HeaderMap();
-        headerMap.put(Headers.USER_AGENT, userAgent);
-        headerMap.put(new HttpString("Account-Id"), accountId);
-
-        // Create the IO thread.
-        XnioIoThread ioThread = mock(XnioIoThread.class);
-        when(ioThread.executeAfter(any(), anyLong(), any())).thenReturn(mock(XnioExecutor.Key.class));
-
-        // Create the exchange.
         HttpServerExchange exchange = mock(HttpServerExchange.class);
-        when(exchange.getRequestHeaders()).thenReturn(headerMap);
-        when(exchange.getIoThread()).thenReturn(ioThread);
+        TestExchanges.addRequestHeaders(
+                exchange, Map.of(Headers.USER_AGENT, userAgent, new HttpString("Account-Id"), accountId));
+        TestExchanges.addStubIoThread(exchange);
         return exchange;
     }
 

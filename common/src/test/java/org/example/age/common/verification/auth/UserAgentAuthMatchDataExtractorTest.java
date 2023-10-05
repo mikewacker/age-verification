@@ -1,14 +1,14 @@
 package org.example.age.common.verification.auth;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import dagger.Component;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
+import java.util.Map;
 import javax.inject.Singleton;
 import org.example.age.certificate.AuthKey;
+import org.example.age.testing.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -39,16 +39,14 @@ public final class UserAgentAuthMatchDataExtractorTest {
 
     @Test
     public void match_UserAgentNotPresent() {
-        HttpServerExchange localExchange = createStubExchange(null);
-        HttpServerExchange remoteExchange = createStubExchange(null);
+        HttpServerExchange localExchange = createStubExchange("");
+        HttpServerExchange remoteExchange = createStubExchange("");
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
     }
 
     private static HttpServerExchange createStubExchange(String userAgent) {
-        HeaderMap headerMap = new HeaderMap();
-        headerMap.put(Headers.USER_AGENT, userAgent);
         HttpServerExchange exchange = mock(HttpServerExchange.class);
-        when(exchange.getRequestHeaders()).thenReturn(headerMap);
+        TestExchanges.addRequestHeaders(exchange, Map.of(Headers.USER_AGENT, userAgent));
         return exchange;
     }
 
