@@ -4,7 +4,9 @@ plugins {
 }
 
 dependencies {
+    compileOnly("org.immutables:value-annotations:2.9.3")
     annotationProcessor("com.google.dagger:dagger-compiler:2.47")
+    annotationProcessor("org.immutables:value:2.9.3")
 
     implementation(project(":data"))
     implementation("com.google.dagger:dagger:2.47")
