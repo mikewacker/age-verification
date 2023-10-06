@@ -8,6 +8,7 @@ dependencies {
 
     implementation(project(":data"))
     implementation("com.google.dagger:dagger:2.47")
+    implementation("com.google.guava:guava:32.1.1-jre")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("io.undertow:undertow-core:2.3.8.Final")
     implementation("javax.inject:javax.inject:1")
