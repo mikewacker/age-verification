@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class MockServerTest {
 
     @RegisterExtension
-    public static MockServer server = MockServer.create();
+    public static final MockServer server = MockServer.create();
 
     @Test
     public void exchange() throws IOException {
