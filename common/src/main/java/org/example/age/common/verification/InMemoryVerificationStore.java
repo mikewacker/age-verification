@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 
 /** In-memory {@link VerificationStore}. */
+@Singleton
 final class InMemoryVerificationStore implements VerificationStore {
 
     private final Map<String, VerificationState> states = new HashMap<>();
