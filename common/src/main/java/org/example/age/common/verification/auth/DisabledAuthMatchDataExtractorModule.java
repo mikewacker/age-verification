@@ -3,9 +3,12 @@ package org.example.age.common.verification.auth;
 import dagger.Binds;
 import dagger.Module;
 
-/** Publishes a binding for {@link AuthMatchDataExtractor} that always returns a successful match. */
+/**
+ * Dagger module that publishes a binding for {@link AuthMatchDataExtractor},
+ * which always returns a successful match.
+ */
 @Module
-public interface DisabledAuthMatchModule {
+public interface DisabledAuthMatchDataExtractorModule {
 
     @Binds
     AuthMatchDataExtractor bindAuthMatchDataExtractor(DisabledAuthMatchDataExtractor impl);

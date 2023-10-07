@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class AuthManagerTest {
+public final class AuthManagerTest {
 
     private AuthManager authManager;
     private AuthMatchDataExtractor authDataExtractor;
@@ -114,7 +114,7 @@ public class AuthManagerTest {
     }
 
     /** Dagger component that provides an {@link AuthManager}, and also an {@link AuthMatchDataExtractor}. */
-    @Component(modules = {AuthManagerModule.class, UserAgentAuthMatchModule.class})
+    @Component(modules = {AuthManagerModule.class, UserAgentAuthMatchDataExtractorModule.class})
     @Singleton
     interface TestComponent {
 

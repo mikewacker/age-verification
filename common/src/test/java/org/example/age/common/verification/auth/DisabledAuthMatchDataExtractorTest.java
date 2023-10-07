@@ -32,7 +32,7 @@ public final class DisabledAuthMatchDataExtractorTest {
     }
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
-    @Component(modules = DisabledAuthMatchModule.class)
+    @Component(modules = DisabledAuthMatchDataExtractorModule.class)
     @Singleton
     interface TestComponent {
 

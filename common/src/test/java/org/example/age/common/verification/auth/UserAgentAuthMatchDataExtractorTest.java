@@ -51,7 +51,7 @@ public final class UserAgentAuthMatchDataExtractorTest {
     }
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
-    @Component(modules = UserAgentAuthMatchModule.class)
+    @Component(modules = UserAgentAuthMatchDataExtractorModule.class)
     @Singleton
     interface TestComponent {
 
