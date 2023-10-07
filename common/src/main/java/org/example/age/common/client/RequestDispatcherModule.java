@@ -3,9 +3,9 @@ package org.example.age.common.client;
 import dagger.Binds;
 import dagger.Module;
 
-/** Publishes a binding for {@link RequestDispatcher}. */
-@Module(includes = ClientModule.class)
-public interface RequestModule {
+/** Dagger module that publishes a binding for {@link RequestDispatcher}. */
+@Module(includes = ExchangeClientModule.class)
+public interface RequestDispatcherModule {
 
     @Binds
     RequestDispatcher bindRequestDispatcher(RequestDispatcherImpl impl);

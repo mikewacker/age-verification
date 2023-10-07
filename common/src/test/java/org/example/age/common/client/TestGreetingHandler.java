@@ -2,53 +2,34 @@ package org.example.age.common.client;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
 import io.undertow.util.SameThreadExecutor;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
+import java.util.function.Supplier;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Test handler that sends either a greeting or the recipient of said greeting.
- *
- * <p>To send a greeting, the server makes an HTTP request to itself to get the recipient of said greeting.
- * The request uses an {@link HttpServerExchangeClient}.</p>
- */
+/** Sends a greeting, making a backend request via {@link ExchangeClient} to get the recipient. */
 @Singleton
 final class TestGreetingHandler implements HttpHandler {
 
-    HttpServerExchangeClient client;
+    private final ExchangeClient client;
+    private final Supplier<String> backendUrlSupplier;
 
     @Inject
-    public TestGreetingHandler(HttpServerExchangeClient client) {
+    public TestGreetingHandler(ExchangeClient client, @Named("backendUrl") Supplier<String> backendUrlSupplier) {
         this.client = client;
+        this.backendUrlSupplier = backendUrlSupplier;
     }
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        if (exchange.getRequestPath().equals("/recipient")) {
-            sendRecipient(exchange);
-            return;
-        }
-
-        sendGreeting(exchange);
-    }
-
-    /** Sends the recipient of the greeting. */
-    private void sendRecipient(HttpServerExchange exchange) {
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-        exchange.getResponseSender().send("world");
-    }
-
-    /** Sends the greeting. */
-    private void sendGreeting(HttpServerExchange exchange) {
-        String url = String.format("http://%s:%d/recipient", exchange.getHostName(), exchange.getHostPort());
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(backendUrlSupplier.get()).build();
         Call call = client.getInstance(exchange).newCall(request);
         Callback callback = GreetingCallback.create(exchange);
         exchange.dispatch(SameThreadExecutor.INSTANCE, () -> call.enqueue(callback));
@@ -75,7 +56,7 @@ final class TestGreetingHandler implements HttpHandler {
             }
 
             String greeting = String.format("Hello, %s!", recipient);
-            sendGreeting(greeting);
+            exchange.getResponseSender().send(greeting);
         }
 
         @Override
@@ -83,15 +64,9 @@ final class TestGreetingHandler implements HttpHandler {
             sendError();
         }
 
-        /** Sends the greeting. */
-        private void sendGreeting(String greeting) {
-            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-            exchange.getResponseSender().send(greeting);
-        }
-
-        /** Sends a 500 error. */
+        /** Sends a 502 error. */
         private void sendError() {
-            exchange.setStatusCode(StatusCodes.INTERNAL_SERVER_ERROR);
+            exchange.setStatusCode(StatusCodes.BAD_GATEWAY);
             exchange.endExchange();
         }
 
