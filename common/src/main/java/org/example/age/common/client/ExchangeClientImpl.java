@@ -8,13 +8,14 @@ import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
 @Singleton
-final class HttpServerExchangeClientImpl implements HttpServerExchangeClient {
+final class ExchangeClientImpl implements ExchangeClient {
 
     private volatile OkHttpClient client = null;
+
     private final Object lock = new Object();
 
     @Inject
-    public HttpServerExchangeClientImpl() {}
+    public ExchangeClientImpl() {}
 
     @Override
     public OkHttpClient getInstance(HttpServerExchange exchange) {

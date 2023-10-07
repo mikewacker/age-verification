@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient;
  * we may not have access to the worker until after the server starts.</p>
  */
 @FunctionalInterface
-public interface HttpServerExchangeClient {
+interface ExchangeClient {
 
     OkHttpClient getInstance(HttpServerExchange exchange);
 }

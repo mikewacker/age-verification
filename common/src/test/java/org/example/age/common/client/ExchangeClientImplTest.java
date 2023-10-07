@@ -8,11 +8,11 @@ import okhttp3.OkHttpClient;
 import org.example.age.testing.TestExchanges;
 import org.junit.jupiter.api.Test;
 
-public final class HttpServerExchangeClientImplTest {
+public final class ExchangeClientImplTest {
 
     @Test
     public void getInstance() {
-        HttpServerExchangeClient client = new HttpServerExchangeClientImpl();
+        ExchangeClient client = new ExchangeClientImpl();
         HttpServerExchange exchange = createStubExchange();
         OkHttpClient client1 = client.getInstance(exchange);
         OkHttpClient client2 = client.getInstance(exchange);
