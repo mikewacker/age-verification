@@ -21,7 +21,7 @@ public interface SiteConfig {
     HostAndPort avsHostAndPort();
 
     /** Public signing key used to verify signed age certificates. */
-    PublicKey avsPublicKey();
+    PublicKey avsPublicSigningKey();
 
     /** Site ID that is expected for age certificates. */
     String siteId();
