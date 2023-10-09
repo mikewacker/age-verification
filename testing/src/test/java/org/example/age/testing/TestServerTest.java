@@ -15,6 +15,12 @@ public class TestServerTest {
         assertThat(server.url("path")).isEqualTo(expectedUrl);
     }
 
+    @Test
+    public void url_Format() {
+        StubServer server = StubServer.create();
+        assertThat(server.url("/path?name=%s", "value")).isEqualTo("http://localhost/path?name=value");
+    }
+
     /** Stub test server with a root URL. */
     private static final class StubServer implements TestServer<Void> {
 
