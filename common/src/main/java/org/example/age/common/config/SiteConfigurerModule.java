@@ -32,10 +32,10 @@ public interface SiteConfigurerModule {
     }
 
     @Provides
-    @Named("avs")
+    @Named("avsSigning")
     @Singleton
     static Supplier<PublicKey> provideAvsPublicKey(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().avsPublicKey();
+        return () -> siteConfigSupplier.get().avsPublicSigningKey();
     }
 
     @Provides
