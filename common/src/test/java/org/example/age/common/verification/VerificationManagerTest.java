@@ -20,21 +20,28 @@ import org.example.age.certificate.VerificationSession;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.testing.TestExchanges;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationManagerTest {
 
-    private static final Duration EXPIRES_IN = Duration.ofHours(1);
-
     private VerificationManager verificationManager;
     private VerificationStore userStore;
+
+    private static SecureId pseudonymKey;
+    private static final Duration EXPIRES_IN = Duration.ofHours(1);
 
     @BeforeEach
     public void createVerificationManagerEtAl() {
         TestComponent component = TestComponent.create();
         verificationManager = component.verificationManager();
         userStore = component.verificationStore();
+    }
+
+    @BeforeAll
+    public static void generateKeys() {
+        pseudonymKey = SecureId.generate();
     }
 
     @Test
@@ -45,12 +52,14 @@ public final class VerificationManagerTest {
         assertThat(statusCode1).isEqualTo(StatusCodes.OK);
 
         VerifiedUser user = createUser();
-        AgeCertificate certificate = createCertification(session, user);
+        AgeCertificate certificate = createCertificate(session, user);
         int statusCode2 = verificationManager.onAgeCertificateReceived(certificate);
         assertThat(statusCode2).isEqualTo(StatusCodes.OK);
+
         VerificationState state = userStore.load("username");
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
-        assertThat(state.verifiedUser()).isEqualTo(user);
+        VerifiedUser expectedUser = user.localize(pseudonymKey);
+        assertThat(state.verifiedUser()).isEqualTo(expectedUser);
         long now = System.currentTimeMillis() / 1000;
         long expectedExpiration = now + EXPIRES_IN.toSeconds();
         assertThat(state.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
@@ -63,7 +72,7 @@ public final class VerificationManagerTest {
         verificationManager.onVerificationSessionReceived("username1", session1, exchange1);
 
         VerifiedUser user = createUser();
-        AgeCertificate certificate1 = createCertification(session1, user);
+        AgeCertificate certificate1 = createCertificate(session1, user);
         int statusCode1 = verificationManager.onAgeCertificateReceived(certificate1);
         assertThat(statusCode1).isEqualTo(StatusCodes.OK);
 
@@ -71,7 +80,7 @@ public final class VerificationManagerTest {
         VerificationSession session2 = createSession();
         verificationManager.onVerificationSessionReceived("username2", session2, exchange2);
 
-        AgeCertificate certificate2 = createCertification(session2, user);
+        AgeCertificate certificate2 = createCertificate(session2, user);
         int statusCode2 = verificationManager.onAgeCertificateReceived(certificate2);
         assertThat(statusCode2).isEqualTo(StatusCodes.CONFLICT);
     }
@@ -80,7 +89,7 @@ public final class VerificationManagerTest {
     public void failToVerify_PendingVerificationNotFound() {
         VerificationSession session = createSession();
         VerifiedUser user = createUser();
-        AgeCertificate certificate = createCertification(session, user);
+        AgeCertificate certificate = createCertificate(session, user);
         int statusCode = verificationManager.onAgeCertificateReceived(certificate);
         assertThat(statusCode).isEqualTo(StatusCodes.NOT_FOUND);
     }
@@ -101,7 +110,7 @@ public final class VerificationManagerTest {
         return VerifiedUser.of(SecureId.generate(), 18);
     }
 
-    private AgeCertificate createCertification(VerificationSession session, VerifiedUser user) {
+    private AgeCertificate createCertificate(VerificationSession session, VerifiedUser user) {
         VerificationRequest request = session.verificationRequest();
         AuthToken authToken = AuthToken.empty();
         return AgeCertificate.of(request, user, authToken);
@@ -113,7 +122,7 @@ public final class VerificationManagerTest {
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerVerificationManagerTest_TestComponent.factory().create(() -> EXPIRES_IN);
+            return DaggerVerificationManagerTest_TestComponent.factory().create(() -> pseudonymKey, () -> EXPIRES_IN);
         }
 
         VerificationManager verificationManager();
@@ -123,7 +132,9 @@ public final class VerificationManagerTest {
         @Component.Factory
         interface Factory {
 
-            TestComponent create(@BindsInstance @Named("expiresIn") Supplier<Duration> expiresInSupplier);
+            TestComponent create(
+                    @BindsInstance @Named("pseudonymKey") Supplier<SecureId> pseudonymKeySupplier,
+                    @BindsInstance @Named("expiresIn") Supplier<Duration> expiresInSupplier);
         }
     }
 }
