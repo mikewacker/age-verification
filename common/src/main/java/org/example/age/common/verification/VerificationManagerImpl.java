@@ -19,14 +19,18 @@ import org.xnio.XnioExecutor;
 final class VerificationManagerImpl implements VerificationManager {
 
     private final VerificationStore verificationStore;
+    private final Supplier<SecureId> pseudonymKeySupplier;
     private final Supplier<Duration> expiresInSupplier;
 
     private final PendingStore<SecureId, String> pendingVerifications = PendingStore.create();
 
     @Inject
     public VerificationManagerImpl(
-            VerificationStore verificationStore, @Named("expiresIn") Supplier<Duration> expiresInSupplier) {
+            VerificationStore verificationStore,
+            @Named("pseudonymKey") Supplier<SecureId> pseudonymKeySupplier,
+            @Named("expiresIn") Supplier<Duration> expiresInSupplier) {
         this.verificationStore = verificationStore;
+        this.pseudonymKeySupplier = pseudonymKeySupplier;
         this.expiresInSupplier = expiresInSupplier;
     }
 
@@ -49,14 +53,15 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         String accountId = maybeAccountId.get();
-        VerificationState state = createVerifiedState(certificate);
+        VerifiedUser user = certificate.verifiedUser();
+        VerifiedUser localizedUser = user.localize(pseudonymKeySupplier.get());
+        VerificationState state = createVerifiedState(localizedUser);
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave(accountId, state);
         return maybeDuplicateAccountId.isEmpty() ? StatusCodes.OK : StatusCodes.CONFLICT;
     }
 
     /** Creates a verified {@link VerificationState}. */
-    private VerificationState createVerifiedState(AgeCertificate certificate) {
-        VerifiedUser user = certificate.verifiedUser();
+    private VerificationState createVerifiedState(VerifiedUser user) {
         long now = System.currentTimeMillis() / 1000;
         long expiration = now + expiresInSupplier.get().toSeconds();
         return VerificationState.verified(user, expiration);

@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.example.age.data.SecureId;
 
 /**
  * Dagger modules that binds dependencies for...
@@ -42,6 +43,13 @@ public interface SiteConfigurerModule {
     @Singleton
     static Supplier<String> provideSiteId(Supplier<SiteConfig> siteConfigSupplier) {
         return () -> siteConfigSupplier.get().siteId();
+    }
+
+    @Provides
+    @Named("pseudonymKey")
+    @Singleton
+    static Supplier<SecureId> providePseudonymKey(Supplier<SiteConfig> siteConfigSupplier) {
+        return () -> siteConfigSupplier.get().pseudonymKey();
     }
 
     @Provides
