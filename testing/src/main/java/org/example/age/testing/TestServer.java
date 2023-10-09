@@ -1,6 +1,7 @@
 package org.example.age.testing;
 
 import com.google.common.net.HostAndPort;
+import com.google.errorprone.annotations.FormatMethod;
 
 /**
  * Extension that starts a test server.
@@ -19,8 +20,10 @@ public interface TestServer<T> {
     String rootUrl();
 
     /** Gets the URL at the provided path. */
-    default String url(String path) {
-        path = path.startsWith("/") ? path : String.format("/%s", path);
+    @FormatMethod
+    default String url(String pathFormat, Object... args) {
+        pathFormat = pathFormat.startsWith("/") ? pathFormat : String.format("/%s", pathFormat);
+        String path = String.format(pathFormat, args);
         return String.format("%s%s", rootUrl(), path);
     }
 }
