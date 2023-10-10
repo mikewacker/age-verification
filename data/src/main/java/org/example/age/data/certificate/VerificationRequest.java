@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
+import org.example.age.data.DataStyle;
 import org.example.age.data.SecureId;
-import org.example.age.data.internal.PackageImplementation;
 import org.immutables.value.Value;
 
 /** Request to verify an account on a social media site. */
 @Value.Immutable
-@PackageImplementation
+@DataStyle
 @JsonSerialize(as = ImmutableVerificationRequest.class)
 @JsonDeserialize(as = ImmutableVerificationRequest.class)
 public interface VerificationRequest {
