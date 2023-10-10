@@ -4,7 +4,7 @@ import com.google.common.net.HostAndPort;
 import java.security.PublicKey;
 import java.time.Duration;
 import org.example.age.data.SecureId;
-import org.example.age.internal.PackageImplementation;
+import org.example.age.data.internal.PackageImplementation;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */

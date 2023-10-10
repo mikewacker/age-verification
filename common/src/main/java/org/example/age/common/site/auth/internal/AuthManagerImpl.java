@@ -5,14 +5,14 @@ import io.undertow.util.StatusCodes;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.AuthKey;
-import org.example.age.certificate.AuthToken;
-import org.example.age.certificate.VerificationSession;
 import org.example.age.common.site.auth.AuthMatchData;
 import org.example.age.common.site.auth.AuthMatchDataExtractor;
 import org.example.age.common.store.internal.PendingStore;
 import org.example.age.data.SecureId;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.certificate.VerificationSession;
 import org.xnio.XnioExecutor;
 
 @Singleton

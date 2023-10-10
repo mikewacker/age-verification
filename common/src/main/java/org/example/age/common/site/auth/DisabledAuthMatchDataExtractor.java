@@ -2,8 +2,8 @@ package org.example.age.common.site.auth;
 
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Inject;
-import org.example.age.certificate.AuthKey;
-import org.example.age.certificate.AuthToken;
+import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.certificate.AuthToken;
 
 /** Creates {@link DisabledAuthMatchData}. */
 final class DisabledAuthMatchDataExtractor implements AuthMatchDataExtractor {

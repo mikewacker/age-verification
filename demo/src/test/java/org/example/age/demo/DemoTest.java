@@ -2,10 +2,10 @@ package org.example.age.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.VerificationRequest;
 import org.example.age.data.AgeRange;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.verification.AvsUi;
 import org.example.age.verification.SiteUi;
 import org.example.age.verification.VerifiedUserStore;

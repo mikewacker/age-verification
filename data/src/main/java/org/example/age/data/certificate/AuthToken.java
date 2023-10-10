@@ -1,10 +1,10 @@
-package org.example.age.certificate;
+package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import org.example.age.internal.ImmutableBytes;
-import org.example.age.internal.StaticFromStringDeserializer;
+import org.example.age.data.internal.ImmutableBytes;
+import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /**
  * Encrypted data used to assist with authentication. Can also be empty.

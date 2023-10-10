@@ -7,7 +7,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import java.util.Map;
 import javax.inject.Singleton;
-import org.example.age.certificate.AuthKey;
+import org.example.age.data.certificate.AuthKey;
 import org.example.age.testing.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

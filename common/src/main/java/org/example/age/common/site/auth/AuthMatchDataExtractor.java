@@ -1,8 +1,8 @@
 package org.example.age.common.site.auth;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.certificate.AuthKey;
-import org.example.age.certificate.AuthToken;
+import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.certificate.AuthToken;
 
 /** Extracts {@link AuthMatchData} from an {@link HttpServerExchange}, or decrypts it from an {@link AuthToken}. */
 public interface AuthMatchDataExtractor {
