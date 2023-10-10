@@ -3,13 +3,13 @@ package org.example.age.common.site.config;
 import com.google.common.net.HostAndPort;
 import java.security.PublicKey;
 import java.time.Duration;
+import org.example.age.data.DataStyle;
 import org.example.age.data.SecureId;
-import org.example.age.data.internal.PackageImplementation;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */
 @Value.Immutable
-@PackageImplementation
+@DataStyle
 public interface SiteConfig {
 
     /** Creates a builder for the site configuration. */
