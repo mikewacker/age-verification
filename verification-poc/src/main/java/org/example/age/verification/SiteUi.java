@@ -1,8 +1,8 @@
 package org.example.age.verification;
 
 import java.util.List;
-import org.example.age.certificate.VerificationRequest;
 import org.example.age.data.AgeRange;
+import org.example.age.data.certificate.VerificationRequest;
 
 /** Encapsulates user interactions with a social media site. */
 public interface SiteUi {

@@ -3,7 +3,7 @@ package org.example.age.data;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.example.age.internal.SerializationUtils;
+import org.example.age.data.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class SecureIdTest {

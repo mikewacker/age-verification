@@ -1,4 +1,4 @@
-package org.example.age.internal;
+package org.example.age.data.internal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

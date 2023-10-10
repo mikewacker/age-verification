@@ -8,13 +8,13 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.VerificationSession;
 import org.example.age.common.site.verification.VerificationState;
 import org.example.age.common.site.verification.VerificationStore;
 import org.example.age.common.store.internal.PendingStore;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.VerificationSession;
 import org.xnio.XnioExecutor;
 
 @Singleton

@@ -1,12 +1,12 @@
-package org.example.age.certificate;
+package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import org.example.age.internal.ImmutableBytes;
-import org.example.age.internal.StaticFromStringDeserializer;
+import org.example.age.data.internal.ImmutableBytes;
+import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /** Ephemeral AES-256 key used for encrypting authentication data. */
 @JsonSerialize(using = ToStringSerializer.class)

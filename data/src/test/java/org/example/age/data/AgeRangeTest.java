@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.testing.EqualsTester;
-import org.example.age.internal.SerializationUtils;
+import org.example.age.data.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {

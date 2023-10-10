@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.VerificationRequest;
 import org.example.age.data.AgeRange;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.VerificationRequest;
 
 /**
  * Proof-of-concept implementation of an age verification component for a social media site.

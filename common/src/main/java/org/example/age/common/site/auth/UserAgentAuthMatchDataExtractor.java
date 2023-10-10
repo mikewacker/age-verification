@@ -4,8 +4,8 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
-import org.example.age.certificate.AuthKey;
-import org.example.age.certificate.AuthToken;
+import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.certificate.AuthToken;
 
 /** Creates {@link UserAgentAuthMatchData}. */
 final class UserAgentAuthMatchDataExtractor implements AuthMatchDataExtractor {

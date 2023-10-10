@@ -1,4 +1,4 @@
-package org.example.age.certificate;
+package org.example.age.data.certificate;
 
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;

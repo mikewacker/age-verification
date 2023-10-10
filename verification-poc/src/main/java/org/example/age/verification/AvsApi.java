@@ -1,7 +1,7 @@
 package org.example.age.verification;
 
 import java.security.PublicKey;
-import org.example.age.certificate.VerificationRequest;
+import org.example.age.data.certificate.VerificationRequest;
 
 /** API that encapsulates how a site interacts with the age verification service. */
 public interface AvsApi {

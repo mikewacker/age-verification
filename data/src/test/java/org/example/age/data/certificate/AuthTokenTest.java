@@ -1,10 +1,10 @@
-package org.example.age.certificate;
+package org.example.age.data.certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
-import org.example.age.internal.SerializationUtils;
+import org.example.age.data.internal.SerializationUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

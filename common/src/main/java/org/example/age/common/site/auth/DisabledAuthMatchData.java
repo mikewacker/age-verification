@@ -1,7 +1,7 @@
 package org.example.age.common.site.auth;
 
-import org.example.age.certificate.AuthKey;
-import org.example.age.certificate.AuthToken;
+import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.certificate.AuthToken;
 
 /** Always returns a successful match. */
 final class DisabledAuthMatchData implements AuthMatchData {

@@ -1,4 +1,4 @@
-package org.example.age.internal;
+package org.example.age.data.internal;
 
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.security.SecureRandom;

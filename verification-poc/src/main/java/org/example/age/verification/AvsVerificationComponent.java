@@ -6,12 +6,12 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.AuthToken;
-import org.example.age.certificate.VerificationRequest;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.certificate.VerificationRequest;
 
 /**
  * Proof-of-concept implementation of an age verification component for the age verification service.

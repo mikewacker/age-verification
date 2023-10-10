@@ -1,7 +1,7 @@
 package org.example.age.common.site.auth;
 
-import org.example.age.certificate.AuthKey;
-import org.example.age.certificate.AuthToken;
+import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.certificate.AuthToken;
 
 /**
  * Authentication data that is used to determine if two actions were performed by the same person.

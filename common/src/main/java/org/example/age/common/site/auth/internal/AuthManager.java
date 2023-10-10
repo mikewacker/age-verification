@@ -1,9 +1,9 @@
 package org.example.age.common.site.auth.internal;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.VerificationSession;
 import org.example.age.common.site.auth.AuthMatchData;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.VerificationSession;
 
 /** Adds an authentication check to the age verification process using {@link AuthMatchData}. */
 public interface AuthManager {

@@ -8,8 +8,8 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import org.example.age.internal.ImmutableBytes;
-import org.example.age.internal.StaticFromStringDeserializer;
+import org.example.age.data.internal.ImmutableBytes;
+import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /** 256 random bits, generated via a secure random number generator. Can also be used as a key. */
 @JsonSerialize(using = ToStringSerializer.class)

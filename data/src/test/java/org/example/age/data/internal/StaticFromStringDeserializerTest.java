@@ -1,4 +1,4 @@
-package org.example.age.internal;
+package org.example.age.data.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

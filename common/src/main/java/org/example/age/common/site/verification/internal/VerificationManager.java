@@ -1,8 +1,8 @@
 package org.example.age.common.site.verification.internal;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.certificate.AgeCertificate;
-import org.example.age.certificate.VerificationSession;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.VerificationSession;
 
 /** Manages the age verification process for accounts. */
 public interface VerificationManager {
