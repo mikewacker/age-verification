@@ -1,7 +1,8 @@
-package org.example.age.testing;
+package org.example.age.verification;
 
 import java.security.KeyPair;
 import org.example.age.data.SecureId;
+import org.example.age.testing.TestKeys;
 
 /** In-memory key store for testing. */
 public final class TestKeyStore {
