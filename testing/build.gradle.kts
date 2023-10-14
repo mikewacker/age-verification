@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":data"))
     implementation("com.google.guava:guava:32.1.1-jre")
     implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
