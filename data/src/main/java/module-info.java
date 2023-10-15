@@ -6,5 +6,13 @@ module org.example.age.data {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.guava;
     requires com.google.common;
-    requires java.compiler;
+    requires com.google.errorprone.annotations;
+    requires jsr305;
+
+    opens org.example.age.data to
+            com.fasterxml.jackson.databind;
+    opens org.example.age.data.certificate to
+            com.fasterxml.jackson.databind;
+    opens org.example.age.data.internal to
+            com.fasterxml.jackson.databind;
 }
