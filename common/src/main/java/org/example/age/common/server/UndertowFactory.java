@@ -4,7 +4,11 @@ import com.google.common.net.HostAndPort;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 
-/** Factory that crates the {@link Undertow} server. */
+/**
+ * Factory that creates the {@link Undertow} server.
+ *
+ * <p>In a real implementation, the server would use HTTPS.</p>
+ */
 final class UndertowFactory {
 
     /** Creates the {@link Undertow} server. */
