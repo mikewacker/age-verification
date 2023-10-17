@@ -1,36 +1,38 @@
 package org.example.age.adult.server;
 
+import com.google.common.net.HostAndPort;
+import dagger.BindsInstance;
 import dagger.Component;
 import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import javax.inject.Named;
+import java.util.function.Supplier;
 import javax.inject.Singleton;
-import org.example.age.adult.html.VerifyHtmlModule;
 
-/** Factory for the Undertow server. */
+/** Factory that creates the {@link Undertow} server. */
 public final class AdultServer {
 
-    /** Creates a server. */
-    public static Undertow create(String host, int port) {
-        HttpHandler handler = ServerComponent.createRootHandler();
-        return Undertow.builder()
-                .addHttpListener(port, host)
-                .setHandler(handler)
-                .build();
+    /** Creates the {@link Undertow} server. */
+    public static Undertow create(HostAndPort hostAndPort) {
+        return ServerComponent.createServer(hostAndPort);
     }
 
-    /** Dagger component that provides the root {@link HttpHandler}. */
-    @Component(modules = VerifyHtmlModule.class)
+    /** Dagger component that provides an {@link Undertow} server. */
+    @Component(modules = AdultUndertowModule.class)
     @Singleton
     interface ServerComponent {
 
-        static HttpHandler createRootHandler() {
-            ServerComponent component = DaggerAdultServer_ServerComponent.create();
-            return component.rootHandler();
+        static Undertow createServer(HostAndPort hostAndPort) {
+            ServerComponent component =
+                    DaggerAdultServer_ServerComponent.factory().create(() -> hostAndPort);
+            return component.server();
         }
 
-        @Named("verifyHtml")
-        HttpHandler rootHandler();
+        Undertow server();
+
+        @Component.Factory
+        interface Factory {
+
+            ServerComponent create(@BindsInstance Supplier<HostAndPort> hostAndPortSupplier);
+        }
     }
 
     // static class

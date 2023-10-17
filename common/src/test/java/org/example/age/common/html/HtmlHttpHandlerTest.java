@@ -27,7 +27,7 @@ public final class HtmlHttpHandlerTest {
         assertThat(response.body().string()).isEqualTo("<p>test</p>");
     }
 
-    /** Dagger component that provides an {@link HttpHandler}. */
+    /** Dagger component that provides a <code>@Named("html") {@link HttpHandler}</code>. */
     @Component(modules = HtmlModule.class)
     @Singleton
     interface TestComponent {
