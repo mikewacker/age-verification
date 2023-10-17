@@ -10,9 +10,8 @@ import javax.inject.Singleton;
  * Dagger module that publishes a binding for <code>@Named("html") {@link HttpHandler}</code>,
  * which serves static HTML files.
  *
- * <p>It depends on an unbound {@code @Named("html") Class<?>},
- * a class in the same project as the {@code "resources"} folder that contains the static HTML files.
- * The root directory for the static HTML files will be {@code "resources/html"}.</p>
+ * <p>Depends on an unbound {@code @Named("html") Class<?>}, which is a class in the module with the static HTML files.
+ * The root directory for the static HTML files is {@code "src/main/resources/html"}.</p>
  */
 @Module
 public interface HtmlModule {
@@ -20,7 +19,7 @@ public interface HtmlModule {
     @Provides
     @Named("html")
     @Singleton
-    static HttpHandler provideHttpHandler(@Named("html") Class<?> clazz) {
+    static HttpHandler provideHtmlHttpHandler(@Named("html") Class<?> clazz) {
         return HtmlHandler.create(clazz);
     }
 }

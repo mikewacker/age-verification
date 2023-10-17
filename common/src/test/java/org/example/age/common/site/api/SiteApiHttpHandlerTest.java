@@ -4,11 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
+import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -22,6 +25,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.common.account.AccountIdExtractor;
 import org.example.age.common.client.internal.RequestDispatcherModule;
+import org.example.age.common.server.UndertowModule;
 import org.example.age.common.site.api.testing.FakeAvsHandler;
 import org.example.age.common.site.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.site.config.SiteConfig;
@@ -38,7 +42,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public class SiteApiHttpHandlerTest {
 
     @RegisterExtension
-    private static final TestUndertowServer siteServer = TestUndertowServer.create(TestComponent::createHandler);
+    private static final TestUndertowServer siteServer = TestUndertowServer.create(TestComponent::createServer);
 
     @RegisterExtension
     private static final TestUndertowServer fakeAvsServer = TestUndertowServer.create(FakeAvsComponent::createHandler);
@@ -138,12 +142,26 @@ public class SiteApiHttpHandlerTest {
         return requestBuilder.build();
     }
 
-    /**
-     * Dagger module that publishes a binding for {@link HttpHandler},
-     * which uses a <code>@Named("siteApi") {@link HttpHandler}</code>.
-     *
-     * <p>Also binds dependencies needed to create a <code>@Named("siteApi") {@link HttpHandler}</code>.</p>
-     */
+    private static Optional<String> extractAccountId(HttpServerExchange exchange) {
+        return Optional.ofNullable(exchange.getRequestHeaders().getFirst("Account-Id"));
+    }
+
+    private static SiteConfig createSiteConfig() {
+        return SiteConfig.builder()
+                .avsHostAndPort(fakeAvsServer.hostAndPort())
+                .avsPublicSigningKey(avsSigningKeyPair.getPublic())
+                .siteId("Site")
+                .pseudonymKey(sitePseudonymKey)
+                .expiresIn(Duration.ofHours(1))
+                .build();
+    }
+
+    private static void stubHandleHtmlRequest(HttpServerExchange exchange) {
+        exchange.setStatusCode(StatusCodes.NOT_FOUND);
+        exchange.endExchange();
+    }
+
+    /** Dagger module that binds dependencies needed to create a <code>@Named("api") {@link HttpHandler}</code>. */
     @Module(
             includes = {
                 SiteApiModule.class,
@@ -154,42 +172,57 @@ public class SiteApiHttpHandlerTest {
 
         @Provides
         @Singleton
-        static HttpHandler provideHttpHandler(@Named("siteApi") HttpHandler siteApiHandler) {
-            PathHandler handler = new PathHandler();
-            handler.addPrefixPath("/api/", siteApiHandler);
-            return handler;
-        }
-
-        @Provides
-        @Singleton
         static AccountIdExtractor provideAccountIdExtractor() {
-            return exchange -> Optional.ofNullable(exchange.getRequestHeaders().getFirst("Account-Id"));
+            return SiteApiHttpHandlerTest::extractAccountId;
         }
 
         @Provides
         @Singleton
         static Supplier<SiteConfig> provideSiteConfig() {
-            return () -> SiteConfig.builder()
-                    .avsHostAndPort(fakeAvsServer.hostAndPort())
-                    .avsPublicSigningKey(avsSigningKeyPair.getPublic())
-                    .siteId("Site")
-                    .pseudonymKey(sitePseudonymKey)
-                    .expiresIn(Duration.ofHours(1))
-                    .build();
+            return SiteApiHttpHandlerTest::createSiteConfig;
         }
     }
 
-    /** Dagger component that provides an {@link HttpHandler}. */
-    @Component(modules = TestModule.class)
+    /**
+     * Dagger module that binds dependencies needed to create an {@link Undertow}.
+     *
+     * <p>Depends on an unbound <code>@Named("port") int</code>.</p>
+     */
+    @Module(includes = {UndertowModule.class, TestModule.class})
+    interface TestUndertowModule {
+
+        @Provides
+        @Named("verifyHtml")
+        @Singleton
+        static HttpHandler provideVerifyHtmlHttpHandler() {
+            return SiteApiHttpHandlerTest::stubHandleHtmlRequest;
+        }
+
+        @Provides
+        @Singleton
+        static Supplier<HostAndPort> provideHostAndPort(@Named("port") int port) {
+            return () -> HostAndPort.fromParts("localhost", port);
+        }
+    }
+
+    /** Dagger component that provides an {@link Undertow} server. */
+    @Component(modules = TestUndertowModule.class)
     @Singleton
     interface TestComponent {
 
-        static HttpHandler createHandler() {
-            TestComponent component = DaggerSiteApiHttpHandlerTest_TestComponent.create();
-            return component.handler();
+        static Undertow createServer(int port) {
+            TestComponent component =
+                    DaggerSiteApiHttpHandlerTest_TestComponent.factory().create(port);
+            return component.server();
         }
 
-        HttpHandler handler();
+        Undertow server();
+
+        @Component.Factory
+        interface Factory {
+
+            TestComponent create(@BindsInstance @Named("port") int port);
+        }
     }
 
     /**

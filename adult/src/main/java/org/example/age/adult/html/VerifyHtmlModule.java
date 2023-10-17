@@ -9,10 +9,8 @@ import javax.inject.Singleton;
 import org.example.age.common.html.HtmlModule;
 
 /**
- * Publishes a binding for <code>@Named("verifyHtml") {@link HttpHandler}</code>,
+ * Dagger module that publishes a binding for <code>@Named("verifyHtml") {@link HttpHandler}</code>,
  * which overlays an age verification check on top of static HTML files.
- *
- * <p>It also binds {@code @Named("html") Class<?>}, providing the location of the static HTML files.</p>
  */
 @Module(includes = {HtmlModule.class})
 public interface VerifyHtmlModule {

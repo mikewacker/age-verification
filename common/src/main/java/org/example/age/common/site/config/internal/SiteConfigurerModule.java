@@ -15,7 +15,7 @@ import org.example.age.data.SecureId;
  * Dagger modules that binds dependencies for...
  * <ul>
  *     <li><code>@Named("avs") Supplier&lt;{@link HostAndPort}&gt;</code></li>
- *     <li><code>@Named("avs") Supplier&lt;{@link PublicKey}&gt;</code></li>
+ *     <li><code>@Named("avsSigning") Supplier&lt;{@link PublicKey}&gt;</code></li>
  *     <li><code>@Named("siteId") Supplier&lt;String&gt;</code></li>
  *     <li><code>@Named("expiresIn") Supplier&lt;{@link Duration}&gt;</code></li>
  * </ul>

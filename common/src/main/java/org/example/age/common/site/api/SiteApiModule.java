@@ -14,7 +14,7 @@ import org.example.age.common.site.verification.VerificationStore;
 import org.example.age.common.site.verification.internal.VerificationManagerModule;
 
 /**
- * Dagger module that publishes a binding for <code>@Named("siteApi") {@link HttpHandler}</code>.
+ * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.
  *
  * <p>Depends on an unbound...</p>
  * <ul>
@@ -34,6 +34,6 @@ import org.example.age.common.site.verification.internal.VerificationManagerModu
 public interface SiteApiModule {
 
     @Binds
-    @Named("siteApi")
-    HttpHandler bindSiteApiHttpHandler(SiteApiHandler impl);
+    @Named("api")
+    HttpHandler bindApiHttpHandler(SiteApiHandler impl);
 }
