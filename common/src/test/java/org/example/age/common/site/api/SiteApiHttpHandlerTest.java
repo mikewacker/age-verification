@@ -10,13 +10,10 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Duration;
-import java.util.Optional;
 import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -25,11 +22,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.common.account.AccountIdExtractor;
 import org.example.age.common.client.internal.RequestDispatcherModule;
-import org.example.age.common.server.UndertowModule;
 import org.example.age.common.site.api.testing.FakeAvsHandler;
 import org.example.age.common.site.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.verification.InMemoryVerificationStoreModule;
+import org.example.age.common.testing.HeaderAccountIdExtractor;
+import org.example.age.common.testing.TestUndertowModule;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.testing.TestClient;
@@ -142,10 +140,6 @@ public class SiteApiHttpHandlerTest {
         return requestBuilder.build();
     }
 
-    private static Optional<String> extractAccountId(HttpServerExchange exchange) {
-        return Optional.ofNullable(exchange.getRequestHeaders().getFirst("Account-Id"));
-    }
-
     private static SiteConfig createSiteConfig() {
         return SiteConfig.builder()
                 .avsHostAndPort(fakeAvsServer.hostAndPort())
@@ -154,11 +148,6 @@ public class SiteApiHttpHandlerTest {
                 .pseudonymKey(sitePseudonymKey)
                 .expiresIn(Duration.ofHours(1))
                 .build();
-    }
-
-    private static void stubHandleHtmlRequest(HttpServerExchange exchange) {
-        exchange.setStatusCode(StatusCodes.NOT_FOUND);
-        exchange.endExchange();
     }
 
     /** Dagger module that binds dependencies needed to create a <code>@Named("api") {@link HttpHandler}</code>. */
@@ -170,11 +159,8 @@ public class SiteApiHttpHandlerTest {
             })
     interface TestModule {
 
-        @Provides
-        @Singleton
-        static AccountIdExtractor provideAccountIdExtractor() {
-            return SiteApiHttpHandlerTest::extractAccountId;
-        }
+        @Binds
+        AccountIdExtractor bindAccountIdExtractor(HeaderAccountIdExtractor impl);
 
         @Provides
         @Singleton
@@ -183,30 +169,8 @@ public class SiteApiHttpHandlerTest {
         }
     }
 
-    /**
-     * Dagger module that binds dependencies needed to create an {@link Undertow}.
-     *
-     * <p>Depends on an unbound <code>@Named("port") int</code>.</p>
-     */
-    @Module(includes = {UndertowModule.class, TestModule.class})
-    interface TestUndertowModule {
-
-        @Provides
-        @Named("verifyHtml")
-        @Singleton
-        static HttpHandler provideVerifyHtmlHttpHandler() {
-            return SiteApiHttpHandlerTest::stubHandleHtmlRequest;
-        }
-
-        @Provides
-        @Singleton
-        static Supplier<HostAndPort> provideHostAndPort(@Named("port") int port) {
-            return () -> HostAndPort.fromParts("localhost", port);
-        }
-    }
-
     /** Dagger component that provides an {@link Undertow} server. */
-    @Component(modules = TestUndertowModule.class)
+    @Component(modules = {TestUndertowModule.class, TestModule.class})
     @Singleton
     interface TestComponent {
 
