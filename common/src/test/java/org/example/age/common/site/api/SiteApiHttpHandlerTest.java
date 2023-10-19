@@ -21,9 +21,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.common.account.AccountIdExtractor;
+import org.example.age.common.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.client.internal.RequestDispatcherModule;
 import org.example.age.common.site.api.testing.FakeAvsHandler;
-import org.example.age.common.site.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.verification.InMemoryVerificationStoreModule;
 import org.example.age.common.testing.HeaderAccountIdExtractor;
@@ -37,7 +37,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public class SiteApiHttpHandlerTest {
+public final class SiteApiHttpHandlerTest {
 
     @RegisterExtension
     private static final TestUndertowServer siteServer = TestUndertowServer.create(TestComponent::createServer);

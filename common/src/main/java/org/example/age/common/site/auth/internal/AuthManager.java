@@ -1,7 +1,7 @@
 package org.example.age.common.site.auth.internal;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.common.site.auth.AuthMatchData;
+import org.example.age.common.auth.AuthMatchData;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 
