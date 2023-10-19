@@ -1,4 +1,4 @@
-package org.example.age.common.site.auth;
+package org.example.age.common.auth;
 
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Inject;

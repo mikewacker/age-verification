@@ -1,4 +1,4 @@
-package org.example.age.common.site.auth;
+package org.example.age.common.auth;
 
 import java.nio.charset.StandardCharsets;
 import org.example.age.data.certificate.AuthKey;

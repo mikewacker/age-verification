@@ -1,4 +1,4 @@
-package org.example.age.common.site.auth;
+package org.example.age.common.auth;
 
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;

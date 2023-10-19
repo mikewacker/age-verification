@@ -8,7 +8,7 @@ import org.example.age.common.account.AccountIdExtractor;
 
 /** Extracts an account ID from the custom {@code Account-Id} header. */
 @Singleton
-public class HeaderAccountIdExtractor implements AccountIdExtractor {
+public final class HeaderAccountIdExtractor implements AccountIdExtractor {
 
     @Inject
     public HeaderAccountIdExtractor() {}
