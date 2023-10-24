@@ -50,13 +50,12 @@ public final class AuthManagerTest {
     public void authPasses() {
         HttpServerExchange localExchange = createStubExchange("user agent");
         VerificationSession session = createSession();
-        int statusCode1 = authManager.onVerificationSessionReceived(session, localExchange);
-        assertThat(statusCode1).isEqualTo(StatusCodes.OK);
+        authManager.onVerificationSessionReceived(session, localExchange);
 
         HttpServerExchange remoteExchange = createStubExchange("user agent");
         AgeCertificate certificate = createCertification(session, remoteExchange);
-        int statusCode2 = authManager.onAgeCertificateReceived(certificate);
-        assertThat(statusCode2).isEqualTo(StatusCodes.OK);
+        int statusCode = authManager.onAgeCertificateReceived(certificate);
+        assertThat(statusCode).isEqualTo(StatusCodes.OK);
     }
 
     @Test

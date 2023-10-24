@@ -28,13 +28,12 @@ final class AuthManagerImpl implements AuthManager {
     }
 
     @Override
-    public int onVerificationSessionReceived(VerificationSession session, HttpServerExchange exchange) {
+    public void onVerificationSessionReceived(VerificationSession session, HttpServerExchange exchange) {
         SecureId requestId = session.verificationRequest().id();
         PendingAuth pendingAuth = createPendingAuth(session, exchange);
         long expiration = session.verificationRequest().expiration();
         XnioExecutor executor = exchange.getIoThread();
-        boolean wasPut = pendingAuths.put(requestId, pendingAuth, expiration, executor);
-        return wasPut ? StatusCodes.OK : StatusCodes.BAD_GATEWAY;
+        pendingAuths.put(requestId, pendingAuth, expiration, executor);
     }
 
     @Override

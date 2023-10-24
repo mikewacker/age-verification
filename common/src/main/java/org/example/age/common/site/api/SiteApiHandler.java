@@ -149,24 +149,14 @@ final class SiteApiHandler implements HttpHandler {
     /** Called when a {@link VerificationSession} is received. */
     private void onVerificationSessionReceived(
             String accountId, VerificationSession session, HttpServerExchange exchange) {
-        int authStatusCode = authManager.onVerificationSessionReceived(session, exchange);
-        if (authStatusCode != StatusCodes.OK) {
-            sendStatusCode(exchange, authStatusCode);
-            return;
-        }
-
-        int verifyStatusCode = verificationManager.onVerificationSessionReceived(accountId, session, exchange);
-        if (verifyStatusCode != StatusCodes.OK) {
-            sendStatusCode(exchange, verifyStatusCode);
-            return;
-        }
-
+        authManager.onVerificationSessionReceived(session, exchange);
+        verificationManager.onVerificationSessionReceived(accountId, session, exchange);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(session.serialize()));
     }
 
     /** Sends only a status code as the response. */
-    private void sendStatusCode(HttpServerExchange exchange, int statusCode) {
+    private static void sendStatusCode(HttpServerExchange exchange, int statusCode) {
         exchange.setStatusCode(statusCode);
         exchange.endExchange();
     }

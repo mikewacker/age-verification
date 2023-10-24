@@ -37,13 +37,12 @@ final class VerificationManagerImpl implements VerificationManager {
     }
 
     @Override
-    public int onVerificationSessionReceived(
+    public void onVerificationSessionReceived(
             String accountId, VerificationSession session, HttpServerExchange exchange) {
         SecureId requestId = session.verificationRequest().id();
         long expiration = session.verificationRequest().expiration();
         XnioExecutor executor = exchange.getIoThread();
-        boolean wasPut = pendingVerifications.put(requestId, accountId, expiration, executor);
-        return wasPut ? StatusCodes.OK : StatusCodes.BAD_GATEWAY;
+        pendingVerifications.put(requestId, accountId, expiration, executor);
     }
 
     @Override
