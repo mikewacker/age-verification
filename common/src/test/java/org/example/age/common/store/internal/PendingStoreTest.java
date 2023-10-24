@@ -1,11 +1,7 @@
 package org.example.age.common.store.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +14,7 @@ public final class PendingStoreTest {
     private MockExecutor executor;
 
     @BeforeEach
-    public void createStoreAndExecutor() {
+    public void createStoreEtAl() {
         store = PendingStore.create();
         executor = MockExecutor.create();
     }
@@ -26,57 +22,50 @@ public final class PendingStoreTest {
     @Test
     public void putAndRemove() {
         long expiration = createExpiration();
-        boolean wasPut = store.put(1, "a", expiration, executor);
-        assertThat(wasPut).isTrue();
+        store.put(1, "a", expiration, executor);
+        assertThat(store.tryGet(1)).hasValue("a");
+        ScheduledTask expirationTask = executor.getExpirationTask();
 
-        Optional<String> maybeValue = store.tryRemove(1);
-        assertThat(maybeValue).hasValue("a");
-        assertThat(executor.wasKeyRemoved()).isTrue();
+        assertThat(store.tryRemove(1)).hasValue("a");
+        assertThat(store.tryGet(1)).isEmpty();
+        assertThat(expirationTask.remove()).isFalse();
     }
 
     @Test
     public void putAndExpire() {
         long expiration = createExpiration(10);
-        boolean wasPut = store.put(1, "a", expiration, executor);
-        assertThat(wasPut).isTrue();
-        assertThat(executor.getDelay()).isCloseTo(10L, Offset.offset(1L));
+        store.put(1, "a", expiration, executor);
+        assertThat(store.tryGet(1)).hasValue("a");
+        ScheduledTask expirationTask = executor.getExpirationTask();
+        assertThat(expirationTask.time()).isCloseTo(10L, Offset.offset(1L));
+        assertThat(expirationTask.unit()).isEqualTo(TimeUnit.SECONDS);
 
-        executor.executeScheduledTask();
-        Optional<String> maybeValue = store.tryRemove(1);
-        assertThat(maybeValue).isEmpty();
-        assertThat(executor.wasKeyRemoved()).isFalse();
+        expirationTask.run();
+        assertThat(store.tryGet(1)).isEmpty();
     }
 
     @Test
     public void putExpiredValue() {
         long expiration = createExpiration(-10);
-        boolean wasPut = store.put(1, "a", expiration, executor);
-        assertThat(wasPut).isFalse();
-
-        Optional<String> maybeValue = store.tryRemove(1);
-        assertThat(maybeValue).isEmpty();
+        store.put(1, "a", expiration, executor);
+        assertThat(store.tryGet(1)).isEmpty();
     }
 
     @Test
-    public void error_Put_DuplicateKey() {
-        long future = (System.currentTimeMillis() / 1000) + 10;
-        store.put(1, "a", future, executor);
-        assertThatThrownBy(() -> store.put(1, "b", future, executor))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("duplicate key");
-
-        Optional<String> maybeValue = store.tryRemove(1);
-        assertThat(maybeValue).hasValue("a");
-    }
-
-    @Test
-    public void error_Put_SchedulingFailure() {
+    public void updateValueAndExpireOldValue() {
         long expiration = createExpiration();
-        executor.failOnSchedule();
-        assertThatThrownBy(() -> store.put(1, "a", expiration, executor));
+        store.put(1, "a", expiration, executor);
+        assertThat(store.tryGet(1)).hasValue("a");
+        ScheduledTask expirationTask = executor.getExpirationTask();
 
-        Optional<String> maybeValue = store.tryRemove(1);
-        assertThat(maybeValue).isEmpty();
+        store.put(1, "a", expiration, executor);
+        expirationTask.run();
+        assertThat(store.tryGet(1)).hasValue("a");
+    }
+
+    @Test
+    public void tryRemoveEmptyValue() {
+        assertThat(store.tryRemove(1)).isEmpty();
     }
 
     private static long createExpiration() {
@@ -88,15 +77,10 @@ public final class PendingStoreTest {
         return now + delta;
     }
 
-    /** Mock {@link XnioExecutor} that can execute a scheduled task immediately (or fail to schedule a task). */
+    /** Mock {@link XnioExecutor} that can execute a scheduled task immediately. */
     private static final class MockExecutor implements XnioExecutor {
 
-        private Runnable command = null;
-        private long time = 0;
-        private TimeUnit unit = null;
-
-        private boolean wasKeyRemoved = false;
-        private boolean failOnSchedule = false;
+        private ScheduledTask expirationTask = null;
 
         public static MockExecutor create() {
             return new MockExecutor();
@@ -109,19 +93,8 @@ public final class PendingStoreTest {
 
         @Override
         public Key executeAfter(Runnable command, long time, TimeUnit unit) {
-            if (failOnSchedule) {
-                throw new RuntimeException();
-            }
-
-            this.command = command;
-            this.time = time;
-            this.unit = unit;
-            Key key = mock(Key.class);
-            when(key.remove()).then(invocation -> {
-                wasKeyRemoved = true;
-                return true;
-            });
-            return key;
+            expirationTask = ScheduledTask.create(command, time, unit);
+            return expirationTask;
         }
 
         @Override
@@ -129,24 +102,51 @@ public final class PendingStoreTest {
             throw new UnsupportedOperationException();
         }
 
-        public long getDelay() {
-            assertThat(unit).isEqualTo(TimeUnit.SECONDS);
-            return time;
-        }
-
-        public boolean wasKeyRemoved() {
-            return wasKeyRemoved;
-        }
-
-        public void executeScheduledTask() {
-            assertThat(command).isNotNull();
-            command.run();
-        }
-
-        public void failOnSchedule() {
-            failOnSchedule = true;
+        public ScheduledTask getExpirationTask() {
+            return expirationTask;
         }
 
         private MockExecutor() {}
+    }
+
+    /** Scheduled task that can be executed immediately. */
+    private static final class ScheduledTask implements Runnable, XnioExecutor.Key {
+
+        private final Runnable command;
+        private final long time;
+        private final TimeUnit unit;
+
+        private boolean wasRemoved = false;
+
+        public static ScheduledTask create(Runnable command, long time, TimeUnit unit) {
+            return new ScheduledTask(command, time, unit);
+        }
+
+        @Override
+        public void run() {
+            wasRemoved = true;
+            command.run();
+        }
+
+        @Override
+        public boolean remove() {
+            boolean result = !wasRemoved;
+            wasRemoved = true;
+            return result;
+        }
+
+        public long time() {
+            return time;
+        }
+
+        public TimeUnit unit() {
+            return unit;
+        }
+
+        private ScheduledTask(Runnable command, long time, TimeUnit unit) {
+            this.command = command;
+            this.time = time;
+            this.unit = unit;
+        }
     }
 }

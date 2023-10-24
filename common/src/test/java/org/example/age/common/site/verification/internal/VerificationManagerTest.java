@@ -52,13 +52,12 @@ public final class VerificationManagerTest {
     public void verify() {
         HttpServerExchange exchange = createStubExchange();
         VerificationSession session = createSession();
-        int statusCode1 = verificationManager.onVerificationSessionReceived("username", session, exchange);
-        assertThat(statusCode1).isEqualTo(StatusCodes.OK);
+        verificationManager.onVerificationSessionReceived("username", session, exchange);
 
         VerifiedUser user = createUser();
         AgeCertificate certificate = createCertificate(session, user);
-        int statusCode2 = verificationManager.onAgeCertificateReceived(certificate);
-        assertThat(statusCode2).isEqualTo(StatusCodes.OK);
+        int statusCode = verificationManager.onAgeCertificateReceived(certificate);
+        assertThat(statusCode).isEqualTo(StatusCodes.OK);
 
         VerificationState state = userStore.load("username");
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
