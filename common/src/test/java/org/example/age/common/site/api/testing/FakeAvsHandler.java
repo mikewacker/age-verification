@@ -3,12 +3,8 @@ package org.example.age.common.site.api.testing;
 import com.google.common.net.HostAndPort;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import java.nio.ByteBuffer;
 import java.security.PrivateKey;
 import java.time.Duration;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Optional;
 import java.util.function.Supplier;
 import javax.inject.Inject;
@@ -19,6 +15,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.example.age.common.auth.AuthMatchDataExtractor;
 import org.example.age.common.client.internal.RequestDispatcher;
+import org.example.age.common.utils.internal.ExchangeUtils;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
@@ -59,35 +56,34 @@ public final class FakeAvsHandler implements HttpHandler {
         switch (exchange.getRequestPath()) {
             case "/api/verification-session" -> handleVerificationSessionRequest(exchange);
             case "/api/age-certificate" -> handleAgeCertificateRequest(exchange);
-            default -> sendStatusCode(exchange, 418);
+            default -> ExchangeUtils.sendStatusCode(exchange, 418);
         }
     }
 
     /** Handles a request to create a {@link VerificationSession} with the provided site ID. */
     private void handleVerificationSessionRequest(HttpServerExchange exchange) {
-        Optional<String> maybeSiteId = tryGetQueryParameter(exchange, "site-id");
+        Optional<String> maybeSiteId = ExchangeUtils.tryGetQueryParameter(exchange, "site-id");
         if (maybeSiteId.isEmpty()) {
-            sendStatusCode(exchange, 418);
+            ExchangeUtils.sendStatusCode(exchange, 418);
             return;
         }
 
         String siteId = maybeSiteId.get();
         session = createVerificationSession(siteId);
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send(ByteBuffer.wrap(session.serialize()));
+        ExchangeUtils.sendResponseBody(exchange, "application/json", session, VerificationSession::serialize);
     }
 
     /** Handles a request to send an {@link AgeCertificate} for the provided pseudonym. */
     private void handleAgeCertificateRequest(HttpServerExchange exchange) {
         if (session == null) {
-            sendStatusCode(exchange, 418);
+            ExchangeUtils.sendStatusCode(exchange, 418);
             return;
         }
 
         Optional<SecureId> maybePseudonym =
-                tryGetQueryParameter(exchange, "pseudonym").map(SecureId::fromString);
+                ExchangeUtils.tryGetQueryParameter(exchange, "pseudonym").map(SecureId::fromString);
         if (maybePseudonym.isEmpty()) {
-            sendStatusCode(exchange, 418);
+            ExchangeUtils.sendStatusCode(exchange, 418);
             return;
         }
 
@@ -97,7 +93,7 @@ public final class FakeAvsHandler implements HttpHandler {
         session = null;
         Request request = createAgeCertificateRequest(signedCertificate);
         requestDispatcher.dispatch(
-                request, exchange, (response, responseBody, ex) -> sendStatusCode(ex, response.code()));
+                request, exchange, (response, responseBody, ex) -> ExchangeUtils.sendStatusCode(ex, response.code()));
     }
 
     /** Create a {@link VerificationSession} for the site. */
@@ -127,17 +123,5 @@ public final class FakeAvsHandler implements HttpHandler {
                 .url(url)
                 .post(RequestBody.create(signedCertificate))
                 .build();
-    }
-
-    /** Tries to get the value of a query parameter. */
-    private Optional<String> tryGetQueryParameter(HttpServerExchange exchange, String name) {
-        Deque<String> values = exchange.getQueryParameters().getOrDefault(name, new ArrayDeque<>());
-        return !values.isEmpty() ? Optional.of(values.getFirst()) : Optional.empty();
-    }
-
-    /** Sends only a status code as the response. */
-    private void sendStatusCode(HttpServerExchange exchange, int statusCode) {
-        exchange.setStatusCode(statusCode);
-        exchange.endExchange();
     }
 }
