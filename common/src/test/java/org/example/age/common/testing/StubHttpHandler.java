@@ -5,6 +5,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.example.age.common.utils.internal.ExchangeUtils;
 
 /** Stub {@link HttpHandler} that always responds with a 404 error. */
 @Singleton
@@ -15,7 +16,6 @@ public final class StubHttpHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        exchange.setStatusCode(StatusCodes.NOT_FOUND);
-        exchange.endExchange();
+        ExchangeUtils.sendStatusCode(exchange, StatusCodes.NOT_FOUND);
     }
 }

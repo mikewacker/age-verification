@@ -20,6 +20,12 @@ public interface TestServer<T> {
     String rootUrl();
 
     /** Gets the URL at the provided path. */
+    @SuppressWarnings("FormatStringAnnotation")
+    default String url(String path) {
+        return url(path, new Object[0]);
+    }
+
+    /** Gets the URL at the provided path. */
     @FormatMethod
     default String url(String pathFormat, Object... args) {
         pathFormat = pathFormat.startsWith("/") ? pathFormat : String.format("/%s", pathFormat);

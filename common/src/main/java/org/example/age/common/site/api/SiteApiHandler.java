@@ -3,9 +3,7 @@ package org.example.age.common.site.api;
 import com.google.common.net.HostAndPort;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
-import java.nio.ByteBuffer;
 import java.security.PublicKey;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -20,6 +18,7 @@ import org.example.age.common.account.AccountIdExtractor;
 import org.example.age.common.client.internal.RequestDispatcher;
 import org.example.age.common.site.auth.internal.AuthManager;
 import org.example.age.common.site.verification.internal.VerificationManager;
+import org.example.age.common.utils.internal.ExchangeUtils;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 
@@ -63,9 +62,9 @@ final class SiteApiHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange exchange) {
         switch (exchange.getRelativePath()) {
             case "/verification-session" -> handleVerificationSessionRequest(exchange);
-            case "/age-certificate" -> exchange.getRequestReceiver()
-                    .receiveFullBytes(this::handleAgeCertificateRequest);
-            default -> sendStatusCode(exchange, StatusCodes.NOT_FOUND);
+            case "/age-certificate" -> ExchangeUtils.handleRequestWithBody(
+                    exchange, this::verifyAgeCertificate, this::handleAgeCertificateRequest);
+            default -> ExchangeUtils.sendStatusCode(exchange, StatusCodes.NOT_FOUND);
         }
     }
 
@@ -73,7 +72,7 @@ final class SiteApiHandler implements HttpHandler {
     private void handleVerificationSessionRequest(HttpServerExchange exchange) {
         Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
-            sendStatusCode(exchange, StatusCodes.UNAUTHORIZED);
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.UNAUTHORIZED);
             return;
         }
 
@@ -84,32 +83,6 @@ final class SiteApiHandler implements HttpHandler {
                 exchange,
                 (response, responseBody, ex) ->
                         onVerificationSessionResponseReceived(accountId, response, responseBody, ex));
-    }
-
-    /** Handles a request to process an {@link AgeCertificate}. */
-    private void handleAgeCertificateRequest(HttpServerExchange exchange, byte[] signedCertificate) {
-        AgeCertificate certificate;
-        try {
-            certificate = AgeCertificate.verifyForSite(
-                    signedCertificate, avsPublicSigningKeySupplier.get(), siteIdSupplier.get());
-        } catch (RuntimeException e) {
-            sendStatusCode(exchange, StatusCodes.BAD_REQUEST);
-            return;
-        }
-
-        int authStatusCode = authManager.onAgeCertificateReceived(certificate);
-        if (authStatusCode != StatusCodes.OK) {
-            sendStatusCode(exchange, authStatusCode);
-            return;
-        }
-
-        int verifyStatusCode = verificationManager.onAgeCertificateReceived(certificate);
-        if (verifyStatusCode != StatusCodes.OK) {
-            sendStatusCode(exchange, verifyStatusCode);
-            return;
-        }
-
-        exchange.endExchange();
     }
 
     /** Creates a backend request to obtain a {@link VerificationSession}. */
@@ -131,7 +104,7 @@ final class SiteApiHandler implements HttpHandler {
         if (!response.isSuccessful()) {
             boolean is5xxError = (response.code() / 100) == 5;
             int statusCode = is5xxError ? StatusCodes.BAD_GATEWAY : StatusCodes.INTERNAL_SERVER_ERROR;
-            sendStatusCode(exchange, statusCode);
+            ExchangeUtils.sendStatusCode(exchange, statusCode);
             return;
         }
 
@@ -139,25 +112,34 @@ final class SiteApiHandler implements HttpHandler {
         try {
             session = VerificationSession.deserialize(responseBody);
         } catch (RuntimeException e) {
-            sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
             return;
         }
 
-        onVerificationSessionReceived(accountId, session, exchange);
-    }
-
-    /** Called when a {@link VerificationSession} is received. */
-    private void onVerificationSessionReceived(
-            String accountId, VerificationSession session, HttpServerExchange exchange) {
         authManager.onVerificationSessionReceived(session, exchange);
         verificationManager.onVerificationSessionReceived(accountId, session, exchange);
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send(ByteBuffer.wrap(session.serialize()));
+        ExchangeUtils.sendResponseBody(exchange, "application/json", session, VerificationSession::serialize);
     }
 
-    /** Sends only a status code as the response. */
-    private static void sendStatusCode(HttpServerExchange exchange, int statusCode) {
-        exchange.setStatusCode(statusCode);
-        exchange.endExchange();
+    /** Verifies a signed {@link AgeCertificate}. */
+    private AgeCertificate verifyAgeCertificate(byte[] signedCertificate) {
+        return AgeCertificate.verifyForSite(signedCertificate, avsPublicSigningKeySupplier.get(), siteIdSupplier.get());
+    }
+
+    /** Handles a request to process an {@link AgeCertificate}. */
+    private void handleAgeCertificateRequest(HttpServerExchange exchange, AgeCertificate certificate) {
+        int authStatusCode = authManager.onAgeCertificateReceived(certificate);
+        if (authStatusCode != StatusCodes.OK) {
+            ExchangeUtils.sendStatusCode(exchange, authStatusCode);
+            return;
+        }
+
+        int verifyStatusCode = verificationManager.onAgeCertificateReceived(certificate);
+        if (verifyStatusCode != StatusCodes.OK) {
+            ExchangeUtils.sendStatusCode(exchange, verifyStatusCode);
+            return;
+        }
+
+        ExchangeUtils.sendStatusCode(exchange, StatusCodes.OK);
     }
 }

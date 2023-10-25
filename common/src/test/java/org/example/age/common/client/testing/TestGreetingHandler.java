@@ -14,6 +14,7 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.client.internal.ExchangeClient;
+import org.example.age.common.utils.internal.ExchangeUtils;
 
 /** Sends a greeting, making a backend request via {@link ExchangeClient} to get the recipient. */
 @Singleton
@@ -52,7 +53,7 @@ public final class TestGreetingHandler implements HttpHandler {
             try {
                 recipient = response.body().string();
             } catch (IOException e) {
-                sendError();
+                ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
                 return;
             }
 
@@ -62,13 +63,7 @@ public final class TestGreetingHandler implements HttpHandler {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            sendError();
-        }
-
-        /** Sends a 502 error. */
-        private void sendError() {
-            exchange.setStatusCode(StatusCodes.BAD_GATEWAY);
-            exchange.endExchange();
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
         }
 
         private GreetingCallback(HttpServerExchange exchange) {

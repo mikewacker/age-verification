@@ -10,6 +10,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.example.age.common.utils.internal.ExchangeUtils;
 import org.xnio.IoUtils;
 
 @Singleton
@@ -46,7 +47,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
             try {
                 responseBody = response.body().bytes();
             } catch (IOException e) {
-                handleFailure();
+                ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
                 return;
             }
 
@@ -59,13 +60,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            handleFailure();
-        }
-
-        /** Handles a failure by sending a 502 error. */
-        private void handleFailure() {
-            exchange.setStatusCode(StatusCodes.BAD_GATEWAY);
-            exchange.endExchange();
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
         }
 
         /** Handles an uncaught exception by sending a 500 error. */
@@ -75,8 +70,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
                 return;
             }
 
-            exchange.setStatusCode(StatusCodes.INTERNAL_SERVER_ERROR);
-            exchange.endExchange();
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
         }
 
         private AdaptedCallback(HttpServerExchange exchange, ExchangeCallback callback) {
