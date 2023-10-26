@@ -92,7 +92,7 @@ public final class FakeAvsHandler implements HttpHandler {
         byte[] signedCertificate = certificate.sign(privateSigningKeySupplier.get());
         session = null;
         Request request = createAgeCertificateRequest(signedCertificate);
-        requestDispatcher.dispatch(
+        requestDispatcher.dispatchWithoutResponseBody(
                 request, exchange, (response, responseBody, ex) -> ExchangeUtils.sendStatusCode(ex, response.code()));
     }
 
