@@ -7,7 +7,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
-import java.util.function.Function;
 
 /** Utilities for handling an {@link HttpServerExchange}. */
 public final class ExchangeUtils {
@@ -16,7 +15,7 @@ public final class ExchangeUtils {
 
     /** Handles a request with a body. */
     public static <T> void handleRequestWithBody(
-            HttpServerExchange exchange, Function<byte[], T> deserializer, RequestBodyCallback<T> handler) {
+            HttpServerExchange exchange, Deserializer<T> deserializer, RequestBodyCallback<T> handler) {
         exchange.getRequestReceiver()
                 .receiveFullBytes(
                         (ex, rawRequestBody) -> onRequestBodyReceived(exchange, rawRequestBody, deserializer, handler));
@@ -36,9 +35,9 @@ public final class ExchangeUtils {
 
     /** Completes the exchange by sending a response body. */
     public static <T> void sendResponseBody(
-            HttpServerExchange exchange, String contentType, T responseBody, Function<T, byte[]> serializer) {
+            HttpServerExchange exchange, String contentType, T responseBody, Serializer<T> serializer) {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
-        ByteBuffer rawResponseBody = ByteBuffer.wrap(serializer.apply(responseBody));
+        ByteBuffer rawResponseBody = ByteBuffer.wrap(serializer.serialize(responseBody));
         exchange.getResponseSender().send(rawResponseBody);
     }
 
@@ -47,7 +46,7 @@ public final class ExchangeUtils {
             HttpServerExchange exchange,
             String contentType,
             HttpOptional<T> maybeResponseBody,
-            Function<T, byte[]> serializer) {
+            Serializer<T> serializer) {
         if (maybeResponseBody.isEmpty()) {
             sendStatusCode(exchange, maybeResponseBody.statusCode());
             return;
@@ -61,12 +60,12 @@ public final class ExchangeUtils {
     private static <T> void onRequestBodyReceived(
             HttpServerExchange exchange,
             byte[] rawRequestBody,
-            Function<byte[], T> deserializer,
+            Deserializer<T> deserializer,
             RequestBodyCallback<T> handler) {
         T requestBody;
         try {
-            requestBody = deserializer.apply(rawRequestBody);
-        } catch (RuntimeException e) {
+            requestBody = deserializer.deserialize(rawRequestBody);
+        } catch (Exception e) {
             sendStatusCode(exchange, StatusCodes.BAD_REQUEST);
             return;
         }
@@ -80,11 +79,4 @@ public final class ExchangeUtils {
 
     // static class
     private ExchangeUtils() {}
-
-    /** Handles a request with a deserialized body. */
-    @FunctionalInterface
-    public interface RequestBodyCallback<T> {
-
-        void handleRequest(HttpServerExchange exchange, T requestBody) throws Exception;
-    }
 }

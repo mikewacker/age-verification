@@ -10,6 +10,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.example.age.common.utils.internal.Deserializer;
 import org.example.age.common.utils.internal.ExchangeUtils;
 import org.xnio.IoUtils;
 
@@ -24,29 +25,35 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     @Override
-    public void dispatch(Request request, HttpServerExchange exchange, ExchangeCallback callback) {
+    public <T> void dispatchWithResponseBody(
+            Request request, HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback) {
         Call call = client.getInstance(exchange).newCall(request);
-        Callback adaptedCallback = AdaptedCallback.create(exchange, callback);
+        Callback adaptedCallback = AdaptedCallback.create(exchange, deserializer, callback);
         exchange.dispatch(SameThreadExecutor.INSTANCE, () -> call.enqueue(adaptedCallback));
     }
 
     /** Adapts a {@link Callback} to an {@link ExchangeCallback}. */
-    private static final class AdaptedCallback implements Callback {
+    private static final class AdaptedCallback<T> implements Callback {
 
         private final HttpServerExchange exchange;
-        private final ExchangeCallback callback;
+        private final Deserializer<T> deserializer;
+        private final ExchangeCallback<T> callback;
 
         /** Creates an adapted callback from the exchange and the callback. */
-        public static Callback create(HttpServerExchange exchange, ExchangeCallback callback) {
-            return new AdaptedCallback(exchange, callback);
+        public static <T> Callback create(
+                HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback) {
+            return new AdaptedCallback(exchange, deserializer, callback);
         }
 
         @Override
         public void onResponse(Call call, Response response) {
-            byte[] responseBody;
+            T responseBody = null;
             try {
-                responseBody = response.body().bytes();
-            } catch (IOException e) {
+                if (response.isSuccessful()) {
+                    byte[] rawResponseBody = response.body().bytes();
+                    responseBody = deserializer.deserialize(rawResponseBody);
+                }
+            } catch (Exception e) {
                 ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
                 return;
             }
@@ -73,8 +80,10 @@ final class RequestDispatcherImpl implements RequestDispatcher {
             ExchangeUtils.sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
         }
 
-        private AdaptedCallback(HttpServerExchange exchange, ExchangeCallback callback) {
+        private AdaptedCallback(
+                HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback) {
             this.exchange = exchange;
+            this.deserializer = deserializer;
             this.callback = callback;
         }
     }

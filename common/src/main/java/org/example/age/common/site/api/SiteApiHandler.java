@@ -78,11 +78,11 @@ final class SiteApiHandler implements HttpHandler {
 
         String accountId = maybeAccountId.get();
         Request request = createVerificationSessionRequest();
-        requestDispatcher.dispatch(
+        requestDispatcher.dispatchWithResponseBody(
                 request,
                 exchange,
-                (response, responseBody, ex) ->
-                        onVerificationSessionResponseReceived(accountId, response, responseBody, ex));
+                VerificationSession::deserialize,
+                (response, session, ex) -> onVerificationSessionResponseReceived(accountId, response, session, ex));
     }
 
     /** Creates a backend request to obtain a {@link VerificationSession}. */
@@ -100,19 +100,11 @@ final class SiteApiHandler implements HttpHandler {
 
     /** Called when a response is received to the request to create a {@link VerificationSession}. */
     private void onVerificationSessionResponseReceived(
-            String accountId, Response response, byte[] responseBody, HttpServerExchange exchange) {
+            String accountId, Response response, VerificationSession session, HttpServerExchange exchange) {
         if (!response.isSuccessful()) {
             boolean is5xxError = (response.code() / 100) == 5;
             int statusCode = is5xxError ? StatusCodes.BAD_GATEWAY : StatusCodes.INTERNAL_SERVER_ERROR;
             ExchangeUtils.sendStatusCode(exchange, statusCode);
-            return;
-        }
-
-        VerificationSession session;
-        try {
-            session = VerificationSession.deserialize(responseBody);
-        } catch (RuntimeException e) {
-            ExchangeUtils.sendStatusCode(exchange, StatusCodes.BAD_GATEWAY);
             return;
         }
 

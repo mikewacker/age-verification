@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
-import org.example.age.common.client.testing.TestProxyHandler;
+import org.example.age.common.client.testing.TestTextProxyHandler;
 import org.example.age.testing.MockServer;
 import org.example.age.testing.TestClient;
 import org.example.age.testing.TestUndertowServer;
@@ -30,7 +30,7 @@ public final class RequestDispatcherTest {
     private static final MockServer backendServer = MockServer.create();
 
     @Test
-    public void exchange() throws IOException {
+    public void exchange_Ok() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("test"));
         Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(200);
@@ -38,14 +38,21 @@ public final class RequestDispatcherTest {
     }
 
     @Test
-    public void backendFailure() throws IOException {
+    public void exchange_ErrorCode() throws IOException {
+        backendServer.enqueue(new MockResponse().setResponseCode(400));
+        Response response = TestClient.get(frontendServer.rootUrl());
+        assertThat(response.code()).isEqualTo(400);
+    }
+
+    @Test
+    public void backendFailure_ResponseFailure() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
         Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
-    public void backendFailureReadingResponseBody() throws IOException {
+    public void backendFailure_ResponseBodyFailure() throws IOException {
         backendServer.enqueue(
                 new MockResponse().setBody("test").setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
         Response response = TestClient.get(frontendServer.rootUrl());
@@ -53,8 +60,15 @@ public final class RequestDispatcherTest {
     }
 
     @Test
+    public void backendFailure_BadResponseBody() throws IOException {
+        backendServer.enqueue(new MockResponse().setBody("deserialize error"));
+        Response response = TestClient.get(frontendServer.rootUrl());
+        assertThat(response.code()).isEqualTo(502);
+    }
+
+    @Test
     public void frontendCallbackException() throws IOException {
-        backendServer.enqueue(new MockResponse().setBody("error")); // special exception trigger
+        backendServer.enqueue(new MockResponse().setBody("callback error"));
         Response response = TestClient.get(frontendServer.rootUrl());
         assertThat(response.code()).isEqualTo(500);
     }
@@ -64,7 +78,7 @@ public final class RequestDispatcherTest {
     interface TestModule {
 
         @Binds
-        HttpHandler bindHttpHandler(TestProxyHandler impl);
+        HttpHandler bindHttpHandler(TestTextProxyHandler impl);
 
         @Provides
         @Named("backendUrl")
