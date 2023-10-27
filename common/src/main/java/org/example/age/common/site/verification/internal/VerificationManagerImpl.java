@@ -11,11 +11,11 @@ import javax.inject.Singleton;
 import org.example.age.common.site.verification.VerificationState;
 import org.example.age.common.site.verification.VerificationStore;
 import org.example.age.common.store.internal.PendingStore;
+import org.example.age.common.utils.internal.PendingStoreUtils;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
-import org.xnio.XnioExecutor;
 
 @Singleton
 final class VerificationManagerImpl implements VerificationManager {
@@ -40,9 +40,7 @@ final class VerificationManagerImpl implements VerificationManager {
     public void onVerificationSessionReceived(
             String accountId, VerificationSession session, HttpServerExchange exchange) {
         SecureId requestId = session.verificationRequest().id();
-        long expiration = session.verificationRequest().expiration();
-        XnioExecutor executor = exchange.getIoThread();
-        pendingVerifications.put(requestId, accountId, expiration, executor);
+        PendingStoreUtils.putForVerificationSession(pendingVerifications, requestId, accountId, session, exchange);
     }
 
     @Override
@@ -54,17 +52,17 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         String accountId = maybeAccountId.get();
-        VerifiedUser user = certificate.verifiedUser();
-        VerifiedUser localizedUser = user.localize(pseudonymKeySupplier.get());
-        VerificationState state = createVerifiedState(localizedUser);
+        VerificationState state = createVerifiedState(certificate);
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave(accountId, state);
         return maybeDuplicateAccountId.isEmpty() ? StatusCodes.OK : StatusCodes.CONFLICT;
     }
 
-    /** Creates a verified {@link VerificationState}. */
-    private VerificationState createVerifiedState(VerifiedUser user) {
+    /** Creates a verified {@link VerificationState} from an {@link AgeCertificate}. */
+    private VerificationState createVerifiedState(AgeCertificate certificate) {
+        VerifiedUser user = certificate.verifiedUser();
+        VerifiedUser localizedUser = user.localize(pseudonymKeySupplier.get());
         long now = System.currentTimeMillis() / 1000;
         long expiration = now + expiresInSupplier.get().toSeconds();
-        return VerificationState.verified(user, expiration);
+        return VerificationState.verified(localizedUser, expiration);
     }
 }
