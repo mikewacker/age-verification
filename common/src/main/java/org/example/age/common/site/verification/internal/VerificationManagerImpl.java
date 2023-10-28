@@ -10,7 +10,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.common.site.verification.VerificationState;
 import org.example.age.common.site.verification.VerificationStore;
-import org.example.age.common.store.internal.PendingStore;
+import org.example.age.common.store.PendingStore;
+import org.example.age.common.store.PendingStoreFactory;
 import org.example.age.common.utils.internal.PendingStoreUtils;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
@@ -21,17 +22,18 @@ import org.example.age.data.certificate.VerificationSession;
 final class VerificationManagerImpl implements VerificationManager {
 
     private final VerificationStore verificationStore;
+    private final PendingStore<SecureId, String> pendingVerifications;
     private final Supplier<SecureId> pseudonymKeySupplier;
     private final Supplier<Duration> expiresInSupplier;
-
-    private final PendingStore<SecureId, String> pendingVerifications = PendingStore.create();
 
     @Inject
     public VerificationManagerImpl(
             VerificationStore verificationStore,
+            PendingStoreFactory pendingStoreFactory,
             @Named("pseudonymKey") Supplier<SecureId> pseudonymKeySupplier,
             @Named("expiresIn") Supplier<Duration> expiresInSupplier) {
         this.verificationStore = verificationStore;
+        this.pendingVerifications = pendingStoreFactory.create();
         this.pseudonymKeySupplier = pseudonymKeySupplier;
         this.expiresInSupplier = expiresInSupplier;
     }

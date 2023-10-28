@@ -12,6 +12,7 @@ import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.config.internal.SiteConfigurerModule;
 import org.example.age.common.site.verification.VerificationStore;
 import org.example.age.common.site.verification.internal.VerificationManagerModule;
+import org.example.age.common.store.PendingStoreFactory;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.
@@ -21,6 +22,7 @@ import org.example.age.common.site.verification.internal.VerificationManagerModu
  *     <li>{@link AccountIdExtractor}</li>
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
+ *     <li>{@link PendingStoreFactory}</li>
  *     <li>{@link SiteConfig}</li>
  * </ul>
  */

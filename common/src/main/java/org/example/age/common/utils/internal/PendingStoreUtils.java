@@ -1,7 +1,7 @@
 package org.example.age.common.utils.internal;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.common.store.internal.PendingStore;
+import org.example.age.common.store.PendingStore;
 import org.example.age.data.certificate.VerificationSession;
 import org.xnio.XnioExecutor;
 
