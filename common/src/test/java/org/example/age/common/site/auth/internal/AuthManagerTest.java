@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import dagger.Component;
+import dagger.Module;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
@@ -13,6 +14,7 @@ import javax.inject.Singleton;
 import org.example.age.common.auth.AuthMatchData;
 import org.example.age.common.auth.AuthMatchDataExtractor;
 import org.example.age.common.auth.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
@@ -115,8 +117,17 @@ public final class AuthManagerTest {
         return AgeCertificate.of(request, user, authToken);
     }
 
+    /** Dagger module that binds dependencies needed to create an {@link AuthManager}. */
+    @Module(
+            includes = {
+                AuthManagerModule.class,
+                UserAgentAuthMatchDataExtractorModule.class,
+                InMemoryPendingStoreFactoryModule.class,
+            })
+    interface TestModule {}
+
     /** Dagger component that provides an {@link AuthManager}, and also an {@link AuthMatchDataExtractor}. */
-    @Component(modules = {AuthManagerModule.class, UserAgentAuthMatchDataExtractorModule.class})
+    @Component(modules = TestModule.class)
     @Singleton
     interface TestComponent {
 

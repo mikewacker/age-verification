@@ -4,6 +4,8 @@ import dagger.Binds;
 import dagger.Module;
 import java.time.Duration;
 import org.example.age.common.site.verification.VerificationStore;
+import org.example.age.common.store.PendingStoreFactory;
+import org.example.age.data.SecureId;
 
 /**
  * Dagger module that publishes a binding for {@link VerificationManager}.
@@ -11,6 +13,8 @@ import org.example.age.common.site.verification.VerificationStore;
  * <p>Depends on an unbound...</p>
  * <ul>
  *     <li>{@link VerificationStore}</li>
+ *     <li>{@link PendingStoreFactory}</li>
+ *     <li><code>@Named("pseudonymKey") Supplier&lt;{@link SecureId}&gt;</code></li>
  *     <li><code>@Named("expiresIn") Supplier&lt;{@link Duration}&gt;</code>: expiration for verified accounts</li>
  * </ul>
  */

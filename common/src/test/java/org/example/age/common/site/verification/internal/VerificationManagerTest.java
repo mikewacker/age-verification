@@ -3,8 +3,9 @@ package org.example.age.common.site.verification.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import dagger.BindsInstance;
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.time.Duration;
@@ -16,6 +17,7 @@ import org.example.age.common.site.verification.InMemoryVerificationStoreModule;
 import org.example.age.common.site.verification.VerificationState;
 import org.example.age.common.site.verification.VerificationStatus;
 import org.example.age.common.site.verification.VerificationStore;
+import org.example.age.common.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
@@ -119,25 +121,41 @@ public final class VerificationManagerTest {
         return AgeCertificate.of(request, user, authToken);
     }
 
+    /** Dagger module that binds dependencies needed to create a {@link VerificationManager}. */
+    @Module(
+            includes = {
+                VerificationManagerModule.class,
+                InMemoryVerificationStoreModule.class,
+                InMemoryPendingStoreFactoryModule.class,
+            })
+    interface TestModule {
+
+        @Provides
+        @Named("pseudonymKey")
+        @Singleton
+        static Supplier<SecureId> providePseudonymKey() {
+            return () -> pseudonymKey;
+        }
+
+        @Provides
+        @Named("expiresIn")
+        @Singleton
+        static Supplier<Duration> provideExpiresIn() {
+            return () -> EXPIRES_IN;
+        }
+    }
+
     /** Dagger component that provides a {@link VerificationManager}, and also a {@link VerificationStore}. */
-    @Component(modules = {VerificationManagerModule.class, InMemoryVerificationStoreModule.class})
+    @Component(modules = TestModule.class)
     @Singleton
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerVerificationManagerTest_TestComponent.factory().create(() -> pseudonymKey, () -> EXPIRES_IN);
+            return DaggerVerificationManagerTest_TestComponent.create();
         }
 
         VerificationManager verificationManager();
 
         VerificationStore verificationStore();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(
-                    @BindsInstance @Named("pseudonymKey") Supplier<SecureId> pseudonymKeySupplier,
-                    @BindsInstance @Named("expiresIn") Supplier<Duration> expiresInSupplier);
-        }
     }
 }

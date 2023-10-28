@@ -26,6 +26,7 @@ import org.example.age.common.client.internal.RequestDispatcherModule;
 import org.example.age.common.site.api.testing.FakeAvsHandler;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.verification.InMemoryVerificationStoreModule;
+import org.example.age.common.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.common.testing.HeaderAccountIdExtractor;
 import org.example.age.common.testing.TestUndertowModule;
 import org.example.age.data.SecureId;
@@ -156,6 +157,7 @@ public final class SiteApiHttpHandlerTest {
                 SiteApiModule.class,
                 UserAgentAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
+                InMemoryPendingStoreFactoryModule.class,
             })
     interface TestModule {
 

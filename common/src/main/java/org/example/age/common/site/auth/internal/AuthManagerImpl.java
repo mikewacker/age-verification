@@ -7,7 +7,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.common.auth.AuthMatchData;
 import org.example.age.common.auth.AuthMatchDataExtractor;
-import org.example.age.common.store.internal.PendingStore;
+import org.example.age.common.store.PendingStore;
+import org.example.age.common.store.PendingStoreFactory;
 import org.example.age.common.utils.internal.PendingStoreUtils;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.AgeCertificate;
@@ -19,12 +20,12 @@ import org.example.age.data.certificate.VerificationSession;
 final class AuthManagerImpl implements AuthManager {
 
     private final AuthMatchDataExtractor authDataExtractor;
-
-    private final PendingStore<SecureId, PendingAuth> pendingAuths = PendingStore.create();
+    private final PendingStore<SecureId, PendingAuth> pendingAuths;
 
     @Inject
-    public AuthManagerImpl(AuthMatchDataExtractor authDataExtractor) {
+    public AuthManagerImpl(AuthMatchDataExtractor authDataExtractor, PendingStoreFactory pendingStoreFactory) {
         this.authDataExtractor = authDataExtractor;
+        this.pendingAuths = pendingStoreFactory.create();
     }
 
     @Override

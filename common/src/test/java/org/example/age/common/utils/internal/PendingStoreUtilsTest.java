@@ -3,19 +3,31 @@ package org.example.age.common.utils.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import dagger.Component;
 import io.undertow.server.HttpServerExchange;
 import java.time.Duration;
-import org.example.age.common.store.internal.PendingStore;
+import javax.inject.Singleton;
+import org.example.age.common.store.InMemoryPendingStoreFactoryModule;
+import org.example.age.common.store.PendingStore;
+import org.example.age.common.store.PendingStoreFactory;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.testing.TestExchanges;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public final class PendingStoreUtilsTest {
 
+    private PendingStore<Integer, String> store;
+
+    @BeforeEach
+    public void createPendingStore() {
+        PendingStoreFactory storeFactory = TestComponent.createPendingStoreFactory();
+        store = storeFactory.create();
+    }
+
     @Test
     public void putAndGet() {
-        PendingStore<Integer, String> store = PendingStore.create();
         VerificationSession session = createVerificationSession();
         HttpServerExchange exchange = createStubExchange();
         PendingStoreUtils.putForVerificationSession(store, 1, "a", session, exchange);
@@ -31,5 +43,18 @@ public final class PendingStoreUtilsTest {
         HttpServerExchange exchange = mock(HttpServerExchange.class);
         TestExchanges.addStubIoThread(exchange);
         return exchange;
+    }
+
+    /** Dagger component that provides a {@link PendingStoreFactory}. */
+    @Component(modules = InMemoryPendingStoreFactoryModule.class)
+    @Singleton
+    interface TestComponent {
+
+        static PendingStoreFactory createPendingStoreFactory() {
+            TestComponent component = DaggerPendingStoreUtilsTest_TestComponent.create();
+            return component.pendingStoreFactory();
+        }
+
+        PendingStoreFactory pendingStoreFactory();
     }
 }

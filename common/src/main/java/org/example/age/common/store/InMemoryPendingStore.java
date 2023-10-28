@@ -1,4 +1,4 @@
-package org.example.age.common.store.internal;
+package org.example.age.common.store;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -8,20 +8,15 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.xnio.XnioExecutor;
 
-/** Key-value store where values are associated with a pending action that expires. */
-public final class PendingStore<K, V> {
+/** In-memory {@link PendingStore}. */
+final class InMemoryPendingStore<K, V> implements PendingStore<K, V> {
 
     private final BiMap<K, Holder<V>> store = HashBiMap.create();
     private final Map<K, XnioExecutor.Key> expirationKeys = new HashMap<>();
 
     private final Object lock = new Object();
 
-    /** Creates a store. */
-    public static <K, V> PendingStore<K, V> create() {
-        return new PendingStore<>();
-    }
-
-    /** Inserts a value with an expiration timestamp (in seconds). */
+    @Override
     public void put(K key, V value, long expiration, XnioExecutor executor) {
         // Check that the value is not already expired.
         long now = System.currentTimeMillis() / 1000;
@@ -43,7 +38,7 @@ public final class PendingStore<K, V> {
         }
     }
 
-    /** Gets a value, if present. */
+    @Override
     public Optional<V> tryGet(K key) {
         Optional<Holder<V>> maybeHolder;
         synchronized (lock) {
@@ -52,7 +47,7 @@ public final class PendingStore<K, V> {
         return maybeHolder.isPresent() ? Optional.of(maybeHolder.get().v) : Optional.empty();
     }
 
-    /** Removes and returns a value, if present. */
+    @Override
     public Optional<V> tryRemove(K key) {
         synchronized (lock) {
             Optional<XnioExecutor.Key> maybeExpirationKey = Optional.ofNullable(expirationKeys.remove(key));
@@ -78,8 +73,6 @@ public final class PendingStore<K, V> {
             expirationKeys.remove(key);
         }
     }
-
-    private PendingStore() {}
 
     /** Value holder that ensures that {@link Object#equals(Object)} behaves like {@code ==}. */
     private static final class Holder<V> {
