@@ -4,15 +4,15 @@ import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
-import org.example.age.common.account.AccountIdExtractor;
-import org.example.age.common.auth.AuthMatchDataExtractor;
-import org.example.age.common.client.internal.RequestDispatcherModule;
+import org.example.age.common.base.account.AccountIdExtractor;
+import org.example.age.common.base.auth.AuthMatchDataExtractor;
+import org.example.age.common.base.client.internal.RequestDispatcherModule;
+import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.site.auth.internal.AuthManagerModule;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.config.internal.SiteConfigurerModule;
 import org.example.age.common.site.store.VerificationStore;
 import org.example.age.common.site.verification.internal.VerificationManagerModule;
-import org.example.age.common.store.PendingStoreFactory;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.

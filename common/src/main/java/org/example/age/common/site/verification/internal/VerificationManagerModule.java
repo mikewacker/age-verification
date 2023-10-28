@@ -3,8 +3,8 @@ package org.example.age.common.site.verification.internal;
 import dagger.Binds;
 import dagger.Module;
 import java.time.Duration;
+import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.site.store.VerificationStore;
-import org.example.age.common.store.PendingStoreFactory;
 import org.example.age.data.SecureId;
 
 /**

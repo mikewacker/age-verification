@@ -9,7 +9,7 @@ import io.undertow.server.HttpHandler;
 import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.common.server.UndertowModule;
+import org.example.age.common.server.undertow.UndertowModule;
 
 /**
  * Dagger module that binds dependencies needed to create an {@link Undertow}.
