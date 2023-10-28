@@ -1,12 +1,12 @@
 module org.example.age.common {
-    exports org.example.age.common.account;
-    exports org.example.age.common.auth;
-    exports org.example.age.common.html;
-    exports org.example.age.common.server;
+    exports org.example.age.common.base.account;
+    exports org.example.age.common.base.auth;
+    exports org.example.age.common.base.store;
+    exports org.example.age.common.server.html;
+    exports org.example.age.common.server.undertow;
     exports org.example.age.common.site.api;
     exports org.example.age.common.site.config;
     exports org.example.age.common.site.store;
-    exports org.example.age.common.store;
 
     requires static org.immutables.value.annotations;
     requires com.google.common;

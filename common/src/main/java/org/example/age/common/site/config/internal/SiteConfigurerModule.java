@@ -12,7 +12,7 @@ import org.example.age.common.site.config.SiteConfig;
 import org.example.age.data.SecureId;
 
 /**
- * Dagger modules that binds dependencies for...
+ * Dagger module that publishes bindings for...
  * <ul>
  *     <li><code>@Named("avs") Supplier&lt;{@link HostAndPort}&gt;</code></li>
  *     <li><code>@Named("avsSigning") Supplier&lt;{@link PublicKey}&gt;</code></li>

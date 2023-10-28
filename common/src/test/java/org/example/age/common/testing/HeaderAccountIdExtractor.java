@@ -4,7 +4,7 @@ import io.undertow.server.HttpServerExchange;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.common.account.AccountIdExtractor;
+import org.example.age.common.base.account.AccountIdExtractor;
 
 /** Extracts an account ID from the custom {@code Account-Id} header. */
 @Singleton

@@ -2,8 +2,8 @@ package org.example.age.common.site.auth.internal;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.auth.AuthMatchDataExtractor;
-import org.example.age.common.store.PendingStoreFactory;
+import org.example.age.common.base.auth.AuthMatchDataExtractor;
+import org.example.age.common.base.store.PendingStoreFactory;
 
 /**
  * Dagger module that publishes a binding for {@link AuthManager}.

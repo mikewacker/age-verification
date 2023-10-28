@@ -5,7 +5,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.common.utils.internal.ExchangeUtils;
+import org.example.age.common.base.utils.internal.ExchangeUtils;
 
 /** Stub {@link HttpHandler} that always responds with a 404 error. */
 @Singleton

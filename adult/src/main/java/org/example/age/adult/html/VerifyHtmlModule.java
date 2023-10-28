@@ -6,7 +6,7 @@ import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.common.html.HtmlModule;
+import org.example.age.common.server.html.HtmlModule;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("verifyHtml") {@link HttpHandler}</code>,
