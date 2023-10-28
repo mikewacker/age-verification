@@ -1,4 +1,4 @@
-package org.example.age.common.site.verification;
+package org.example.age.common.site.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

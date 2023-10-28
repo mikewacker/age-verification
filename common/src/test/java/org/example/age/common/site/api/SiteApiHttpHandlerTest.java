@@ -25,7 +25,7 @@ import org.example.age.common.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.client.internal.RequestDispatcherModule;
 import org.example.age.common.site.api.testing.FakeAvsHandler;
 import org.example.age.common.site.config.SiteConfig;
-import org.example.age.common.site.verification.InMemoryVerificationStoreModule;
+import org.example.age.common.site.store.InMemoryVerificationStoreModule;
 import org.example.age.common.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.common.testing.HeaderAccountIdExtractor;
 import org.example.age.common.testing.TestUndertowModule;

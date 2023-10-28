@@ -1,4 +1,4 @@
-package org.example.age.common.site.verification;
+package org.example.age.common.site.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,56 +26,64 @@ public final class InMemoryVerificationStoreTest {
     }
 
     @Test
-    public void saveAndLoad() {
+    public void verify() {
         VerificationState state = createVerifiedState();
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username", state);
         assertThat(maybeDuplicateAccountId).isEmpty();
-        VerificationState loadedState = verificationStore.load("username");
-        assertThat(loadedState.status()).isEqualTo(VerificationStatus.VERIFIED);
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
-    public void saveTwiceForSameAccount() {
+    public void verifySameAccountTwice() {
         VerificationState state = createVerifiedState();
         verificationStore.trySave("username", state);
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
 
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username", state);
         assertThat(maybeDuplicateAccountId).isEmpty();
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
-    public void saveUpdateAndLoad() {
+    public void updateState() {
         long past = (System.currentTimeMillis() / 1000) - 10;
         VerificationState state = createVerifiedState(past);
         verificationStore.trySave("username", state);
-        VerificationState loadedState = verificationStore.load("username");
-        assertThat(loadedState.status()).isEqualTo(VerificationStatus.EXPIRED);
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.EXPIRED);
     }
 
     @Test
     public void switchVerifiedAccount() {
         VerificationState state = createVerifiedState();
         verificationStore.trySave("username1", state);
+        assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.VERIFIED);
 
         verificationStore.trySave("username1", VerificationState.invalidated());
-        VerificationState loadedState1 = verificationStore.load("username1");
-        assertThat(loadedState1.status()).isEqualTo(VerificationStatus.INVALIDATED);
-
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username2", state);
         assertThat(maybeDuplicateAccountId).isEmpty();
-        VerificationState loadedState2 = verificationStore.load("username2");
-        assertThat(loadedState2.status()).isEqualTo(VerificationStatus.VERIFIED);
+        assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.INVALIDATED);
+        assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
-    public void failToSaveDuplicateVerification() {
+    public void delete() {
+        VerificationState state = createVerifiedState();
+        verificationStore.trySave("username", state);
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
+
+        verificationStore.delete("username");
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.UNVERIFIED);
+    }
+
+    @Test
+    public void error_DuplicateVerification() {
         VerificationState state = createVerifiedState();
         verificationStore.trySave("username1", state);
+        assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.VERIFIED);
 
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username2", state);
         assertThat(maybeDuplicateAccountId).hasValue("username1");
-        VerificationState loadedState = verificationStore.load("username2");
-        assertThat(loadedState.status()).isEqualTo(VerificationStatus.UNVERIFIED);
+        assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 
     private static VerificationState createVerifiedState() {

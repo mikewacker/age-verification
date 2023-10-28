@@ -1,4 +1,4 @@
-package org.example.age.common.site.verification;
+package org.example.age.common.site.store;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -24,7 +24,6 @@ final class InMemoryVerificationStore implements VerificationStore {
 
     @Override
     public VerificationState load(String accountId) {
-        VerificationState updatedState;
         synchronized (lock) {
             Optional<VerificationState> maybeState = Optional.ofNullable(states.get(accountId));
             if (maybeState.isEmpty()) {
@@ -32,12 +31,13 @@ final class InMemoryVerificationStore implements VerificationStore {
             }
 
             VerificationState state = maybeState.get();
-            updatedState = state.update();
+            VerificationState updatedState = state.update();
             if (updatedState != state) {
                 save(accountId, updatedState);
             }
+
+            return updatedState;
         }
-        return updatedState;
     }
 
     @Override
@@ -51,6 +51,14 @@ final class InMemoryVerificationStore implements VerificationStore {
             save(accountId, state);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void delete(String accountId) {
+        synchronized (lock) {
+            states.remove(accountId);
+            verifiedAccountIds.inverse().remove(accountId);
+        }
     }
 
     /** Checks that two accounts are not verified with the same {@link VerifiedUser}. */

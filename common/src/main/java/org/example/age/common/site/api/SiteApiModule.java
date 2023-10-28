@@ -10,7 +10,7 @@ import org.example.age.common.client.internal.RequestDispatcherModule;
 import org.example.age.common.site.auth.internal.AuthManagerModule;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.config.internal.SiteConfigurerModule;
-import org.example.age.common.site.verification.VerificationStore;
+import org.example.age.common.site.store.VerificationStore;
 import org.example.age.common.site.verification.internal.VerificationManagerModule;
 import org.example.age.common.store.PendingStoreFactory;
 

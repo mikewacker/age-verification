@@ -1,4 +1,4 @@
-package org.example.age.common.site.verification;
+package org.example.age.common.site.store;
 
 import dagger.Binds;
 import dagger.Module;

@@ -1,12 +1,8 @@
-package org.example.age.common.site.verification;
+package org.example.age.common.site.store;
 
 import java.util.Optional;
 
-/**
- * Stores {@link VerificationState}'s for accounts.
- *
- * <p>The account ID could be a username, or it could be an ephemeral ID for a session.</p>
- */
+/** Persistent store of {@link VerificationState}'s for accounts. */
 public interface VerificationStore {
 
     /** Loads the {@link VerificationState} for the account. */
@@ -17,4 +13,7 @@ public interface VerificationStore {
      * Returns the account ID that is already verified if a duplicate verification occurs.
      */
     Optional<String> trySave(String accountId, VerificationState state);
+
+    /** Deletes the {@link VerificationState} for the account. */
+    void delete(String accountId);
 }
