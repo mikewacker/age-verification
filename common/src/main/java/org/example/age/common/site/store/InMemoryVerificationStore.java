@@ -74,12 +74,7 @@ final class InMemoryVerificationStore implements VerificationStore {
         }
 
         String verifiedAccountId = maybeVerifiedAccountId.get();
-        if (verifiedAccountId.equals(accountId)) {
-            return Optional.empty();
-        }
-
-        VerificationState otherState = load(verifiedAccountId);
-        return (otherState.status() == VerificationStatus.VERIFIED) ? Optional.of(verifiedAccountId) : Optional.empty();
+        return verifiedAccountId.equals(accountId) ? Optional.empty() : Optional.of(verifiedAccountId);
     }
 
     /** Saves the {@link VerificationState} for an account. */

@@ -12,7 +12,7 @@ import org.example.age.testing.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public class ExchangeUtilsTest {
+public final class ExchangeUtilsTest {
 
     @RegisterExtension
     private static final TestUndertowServer server = TestUndertowServer.create(TestAddHandler::create);

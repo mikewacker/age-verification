@@ -1,4 +1,6 @@
 module org.example.age.common {
+    exports org.example.age.common.avs.api;
+    exports org.example.age.common.avs.store;
     exports org.example.age.common.base.account;
     exports org.example.age.common.base.auth;
     exports org.example.age.common.base.store;
