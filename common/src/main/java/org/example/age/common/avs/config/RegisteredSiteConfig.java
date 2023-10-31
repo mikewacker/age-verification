@@ -1,6 +1,5 @@
 package org.example.age.common.avs.config;
 
-import com.google.common.net.HostAndPort;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.DataStyle;
 import org.example.age.data.SecureId;
@@ -20,7 +19,7 @@ public interface RegisteredSiteConfig {
     String siteId();
 
     /** URL location of the site. */
-    HostAndPort siteLocation();
+    SiteLocation siteLocation();
 
     /** Age thresholds that the site cares about. */
     AgeThresholds ageThresholds();

@@ -1,6 +1,5 @@
 package org.example.age.common.site.config.internal;
 
-import com.google.common.net.HostAndPort;
 import dagger.Module;
 import dagger.Provides;
 import java.security.PublicKey;
@@ -8,13 +7,14 @@ import java.time.Duration;
 import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.data.SecureId;
 
 /**
  * Dagger module that publishes bindings for...
  * <ul>
- *     <li><code>@Named("avs") Supplier&lt;{@link HostAndPort}&gt;</code></li>
+ *     <li><code>Supplier&lt;{@link AvsLocation}&gt;</code></li>
  *     <li><code>@Named("avsSigning") Supplier&lt;{@link PublicKey}&gt;</code></li>
  *     <li><code>@Named("siteId") Supplier&lt;String&gt;</code></li>
  *     <li><code>@Named("expiresIn") Supplier&lt;{@link Duration}&gt;</code></li>
@@ -26,10 +26,9 @@ import org.example.age.data.SecureId;
 public interface SiteConfigurerModule {
 
     @Provides
-    @Named("avs")
     @Singleton
-    static Supplier<HostAndPort> provideAvsHostAndPort(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().avsHostAndPort();
+    static Supplier<AvsLocation> provideAvsLocation(Supplier<SiteConfig> siteConfigSupplier) {
+        return () -> siteConfigSupplier.get().avsLocation();
     }
 
     @Provides

@@ -1,6 +1,5 @@
 package org.example.age.common.site.config;
 
-import com.google.common.net.HostAndPort;
 import java.security.PublicKey;
 import java.time.Duration;
 import org.example.age.data.DataStyle;
@@ -17,8 +16,8 @@ public interface SiteConfig {
         return new Builder();
     }
 
-    /** Host and port of the age verification service. */
-    HostAndPort avsHostAndPort();
+    /** URL location of the age verification service. */
+    AvsLocation avsLocation();
 
     /** Public signing key used to verify signed age certificates. */
     PublicKey avsPublicSigningKey();

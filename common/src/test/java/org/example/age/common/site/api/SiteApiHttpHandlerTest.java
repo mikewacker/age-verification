@@ -25,6 +25,7 @@ import org.example.age.common.base.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.base.client.internal.RequestDispatcherModule;
 import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.common.site.api.testing.FakeAvsHandler;
+import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.store.InMemoryVerificationStoreModule;
 import org.example.age.common.testing.HeaderAccountIdExtractor;
@@ -142,8 +143,11 @@ public final class SiteApiHttpHandlerTest {
     }
 
     private static SiteConfig createSiteConfig() {
+        AvsLocation avsLocation = AvsLocation.builder(fakeAvsServer.hostAndPort())
+                .redirectPath("")
+                .build();
         return SiteConfig.builder()
-                .avsHostAndPort(fakeAvsServer.hostAndPort())
+                .avsLocation(avsLocation)
                 .avsPublicSigningKey(avsSigningKeyPair.getPublic())
                 .siteId("Site")
                 .pseudonymKey(sitePseudonymKey)

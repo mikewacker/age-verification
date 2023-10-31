@@ -2,10 +2,10 @@ package org.example.age.common.avs.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.net.HostAndPort;
 import dagger.Component;
 import javax.inject.Singleton;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
+import org.example.age.common.avs.config.SiteLocation;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.SecureId;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,14 +22,14 @@ public final class InMemoryRegisteredSiteConfigStoreTest {
 
     @Test
     public void saveAndLoad() {
-        RegisteredSiteConfig siteConfig = createSiteConfig();
+        RegisteredSiteConfig siteConfig = createRegisteredSiteConfig();
         siteConfigStore.save(siteConfig);
         assertThat(siteConfigStore.tryLoad(siteConfig.siteId())).hasValue(siteConfig);
     }
 
     @Test
     public void delete() {
-        RegisteredSiteConfig siteConfig = createSiteConfig();
+        RegisteredSiteConfig siteConfig = createRegisteredSiteConfig();
         siteConfigStore.save(siteConfig);
         assertThat(siteConfigStore.tryLoad(siteConfig.siteId())).isPresent();
 
@@ -37,9 +37,11 @@ public final class InMemoryRegisteredSiteConfigStoreTest {
         assertThat(siteConfigStore.tryLoad(siteConfig.siteId())).isEmpty();
     }
 
-    private static RegisteredSiteConfig createSiteConfig() {
+    private static RegisteredSiteConfig createRegisteredSiteConfig() {
+        SiteLocation siteLocation =
+                SiteLocation.builder("localhost", 80).redirectPath("").build();
         return RegisteredSiteConfig.builder("Site")
-                .siteLocation(HostAndPort.fromParts("localhost", 80))
+                .siteLocation(siteLocation)
                 .ageThresholds(AgeThresholds.of(18))
                 .pseudonymKey(SecureId.generate())
                 .build();

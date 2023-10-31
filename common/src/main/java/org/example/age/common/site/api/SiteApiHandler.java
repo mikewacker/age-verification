@@ -1,6 +1,5 @@
 package org.example.age.common.site.api;
 
-import com.google.common.net.HostAndPort;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
@@ -18,6 +17,7 @@ import org.example.age.common.base.account.AccountIdExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.common.base.utils.internal.ExchangeUtils;
 import org.example.age.common.site.auth.internal.AuthManager;
+import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.verification.internal.VerificationManager;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
@@ -36,7 +36,7 @@ final class SiteApiHandler implements HttpHandler {
     private final AuthManager authManager;
     private final VerificationManager verificationManager;
     private final RequestDispatcher requestDispatcher;
-    private final Supplier<HostAndPort> avsHostAndPortSupplier;
+    private final Supplier<AvsLocation> avsLocationSupplier;
     private final Supplier<PublicKey> avsPublicSigningKeySupplier;
     private final Supplier<String> siteIdSupplier;
 
@@ -46,14 +46,14 @@ final class SiteApiHandler implements HttpHandler {
             AuthManager authManager,
             VerificationManager verificationManager,
             RequestDispatcher requestDispatcher,
-            @Named("avs") Supplier<HostAndPort> avsHostAndPortSupplier,
+            Supplier<AvsLocation> avsLocationSupplier,
             @Named("avsSigning") Supplier<PublicKey> avsPublicSigningKeySupplier,
             @Named("siteId") Supplier<String> siteIdSupplier) {
         this.accountIdExtractor = accountIdExtractor;
         this.authManager = authManager;
         this.verificationManager = verificationManager;
         this.requestDispatcher = requestDispatcher;
-        this.avsHostAndPortSupplier = avsHostAndPortSupplier;
+        this.avsLocationSupplier = avsLocationSupplier;
         this.avsPublicSigningKeySupplier = avsPublicSigningKeySupplier;
         this.siteIdSupplier = siteIdSupplier;
     }
@@ -87,14 +87,7 @@ final class SiteApiHandler implements HttpHandler {
 
     /** Creates a backend request to obtain a {@link VerificationSession}. */
     private Request createVerificationSessionRequest() {
-        HostAndPort avsHostAndPort = avsHostAndPortSupplier.get();
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme("http")
-                .host(avsHostAndPort.getHost())
-                .port(avsHostAndPort.getPort())
-                .addPathSegments("api/verification-session")
-                .addQueryParameter("site-id", siteIdSupplier.get())
-                .build();
+        HttpUrl url = avsLocationSupplier.get().verificationSessionUrl(siteIdSupplier.get());
         return new Request.Builder().url(url).post(EMPTY_BODY).build();
     }
 

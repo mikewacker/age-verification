@@ -1,6 +1,5 @@
 package org.example.age.common.avs.verification.internal;
 
-import com.google.common.net.HostAndPort;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.time.Duration;
@@ -10,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
+import org.example.age.common.avs.config.SiteLocation;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.base.auth.AuthMatchData;
@@ -100,7 +100,7 @@ final class VerificationManagerImpl implements VerificationManager {
 
         PendingVerification pendingVerification = maybePendingVerification.get();
         AgeCertificate certificate = createAgeCertificate(user, pendingVerification, exchange);
-        HostAndPort location = pendingVerification.siteConfig().siteLocation();
+        SiteLocation location = pendingVerification.siteConfig().siteLocation();
         Verification verification = Verification.of(certificate, location);
         return HttpOptional.of(verification);
     }
