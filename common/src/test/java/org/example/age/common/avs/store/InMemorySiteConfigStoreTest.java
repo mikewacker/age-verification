@@ -2,6 +2,7 @@ package org.example.age.common.avs.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.net.HostAndPort;
 import dagger.Component;
 import javax.inject.Singleton;
 import org.example.age.data.AgeThresholds;
@@ -36,7 +37,11 @@ public final class InMemorySiteConfigStoreTest {
     }
 
     private static SiteConfig createSiteConfig() {
-        return SiteConfig.of("Site", AgeThresholds.of(18), SecureId.generate());
+        return SiteConfig.builder("Site")
+                .siteLocation(HostAndPort.fromParts("localhost", 80))
+                .ageThresholds(AgeThresholds.of(18))
+                .pseudonymKey(SecureId.generate())
+                .build();
     }
 
     /** Dagger component that provides a {@link SiteConfigStore}. */
