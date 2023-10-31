@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.common.avs.store.SiteConfig;
-import org.example.age.common.avs.store.SiteConfigStore;
+import org.example.age.common.avs.config.RegisteredSiteConfig;
+import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.base.auth.AuthMatchData;
 import org.example.age.common.base.auth.AuthMatchDataExtractor;
@@ -29,7 +29,7 @@ import org.example.age.data.certificate.VerificationSession;
 final class VerificationManagerImpl implements VerificationManager {
 
     private final VerifiedUserStore userStore;
-    private final SiteConfigStore siteConfigStore;
+    private final RegisteredSiteConfigStore siteConfigStore;
     private final AuthMatchDataExtractor authDataExtractor;
     private final PendingStore<SecureId, PendingVerification> unlinkedPendingVerifications;
     private final PendingStore<String, PendingVerification> linkedPendingVerifications;
@@ -38,7 +38,7 @@ final class VerificationManagerImpl implements VerificationManager {
     @Inject
     public VerificationManagerImpl(
             VerifiedUserStore userStore,
-            SiteConfigStore siteConfigStore,
+            RegisteredSiteConfigStore siteConfigStore,
             AuthMatchDataExtractor authDataExtractor,
             PendingStoreFactory pendingStoreFactory,
             @Named("expiresIn") Supplier<Duration> expiresInSupplier) {
@@ -52,12 +52,12 @@ final class VerificationManagerImpl implements VerificationManager {
 
     @Override
     public HttpOptional<VerificationSession> createVerificationSession(String siteId, HttpServerExchange exchange) {
-        Optional<SiteConfig> maybeSiteConfig = siteConfigStore.tryLoad(siteId);
+        Optional<RegisteredSiteConfig> maybeSiteConfig = siteConfigStore.tryLoad(siteId);
         if (maybeSiteConfig.isEmpty()) {
             return HttpOptional.empty(StatusCodes.NOT_FOUND);
         }
 
-        SiteConfig siteConfig = maybeSiteConfig.get();
+        RegisteredSiteConfig siteConfig = maybeSiteConfig.get();
         VerificationSession session = createVerificationSession(siteId);
         PendingVerification pendingVerification = new PendingVerification(session, siteConfig);
         SecureId requestId = session.verificationRequest().id();
@@ -120,8 +120,8 @@ final class VerificationManagerImpl implements VerificationManager {
         return AgeCertificate.of(request, localizedUser, authToken);
     }
 
-    /** Localizes a {@link VerifiedUser} for a site using the {@link SiteConfig}. */
-    private static VerifiedUser localizeUser(VerifiedUser user, SiteConfig siteConfig) {
+    /** Localizes a {@link VerifiedUser} for a site using the {@link RegisteredSiteConfig}. */
+    private static VerifiedUser localizeUser(VerifiedUser user, RegisteredSiteConfig siteConfig) {
         return user.localize(siteConfig.pseudonymKey()).anonymizeAge(siteConfig.ageThresholds());
     }
 
@@ -132,5 +132,5 @@ final class VerificationManagerImpl implements VerificationManager {
     }
 
     /** Pending verification request for a specific site. */
-    private record PendingVerification(VerificationSession verificationSession, SiteConfig siteConfig) {}
+    private record PendingVerification(VerificationSession verificationSession, RegisteredSiteConfig siteConfig) {}
 }
