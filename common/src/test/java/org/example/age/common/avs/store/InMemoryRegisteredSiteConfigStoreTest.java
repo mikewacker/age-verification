@@ -5,14 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.net.HostAndPort;
 import dagger.Component;
 import javax.inject.Singleton;
+import org.example.age.common.avs.config.RegisteredSiteConfig;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.SecureId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class InMemorySiteConfigStoreTest {
+public final class InMemoryRegisteredSiteConfigStoreTest {
 
-    private SiteConfigStore siteConfigStore;
+    private RegisteredSiteConfigStore siteConfigStore;
 
     @BeforeEach
     public void createSiteConfigStore() {
@@ -21,14 +22,14 @@ public final class InMemorySiteConfigStoreTest {
 
     @Test
     public void saveAndLoad() {
-        SiteConfig siteConfig = createSiteConfig();
+        RegisteredSiteConfig siteConfig = createSiteConfig();
         siteConfigStore.save(siteConfig);
         assertThat(siteConfigStore.tryLoad(siteConfig.siteId())).hasValue(siteConfig);
     }
 
     @Test
     public void delete() {
-        SiteConfig siteConfig = createSiteConfig();
+        RegisteredSiteConfig siteConfig = createSiteConfig();
         siteConfigStore.save(siteConfig);
         assertThat(siteConfigStore.tryLoad(siteConfig.siteId())).isPresent();
 
@@ -36,24 +37,24 @@ public final class InMemorySiteConfigStoreTest {
         assertThat(siteConfigStore.tryLoad(siteConfig.siteId())).isEmpty();
     }
 
-    private static SiteConfig createSiteConfig() {
-        return SiteConfig.builder("Site")
+    private static RegisteredSiteConfig createSiteConfig() {
+        return RegisteredSiteConfig.builder("Site")
                 .siteLocation(HostAndPort.fromParts("localhost", 80))
                 .ageThresholds(AgeThresholds.of(18))
                 .pseudonymKey(SecureId.generate())
                 .build();
     }
 
-    /** Dagger component that provides a {@link SiteConfigStore}. */
-    @Component(modules = InMemorySiteConfigStoreModule.class)
+    /** Dagger component that provides a {@link RegisteredSiteConfigStore}. */
+    @Component(modules = InMemoryRegisteredSiteConfigStoreModule.class)
     @Singleton
     interface TestComponent {
 
-        static SiteConfigStore createSiteConfigStore() {
-            TestComponent component = DaggerInMemorySiteConfigStoreTest_TestComponent.create();
+        static RegisteredSiteConfigStore createSiteConfigStore() {
+            TestComponent component = DaggerInMemoryRegisteredSiteConfigStoreTest_TestComponent.create();
             return component.siteConfigStore();
         }
 
-        SiteConfigStore siteConfigStore();
+        RegisteredSiteConfigStore siteConfigStore();
     }
 }

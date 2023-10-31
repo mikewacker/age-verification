@@ -1,4 +1,4 @@
-package org.example.age.common.avs.store;
+package org.example.age.common.avs.config;
 
 import com.google.common.net.HostAndPort;
 import org.example.age.data.AgeThresholds;
@@ -9,10 +9,10 @@ import org.immutables.value.Value;
 /** Configuration for a registered site. */
 @Value.Immutable
 @DataStyle
-public interface SiteConfig {
+public interface RegisteredSiteConfig {
 
     /** Creates a builder for the site configuration. */
-    static SiteConfig.Builder builder(String siteId) {
+    static RegisteredSiteConfig.Builder builder(String siteId) {
         return new Builder().siteId(siteId);
     }
 
@@ -28,5 +28,5 @@ public interface SiteConfig {
     /** Key used to localize pseudonyms for this site. */
     SecureId pseudonymKey();
 
-    final class Builder extends ImmutableSiteConfig.Builder {}
+    final class Builder extends ImmutableRegisteredSiteConfig.Builder {}
 }

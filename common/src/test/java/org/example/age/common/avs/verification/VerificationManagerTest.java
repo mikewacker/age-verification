@@ -13,10 +13,10 @@ import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
-import org.example.age.common.avs.store.InMemorySiteConfigStoreModule;
+import org.example.age.common.avs.config.RegisteredSiteConfig;
+import org.example.age.common.avs.store.InMemoryRegisteredSiteConfigStoreModule;
 import org.example.age.common.avs.store.InMemoryVerifiedUserStoreModule;
-import org.example.age.common.avs.store.SiteConfig;
-import org.example.age.common.avs.store.SiteConfigStore;
+import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.avs.verification.internal.Verification;
 import org.example.age.common.avs.verification.internal.VerificationManager;
@@ -147,8 +147,8 @@ public final class VerificationManagerTest {
         userStore.trySave("other name", user2);
     }
 
-    private static void initSiteConfigStore(SiteConfigStore siteConfigStore) {
-        SiteConfig siteConfig = SiteConfig.builder("Site")
+    private static void initSiteConfigStore(RegisteredSiteConfigStore siteConfigStore) {
+        RegisteredSiteConfig siteConfig = RegisteredSiteConfig.builder("Site")
                 .siteLocation(HostAndPort.fromParts("localhost", 80))
                 .ageThresholds(AgeThresholds.of(18))
                 .pseudonymKey(pseudonymKey)
@@ -161,7 +161,7 @@ public final class VerificationManagerTest {
             includes = {
                 VerificationManagerModule.class,
                 InMemoryVerifiedUserStoreModule.class,
-                InMemorySiteConfigStoreModule.class,
+                InMemoryRegisteredSiteConfigStoreModule.class,
                 DisabledAuthMatchDataExtractorModule.class,
                 InMemoryPendingStoreFactoryModule.class,
             })
@@ -177,7 +177,7 @@ public final class VerificationManagerTest {
 
     /**
      * Dagger component that provides a {@link VerificationManager},
-     * and also a {@link VerifiedUserStore} and a {@link SiteConfigStore}.
+     * and also a {@link VerifiedUserStore} and a {@link RegisteredSiteConfigStore}.
      */
     @Component(modules = TestModule.class)
     @Singleton
@@ -191,6 +191,6 @@ public final class VerificationManagerTest {
 
         VerifiedUserStore verifiedUserStore();
 
-        SiteConfigStore siteConfigStore();
+        RegisteredSiteConfigStore siteConfigStore();
     }
 }

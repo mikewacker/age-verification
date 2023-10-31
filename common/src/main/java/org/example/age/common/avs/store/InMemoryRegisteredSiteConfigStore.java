@@ -5,23 +5,24 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.example.age.common.avs.config.RegisteredSiteConfig;
 
-/** In-memory {@link SiteConfigStore}. */
+/** In-memory {@link RegisteredSiteConfigStore}. */
 @Singleton
-final class InMemorySiteConfigStore implements SiteConfigStore {
+final class InMemoryRegisteredSiteConfigStore implements RegisteredSiteConfigStore {
 
-    private final Map<String, SiteConfig> siteConfigs = new ConcurrentHashMap<>();
+    private final Map<String, RegisteredSiteConfig> siteConfigs = new ConcurrentHashMap<>();
 
     @Inject
-    public InMemorySiteConfigStore() {}
+    public InMemoryRegisteredSiteConfigStore() {}
 
     @Override
-    public Optional<SiteConfig> tryLoad(String siteId) {
+    public Optional<RegisteredSiteConfig> tryLoad(String siteId) {
         return Optional.ofNullable(siteConfigs.get(siteId));
     }
 
     @Override
-    public void save(SiteConfig siteConfig) {
+    public void save(RegisteredSiteConfig siteConfig) {
         siteConfigs.put(siteConfig.siteId(), siteConfig);
     }
 
