@@ -3,7 +3,6 @@ package org.example.age.common.avs.verification;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import com.google.common.net.HostAndPort;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -14,6 +13,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
+import org.example.age.common.avs.config.SiteLocation;
 import org.example.age.common.avs.store.InMemoryRegisteredSiteConfigStoreModule;
 import org.example.age.common.avs.store.InMemoryVerifiedUserStoreModule;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
@@ -45,7 +45,7 @@ public final class VerificationManagerTest {
         TestComponent component = TestComponent.create();
         verificationManager = component.verificationManager();
         initVerifiedUserStore(component.verifiedUserStore());
-        initSiteConfigStore(component.siteConfigStore());
+        initRegisteredSiteConfigStore(component.siteConfigStore());
     }
 
     @BeforeAll
@@ -147,9 +147,11 @@ public final class VerificationManagerTest {
         userStore.trySave("other name", user2);
     }
 
-    private static void initSiteConfigStore(RegisteredSiteConfigStore siteConfigStore) {
+    private static void initRegisteredSiteConfigStore(RegisteredSiteConfigStore siteConfigStore) {
+        SiteLocation siteLocation =
+                SiteLocation.builder("localhost", 80).redirectPath("").build();
         RegisteredSiteConfig siteConfig = RegisteredSiteConfig.builder("Site")
-                .siteLocation(HostAndPort.fromParts("localhost", 80))
+                .siteLocation(siteLocation)
                 .ageThresholds(AgeThresholds.of(18))
                 .pseudonymKey(pseudonymKey)
                 .build();

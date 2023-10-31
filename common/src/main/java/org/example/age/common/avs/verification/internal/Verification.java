@@ -1,6 +1,6 @@
 package org.example.age.common.avs.verification.internal;
 
-import com.google.common.net.HostAndPort;
+import org.example.age.common.avs.config.SiteLocation;
 import org.example.age.data.certificate.AgeCertificate;
 import org.immutables.value.Value;
 
@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface Verification {
 
-    static Verification of(AgeCertificate certificate, HostAndPort location) {
+    static Verification of(AgeCertificate certificate, SiteLocation location) {
         return ImmutableVerification.builder()
                 .ageCertificate(certificate)
                 .siteLocation(location)
@@ -19,5 +19,5 @@ public interface Verification {
     AgeCertificate ageCertificate();
 
     /** Location to send the age certificate to. */
-    HostAndPort siteLocation();
+    SiteLocation siteLocation();
 }
