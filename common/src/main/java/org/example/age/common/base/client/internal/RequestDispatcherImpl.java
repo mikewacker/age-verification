@@ -10,7 +10,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.common.base.utils.internal.Deserializer;
+import org.example.age.common.base.utils.internal.BytesDeserializer;
 import org.example.age.common.base.utils.internal.ExchangeUtils;
 import org.xnio.IoUtils;
 
@@ -26,7 +26,10 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
     @Override
     public <T> void dispatchWithResponseBody(
-            Request request, HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback) {
+            Request request,
+            HttpServerExchange exchange,
+            BytesDeserializer<T> deserializer,
+            ExchangeCallback<T> callback) {
         Call call = client.getInstance(exchange).newCall(request);
         Callback adaptedCallback = AdaptedCallback.create(exchange, deserializer, callback);
         exchange.dispatch(SameThreadExecutor.INSTANCE, () -> call.enqueue(adaptedCallback));
@@ -36,12 +39,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     private static final class AdaptedCallback<T> implements Callback {
 
         private final HttpServerExchange exchange;
-        private final Deserializer<T> deserializer;
+        private final BytesDeserializer<T> deserializer;
         private final ExchangeCallback<T> callback;
 
         /** Creates an adapted callback from the exchange and the callback. */
         public static <T> Callback create(
-                HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback) {
+                HttpServerExchange exchange, BytesDeserializer<T> deserializer, ExchangeCallback<T> callback) {
             return new AdaptedCallback(exchange, deserializer, callback);
         }
 
@@ -81,7 +84,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         }
 
         private AdaptedCallback(
-                HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback) {
+                HttpServerExchange exchange, BytesDeserializer<T> deserializer, ExchangeCallback<T> callback) {
             this.exchange = exchange;
             this.deserializer = deserializer;
             this.callback = callback;

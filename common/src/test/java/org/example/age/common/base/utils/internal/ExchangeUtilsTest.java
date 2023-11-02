@@ -28,22 +28,43 @@ public final class ExchangeUtilsTest {
 
     @Test
     public void exchangeWithOnlyStatusCode() throws IOException {
-        Request request = createRequest("/add?operand=2", "40");
+        Request request = createRequest("/add?operand=400", "18");
         Response response = TestClient.execute(request);
         assertThat(response.code()).isEqualTo(418);
         assertThat(response.body().string()).isEmpty();
     }
 
     @Test
-    public void error_BadRequest() throws IOException {
+    public void error_DeserializeBodyFailed() throws IOException {
         Request request = createRequest("/add?operand=2", "a");
         Response response = TestClient.execute(request);
         assertThat(response.code()).isEqualTo(400);
     }
 
     @Test
-    public void error_InternalServerError() throws IOException {
+    public void error_ParamMissing() throws IOException {
         Request request = createRequest("/add", "2");
+        Response response = TestClient.execute(request);
+        assertThat(response.code()).isEqualTo(400);
+    }
+
+    @Test
+    public void error_DeserializeParamFailed() throws IOException {
+        Request request = createRequest("/add?operand=a", "2");
+        Response response = TestClient.execute(request);
+        assertThat(response.code()).isEqualTo(400);
+    }
+
+    @Test
+    public void error_UncaughtException() throws IOException {
+        Request request = createRequest("/add?operand=500", "0");
+        Response response = TestClient.execute(request);
+        assertThat(response.code()).isEqualTo(500);
+    }
+
+    @Test
+    public void error_SerializeResponseFailed() throws IOException {
+        Request request = createRequest("/add?operand=1000", "337");
         Response response = TestClient.execute(request);
         assertThat(response.code()).isEqualTo(500);
     }
