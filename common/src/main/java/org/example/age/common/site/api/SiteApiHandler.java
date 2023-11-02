@@ -5,9 +5,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.security.PublicKey;
 import java.util.Optional;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -36,9 +36,9 @@ final class SiteApiHandler implements HttpHandler {
     private final AuthManager authManager;
     private final VerificationManager verificationManager;
     private final RequestDispatcher requestDispatcher;
-    private final Supplier<AvsLocation> avsLocationSupplier;
-    private final Supplier<PublicKey> avsPublicSigningKeySupplier;
-    private final Supplier<String> siteIdSupplier;
+    private final Provider<AvsLocation> avsLocationProvider;
+    private final Provider<PublicKey> avsPublicSigningKeyProvider;
+    private final Provider<String> siteIdProvider;
 
     @Inject
     public SiteApiHandler(
@@ -46,16 +46,16 @@ final class SiteApiHandler implements HttpHandler {
             AuthManager authManager,
             VerificationManager verificationManager,
             RequestDispatcher requestDispatcher,
-            Supplier<AvsLocation> avsLocationSupplier,
-            @Named("avsSigning") Supplier<PublicKey> avsPublicSigningKeySupplier,
-            @Named("siteId") Supplier<String> siteIdSupplier) {
+            Provider<AvsLocation> avsLocationProvider,
+            @Named("avsSigning") Provider<PublicKey> avsPublicSigningKeyProvider,
+            @Named("siteId") Provider<String> siteIdProvider) {
         this.accountIdExtractor = accountIdExtractor;
         this.authManager = authManager;
         this.verificationManager = verificationManager;
         this.requestDispatcher = requestDispatcher;
-        this.avsLocationSupplier = avsLocationSupplier;
-        this.avsPublicSigningKeySupplier = avsPublicSigningKeySupplier;
-        this.siteIdSupplier = siteIdSupplier;
+        this.avsLocationProvider = avsLocationProvider;
+        this.avsPublicSigningKeyProvider = avsPublicSigningKeyProvider;
+        this.siteIdProvider = siteIdProvider;
     }
 
     @Override
@@ -87,7 +87,7 @@ final class SiteApiHandler implements HttpHandler {
 
     /** Creates a backend request to obtain a {@link VerificationSession}. */
     private Request createVerificationSessionRequest() {
-        HttpUrl url = avsLocationSupplier.get().verificationSessionUrl(siteIdSupplier.get());
+        HttpUrl url = avsLocationProvider.get().verificationSessionUrl(siteIdProvider.get());
         return new Request.Builder().url(url).post(EMPTY_BODY).build();
     }
 
@@ -108,7 +108,7 @@ final class SiteApiHandler implements HttpHandler {
 
     /** Verifies a signed {@link AgeCertificate}. */
     private AgeCertificate verifyAgeCertificate(byte[] signedCertificate) {
-        return AgeCertificate.verifyForSite(signedCertificate, avsPublicSigningKeySupplier.get(), siteIdSupplier.get());
+        return AgeCertificate.verifyForSite(signedCertificate, avsPublicSigningKeyProvider.get(), siteIdProvider.get());
     }
 
     /** Handles a request to process an {@link AgeCertificate}. */

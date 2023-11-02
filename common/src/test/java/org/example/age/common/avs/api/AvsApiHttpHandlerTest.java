@@ -2,7 +2,6 @@ package org.example.age.common.avs.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.base.Suppliers;
 import dagger.Binds;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -13,7 +12,6 @@ import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.time.Duration;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Request;
@@ -82,8 +80,8 @@ public final class AvsApiHttpHandlerTest {
 
         @Provides
         @Singleton
-        static Supplier<AvsConfig> provideAvsConfig() {
-            return Suppliers.memoize(AvsApiHttpHandlerTest::createAvsConfig);
+        static AvsConfig provideAvsConfig() {
+            return createAvsConfig();
         }
     }
 

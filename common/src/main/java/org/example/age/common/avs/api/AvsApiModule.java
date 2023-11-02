@@ -21,10 +21,10 @@ import org.example.age.common.base.store.PendingStoreFactory;
  * <ul>
  *     <li>{@link AccountIdExtractor}</li>
  *     <li>{@link AuthMatchDataExtractor}</li>
- *     <li>{@link VerifiedUserStore}</li>
  *     <li>{@link RegisteredSiteConfigStore}</li>
+ *     <li>{@link VerifiedUserStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li><code>Supplier&lt;{@link AvsConfig}&gt;</code></li>
+ *     <li><code>Provider&lt;{@link AvsConfig}&gt;</code></li>
  * </ul>
  */
 @Module(includes = {VerificationManagerModule.class, RequestDispatcherModule.class, AvsConfigurerModule.class})

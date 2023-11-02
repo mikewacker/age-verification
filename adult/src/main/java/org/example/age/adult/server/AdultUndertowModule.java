@@ -13,7 +13,7 @@ import org.example.age.common.server.undertow.UndertowModule;
 /**
  * Dagger module that binds dependencies needed to create an {@link Undertow}.
  *
- * <p>Depends on an unbound <code>Supplier&lt;{@link HostAndPort}&gt;</code>.</p>
+ * <p>Depends on an unbound {@link HostAndPort}.</p>
  */
 @Module(includes = {UndertowModule.class, VerifyHtmlModule.class})
 interface AdultUndertowModule {

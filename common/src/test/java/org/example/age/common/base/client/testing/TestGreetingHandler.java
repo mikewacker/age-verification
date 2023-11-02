@@ -5,9 +5,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.SameThreadExecutor;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,17 +21,17 @@ import org.example.age.common.base.utils.internal.ExchangeUtils;
 public final class TestGreetingHandler implements HttpHandler {
 
     private final ExchangeClient client;
-    private final Supplier<String> backendUrlSupplier;
+    private final Provider<String> backendUrlProvider;
 
     @Inject
-    public TestGreetingHandler(ExchangeClient client, @Named("backendUrl") Supplier<String> backendUrlSupplier) {
+    public TestGreetingHandler(ExchangeClient client, @Named("backendUrl") Provider<String> backendUrlProvider) {
         this.client = client;
-        this.backendUrlSupplier = backendUrlSupplier;
+        this.backendUrlProvider = backendUrlProvider;
     }
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        Request request = new Request.Builder().url(backendUrlSupplier.get()).build();
+        Request request = new Request.Builder().url(backendUrlProvider.get()).build();
         Call call = client.getInstance(exchange).newCall(request);
         Callback callback = GreetingCallback.create(exchange);
         exchange.dispatch(SameThreadExecutor.INSTANCE, () -> call.enqueue(callback));

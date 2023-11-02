@@ -4,9 +4,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.time.Duration;
 import java.util.Optional;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.common.base.store.PendingStore;
 import org.example.age.common.base.store.PendingStoreFactory;
@@ -23,19 +23,19 @@ final class VerificationManagerImpl implements VerificationManager {
 
     private final VerificationStore verificationStore;
     private final PendingStore<SecureId, String> pendingVerifications;
-    private final Supplier<SecureId> pseudonymKeySupplier;
-    private final Supplier<Duration> expiresInSupplier;
+    private final Provider<SecureId> pseudonymKeyProvider;
+    private final Provider<Duration> expiresInProvider;
 
     @Inject
     public VerificationManagerImpl(
             VerificationStore verificationStore,
             PendingStoreFactory pendingStoreFactory,
-            @Named("pseudonymKey") Supplier<SecureId> pseudonymKeySupplier,
-            @Named("expiresIn") Supplier<Duration> expiresInSupplier) {
+            @Named("pseudonymKey") Provider<SecureId> pseudonymKeyProvider,
+            @Named("expiresIn") Provider<Duration> expiresInProvider) {
         this.verificationStore = verificationStore;
         this.pendingVerifications = pendingStoreFactory.create();
-        this.pseudonymKeySupplier = pseudonymKeySupplier;
-        this.expiresInSupplier = expiresInSupplier;
+        this.pseudonymKeyProvider = pseudonymKeyProvider;
+        this.expiresInProvider = expiresInProvider;
     }
 
     @Override
@@ -62,9 +62,9 @@ final class VerificationManagerImpl implements VerificationManager {
     /** Creates a verified {@link VerificationState} from an {@link AgeCertificate}. */
     private VerificationState createVerifiedState(AgeCertificate certificate) {
         VerifiedUser user = certificate.verifiedUser();
-        VerifiedUser localizedUser = user.localize(pseudonymKeySupplier.get());
+        VerifiedUser localizedUser = user.localize(pseudonymKeyProvider.get());
         long now = System.currentTimeMillis() / 1000;
-        long expiration = now + expiresInSupplier.get().toSeconds();
+        long expiration = now + expiresInProvider.get().toSeconds();
         return VerificationState.verified(localizedUser, expiration);
     }
 }

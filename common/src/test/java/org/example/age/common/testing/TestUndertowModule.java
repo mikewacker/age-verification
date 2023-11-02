@@ -6,7 +6,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.common.server.undertow.UndertowModule;
@@ -30,7 +29,7 @@ public interface TestUndertowModule {
 
     @Provides
     @Singleton
-    static Supplier<HostAndPort> provideHostAndPort(@Named("port") int port) {
-        return () -> HostAndPort.fromParts("localhost", port);
+    static HostAndPort provideHostAndPort(@Named("port") int port) {
+        return HostAndPort.fromParts("localhost", port);
     }
 }

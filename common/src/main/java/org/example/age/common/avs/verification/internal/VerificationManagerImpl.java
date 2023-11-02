@@ -4,9 +4,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.time.Duration;
 import java.util.Optional;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
 import org.example.age.common.avs.config.SiteLocation;
@@ -28,26 +28,26 @@ import org.example.age.data.certificate.VerificationSession;
 @Singleton
 final class VerificationManagerImpl implements VerificationManager {
 
-    private final VerifiedUserStore userStore;
-    private final RegisteredSiteConfigStore siteConfigStore;
     private final AuthMatchDataExtractor authDataExtractor;
+    private final RegisteredSiteConfigStore siteConfigStore;
+    private final VerifiedUserStore userStore;
     private final PendingStore<SecureId, PendingVerification> unlinkedPendingVerifications;
     private final PendingStore<String, PendingVerification> linkedPendingVerifications;
-    private final Supplier<Duration> expiresInSupplier;
+    private final Provider<Duration> expiresInProvider;
 
     @Inject
     public VerificationManagerImpl(
-            VerifiedUserStore userStore,
-            RegisteredSiteConfigStore siteConfigStore,
             AuthMatchDataExtractor authDataExtractor,
+            RegisteredSiteConfigStore siteConfigStore,
+            VerifiedUserStore userStore,
             PendingStoreFactory pendingStoreFactory,
-            @Named("expiresIn") Supplier<Duration> expiresInSupplier) {
-        this.userStore = userStore;
-        this.siteConfigStore = siteConfigStore;
+            @Named("expiresIn") Provider<Duration> expiresInProvider) {
         this.authDataExtractor = authDataExtractor;
+        this.siteConfigStore = siteConfigStore;
+        this.userStore = userStore;
         unlinkedPendingVerifications = pendingStoreFactory.create();
         linkedPendingVerifications = pendingStoreFactory.create();
-        this.expiresInSupplier = expiresInSupplier;
+        this.expiresInProvider = expiresInProvider;
     }
 
     @Override
@@ -107,7 +107,7 @@ final class VerificationManagerImpl implements VerificationManager {
 
     /** Creates a {@link VerificationSession} for the site. */
     private VerificationSession createVerificationSession(String siteId) {
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresInSupplier.get());
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresInProvider.get());
         return VerificationSession.create(request);
     }
 
