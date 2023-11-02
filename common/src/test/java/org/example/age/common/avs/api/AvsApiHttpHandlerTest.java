@@ -2,18 +2,35 @@ package org.example.age.common.avs.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.base.Suppliers;
+import dagger.Binds;
 import dagger.BindsInstance;
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.time.Duration;
+import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.example.age.common.avs.config.AvsConfig;
+import org.example.age.common.avs.store.InMemoryRegisteredSiteConfigStoreModule;
+import org.example.age.common.avs.store.InMemoryVerifiedUserStoreModule;
+import org.example.age.common.base.account.AccountIdExtractor;
+import org.example.age.common.base.auth.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;
+import org.example.age.common.testing.HeaderAccountIdExtractor;
 import org.example.age.common.testing.TestUndertowModule;
 import org.example.age.testing.TestClient;
+import org.example.age.testing.TestKeys;
 import org.example.age.testing.TestUndertowServer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -21,6 +38,13 @@ public final class AvsApiHttpHandlerTest {
 
     @RegisterExtension
     private static final TestUndertowServer avsServer = TestUndertowServer.create(TestComponent::createServer);
+
+    private static KeyPair avsSigningKeyPair;
+
+    @BeforeAll
+    public static void generateKeys() {
+        avsSigningKeyPair = TestKeys.generateEd25519KeyPair();
+    }
 
     @Test
     public void stubTest() throws IOException {
@@ -35,8 +59,36 @@ public final class AvsApiHttpHandlerTest {
         return new Request.Builder().url(url).post(emptyBody).build();
     }
 
+    private static AvsConfig createAvsConfig() {
+        return AvsConfig.builder()
+                .privateSigningKey(avsSigningKeyPair.getPrivate())
+                .expiresIn(Duration.ofMinutes(5))
+                .build();
+    }
+
+    /** Dagger module that binds dependencies needed to create a <code>@Named("api") {@link HttpHandler}</code>. */
+    @Module(
+            includes = {
+                AvsApiModule.class,
+                UserAgentAuthMatchDataExtractorModule.class,
+                InMemoryVerifiedUserStoreModule.class,
+                InMemoryRegisteredSiteConfigStoreModule.class,
+                InMemoryPendingStoreFactoryModule.class,
+            })
+    interface TestModule {
+
+        @Binds
+        AccountIdExtractor bindAccountIdExtractor(HeaderAccountIdExtractor impl);
+
+        @Provides
+        @Singleton
+        static Supplier<AvsConfig> provideAvsConfig() {
+            return Suppliers.memoize(AvsApiHttpHandlerTest::createAvsConfig);
+        }
+    }
+
     /** Dagger component that provides an {@link Undertow} server. */
-    @Component(modules = {TestUndertowModule.class, AvsApiModule.class})
+    @Component(modules = {TestUndertowModule.class, TestModule.class})
     @Singleton
     interface TestComponent {
 

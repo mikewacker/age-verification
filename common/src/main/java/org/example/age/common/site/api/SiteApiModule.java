@@ -23,7 +23,7 @@ import org.example.age.common.site.verification.internal.VerificationManagerModu
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li>{@link SiteConfig}</li>
+ *     <li><code>Supplier&lt;{@link SiteConfig}&gt;</code></li>
  * </ul>
  */
 @Module(

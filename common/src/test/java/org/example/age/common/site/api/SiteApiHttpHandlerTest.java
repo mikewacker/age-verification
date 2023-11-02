@@ -2,6 +2,7 @@ package org.example.age.common.site.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.base.Suppliers;
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
 import dagger.BindsInstance;
@@ -171,7 +172,7 @@ public final class SiteApiHttpHandlerTest {
         @Provides
         @Singleton
         static Supplier<SiteConfig> provideSiteConfig() {
-            return SiteApiHttpHandlerTest::createSiteConfig;
+            return Suppliers.memoize(SiteApiHttpHandlerTest::createSiteConfig);
         }
     }
 
