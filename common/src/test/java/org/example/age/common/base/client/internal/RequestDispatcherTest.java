@@ -8,7 +8,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
@@ -82,9 +81,8 @@ public final class RequestDispatcherTest {
 
         @Provides
         @Named("backendUrl")
-        @Singleton
-        static Supplier<String> provideBackendUrl() {
-            return backendServer::rootUrl;
+        static String provideBackendUrl() {
+            return backendServer.rootUrl();
         }
     }
 

@@ -4,9 +4,9 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.security.PrivateKey;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.common.avs.verification.internal.VerificationManager;
 import org.example.age.common.base.account.AccountIdExtractor;
@@ -25,18 +25,18 @@ final class AvsApiHandler implements HttpHandler {
     private final AccountIdExtractor accountIdExtractor;
     private final VerificationManager verificationManager;
     private final RequestDispatcher requestDispatcher;
-    private final Supplier<PrivateKey> privateSigningKeySupplier;
+    private final Provider<PrivateKey> privateSigningKeyProvider;
 
     @Inject
     public AvsApiHandler(
             AccountIdExtractor accountIdExtractor,
             VerificationManager verificationManager,
             RequestDispatcher requestDispatcher,
-            @Named("signing") Supplier<PrivateKey> privateSigningKeySupplier) {
+            @Named("signing") Provider<PrivateKey> privateSigningKeyProvider) {
         this.accountIdExtractor = accountIdExtractor;
         this.verificationManager = verificationManager;
         this.requestDispatcher = requestDispatcher;
-        this.privateSigningKeySupplier = privateSigningKeySupplier;
+        this.privateSigningKeyProvider = privateSigningKeyProvider;
     }
 
     @Override

@@ -6,9 +6,9 @@ import io.undertow.server.HttpServerExchange;
 import java.security.PrivateKey;
 import java.time.Duration;
 import java.util.Optional;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -34,8 +34,8 @@ public final class FakeAvsHandler implements HttpHandler {
 
     private final AuthMatchDataExtractor authDataExtractor;
     private final RequestDispatcher requestDispatcher;
-    private final Supplier<HostAndPort> siteHostAndPortSupplier;
-    private final Supplier<PrivateKey> privateSigningKeySupplier;
+    private final Provider<HostAndPort> siteHostAndPortProvider;
+    private final Provider<PrivateKey> privateSigningKeyProvider;
 
     private VerificationSession session = null;
 
@@ -43,12 +43,12 @@ public final class FakeAvsHandler implements HttpHandler {
     public FakeAvsHandler(
             AuthMatchDataExtractor authDataExtractor,
             RequestDispatcher requestDispatcher,
-            @Named("site") Supplier<HostAndPort> siteHostAndPortSupplier,
-            @Named("signing") Supplier<PrivateKey> privateSigningKeySupplier) {
+            @Named("site") Provider<HostAndPort> siteHostAndPortProvider,
+            @Named("signing") Provider<PrivateKey> privateSigningKeyProvider) {
         this.authDataExtractor = authDataExtractor;
         this.requestDispatcher = requestDispatcher;
-        this.siteHostAndPortSupplier = siteHostAndPortSupplier;
-        this.privateSigningKeySupplier = privateSigningKeySupplier;
+        this.siteHostAndPortProvider = siteHostAndPortProvider;
+        this.privateSigningKeyProvider = privateSigningKeyProvider;
     }
 
     @Override
@@ -89,7 +89,7 @@ public final class FakeAvsHandler implements HttpHandler {
 
         SecureId pseudonym = maybePseudonym.get();
         AgeCertificate certificate = createAgeCertificate(pseudonym, exchange);
-        byte[] signedCertificate = certificate.sign(privateSigningKeySupplier.get());
+        byte[] signedCertificate = certificate.sign(privateSigningKeyProvider.get());
         session = null;
         Request request = createAgeCertificateRequest(signedCertificate);
         requestDispatcher.dispatchWithoutResponseBody(
@@ -112,7 +112,7 @@ public final class FakeAvsHandler implements HttpHandler {
 
     /** Creates a request to transmit the signed age certificate. */
     private Request createAgeCertificateRequest(byte[] signedCertificate) {
-        HostAndPort siteHostAndPort = siteHostAndPortSupplier.get();
+        HostAndPort siteHostAndPort = siteHostAndPortProvider.get();
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
                 .host(siteHostAndPort.getHost())

@@ -4,7 +4,6 @@ import com.google.common.net.HostAndPort;
 import dagger.BindsInstance;
 import dagger.Component;
 import io.undertow.Undertow;
-import java.util.function.Supplier;
 import javax.inject.Singleton;
 
 /** Factory that creates the {@link Undertow} server. */
@@ -22,7 +21,7 @@ public final class AdultServer {
 
         static Undertow createServer(HostAndPort hostAndPort) {
             ServerComponent component =
-                    DaggerAdultServer_ServerComponent.factory().create(() -> hostAndPort);
+                    DaggerAdultServer_ServerComponent.factory().create(hostAndPort);
             return component.server();
         }
 
@@ -31,7 +30,7 @@ public final class AdultServer {
         @Component.Factory
         interface Factory {
 
-            ServerComponent create(@BindsInstance Supplier<HostAndPort> hostAndPortSupplier);
+            ServerComponent create(@BindsInstance HostAndPort hostAndPort);
         }
     }
 

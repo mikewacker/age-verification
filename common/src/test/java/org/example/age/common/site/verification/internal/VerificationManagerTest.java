@@ -9,7 +9,6 @@ import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.time.Duration;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
@@ -133,15 +132,15 @@ public final class VerificationManagerTest {
         @Provides
         @Named("pseudonymKey")
         @Singleton
-        static Supplier<SecureId> providePseudonymKey() {
-            return () -> pseudonymKey;
+        static SecureId providePseudonymKey() {
+            return pseudonymKey;
         }
 
         @Provides
         @Named("expiresIn")
         @Singleton
-        static Supplier<Duration> provideExpiresIn() {
-            return () -> EXPIRES_IN;
+        static Duration provideExpiresIn() {
+            return EXPIRES_IN;
         }
     }
 

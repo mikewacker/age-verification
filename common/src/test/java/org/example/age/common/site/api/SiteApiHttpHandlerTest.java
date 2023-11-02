@@ -2,7 +2,6 @@ package org.example.age.common.site.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.base.Suppliers;
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
 import dagger.BindsInstance;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Duration;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Request;
@@ -171,8 +169,8 @@ public final class SiteApiHttpHandlerTest {
 
         @Provides
         @Singleton
-        static Supplier<SiteConfig> provideSiteConfig() {
-            return Suppliers.memoize(SiteApiHttpHandlerTest::createSiteConfig);
+        static SiteConfig provideSiteConfig() {
+            return createSiteConfig();
         }
     }
 
@@ -209,15 +207,15 @@ public final class SiteApiHttpHandlerTest {
         @Provides
         @Named("site")
         @Singleton
-        static Supplier<HostAndPort> provideSiteHostAndPort() {
-            return () -> siteServer.hostAndPort();
+        static HostAndPort provideSiteHostAndPort() {
+            return siteServer.hostAndPort();
         }
 
         @Provides
         @Named("signing")
         @Singleton
-        static Supplier<PrivateKey> providePrivateSigningKey() {
-            return () -> avsSigningKeyPair.getPrivate();
+        static PrivateKey providePrivateSigningKey() {
+            return avsSigningKeyPair.getPrivate();
         }
     }
 

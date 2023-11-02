@@ -12,7 +12,6 @@ import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
@@ -73,8 +72,8 @@ public final class UndertowTest {
 
         @Provides
         @Singleton
-        static Supplier<HostAndPort> provideHostAndPort(@Named("port") int port) {
-            return () -> HostAndPort.fromParts("localhost", port);
+        static HostAndPort provideHostAndPort(@Named("port") int port) {
+            return HostAndPort.fromParts("localhost", port);
         }
     }
 

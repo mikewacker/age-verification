@@ -8,7 +8,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import java.time.Duration;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
@@ -172,8 +171,8 @@ public final class VerificationManagerTest {
         @Provides
         @Named("expiresIn")
         @Singleton
-        static Supplier<Duration> provideExpiresIn() {
-            return () -> EXPIRES_IN;
+        static Duration provideExpiresIn() {
+            return EXPIRES_IN;
         }
     }
 

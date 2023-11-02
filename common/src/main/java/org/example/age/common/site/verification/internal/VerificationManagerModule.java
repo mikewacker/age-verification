@@ -14,8 +14,8 @@ import org.example.age.data.SecureId;
  * <ul>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li><code>@Named("pseudonymKey") Supplier&lt;{@link SecureId}&gt;</code></li>
- *     <li><code>@Named("expiresIn") Supplier&lt;{@link Duration}&gt;</code>: expiration for verified accounts</li>
+ *     <li><code>@Named("pseudonymKey") Provider&lt;{@link SecureId}&gt;</code></li>
+ *     <li><code>@Named("expiresIn") Provider&lt;{@link Duration}&gt;</code>: expiration for verified accounts</li>
  * </ul>
  */
 @Module

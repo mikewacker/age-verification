@@ -3,9 +3,9 @@ package org.example.age.common.base.client.testing;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -21,18 +21,18 @@ import org.example.age.common.base.utils.internal.ExchangeUtils;
 public final class TestTextProxyHandler implements HttpHandler {
 
     private final RequestDispatcher requestDispatcher;
-    private final Supplier<String> backendUrlSupplier;
+    private final Provider<String> backendUrlProvider;
 
     @Inject
     TestTextProxyHandler(
-            RequestDispatcher requestDispatcher, @Named("backendUrl") Supplier<String> backendUrlSupplier) {
+            RequestDispatcher requestDispatcher, @Named("backendUrl") Provider<String> backendUrlProvider) {
         this.requestDispatcher = requestDispatcher;
-        this.backendUrlSupplier = backendUrlSupplier;
+        this.backendUrlProvider = backendUrlProvider;
     }
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        Request request = new Request.Builder().url(backendUrlSupplier.get()).build();
+        Request request = new Request.Builder().url(backendUrlProvider.get()).build();
         requestDispatcher.dispatchWithResponseBody(
                 request, exchange, TestTextProxyHandler::deserialize, TestTextProxyHandler::sendResponse);
     }

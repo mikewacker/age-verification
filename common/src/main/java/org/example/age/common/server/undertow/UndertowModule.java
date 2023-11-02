@@ -5,7 +5,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import java.util.function.Supplier;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -17,7 +16,7 @@ import javax.inject.Singleton;
  *     <li><code>@Named("api") {@link HttpHandler}</code></li>
  *     <li><code>@Named("verifyHtml") {@link HttpHandler}</code>:
  *         overlays an age verification check on top of static HTML files</li>
- *     <li><code>Supplier&lt;{@link HostAndPort}&gt;</code></li>
+ *     <li>{@link HostAndPort}</li>
  * </ul>
  */
 @Module
@@ -25,8 +24,8 @@ public interface UndertowModule {
 
     @Provides
     @Singleton
-    static Undertow provideUndertow(HttpHandler handler, Supplier<HostAndPort> hostAndPortSupplier) {
-        return UndertowFactory.create(handler, hostAndPortSupplier.get());
+    static Undertow provideUndertow(HttpHandler handler, HostAndPort hostAndPort) {
+        return UndertowFactory.create(handler, hostAndPort);
     }
 
     @Provides

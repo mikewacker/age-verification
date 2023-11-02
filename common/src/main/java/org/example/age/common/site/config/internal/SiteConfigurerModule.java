@@ -4,9 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.security.PublicKey;
 import java.time.Duration;
-import java.util.function.Supplier;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.config.SiteConfig;
 import org.example.age.data.SecureId;
@@ -14,48 +12,43 @@ import org.example.age.data.SecureId;
 /**
  * Dagger module that publishes bindings for...
  * <ul>
- *     <li><code>Supplier&lt;{@link AvsLocation}&gt;</code></li>
- *     <li><code>@Named("avsSigning") Supplier&lt;{@link PublicKey}&gt;</code></li>
- *     <li><code>@Named("siteId") Supplier&lt;String&gt;</code></li>
- *     <li><code>@Named("expiresIn") Supplier&lt;{@link Duration}&gt;</code></li>
+ *     <li>{@link AvsLocation}</li>
+ *     <li><code>@Named("avsSigning") {@link PublicKey}</code></li>
+ *     <li><code>@Named("siteId") String</code></li>
+ *     <li><code>@Named("expiresIn") {@link Duration}</code></li>
  * </ul>
  *
- * <p>Depends on an unbound <code>Supplier&lt;{@link SiteConfig}&gt;</code>.</p>
+ * <p>Depends on an unbound {@link SiteConfig}</code>.</p>
  */
 @Module
 public interface SiteConfigurerModule {
 
     @Provides
-    @Singleton
-    static Supplier<AvsLocation> provideAvsLocation(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().avsLocation();
+    static AvsLocation provideAvsLocation(SiteConfig siteConfig) {
+        return siteConfig.avsLocation();
     }
 
     @Provides
     @Named("avsSigning")
-    @Singleton
-    static Supplier<PublicKey> provideAvsPublicSigningKey(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().avsPublicSigningKey();
+    static PublicKey provideAvsPublicSigningKey(SiteConfig siteConfig) {
+        return siteConfig.avsPublicSigningKey();
     }
 
     @Provides
     @Named("siteId")
-    @Singleton
-    static Supplier<String> provideSiteId(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().siteId();
+    static String provideSiteId(SiteConfig siteConfig) {
+        return siteConfig.siteId();
     }
 
     @Provides
     @Named("pseudonymKey")
-    @Singleton
-    static Supplier<SecureId> providePseudonymKey(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().pseudonymKey();
+    static SecureId providePseudonymKey(SiteConfig siteConfig) {
+        return siteConfig.pseudonymKey();
     }
 
     @Provides
     @Named("expiresIn")
-    @Singleton
-    static Supplier<Duration> provideExpiresIn(Supplier<SiteConfig> siteConfigSupplier) {
-        return () -> siteConfigSupplier.get().expiresIn();
+    static Duration provideExpiresIn(SiteConfig siteConfig) {
+        return siteConfig.expiresIn();
     }
 }
