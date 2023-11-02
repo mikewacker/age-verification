@@ -19,7 +19,7 @@ public interface SiteConfig {
     /** URL location of the age verification service. */
     AvsLocation avsLocation();
 
-    /** Public signing key used to verify signed age certificates. */
+    /** Public key used to verify signed age certificates. */
     PublicKey avsPublicSigningKey();
 
     /** Site ID that is expected for age certificates. */
