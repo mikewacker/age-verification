@@ -15,7 +15,7 @@ public final class ExchangeUtils {
 
     /** Handles a request with a body. */
     public static <T> void handleRequestWithBody(
-            HttpServerExchange exchange, Deserializer<T> deserializer, RequestBodyCallback<T> handler) {
+            HttpServerExchange exchange, BytesDeserializer<T> deserializer, RequestBodyCallback<T> handler) {
         exchange.getRequestReceiver()
                 .receiveFullBytes(
                         (ex, rawRequestBody) -> onRequestBodyReceived(exchange, rawRequestBody, deserializer, handler));
@@ -27,6 +27,27 @@ public final class ExchangeUtils {
         return !values.isEmpty() ? Optional.of(values.getFirst()) : Optional.empty();
     }
 
+    /**
+     * Gets the (first) value of a query parameter, if present.
+     *
+     * <p>Also returns empty if deserialization fails.</p>
+     */
+    public static <T> Optional<T> tryGetQueryParameter(
+            HttpServerExchange exchange, String name, TextDeserializer<T> deserializer) {
+        Optional<String> maybeValue = tryGetQueryParameter(exchange, name);
+        if (maybeValue.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String value = maybeValue.get();
+        try {
+            T t = deserializer.deserialize(value);
+            return Optional.of(t);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     /** Completes the exchange by sending only a status code. */
     public static void sendStatusCode(HttpServerExchange exchange, int statusCode) {
         exchange.setStatusCode(statusCode);
@@ -35,10 +56,17 @@ public final class ExchangeUtils {
 
     /** Completes the exchange by sending a response body. */
     public static <T> void sendResponseBody(
-            HttpServerExchange exchange, String contentType, T responseBody, Serializer<T> serializer) {
+            HttpServerExchange exchange, String contentType, T responseBody, BytesSerializer<T> serializer) {
+        byte[] rawResponseBody;
+        try {
+            rawResponseBody = serializer.serialize(responseBody);
+        } catch (Exception e) {
+            sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
+            return;
+        }
+
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, contentType);
-        ByteBuffer rawResponseBody = ByteBuffer.wrap(serializer.serialize(responseBody));
-        exchange.getResponseSender().send(rawResponseBody);
+        exchange.getResponseSender().send(ByteBuffer.wrap(rawResponseBody));
     }
 
     /** Completes the exchange by sending a response body or an error status code. */
@@ -46,7 +74,7 @@ public final class ExchangeUtils {
             HttpServerExchange exchange,
             String contentType,
             HttpOptional<T> maybeResponseBody,
-            Serializer<T> serializer) {
+            BytesSerializer<T> serializer) {
         if (maybeResponseBody.isEmpty()) {
             sendStatusCode(exchange, maybeResponseBody.statusCode());
             return;
@@ -60,7 +88,7 @@ public final class ExchangeUtils {
     private static <T> void onRequestBodyReceived(
             HttpServerExchange exchange,
             byte[] rawRequestBody,
-            Deserializer<T> deserializer,
+            BytesDeserializer<T> deserializer,
             RequestBodyCallback<T> handler) {
         T requestBody;
         try {
@@ -70,6 +98,7 @@ public final class ExchangeUtils {
             return;
         }
 
+        // FullBytesCallback does not throw an exception, so we have to handle any exceptions here.
         try {
             handler.handleRequest(exchange, requestBody);
         } catch (Exception e) {

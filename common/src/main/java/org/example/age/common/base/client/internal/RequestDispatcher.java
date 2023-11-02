@@ -2,7 +2,7 @@ package org.example.age.common.base.client.internal;
 
 import io.undertow.server.HttpServerExchange;
 import okhttp3.Request;
-import org.example.age.common.base.utils.internal.Deserializer;
+import org.example.age.common.base.utils.internal.BytesDeserializer;
 
 /**
  * Dispatches an HTTP request to a backend server as part of a frontend exchange.
@@ -14,7 +14,10 @@ import org.example.age.common.base.utils.internal.Deserializer;
 public interface RequestDispatcher {
 
     <T> void dispatchWithResponseBody(
-            Request request, HttpServerExchange exchange, Deserializer<T> deserializer, ExchangeCallback<T> callback);
+            Request request,
+            HttpServerExchange exchange,
+            BytesDeserializer<T> deserializer,
+            ExchangeCallback<T> callback);
 
     default void dispatchWithoutResponseBody(
             Request request, HttpServerExchange exchange, ExchangeCallback<Void> callback) {
