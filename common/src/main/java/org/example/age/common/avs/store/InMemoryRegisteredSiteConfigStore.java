@@ -3,7 +3,9 @@ package org.example.age.common.avs.store;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
 
@@ -14,7 +16,10 @@ final class InMemoryRegisteredSiteConfigStore implements RegisteredSiteConfigSto
     private final Map<String, RegisteredSiteConfig> siteConfigs = new ConcurrentHashMap<>();
 
     @Inject
-    public InMemoryRegisteredSiteConfigStore() {}
+    public InMemoryRegisteredSiteConfigStore(
+            @Named("initializer") Optional<Consumer<RegisteredSiteConfigStore>> maybeInitializer) {
+        maybeInitializer.ifPresent(initializer -> initializer.accept(this));
+    }
 
     @Override
     public Optional<RegisteredSiteConfig> tryLoad(String siteId) {

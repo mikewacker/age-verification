@@ -5,7 +5,9 @@ import com.google.common.collect.HashBiMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
@@ -20,7 +22,9 @@ final class InMemoryVerifiedUserStore implements VerifiedUserStore {
     private final Object lock = new Object();
 
     @Inject
-    public InMemoryVerifiedUserStore() {}
+    public InMemoryVerifiedUserStore(@Named("initializer") Optional<Consumer<VerifiedUserStore>> maybeInitializer) {
+        maybeInitializer.ifPresent(initializer -> initializer.accept(this));
+    }
 
     @Override
     public Optional<VerifiedUser> tryLoad(String accountId) {
