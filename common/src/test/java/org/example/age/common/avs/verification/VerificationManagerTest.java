@@ -8,6 +8,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import java.time.Duration;
+import java.util.function.Consumer;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
@@ -41,10 +42,7 @@ public final class VerificationManagerTest {
 
     @BeforeEach
     public void createVerificationManager() {
-        TestComponent component = TestComponent.create();
-        verificationManager = component.verificationManager();
-        initVerifiedUserStore(component.verifiedUserStore());
-        initRegisteredSiteConfigStore(component.siteConfigStore());
+        verificationManager = TestComponent.createVerificationManager();
     }
 
     @BeforeAll
@@ -139,13 +137,6 @@ public final class VerificationManagerTest {
         return exchange;
     }
 
-    private static void initVerifiedUserStore(VerifiedUserStore userStore) {
-        VerifiedUser user1 = VerifiedUser.of(SecureId.generate(), 18);
-        userStore.trySave("name", user1);
-        VerifiedUser user2 = VerifiedUser.of(SecureId.generate(), 18);
-        userStore.trySave("other name", user2);
-    }
-
     private static void initRegisteredSiteConfigStore(RegisteredSiteConfigStore siteConfigStore) {
         SiteLocation siteLocation =
                 SiteLocation.builder("localhost", 80).redirectPath("").build();
@@ -155,6 +146,13 @@ public final class VerificationManagerTest {
                 .pseudonymKey(pseudonymKey)
                 .build();
         siteConfigStore.save(siteConfig);
+    }
+
+    private static void initVerifiedUserStore(VerifiedUserStore userStore) {
+        VerifiedUser user1 = VerifiedUser.of(SecureId.generate(), 18);
+        userStore.trySave("name", user1);
+        VerifiedUser user2 = VerifiedUser.of(SecureId.generate(), 18);
+        userStore.trySave("other name", user2);
     }
 
     /** Dagger module that binds dependencies needed to create a {@link VerificationManager}. */
@@ -169,6 +167,20 @@ public final class VerificationManagerTest {
     interface TestModule {
 
         @Provides
+        @Named("initializer")
+        @Singleton
+        static Consumer<RegisteredSiteConfigStore> provideRegisteredSiteConfigStoreInitializer() {
+            return VerificationManagerTest::initRegisteredSiteConfigStore;
+        }
+
+        @Provides
+        @Named("initializer")
+        @Singleton
+        static Consumer<VerifiedUserStore> provideVerifiedUserStoreInitializer() {
+            return VerificationManagerTest::initVerifiedUserStore;
+        }
+
+        @Provides
         @Named("expiresIn")
         @Singleton
         static Duration provideExpiresIn() {
@@ -176,22 +188,16 @@ public final class VerificationManagerTest {
         }
     }
 
-    /**
-     * Dagger component that provides a {@link VerificationManager},
-     * and also a {@link VerifiedUserStore} and a {@link RegisteredSiteConfigStore}.
-     */
+    /** Dagger component that provides a {@link VerificationManager}. */
     @Component(modules = TestModule.class)
     @Singleton
     interface TestComponent {
 
-        static TestComponent create() {
-            return DaggerVerificationManagerTest_TestComponent.create();
+        static VerificationManager createVerificationManager() {
+            TestComponent component = DaggerVerificationManagerTest_TestComponent.create();
+            return component.verificationManager();
         }
 
         VerificationManager verificationManager();
-
-        VerifiedUserStore verifiedUserStore();
-
-        RegisteredSiteConfigStore siteConfigStore();
     }
 }
