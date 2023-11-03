@@ -6,5 +6,6 @@ module org.example.age.adult {
     requires java.compiler;
     requires javax.inject;
     requires org.example.age.common;
+    requires org.example.age.common.server;
     requires undertow.core;
 }

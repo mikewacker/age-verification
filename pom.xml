@@ -12,6 +12,7 @@
     <modules>
         <module>adult</module>
         <module>common</module>
+        <module>common-server</module>
         <module>data</module>
         <module>demo</module>
         <module>testing</module>
