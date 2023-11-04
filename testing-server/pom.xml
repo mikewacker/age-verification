@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.example</groupId>
+        <groupId>org.example.age</groupId>
         <artifactId>age-verification</artifactId>
-        <version>0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>testing-server</artifactId>
     <packaging>jar</packaging>
@@ -15,9 +15,9 @@
     <dependencies>
         <!-- main -->
         <dependency>
-            <groupId>org.example</groupId>
+            <groupId>org.example.age</groupId>
             <artifactId>common-server</artifactId>
-            <version>0.0-SNAPSHOT</version>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
+            <version>${junit-jupiter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
