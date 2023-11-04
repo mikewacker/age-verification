@@ -7,7 +7,7 @@ import java.security.KeyPair;
 import java.time.Duration;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
-import org.example.age.testing.TestKeys;
+import org.example.age.testing.crypto.TestKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

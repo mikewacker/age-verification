@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

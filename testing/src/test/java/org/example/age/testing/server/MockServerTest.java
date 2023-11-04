@@ -1,22 +1,24 @@
-package org.example.age.testing;
+package org.example.age.testing.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
 import okhttp3.Response;
+import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.ThrowableAssert;
+import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class TestUndertowServerTest {
+public final class MockServerTest {
 
     @RegisterExtension
-    private static final TestUndertowServer server = TestUndertowServer.create(TestUndertowServerTest::stubHandle);
+    public static final MockServer server = MockServer.create();
 
     @Test
     public void exchange() throws IOException {
+        server.enqueue(new MockResponse().setBody("test"));
         Response response = TestClient.get(server.rootUrl());
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.body().string()).isEqualTo("test");
@@ -30,7 +32,6 @@ public final class TestUndertowServerTest {
     @Test
     public void getLocation() {
         assertThat(server.hostAndPort().getHost()).isEqualTo("localhost");
-        assertThat(server.hostAndPort().getPort()).isBetween(1024, 65535);
         String expectedUrl =
                 String.format("http://localhost:%d", server.hostAndPort().getPort());
         assertThat(server.rootUrl()).isEqualTo(expectedUrl);
@@ -38,18 +39,14 @@ public final class TestUndertowServerTest {
 
     @Test
     public void error_ServerNotStarted() {
-        TestUndertowServer inactiveServer = TestUndertowServer.create(TestUndertowServerTest::stubHandle);
+        MockServer inactiveServer = MockServer.create();
         error_ServerNotStarted(inactiveServer::get);
         error_ServerNotStarted(inactiveServer::hostAndPort);
         error_ServerNotStarted(inactiveServer::rootUrl);
+        error_ServerNotStarted(() -> inactiveServer.enqueue(new MockResponse()));
     }
 
     private void error_ServerNotStarted(ThrowableAssert.ThrowingCallable callable) {
         assertThatThrownBy(callable).isInstanceOf(IllegalStateException.class).hasMessage("server has not started");
-    }
-
-    /** HTTP handler that sends a stub response. */
-    private static void stubHandle(HttpServerExchange exchange) {
-        exchange.getResponseSender().send("test");
     }
 }

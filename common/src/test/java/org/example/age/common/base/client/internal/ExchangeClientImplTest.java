@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import io.undertow.server.HttpServerExchange;
 import okhttp3.OkHttpClient;
-import org.example.age.testing.TestExchanges;
+import org.example.age.testing.client.TestExchanges;
 import org.junit.jupiter.api.Test;
 
 public final class ExchangeClientImplTest {

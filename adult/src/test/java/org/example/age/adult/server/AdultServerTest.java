@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.net.HostAndPort;
 import java.io.IOException;
 import okhttp3.Response;
-import org.example.age.testing.TestClient;
-import org.example.age.testing.TestUndertowServer;
+import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

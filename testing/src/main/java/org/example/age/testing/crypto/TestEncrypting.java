@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.crypto;
 
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;

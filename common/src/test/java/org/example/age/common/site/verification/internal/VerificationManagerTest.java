@@ -24,7 +24,7 @@ import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.testing.TestExchanges;
+import org.example.age.testing.client.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

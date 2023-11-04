@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.server;
 
 import com.google.common.net.HostAndPort;
 import com.google.errorprone.annotations.FormatMethod;

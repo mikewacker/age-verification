@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.crypto;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;

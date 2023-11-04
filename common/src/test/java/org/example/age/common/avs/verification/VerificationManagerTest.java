@@ -28,7 +28,7 @@ import org.example.age.data.AgeThresholds;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.testing.TestExchanges;
+import org.example.age.testing.client.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

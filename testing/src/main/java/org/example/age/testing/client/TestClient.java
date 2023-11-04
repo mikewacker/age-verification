@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.client;
 
 import java.io.IOException;
 import okhttp3.OkHttpClient;
