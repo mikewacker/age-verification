@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.crypto;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

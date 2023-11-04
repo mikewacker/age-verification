@@ -9,7 +9,7 @@ import java.util.Arrays;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import org.assertj.core.api.ThrowableAssert;
-import org.example.age.testing.TestKeys;
+import org.example.age.testing.crypto.TestKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

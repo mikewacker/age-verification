@@ -13,7 +13,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import org.assertj.core.api.ThrowableAssert;
-import org.example.age.testing.TestKeys;
+import org.example.age.testing.crypto.TestKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

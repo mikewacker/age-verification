@@ -16,8 +16,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.common.server.html.HtmlModule;
-import org.example.age.testing.TestClient;
-import org.example.age.testing.TestUndertowServer;
+import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.security.KeyPair;
 import org.example.age.data.SecureId;
-import org.example.age.testing.TestSigning;
+import org.example.age.testing.crypto.TestSigning;
 import org.junit.jupiter.api.Test;
 
 public final class ResourcesTest {

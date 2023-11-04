@@ -7,8 +7,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.common.api.exchange.testing.TestAddHandler;
-import org.example.age.testing.TestClient;
-import org.example.age.testing.TestUndertowServer;
+import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

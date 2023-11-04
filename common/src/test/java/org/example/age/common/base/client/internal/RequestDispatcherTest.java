@@ -14,9 +14,9 @@ import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
 import org.example.age.common.base.client.testing.TestTextProxyHandler;
-import org.example.age.testing.MockServer;
-import org.example.age.testing.TestClient;
-import org.example.age.testing.TestUndertowServer;
+import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.MockServer;
+import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

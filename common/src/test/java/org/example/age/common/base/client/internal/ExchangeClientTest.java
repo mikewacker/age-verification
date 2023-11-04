@@ -13,9 +13,9 @@ import javax.inject.Singleton;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import org.example.age.common.base.client.testing.TestGreetingHandler;
-import org.example.age.testing.MockServer;
-import org.example.age.testing.TestClient;
-import org.example.age.testing.TestUndertowServer;
+import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.MockServer;
+import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

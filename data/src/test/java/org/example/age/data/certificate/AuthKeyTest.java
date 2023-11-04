@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
 import org.example.age.data.internal.SerializationUtils;
-import org.example.age.testing.TestEncrypting;
+import org.example.age.testing.crypto.TestEncrypting;
 import org.junit.jupiter.api.Test;
 
 public final class AuthKeyTest {

@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.testing.client;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
