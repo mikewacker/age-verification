@@ -3,9 +3,9 @@ package org.example.age.common.avs.verification.internal;
 import dagger.Binds;
 import dagger.Module;
 import java.time.Duration;
+import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
-import org.example.age.common.base.auth.AuthMatchDataExtractor;
 import org.example.age.common.base.store.PendingStoreFactory;
 
 /**

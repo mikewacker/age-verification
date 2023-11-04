@@ -3,6 +3,8 @@ package org.example.age.common.base.auth;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.undertow.server.HttpServerExchange;
+import org.example.age.common.api.data.auth.AuthMatchData;
+import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 

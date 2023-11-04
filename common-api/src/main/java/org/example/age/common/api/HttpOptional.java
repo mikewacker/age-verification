@@ -1,4 +1,4 @@
-package org.example.age.common.base.utils.internal;
+package org.example.age.common.api;
 
 import io.undertow.util.StatusCodes;
 import java.util.NoSuchElementException;

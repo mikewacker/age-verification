@@ -4,6 +4,8 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
+import org.example.age.common.api.data.auth.AuthMatchData;
+import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 

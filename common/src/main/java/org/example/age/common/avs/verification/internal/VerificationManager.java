@@ -1,7 +1,7 @@
 package org.example.age.common.avs.verification.internal;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.common.base.utils.internal.HttpOptional;
+import org.example.age.common.api.HttpOptional;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;

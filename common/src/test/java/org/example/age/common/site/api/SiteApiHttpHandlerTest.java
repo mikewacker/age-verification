@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.common.base.account.AccountIdExtractor;
+import org.example.age.common.api.data.account.AccountIdExtractor;
 import org.example.age.common.base.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.base.client.internal.RequestDispatcherModule;
 import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;

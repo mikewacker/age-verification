@@ -8,10 +8,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import org.example.age.common.api.data.account.AccountIdExtractor;
+import org.example.age.common.api.exchange.impl.ExchangeUtils;
 import org.example.age.common.avs.verification.internal.VerificationManager;
-import org.example.age.common.base.account.AccountIdExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
-import org.example.age.common.base.utils.internal.ExchangeUtils;
 
 /**
  * HTTP handler for the age verification service's API.

@@ -2,7 +2,6 @@ module org.example.age.common {
     exports org.example.age.common.avs.api;
     exports org.example.age.common.avs.config;
     exports org.example.age.common.avs.store;
-    exports org.example.age.common.base.account;
     exports org.example.age.common.base.auth;
     exports org.example.age.common.base.store;
     exports org.example.age.common.site.api;
@@ -17,6 +16,7 @@ module org.example.age.common {
     requires javax.inject;
     requires jsr305;
     requires okhttp3;
+    requires org.example.age.common.api;
     requires org.example.age.data;
     requires undertow.core;
     requires xnio.api;

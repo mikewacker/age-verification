@@ -2,7 +2,7 @@ package org.example.age.common.site.auth.internal;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.base.auth.AuthMatchDataExtractor;
+import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.common.base.store.PendingStoreFactory;
 
 /**

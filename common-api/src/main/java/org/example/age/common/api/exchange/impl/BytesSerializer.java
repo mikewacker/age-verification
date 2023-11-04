@@ -1,4 +1,4 @@
-package org.example.age.common.base.utils.internal;
+package org.example.age.common.api.exchange.impl;
 
 /** Serializes a type into raw bytes. */
 @FunctionalInterface

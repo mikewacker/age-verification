@@ -1,4 +1,4 @@
-package org.example.age.common.base.utils.internal;
+package org.example.age.common.api.exchange.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.common.base.utils.testing.TestAddHandler;
+import org.example.age.common.api.exchange.testing.TestAddHandler;
 import org.example.age.testing.TestClient;
 import org.example.age.testing.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -35,13 +35,6 @@ public final class ExchangeUtilsTest {
     }
 
     @Test
-    public void error_DeserializeBodyFailed() throws IOException {
-        Request request = createRequest("/add?operand=2", "a");
-        Response response = TestClient.execute(request);
-        assertThat(response.code()).isEqualTo(400);
-    }
-
-    @Test
     public void error_ParamMissing() throws IOException {
         Request request = createRequest("/add", "2");
         Response response = TestClient.execute(request);
@@ -51,6 +44,13 @@ public final class ExchangeUtilsTest {
     @Test
     public void error_DeserializeParamFailed() throws IOException {
         Request request = createRequest("/add?operand=a", "2");
+        Response response = TestClient.execute(request);
+        assertThat(response.code()).isEqualTo(400);
+    }
+
+    @Test
+    public void error_DeserializeBodyFailed() throws IOException {
+        Request request = createRequest("/add?operand=2", "a");
         Response response = TestClient.execute(request);
         assertThat(response.code()).isEqualTo(400);
     }

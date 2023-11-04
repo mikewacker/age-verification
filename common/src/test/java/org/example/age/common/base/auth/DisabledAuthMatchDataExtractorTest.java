@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import dagger.Component;
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Singleton;
+import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

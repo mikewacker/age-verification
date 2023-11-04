@@ -1,4 +1,4 @@
-package org.example.age.common.base.utils.internal;
+package org.example.age.common.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
