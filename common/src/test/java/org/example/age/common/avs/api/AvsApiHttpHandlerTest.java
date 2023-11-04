@@ -2,7 +2,6 @@ package org.example.age.common.avs.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dagger.Binds;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
@@ -17,17 +16,16 @@ import javax.inject.Singleton;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.common.api.data.account.AccountIdExtractor;
 import org.example.age.common.avs.config.AvsConfig;
 import org.example.age.common.avs.store.InMemoryRegisteredSiteConfigStoreModule;
 import org.example.age.common.avs.store.InMemoryVerifiedUserStoreModule;
 import org.example.age.common.base.auth.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;
-import org.example.age.common.testing.HeaderAccountIdExtractor;
 import org.example.age.common.testing.TestUndertowModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.crypto.TestKeys;
 import org.example.age.testing.server.TestUndertowServer;
+import org.example.age.testing.service.data.account.TestAccountIdExtractorModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -68,15 +66,13 @@ public final class AvsApiHttpHandlerTest {
     @Module(
             includes = {
                 AvsApiModule.class,
+                TestAccountIdExtractorModule.class,
                 UserAgentAuthMatchDataExtractorModule.class,
                 InMemoryVerifiedUserStoreModule.class,
                 InMemoryRegisteredSiteConfigStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
             })
     interface TestModule {
-
-        @Binds
-        AccountIdExtractor bindAccountIdExtractor(HeaderAccountIdExtractor impl);
 
         @Provides
         @Singleton

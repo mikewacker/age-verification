@@ -70,6 +70,12 @@
             <version>0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>testing-service</artifactId>
+            <version>0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
