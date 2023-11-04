@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.example</groupId>
+        <groupId>org.example.age</groupId>
         <artifactId>age-verification</artifactId>
-        <version>0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>common-server</artifactId>
     <packaging>jar</packaging>

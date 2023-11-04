@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.example</groupId>
+        <groupId>org.example.age</groupId>
         <artifactId>age-verification</artifactId>
-        <version>0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>common-server-test</artifactId>
     <packaging>jar</packaging>
@@ -15,15 +15,15 @@
     <dependencies>
         <!-- test -->
         <dependency>
-            <groupId>org.example</groupId>
+            <groupId>org.example.age</groupId>
             <artifactId>common-server</artifactId>
-            <version>0.0-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.example</groupId>
+            <groupId>org.example.age</groupId>
             <artifactId>testing-server</artifactId>
-            <version>0.0-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
 
