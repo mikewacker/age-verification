@@ -1,4 +1,4 @@
-package org.example.age.common.testing;
+package org.example.age.testing.server.undertow;
 
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
