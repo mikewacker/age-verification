@@ -1,4 +1,4 @@
-package org.example.age.common.base.auth;
+package org.example.age.common.api.data.auth;
 
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;

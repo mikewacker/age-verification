@@ -2,6 +2,8 @@ package org.example.age.common.base.auth;
 
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Inject;
+import org.example.age.common.api.data.auth.AuthMatchData;
+import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 

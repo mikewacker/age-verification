@@ -1,4 +1,4 @@
-package org.example.age.common.base.utils.internal;
+package org.example.age.common.api.exchange.impl;
 
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
+import org.example.age.common.api.HttpOptional;
 
 /** Utilities for handling an {@link HttpServerExchange}. */
 public final class ExchangeUtils {

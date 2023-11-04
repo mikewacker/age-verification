@@ -1,6 +1,7 @@
 package org.example.age.common.base.auth;
 
 import java.nio.charset.StandardCharsets;
+import org.example.age.common.api.data.auth.AuthMatchData;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 

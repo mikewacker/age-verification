@@ -13,8 +13,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.example.age.common.api.exchange.impl.ExchangeUtils;
 import org.example.age.common.base.client.internal.ExchangeClient;
-import org.example.age.common.base.utils.internal.ExchangeUtils;
 
 /** Sends a greeting, making a backend request via {@link ExchangeClient} to get the recipient. */
 @Singleton
