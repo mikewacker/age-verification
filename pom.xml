@@ -17,6 +17,7 @@
         <module>data</module>
         <module>demo</module>
         <module>testing</module>
+        <module>testing-service</module>
         <module>verification-poc</module>
     </modules>
 

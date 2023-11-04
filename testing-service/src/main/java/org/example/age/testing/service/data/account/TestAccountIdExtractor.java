@@ -1,4 +1,4 @@
-package org.example.age.common.testing;
+package org.example.age.testing.service.data.account;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.Optional;
@@ -8,10 +8,10 @@ import org.example.age.common.api.data.account.AccountIdExtractor;
 
 /** Extracts an account ID from the custom {@code Account-Id} header. */
 @Singleton
-public final class HeaderAccountIdExtractor implements AccountIdExtractor {
+final class TestAccountIdExtractor implements AccountIdExtractor {
 
     @Inject
-    public HeaderAccountIdExtractor() {}
+    public TestAccountIdExtractor() {}
 
     @Override
     public Optional<String> tryExtract(HttpServerExchange exchange) {
