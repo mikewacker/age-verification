@@ -9,30 +9,53 @@
         <artifactId>age-verification</artifactId>
         <version>0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>common-server</artifactId>
+    <artifactId>common-server-test</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- main -->
+        <!-- test -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>common-server</artifactId>
+            <version>0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>testing</artifactId>
+            <version>0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
             <version>${dagger.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>${undertow.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
