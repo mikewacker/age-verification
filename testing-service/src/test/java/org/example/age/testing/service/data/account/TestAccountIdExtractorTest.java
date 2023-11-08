@@ -12,30 +12,41 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.account.AccountIdExtractor;
 import org.example.age.testing.exchange.TestExchanges;
+import org.example.age.testing.service.TestCodeSender;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public final class TestAccountIdExtractorTest {
 
     private static AccountIdExtractor accountIdExtractor;
+    private TestCodeSender sender;
 
     @BeforeAll
-    private static void createAccountIdExtractor() {
+    public static void createAccountIdExtractor() {
         accountIdExtractor = TestComponent.createAccountIdExtractor();
+    }
+
+    @BeforeEach
+    public void createSender() {
+        sender = TestCodeSender.create();
     }
 
     @Test
     public void extractAccountId() {
         HttpServerExchange exchange = createStubExchange(Optional.of("username"));
-        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
+        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         assertThat(maybeAccountId).hasValue("username");
+        assertThat(sender.wasSent()).isFalse();
     }
 
     @Test
-    public void extractNothing() {
+    public void sendError() {
         HttpServerExchange exchange = createStubExchange(Optional.empty());
-        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
+        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         assertThat(maybeAccountId).isEmpty();
+        assertThat(sender.wasSent()).isTrue();
+        assertThat(sender.get()).isEqualTo(401);
     }
 
     private static HttpServerExchange createStubExchange(Optional<String> maybeAccountId) {
