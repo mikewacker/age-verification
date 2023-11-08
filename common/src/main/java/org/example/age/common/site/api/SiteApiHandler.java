@@ -13,6 +13,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.example.age.common.api.CodeSender;
 import org.example.age.common.api.data.account.AccountIdExtractor;
 import org.example.age.common.api.exchange.impl.ExchangeUtils;
 import org.example.age.common.base.client.internal.RequestDispatcher;
@@ -70,9 +71,9 @@ final class SiteApiHandler implements HttpHandler {
 
     /** Handles a request to create a {@link VerificationSession} for an account. */
     private void handleVerificationSessionRequest(HttpServerExchange exchange) {
-        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
+        CodeSender sender = CodeSender.create(exchange);
+        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         if (maybeAccountId.isEmpty()) {
-            ExchangeUtils.sendStatusCode(exchange, StatusCodes.UNAUTHORIZED);
             return;
         }
 
