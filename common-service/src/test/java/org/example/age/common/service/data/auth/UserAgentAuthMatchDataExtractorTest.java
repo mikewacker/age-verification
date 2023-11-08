@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
-import org.example.age.testing.client.TestExchanges;
+import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

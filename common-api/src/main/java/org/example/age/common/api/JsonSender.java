@@ -5,19 +5,20 @@ import io.undertow.server.HttpServerExchange;
 
 /** Response sender that sends a JSON body, or an error status code. */
 @FunctionalInterface
-public interface JsonSender<T> extends Sender {
+public interface JsonSender<B> extends Sender {
 
-    static <T> JsonSender<T> create(HttpServerExchange exchange, ObjectMapper mapper) {
+    static <B> JsonSender<B> create(HttpServerExchange exchange, ObjectMapper mapper) {
         return new JsonSenderImpl<>(exchange, mapper);
     }
 
-    default void sendBody(T body) {
+    default void sendBody(B body) {
         send(HttpOptional.of(body));
     }
 
+    @Override
     default void sendError(int statusCode) {
         send(HttpOptional.empty(statusCode));
     }
 
-    void send(HttpOptional<T> maybeBody);
+    void send(HttpOptional<B> maybeBody);
 }

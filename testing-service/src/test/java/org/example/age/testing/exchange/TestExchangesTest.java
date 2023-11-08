@@ -1,4 +1,4 @@
-package org.example.age.testing.client;
+package org.example.age.testing.exchange;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

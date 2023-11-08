@@ -51,19 +51,9 @@
             <version>1</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss.xnio</groupId>
-            <artifactId>xnio-api</artifactId>
-            <version>${xnio.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
         </dependency>
     </dependencies>
 
@@ -79,11 +69,6 @@
                             <groupId>com.google.dagger</groupId>
                             <artifactId>dagger-compiler</artifactId>
                             <version>${dagger.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.immutables</groupId>
-                            <artifactId>value</artifactId>
-                            <version>${immutables.version}</version>
                         </dependency>
                     </annotationProcessorPaths>
                 </configuration>

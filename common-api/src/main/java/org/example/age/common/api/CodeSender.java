@@ -15,5 +15,10 @@ public interface CodeSender extends Sender {
         send(StatusCodes.OK);
     }
 
+    @Override
+    default void sendError(int statusCode) {
+        send(statusCode);
+    }
+
     void send(int statusCode);
 }
