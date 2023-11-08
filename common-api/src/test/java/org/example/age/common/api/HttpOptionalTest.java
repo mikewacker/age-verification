@@ -3,6 +3,7 @@ package org.example.age.common.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.google.common.testing.EqualsTester;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +16,7 @@ public final class HttpOptionalTest {
         assertThat(maybeValue.isPresent()).isTrue();
         assertThat(maybeValue.get()).isEqualTo("a");
         assertThat(maybeValue.statusCode()).isEqualTo(200);
+        assertThat(maybeValue.toString()).isEqualTo("HttpOptional[a]");
     }
 
     @Test
@@ -23,6 +25,18 @@ public final class HttpOptionalTest {
         assertThat(maybeValue.isEmpty()).isTrue();
         assertThat(maybeValue.isPresent()).isFalse();
         assertThat(maybeValue.statusCode()).isEqualTo(500);
+        assertThat(maybeValue.toString()).isEqualTo("HttpOptional.empty[500]");
+    }
+
+    @Test
+    public void equals() {
+        new EqualsTester()
+                .addEqualityGroup(HttpOptional.of("a"), HttpOptional.of("a"))
+                .addEqualityGroup(HttpOptional.of("b"))
+                .addEqualityGroup(HttpOptional.of(1))
+                .addEqualityGroup(HttpOptional.empty(400), HttpOptional.empty(400))
+                .addEqualityGroup(HttpOptional.empty(500))
+                .testEquals();
     }
 
     @Test

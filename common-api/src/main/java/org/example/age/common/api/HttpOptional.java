@@ -5,19 +5,19 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /** A non-null value and a 200 status code, or an error status code if the value is empty. */
-public final class HttpOptional<T> {
+public final class HttpOptional<V> {
 
-    private final T value;
+    private final V value;
     private final int statusCode;
 
     /** Creates a {@link HttpOptional} with the provided value and a 200 status code. */
-    public static <T> HttpOptional<T> of(T value) {
+    public static <V> HttpOptional<V> of(V value) {
         Objects.requireNonNull(value);
         return new HttpOptional<>(value, StatusCodes.OK);
     }
 
     /** Creates an empty {@link HttpOptional} with the provided status code. */
-    public static <T> HttpOptional<T> empty(int statusCode) {
+    public static <V> HttpOptional<V> empty(int statusCode) {
         return new HttpOptional<>(null, statusCode);
     }
 
@@ -32,7 +32,7 @@ public final class HttpOptional<T> {
     }
 
     /** Gets the value. */
-    public T get() {
+    public V get() {
         if (value == null) {
             throw new NoSuchElementException();
         }
@@ -45,7 +45,29 @@ public final class HttpOptional<T> {
         return statusCode;
     }
 
-    private HttpOptional(T result, int code) {
+    @Override
+    public boolean equals(Object o) {
+        HttpOptional<?> other = (o instanceof HttpOptional) ? (HttpOptional<?>) o : null;
+        if (other == null) {
+            return false;
+        }
+
+        return Objects.equals(value, other.value) && (statusCode == other.statusCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, statusCode);
+    }
+
+    @Override
+    public String toString() {
+        return (value != null)
+                ? String.format("HttpOptional[%s]", value)
+                : String.format("HttpOptional.empty[%d]", statusCode);
+    }
+
+    private HttpOptional(V result, int code) {
         this.value = result;
         this.statusCode = code;
     }
