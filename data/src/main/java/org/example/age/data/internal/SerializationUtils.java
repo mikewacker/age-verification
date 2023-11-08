@@ -2,13 +2,13 @@ package org.example.age.data.internal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import java.io.IOException;
+import org.example.age.data.DataMapper;
 
 /** Utilities for serializing and deserializing objects to and from bytes. */
 public final class SerializationUtils {
 
-    private static final ObjectMapper mapper = createMapper();
+    private static final ObjectMapper mapper = DataMapper.get();
 
     /** Serializes an object to bytes. */
     public static byte[] serialize(Object o) {
@@ -33,13 +33,6 @@ public final class SerializationUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /** Creates a mapper for serialization and deserialization. */
-    private static ObjectMapper createMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new GuavaModule());
-        return mapper;
     }
 
     // static class
