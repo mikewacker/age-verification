@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.account.AccountIdExtractor;
-import org.example.age.testing.client.TestExchanges;
+import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

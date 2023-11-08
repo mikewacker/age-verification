@@ -1,4 +1,4 @@
-package org.example.age.testing.client;
+package org.example.age.testing.exchange;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -14,7 +14,7 @@ import org.xnio.XnioExecutor;
 import org.xnio.XnioIoThread;
 import org.xnio.XnioWorker;
 
-/** Creates {@link HttpServerExchange}'s for testing. */
+/** Creates stub {@link HttpServerExchange}'s. */
 public final class TestExchanges {
 
     /**
