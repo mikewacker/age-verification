@@ -1,4 +1,4 @@
-package org.example.age.common.base.auth;
+package org.example.age.common.service.data.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

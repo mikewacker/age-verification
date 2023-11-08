@@ -9,7 +9,7 @@
         <artifactId>age-verification</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>common</artifactId>
+    <artifactId>common-service</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -17,11 +17,6 @@
         <dependency>
             <groupId>org.example.age</groupId>
             <artifactId>common-api</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.example.age</groupId>
-            <artifactId>common-service</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
@@ -36,16 +31,6 @@
             <version>${dagger.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>${undertow.version}</version>
@@ -55,43 +40,12 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-        <dependency>
-            <groupId>org.immutables</groupId>
-            <artifactId>value-annotations</artifactId>
-            <version>${immutables.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- test -->
         <dependency>
             <groupId>org.example.age</groupId>
-            <artifactId>common-server</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.example.age</groupId>
-            <artifactId>testing</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.example.age</groupId>
             <artifactId>testing-server</artifactId>
             <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.example.age</groupId>
-            <artifactId>testing-service</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>mockwebserver</artifactId>
-            <version>${okhttp.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -108,11 +62,6 @@
                             <groupId>com.google.dagger</groupId>
                             <artifactId>dagger-compiler</artifactId>
                             <version>${dagger.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.immutables</groupId>
-                            <artifactId>value</artifactId>
-                            <version>${immutables.version}</version>
                         </dependency>
                     </annotationProcessorPaths>
                 </configuration>
