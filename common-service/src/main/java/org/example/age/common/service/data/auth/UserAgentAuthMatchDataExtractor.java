@@ -1,4 +1,4 @@
-package org.example.age.common.base.auth;
+package org.example.age.common.service.data.auth;
 
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;

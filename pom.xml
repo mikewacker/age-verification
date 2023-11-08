@@ -15,6 +15,7 @@
         <module>common-api</module>
         <module>common-server</module>
         <module>common-server-test</module> <!-- Break a circular dependency in the test scope. -->
+        <module>common-service</module>
         <module>data</module>
         <module>demo</module>
         <module>testing</module>

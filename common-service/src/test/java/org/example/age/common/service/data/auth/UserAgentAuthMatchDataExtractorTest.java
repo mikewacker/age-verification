@@ -1,4 +1,4 @@
-package org.example.age.common.base.auth;
+package org.example.age.common.service.data.auth;
 
 import static org.mockito.Mockito.mock;
 
@@ -19,7 +19,7 @@ public final class UserAgentAuthMatchDataExtractorTest {
     private static AuthKey key;
 
     @BeforeAll
-    public static void createExtractorAndKey() {
+    public static void createAuthMatchDataExtractorEtAl() {
         extractor = TestComponent.createAuthMatchDataExtractor();
         key = AuthKey.generate();
     }
