@@ -106,7 +106,8 @@ public final class FakeAvsHandler implements HttpHandler {
     private AgeCertificate createAgeCertificate(SecureId pseudonym, HttpServerExchange exchange) {
         VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(pseudonym, 18);
-        AuthToken authToken = authDataExtractor.extract(exchange).encrypt(session.authKey());
+        AuthToken authToken =
+                authDataExtractor.tryExtract(exchange, code -> {}).get().encrypt(session.authKey());
         return AgeCertificate.of(request, user, authToken);
     }
 

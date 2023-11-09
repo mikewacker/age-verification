@@ -99,7 +99,13 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         PendingVerification pendingVerification = maybePendingVerification.get();
-        AgeCertificate certificate = createAgeCertificate(user, pendingVerification, exchange);
+        Optional<AuthToken> maybeAuthToken = tryExtractAuthToken(exchange, pendingVerification.verificationSession());
+        if (maybeAuthToken.isEmpty()) {
+            return HttpOptional.empty(StatusCodes.BAD_REQUEST);
+        }
+
+        AuthToken authToken = maybeAuthToken.get();
+        AgeCertificate certificate = createAgeCertificate(user, pendingVerification, authToken);
         SiteLocation location = pendingVerification.siteConfig().siteLocation();
         Verification verification = Verification.of(certificate, location);
         return HttpOptional.of(verification);
@@ -113,10 +119,9 @@ final class VerificationManagerImpl implements VerificationManager {
 
     /** Creates an {@link AgeCertificate} from a {@link VerifiedUser} and a pending verification request. */
     private AgeCertificate createAgeCertificate(
-            VerifiedUser user, PendingVerification pendingVerification, HttpServerExchange exchange) {
+            VerifiedUser user, PendingVerification pendingVerification, AuthToken authToken) {
         VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
         VerifiedUser localizedUser = localizeUser(user, pendingVerification.siteConfig());
-        AuthToken authToken = extractAuthToken(exchange, pendingVerification.verificationSession());
         return AgeCertificate.of(request, localizedUser, authToken);
     }
 
@@ -126,9 +131,15 @@ final class VerificationManagerImpl implements VerificationManager {
     }
 
     /** Extracts an encrypted {@link AuthToken} from an {@link HttpServerExchange}. */
-    private AuthToken extractAuthToken(HttpServerExchange exchange, VerificationSession session) {
-        AuthMatchData authData = authDataExtractor.extract(exchange);
-        return authData.encrypt(session.authKey());
+    private Optional<AuthToken> tryExtractAuthToken(HttpServerExchange exchange, VerificationSession session) {
+        Optional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange, code -> {});
+        if (maybeAuthData.isEmpty()) {
+            return Optional.empty();
+        }
+
+        AuthMatchData authData = maybeAuthData.get();
+        AuthToken authToken = authData.encrypt(session.authKey());
+        return Optional.of(authToken);
     }
 
     /** Pending verification request for a specific site. */

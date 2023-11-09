@@ -13,7 +13,6 @@ import org.example.age.common.base.utils.internal.PendingStoreUtils;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.AuthKey;
-import org.example.age.data.certificate.AuthToken;
 import org.example.age.data.certificate.VerificationSession;
 
 @Singleton
@@ -31,7 +30,13 @@ final class AuthManagerImpl implements AuthManager {
     @Override
     public void onVerificationSessionReceived(VerificationSession session, HttpServerExchange exchange) {
         SecureId requestId = session.verificationRequest().id();
-        PendingAuth pendingAuth = createPendingAuth(session, exchange);
+        Optional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange, code -> {});
+        if (maybeAuthData.isEmpty()) {
+            return;
+        }
+
+        AuthMatchData authData = maybeAuthData.get();
+        PendingAuth pendingAuth = new PendingAuth(authData, session.authKey());
         PendingStoreUtils.putForVerificationSession(pendingAuths, requestId, pendingAuth, session, exchange);
     }
 
@@ -44,30 +49,15 @@ final class AuthManagerImpl implements AuthManager {
         }
 
         PendingAuth pendingAuth = maybePendingAuth.get();
-        AuthMatchData remoteAuthData;
-        try {
-            remoteAuthData = extractRemoteAuthData(certificate, pendingAuth);
-        } catch (RuntimeException e) {
+        Optional<AuthMatchData> maybeRemoteAuthData =
+                authDataExtractor.tryDecrypt(certificate.authToken(), pendingAuth.key(), code -> {});
+        if (maybeRemoteAuthData.isEmpty()) {
             return StatusCodes.UNAUTHORIZED;
         }
 
-        AuthMatchData localAuthData = pendingAuth.localData();
-        boolean matches = localAuthData.match(remoteAuthData);
+        AuthMatchData remoteAuthData = maybeRemoteAuthData.get();
+        boolean matches = pendingAuth.localData().match(remoteAuthData);
         return matches ? StatusCodes.OK : StatusCodes.UNAUTHORIZED;
-    }
-
-    /** Creates a {@link PendingAuth} for a {@link VerificationSession}. */
-    private PendingAuth createPendingAuth(VerificationSession session, HttpServerExchange exchange) {
-        AuthMatchData localAuthData = authDataExtractor.extract(exchange);
-        AuthKey authKey = session.authKey();
-        return new PendingAuth(localAuthData, authKey);
-    }
-
-    /** Extracts remote {@link AuthMatchData} from an {@link AgeCertificate}. */
-    private AuthMatchData extractRemoteAuthData(AgeCertificate certificate, PendingAuth pendingAuth) {
-        AuthToken remoteAuthToken = certificate.authToken();
-        AuthKey authKey = pendingAuth.key();
-        return authDataExtractor.decrypt(remoteAuthToken, authKey);
     }
 
     @SuppressWarnings("UnusedVariable") // false positive, see https://github.com/google/error-prone/issues/2713
