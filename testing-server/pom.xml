@@ -19,7 +19,17 @@
             <artifactId>common-server</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.example.age</groupId>
+            <artifactId>data</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
