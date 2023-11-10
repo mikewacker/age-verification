@@ -1,8 +1,10 @@
 package org.example.age.testing.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,6 +15,7 @@ import org.example.age.data.DataMapper;
 /** Shared HTTP client for testing. */
 public final class TestClient {
 
+    private static final Map<String, String> EMPTY_HEADERS = Map.of();
     private static final MediaType JSON_CONTENT_TYPE = MediaType.get("application/json");
     private static final RequestBody EMPTY_REQUEST_BODY = RequestBody.create(new byte[0]);
 
@@ -26,17 +29,24 @@ public final class TestClient {
 
     /** Issues a simple, synchronous HTTP POST request, returning the response. */
     public static Response post(String url) throws IOException {
-        Request request =
-                new Request.Builder().url(url).post(EMPTY_REQUEST_BODY).build();
-        return execute(request);
+        return post(url, EMPTY_HEADERS, EMPTY_REQUEST_BODY);
+    }
+
+    /** Issues a synchronous HTTP POST request with headers, returning the response. */
+    public static Response post(String url, Map<String, String> headers) throws IOException {
+        return post(url, headers, EMPTY_REQUEST_BODY);
     }
 
     /** Issues a synchronous HTTP POST request with a JSON body, returning the response. */
     public static <B> Response post(String url, B body) throws IOException {
-        byte[] rawBody = mapper.writeValueAsBytes(body);
-        RequestBody requestBody = RequestBody.create(rawBody, JSON_CONTENT_TYPE);
-        Request request = new Request.Builder().url(url).post(requestBody).build();
-        return execute(request);
+        RequestBody requestBody = createRequestBody(body);
+        return post(url, EMPTY_HEADERS, requestBody);
+    }
+
+    /** Issues a synchronous HTTP POST request with headers and a JSON body, returning the response. */
+    public static <B> Response post(String url, Map<String, String> headers, B body) throws IOException {
+        RequestBody requestBody = createRequestBody(body);
+        return post(url, headers, requestBody);
     }
 
     /** Issues a synchronous HTTP request, returning the response. */
@@ -53,6 +63,20 @@ public final class TestClient {
     /** Gets the shared client. */
     public static OkHttpClient getInstance() {
         return Holder.INSTANCE;
+    }
+
+    /** Creates a request body. */
+    private static <B> RequestBody createRequestBody(B body) throws JsonProcessingException {
+        byte[] rawBody = mapper.writeValueAsBytes(body);
+        return RequestBody.create(rawBody, JSON_CONTENT_TYPE);
+    }
+
+    /** Issues a synchronous HTTP POST request, returning the response. */
+    private static Response post(String url, Map<String, String> headers, RequestBody requestBody) throws IOException {
+        Request.Builder requestBuilder = new Request.Builder().url(url);
+        headers.forEach((name, value) -> requestBuilder.header(name, value));
+        Request request = requestBuilder.post(requestBody).build();
+        return execute(request);
     }
 
     /** Holder for the shared client. */

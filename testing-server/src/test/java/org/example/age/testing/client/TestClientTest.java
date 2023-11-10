@@ -2,7 +2,6 @@ package org.example.age.testing.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
@@ -10,7 +9,10 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
+import java.util.Map;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.example.age.testing.server.TestUndertowServer;
@@ -29,15 +31,15 @@ public final class TestClientTest {
     }
 
     @Test
-    public void post_NoBody() throws IOException {
+    public void post_UrlOnly() throws IOException {
         Response response = TestClient.post(server.url("/path"));
         assertResponseBodyEquals(response, "POST /path");
     }
 
     @Test
-    public void post_Body() throws IOException {
-        Response response = TestClient.post(server.url("/path"), "test");
-        assertResponseBodyEquals(response, "POST /path[application/json: test]");
+    public void post_HeadersAndBody() throws IOException {
+        Response response = TestClient.post(server.url("/path"), Map.of("Cookie", "name=value"), "test");
+        assertResponseBodyEquals(response, "POST /path[name=value][application/json: test]");
     }
 
     @Test
@@ -69,27 +71,29 @@ public final class TestClientTest {
 
         private static void handleRequest(HttpServerExchange exchange, byte[] rawRequestBody) {
             try {
+                StringWriter writer = new StringWriter();
+                PrintWriter responseBodyWriter = new PrintWriter(writer);
                 String method = exchange.getRequestMethod().toString();
                 String path = exchange.getRequestPath();
-                if (rawRequestBody.length == 0) {
-                    String responseBody = String.format("%s %s", method, path);
-                    sendResponse(exchange, responseBody);
-                    return;
+                responseBodyWriter.format("%s %s", method, path);
+
+                String userAgent = exchange.getRequestHeaders().getFirst(Headers.COOKIE);
+                if (userAgent != null) {
+                    responseBodyWriter.format("[%s]", userAgent);
                 }
 
-                String contentType = exchange.getRequestHeaders().getFirst(Headers.CONTENT_TYPE);
-                String requestBody = mapper.readValue(rawRequestBody, String.class);
-                String responseBody = String.format("%s %s[%s: %s]", method, path, contentType, requestBody);
-                sendResponse(exchange, responseBody);
+                if (rawRequestBody.length != 0) {
+                    String contentType = exchange.getRequestHeaders().getFirst(Headers.CONTENT_TYPE);
+                    String requestBody = mapper.readValue(rawRequestBody, String.class);
+                    responseBodyWriter.format("[%s: %s]", contentType, requestBody);
+                }
+
+                String responseBody = writer.toString();
+                byte[] rawResponseBody = mapper.writeValueAsBytes(responseBody);
+                exchange.getResponseSender().send(ByteBuffer.wrap(rawResponseBody));
             } catch (Exception e) {
                 exchange.setStatusCode(StatusCodes.INTERNAL_SERVER_ERROR);
             }
-        }
-
-        private static void sendResponse(HttpServerExchange exchange, String responseBody)
-                throws JsonProcessingException {
-            byte[] rawResponseBody = mapper.writeValueAsBytes(responseBody);
-            exchange.getResponseSender().send(ByteBuffer.wrap(rawResponseBody));
         }
 
         private TestHandler() {}
