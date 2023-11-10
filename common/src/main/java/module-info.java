@@ -15,6 +15,7 @@ module org.example.age.common {
     requires javax.inject;
     requires jsr305;
     requires okhttp3;
+    requires org.example.age.api;
     requires org.example.age.common.api;
     requires org.example.age.data;
     requires undertow.core;

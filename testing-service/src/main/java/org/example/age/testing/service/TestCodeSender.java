@@ -1,7 +1,7 @@
 package org.example.age.testing.service;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.example.age.common.api.CodeSender;
+import org.example.age.api.CodeSender;
 
 /** Fake {@link CodeSender} that stores the status code that was sent. */
 public final class TestCodeSender implements CodeSender {

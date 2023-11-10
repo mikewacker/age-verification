@@ -1,8 +1,8 @@
 package org.example.age.testing.service;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.example.age.common.api.HttpOptional;
-import org.example.age.common.api.JsonSender;
+import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSender;
 
 /** Fake {@link JsonSender} that stores the body (or error status code) that was sent. */
 public final class TestJsonSender<B> implements JsonSender<B> {

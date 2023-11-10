@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
-import org.example.age.common.api.HttpOptional;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
 import org.example.age.common.avs.config.SiteLocation;
 import org.example.age.common.avs.store.InMemoryRegisteredSiteConfigStoreModule;

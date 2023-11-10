@@ -2,7 +2,7 @@ package org.example.age.common.api.data.account;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.Optional;
-import org.example.age.common.api.Sender;
+import org.example.age.api.Sender;
 
 /**
  * Extracts an account ID from an {@link HttpServerExchange}, or sends an error status code.

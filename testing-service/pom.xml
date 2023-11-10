@@ -16,6 +16,11 @@
         <!-- main -->
         <dependency>
             <groupId>org.example.age</groupId>
+            <artifactId>api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.example.age</groupId>
             <artifactId>common-api</artifactId>
             <version>${revision}</version>
         </dependency>

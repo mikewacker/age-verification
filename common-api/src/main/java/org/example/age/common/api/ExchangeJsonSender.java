@@ -7,16 +7,19 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSender;
 
-final class JsonSenderImpl<B> implements JsonSender<B> {
+/** {@link JsonSender} that is backed by an {@link HttpServerExchange}. */
+public final class ExchangeJsonSender<B> implements JsonSender<B> {
 
     private final HttpServerExchange exchange;
     private final ObjectMapper mapper;
     private final AtomicBoolean wasSent = new AtomicBoolean(false);
 
-    public JsonSenderImpl(HttpServerExchange exchange, ObjectMapper mapper) {
-        this.exchange = exchange;
-        this.mapper = mapper;
+    /** Creates the {@link JsonSender} from the {@link HttpServerExchange}. */
+    public static JsonSender create(HttpServerExchange exchange, ObjectMapper mapper) {
+        return new ExchangeJsonSender(exchange, mapper);
     }
 
     @Override
@@ -50,5 +53,10 @@ final class JsonSenderImpl<B> implements JsonSender<B> {
     private void sendStatusCode(int statusCode) {
         exchange.setStatusCode(statusCode);
         exchange.endExchange();
+    }
+
+    private ExchangeJsonSender(HttpServerExchange exchange, ObjectMapper mapper) {
+        this.exchange = exchange;
+        this.mapper = mapper;
     }
 }

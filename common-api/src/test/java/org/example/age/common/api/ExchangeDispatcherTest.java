@@ -7,12 +7,14 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import okhttp3.Response;
+import org.example.age.api.CodeSender;
+import org.example.age.api.Dispatcher;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class ExecutorContextTest {
+public final class ExchangeDispatcherTest {
 
     @RegisterExtension
     private static final TestUndertowServer server = TestUndertowServer.create(TestHandler::create);
@@ -47,7 +49,7 @@ public final class ExecutorContextTest {
         assertThat(response.code()).isEqualTo(expectedStatusCode);
     }
 
-    /** Test {@link HttpHandler} that uses the {@link ExchangeExecutors}. */
+    /** Test {@link HttpHandler} that uses an {@link ExchangeDispatcher}. */
     private static final class TestHandler implements HttpHandler {
 
         public static HttpHandler create() {
@@ -56,40 +58,40 @@ public final class ExecutorContextTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            ExchangeExecutors executors = ExchangeExecutors.create(exchange);
-            CodeSender sender = CodeSender.create(exchange);
-            if (!executors.isInIoThread()) {
+            Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+            CodeSender sender = ExchangeCodeSender.create(exchange);
+            if (!dispatcher.isInIoThread()) {
                 sender.send(418);
                 return;
             }
 
             switch (exchange.getRequestPath()) {
-                case "/dispatch" -> executors.dispatch(sender, TestHandler::handler);
-                case "/dispatched-io-thread" -> dispatchedIoThread(executors, sender);
-                case "/dispatched-worker" -> dispatchedWorker(executors, sender);
-                case "/error-dispatch" -> executors.dispatch(sender, TestHandler::badHandler);
-                case "/error-dispatched" -> dispatchedBadHandler(executors, sender);
+                case "/dispatch" -> dispatcher.dispatch(sender, TestHandler::handler);
+                case "/dispatched-io-thread" -> dispatchedIoThread(sender, dispatcher);
+                case "/dispatched-worker" -> dispatchedWorker(sender, dispatcher);
+                case "/error-dispatch" -> dispatcher.dispatch(sender, TestHandler::badHandler);
+                case "/error-dispatched" -> dispatchedBadHandler(sender, dispatcher);
                 default -> sender.send(StatusCodes.NOT_FOUND);
             }
         }
 
-        private static void dispatchedIoThread(ExchangeExecutors executors, CodeSender sender) {
-            executors.getIoThread().execute(() -> executors.executeHandler(sender, TestHandler::ioThreadHandler));
-            executors.dispatched();
+        private static void dispatchedIoThread(CodeSender sender, Dispatcher dispatcher) {
+            dispatcher.getIoThread().execute(() -> dispatcher.executeHandler(sender, TestHandler::ioThreadHandler));
+            dispatcher.dispatched();
         }
 
-        private static void dispatchedWorker(ExchangeExecutors executors, CodeSender sender) {
-            executors.getWorker().execute(() -> executors.executeHandler(sender, TestHandler::handler));
-            executors.dispatched();
+        private static void dispatchedWorker(CodeSender sender, Dispatcher dispatcher) {
+            dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::handler));
+            dispatcher.dispatched();
         }
 
-        private static void dispatchedBadHandler(ExchangeExecutors executors, CodeSender sender) {
-            executors.getWorker().execute(() -> executors.executeHandler(sender, TestHandler::badHandler));
-            executors.dispatched();
+        private static void dispatchedBadHandler(CodeSender sender, Dispatcher dispatcher) {
+            dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::badHandler));
+            dispatcher.dispatched();
         }
 
-        private static void handler(ExchangeExecutors executors, CodeSender sender) {
-            if (executors.isInIoThread()) {
+        private static void handler(CodeSender sender, Dispatcher dispatcher) {
+            if (dispatcher.isInIoThread()) {
                 sender.send(418);
                 return;
             }
@@ -97,8 +99,8 @@ public final class ExecutorContextTest {
             sender.sendOk();
         }
 
-        private static void ioThreadHandler(ExchangeExecutors executors, CodeSender sender) {
-            if (!executors.isInIoThread()) {
+        private static void ioThreadHandler(CodeSender sender, Dispatcher dispatcher) {
+            if (!dispatcher.isInIoThread()) {
                 sender.send(418);
                 return;
             }
@@ -106,7 +108,7 @@ public final class ExecutorContextTest {
             sender.sendOk();
         }
 
-        private static void badHandler(ExchangeExecutors executors, CodeSender sender) {
+        private static void badHandler(CodeSender sender, Dispatcher dispatcher) {
             throw new RuntimeException();
         }
 

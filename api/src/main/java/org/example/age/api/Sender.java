@@ -1,4 +1,4 @@
-package org.example.age.common.api;
+package org.example.age.api;
 
 /**
  * Response sender that sends an error status code.

@@ -5,7 +5,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import org.example.age.common.api.HttpOptional;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.api.exchange.impl.ExchangeUtils;
 
 /** Adds an operand in a query parameter and an operand in the body. Also has some special cases. */

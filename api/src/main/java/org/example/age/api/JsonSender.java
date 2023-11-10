@@ -1,15 +1,8 @@
-package org.example.age.common.api;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.undertow.server.HttpServerExchange;
+package org.example.age.api;
 
 /** Response sender that sends a JSON body, or an error status code. */
 @FunctionalInterface
 public interface JsonSender<B> extends Sender {
-
-    static <B> JsonSender<B> create(HttpServerExchange exchange, ObjectMapper mapper) {
-        return new JsonSenderImpl<>(exchange, mapper);
-    }
 
     default void sendBody(B body) {
         send(HttpOptional.of(body));
