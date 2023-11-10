@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import org.example.age.common.api.HttpOptional;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.auth.AuthMatchData;
 import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
 import org.example.age.common.avs.config.RegisteredSiteConfig;

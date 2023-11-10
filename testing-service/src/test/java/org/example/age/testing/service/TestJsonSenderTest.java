@@ -3,7 +3,7 @@ package org.example.age.testing.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.example.age.common.api.HttpOptional;
+import org.example.age.api.HttpOptional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

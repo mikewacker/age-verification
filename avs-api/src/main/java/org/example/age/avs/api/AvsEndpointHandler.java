@@ -8,9 +8,12 @@ import io.undertow.util.StatusCodes;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.common.api.CodeSender;
-import org.example.age.common.api.ExchangeExecutors;
-import org.example.age.common.api.JsonSender;
+import org.example.age.api.CodeSender;
+import org.example.age.api.Dispatcher;
+import org.example.age.api.JsonSender;
+import org.example.age.common.api.ExchangeCodeSender;
+import org.example.age.common.api.ExchangeDispatcher;
+import org.example.age.common.api.ExchangeJsonSender;
 import org.example.age.common.api.data.account.AccountIdExtractor;
 import org.example.age.common.api.data.auth.AuthMatchData;
 import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
@@ -43,12 +46,12 @@ final class AvsEndpointHandler implements HttpHandler {
             case "/verification-session" -> handleVerificationSession(exchange, parser);
             case "/linked-verification-request" -> handleLinkedVerificationRequest(exchange, parser);
             case "/age-certificate" -> handleAgeCertificate(exchange);
-            default -> CodeSender.create(exchange).send(StatusCodes.NOT_FOUND);
+            default -> ExchangeCodeSender.create(exchange).send(StatusCodes.NOT_FOUND);
         }
     }
 
     private void handleVerificationSession(HttpServerExchange exchange, RequestParser parser) {
-        JsonSender<VerificationSession> sender = JsonSender.create(exchange, mapper);
+        JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange, mapper);
 
         Optional<String> maybeSiteId = parser.tryGetQueryParameter("site-id");
         if (maybeSiteId.isEmpty()) {
@@ -56,12 +59,12 @@ final class AvsEndpointHandler implements HttpHandler {
         }
         String siteId = maybeSiteId.get();
 
-        ExchangeExecutors executors = ExchangeExecutors.create(exchange);
-        avsApi.createVerificationSession(sender, siteId, executors);
+        Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+        avsApi.createVerificationSession(sender, siteId, dispatcher);
     }
 
     private void handleLinkedVerificationRequest(HttpServerExchange exchange, RequestParser parser) {
-        CodeSender sender = CodeSender.create(exchange);
+        CodeSender sender = ExchangeCodeSender.create(exchange);
 
         Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         if (maybeAccountId.isEmpty()) {
@@ -75,12 +78,12 @@ final class AvsEndpointHandler implements HttpHandler {
         }
         SecureId requestId = maybeRequestId.get();
 
-        ExchangeExecutors executors = ExchangeExecutors.create(exchange);
-        avsApi.linkVerificationRequest(sender, accountId, requestId, executors);
+        Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+        avsApi.linkVerificationRequest(sender, accountId, requestId, dispatcher);
     }
 
     private void handleAgeCertificate(HttpServerExchange exchange) {
-        CodeSender sender = CodeSender.create(exchange);
+        CodeSender sender = ExchangeCodeSender.create(exchange);
 
         Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         if (maybeAccountId.isEmpty()) {
@@ -94,7 +97,7 @@ final class AvsEndpointHandler implements HttpHandler {
         }
         AuthMatchData authData = maybeAuthData.get();
 
-        ExchangeExecutors executors = ExchangeExecutors.create(exchange);
-        avsApi.sendAgeCertificate(sender, accountId, authData, executors);
+        Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+        avsApi.sendAgeCertificate(sender, accountId, authData, dispatcher);
     }
 }

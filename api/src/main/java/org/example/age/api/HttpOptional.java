@@ -1,6 +1,5 @@
-package org.example.age.common.api;
+package org.example.age.api;
 
-import io.undertow.util.StatusCodes;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -13,7 +12,7 @@ public final class HttpOptional<V> {
     /** Creates a {@link HttpOptional} with the provided value and a 200 status code. */
     public static <V> HttpOptional<V> of(V value) {
         Objects.requireNonNull(value);
-        return new HttpOptional<>(value, StatusCodes.OK);
+        return new HttpOptional<>(value, 200);
     }
 
     /** Creates an empty {@link HttpOptional} with the provided status code. */

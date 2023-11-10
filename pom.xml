@@ -11,6 +11,7 @@
 
     <modules>
         <module>adult</module>
+        <module>api</module>
         <module>avs-api</module>
         <module>common</module>
         <module>common-api</module>

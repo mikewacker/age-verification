@@ -8,12 +8,13 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import okhttp3.Response;
+import org.example.age.api.JsonSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class JsonSenderTest {
+public final class ExchangeJsonSenderTest {
 
     @RegisterExtension
     private static final TestUndertowServer server = TestUndertowServer.create(TestHandler::create);
@@ -52,7 +53,7 @@ public final class JsonSenderTest {
         assertThat(response.body().string()).isEmpty();
     }
 
-    /** Test {@link HttpHandler} that uses a {@link JsonSender}. */
+    /** Test {@link HttpHandler} that uses an {@link ExchangeJsonSender}. */
     private static final class TestHandler implements HttpHandler {
 
         private static final ObjectMapper mapper = new ObjectMapper();
@@ -63,7 +64,7 @@ public final class JsonSenderTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = JsonSender.create(exchange, mapper);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange, mapper);
             switch (exchange.getRequestPath()) {
                 case "/body" -> sender.sendBody("test");
                 case "/forbidden" -> sender.sendError(StatusCodes.FORBIDDEN);
@@ -79,7 +80,7 @@ public final class JsonSenderTest {
         }
 
         private static void serializationFailed(HttpServerExchange exchange) {
-            JsonSender<HttpServerExchange> sender = JsonSender.create(exchange, mapper);
+            JsonSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange, mapper);
             sender.sendBody(exchange);
         }
 

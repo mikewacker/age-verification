@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
-import org.example.age.common.api.HttpOptional;
+import org.example.age.api.HttpOptional;
 
 /** Utilities for handling an {@link HttpServerExchange}. */
 public final class ExchangeUtils {

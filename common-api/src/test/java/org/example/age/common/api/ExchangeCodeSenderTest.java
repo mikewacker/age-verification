@@ -7,12 +7,13 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import okhttp3.Response;
+import org.example.age.api.CodeSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class CodeSenderTest {
+public final class ExchangeCodeSenderTest {
 
     @RegisterExtension
     private static final TestUndertowServer server = TestUndertowServer.create(TestHandler::create);
@@ -37,7 +38,7 @@ public final class CodeSenderTest {
         assertThat(response.code()).isEqualTo(expectedStatusCode);
     }
 
-    /** Test {@link HttpHandler} that uses a {@link CodeSender}. */
+    /** Test {@link HttpHandler} that uses an {@link ExchangeCodeSender}. */
     private static final class TestHandler implements HttpHandler {
 
         public static HttpHandler create() {
@@ -46,7 +47,7 @@ public final class CodeSenderTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            CodeSender sender = CodeSender.create(exchange);
+            CodeSender sender = ExchangeCodeSender.create(exchange);
             switch (exchange.getRequestPath()) {
                 case "/ok" -> sender.sendOk();
                 case "/forbidden" -> sender.send(StatusCodes.FORBIDDEN);

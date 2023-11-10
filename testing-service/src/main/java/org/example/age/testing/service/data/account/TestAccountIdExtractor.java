@@ -5,7 +5,7 @@ import io.undertow.util.StatusCodes;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.common.api.Sender;
+import org.example.age.api.Sender;
 import org.example.age.common.api.data.account.AccountIdExtractor;
 
 /** Extracts an account ID from the custom {@code Account-Id} header, or sends a 401 error. */

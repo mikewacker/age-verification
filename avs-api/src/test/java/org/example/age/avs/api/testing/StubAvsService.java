@@ -3,10 +3,10 @@ package org.example.age.avs.api.testing;
 import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.example.age.api.CodeSender;
+import org.example.age.api.Dispatcher;
+import org.example.age.api.JsonSender;
 import org.example.age.avs.api.AvsApi;
-import org.example.age.common.api.CodeSender;
-import org.example.age.common.api.ExchangeExecutors;
-import org.example.age.common.api.JsonSender;
 import org.example.age.common.api.data.auth.AuthMatchData;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.VerificationRequest;
@@ -23,7 +23,7 @@ public final class StubAvsService implements AvsApi {
 
     @Override
     public void createVerificationSession(
-            JsonSender<VerificationSession> sender, String siteId, ExchangeExecutors executors) {
+            JsonSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
         VerificationRequest request = VerificationRequest.generateForSite(siteId, EXPIRES_IN);
         VerificationSession session = VerificationSession.create(request);
         sender.sendBody(session);
@@ -31,13 +31,12 @@ public final class StubAvsService implements AvsApi {
 
     @Override
     public void linkVerificationRequest(
-            CodeSender sender, String accountId, SecureId requestId, ExchangeExecutors executors) {
+            CodeSender sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
         sender.sendOk();
     }
 
     @Override
-    public void sendAgeCertificate(
-            CodeSender sender, String accountId, AuthMatchData authData, ExchangeExecutors executors) {
+    public void sendAgeCertificate(CodeSender sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         sender.sendOk();
     }
 }

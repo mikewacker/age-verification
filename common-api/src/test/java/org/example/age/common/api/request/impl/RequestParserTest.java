@@ -12,7 +12,8 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.common.api.JsonSender;
+import org.example.age.api.JsonSender;
+import org.example.age.common.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -88,7 +89,7 @@ public final class RequestParserTest {
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
-            JsonSender<Integer> sender = JsonSender.create(exchange, mapper);
+            JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, mapper);
             Optional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", INT_TYPE);
             if (maybeOperand1.isEmpty()) {
                 return;
