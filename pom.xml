@@ -10,22 +10,32 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>adult</module>
+        <!-- data -->
+        <module>data</module>
+        <module>testing</module>
+
+        <!-- api -->
         <module>api</module>
-        <module>avs-api</module>
-        <module>common</module>
+        <module>infra-api</module>
         <module>common-api</module>
+        <module>avs-api</module>
+        <module>site-api</module>
+
+        <!-- service -->
+        <module>infra-service</module>
+        <module>common-service</module>
+        <module>common</module>
+        <module>verification-poc</module>
+        <module>testing-service</module>
+
+        <!-- server -->
         <module>common-server</module>
         <module>common-server-test</module> <!-- Break a circular dependency in the test scope. -->
-        <module>common-service</module>
-        <module>data</module>
-        <module>demo</module>
-        <module>infra-api</module>
-        <module>site-api</module>
-        <module>testing</module>
+        <module>adult</module>
         <module>testing-server</module>
-        <module>testing-service</module>
-        <module>verification-poc</module>
+
+        <!-- demo -->
+        <module>demo</module>
     </modules>
 
     <properties>
