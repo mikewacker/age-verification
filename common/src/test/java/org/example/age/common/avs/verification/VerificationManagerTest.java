@@ -23,7 +23,7 @@ import org.example.age.common.avs.verification.internal.Verification;
 import org.example.age.common.avs.verification.internal.VerificationManager;
 import org.example.age.common.avs.verification.internal.VerificationManagerModule;
 import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;
-import org.example.age.common.service.data.auth.DisabledAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;

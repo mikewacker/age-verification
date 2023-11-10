@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
+import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;

@@ -1,4 +1,4 @@
-package org.example.age.common.api.data.account;
+package org.example.age.common.api.data;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.Optional;

@@ -7,7 +7,7 @@ import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.avs.api.AvsApi;
-import org.example.age.common.api.data.auth.AuthMatchData;
+import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;

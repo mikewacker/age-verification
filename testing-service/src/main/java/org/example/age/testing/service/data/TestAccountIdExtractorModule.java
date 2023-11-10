@@ -1,8 +1,8 @@
-package org.example.age.testing.service.data.account;
+package org.example.age.testing.service.data;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.api.data.account.AccountIdExtractor;
+import org.example.age.common.api.data.AccountIdExtractor;
 
 /**
  * Dagger module that publishes a binding for {@link AccountIdExtractor},

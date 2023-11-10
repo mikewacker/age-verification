@@ -15,13 +15,13 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.avs.api.testing.StubAvsService;
-import org.example.age.common.service.data.auth.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.example.age.testing.server.undertow.TestUndertowModule;
-import org.example.age.testing.service.data.account.TestAccountIdExtractorModule;
+import org.example.age.testing.service.data.TestAccountIdExtractorModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
