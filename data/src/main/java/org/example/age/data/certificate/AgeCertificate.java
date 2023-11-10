@@ -34,7 +34,7 @@ public interface AgeCertificate {
      * Throws an {@link IllegalArgumentException} if verification fails.
      */
     static AgeCertificate verifyForSite(byte[] signedCertificate, PublicKey publicKey, String siteId) {
-        int certificateLength = SignatureUtils.verify(signedCertificate, publicKey);
+        int certificateLength = SignatureUtils.verifyLegacy(signedCertificate, publicKey);
         AgeCertificate certificate = SerializationUtils.deserialize(
                 signedCertificate, SignatureUtils.MESSAGE_OFFSET, certificateLength, AgeCertificate.class);
         if (!certificate.verificationRequest().isIntendedRecipient(siteId)) {
@@ -60,6 +60,6 @@ public interface AgeCertificate {
     /** Signs the certificate. */
     default byte[] sign(PrivateKey privateKey) {
         byte[] rawCertificate = SerializationUtils.serialize(this);
-        return SignatureUtils.sign(rawCertificate, privateKey);
+        return SignatureUtils.signLegacy(rawCertificate, privateKey);
     }
 }
