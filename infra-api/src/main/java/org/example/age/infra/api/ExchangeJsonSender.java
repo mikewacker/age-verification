@@ -1,4 +1,4 @@
-package org.example.age.common.api;
+package org.example.age.infra.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

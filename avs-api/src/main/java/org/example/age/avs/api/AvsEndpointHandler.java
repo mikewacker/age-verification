@@ -11,16 +11,16 @@ import javax.inject.Singleton;
 import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
-import org.example.age.common.api.ExchangeCodeSender;
-import org.example.age.common.api.ExchangeDispatcher;
-import org.example.age.common.api.ExchangeJsonSender;
 import org.example.age.common.api.data.account.AccountIdExtractor;
 import org.example.age.common.api.data.auth.AuthMatchData;
 import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
-import org.example.age.common.api.request.impl.RequestParser;
 import org.example.age.data.DataMapper;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.infra.api.ExchangeCodeSender;
+import org.example.age.infra.api.ExchangeDispatcher;
+import org.example.age.infra.api.ExchangeJsonSender;
+import org.example.age.infra.api.request.RequestParser;
 
 @Singleton
 final class AvsEndpointHandler implements HttpHandler {

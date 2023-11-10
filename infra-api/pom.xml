@@ -9,7 +9,7 @@
         <artifactId>age-verification</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>common-api</artifactId>
+    <artifactId>infra-api</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -19,16 +19,21 @@
             <artifactId>api</artifactId>
             <version>${revision}</version>
         </dependency>
-        <dependency>
-            <groupId>org.example.age</groupId>
-            <artifactId>data</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>${undertow.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-api</artifactId>
+            <version>${xnio.version}</version>
         </dependency>
 
         <!-- test -->

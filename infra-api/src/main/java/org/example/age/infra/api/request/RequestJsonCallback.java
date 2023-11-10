@@ -1,4 +1,4 @@
-package org.example.age.common.api.request.impl;
+package org.example.age.infra.api.request;
 
 import io.undertow.server.HttpServerExchange;
 
