@@ -1,4 +1,4 @@
-package org.example.age.common.api.exchange.impl;
+package org.example.age.infra.api.exchange;
 
 /** Deserializes text into a type. */
 @FunctionalInterface

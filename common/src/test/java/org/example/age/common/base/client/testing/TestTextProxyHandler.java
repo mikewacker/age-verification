@@ -9,8 +9,8 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.common.api.exchange.impl.ExchangeUtils;
 import org.example.age.common.base.client.internal.RequestDispatcher;
+import org.example.age.infra.api.exchange.ExchangeUtils;
 
 /**
  * Proxies the request to another server using a {@link RequestDispatcher}.

@@ -10,8 +10,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.common.api.exchange.impl.BytesDeserializer;
-import org.example.age.common.api.exchange.impl.ExchangeUtils;
+import org.example.age.infra.api.exchange.BytesDeserializer;
+import org.example.age.infra.api.exchange.ExchangeUtils;
 import org.xnio.IoUtils;
 
 @Singleton

@@ -2,7 +2,7 @@ package org.example.age.common.base.client.internal;
 
 import io.undertow.server.HttpServerExchange;
 import okhttp3.Request;
-import org.example.age.common.api.exchange.impl.BytesDeserializer;
+import org.example.age.infra.api.exchange.BytesDeserializer;
 
 /**
  * Dispatches an HTTP request to a backend server as part of a frontend exchange.

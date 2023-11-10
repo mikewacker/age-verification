@@ -1,4 +1,4 @@
-package org.example.age.common.api.exchange.testing;
+package org.example.age.infra.api.exchange.testing;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -6,7 +6,7 @@ import io.undertow.util.StatusCodes;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.example.age.api.HttpOptional;
-import org.example.age.common.api.exchange.impl.ExchangeUtils;
+import org.example.age.infra.api.exchange.ExchangeUtils;
 
 /** Adds an operand in a query parameter and an operand in the body. Also has some special cases. */
 public final class TestAddHandler implements HttpHandler {
