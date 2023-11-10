@@ -1,4 +1,4 @@
-package org.example.age.common.api.exchange.impl;
+package org.example.age.infra.api.exchange;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.common.api.exchange.testing.TestAddHandler;
+import org.example.age.infra.api.exchange.testing.TestAddHandler;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;

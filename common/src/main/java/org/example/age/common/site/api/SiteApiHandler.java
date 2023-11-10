@@ -14,13 +14,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.common.api.data.account.AccountIdExtractor;
-import org.example.age.common.api.exchange.impl.ExchangeUtils;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.common.site.auth.internal.AuthManager;
 import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.verification.internal.VerificationManager;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.infra.api.exchange.ExchangeUtils;
 
 /**
  * HTTP handler for a site's age verification API.

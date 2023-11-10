@@ -1,5 +1,6 @@
 module org.example.age.infra.api {
     exports org.example.age.infra.api;
+    exports org.example.age.infra.api.exchange;
     exports org.example.age.infra.api.request;
 
     requires com.fasterxml.jackson.databind;
