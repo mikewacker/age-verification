@@ -1,4 +1,4 @@
-package org.example.age.testing.service.data.account;
+package org.example.age.testing.service.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Singleton;
-import org.example.age.common.api.data.account.AccountIdExtractor;
+import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.testing.exchange.TestExchanges;
 import org.example.age.testing.service.TestCodeSender;
 import org.junit.jupiter.api.BeforeAll;

@@ -1,5 +1,5 @@
 module common.service {
-    exports org.example.age.common.service.data.auth;
+    exports org.example.age.common.service.data;
 
     requires dagger;
     requires java.compiler;

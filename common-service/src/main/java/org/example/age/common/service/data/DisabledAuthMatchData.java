@@ -1,6 +1,6 @@
-package org.example.age.common.service.data.auth;
+package org.example.age.common.service.data;
 
-import org.example.age.common.api.data.auth.AuthMatchData;
+import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 

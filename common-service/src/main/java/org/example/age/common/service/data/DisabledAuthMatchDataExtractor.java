@@ -1,11 +1,11 @@
-package org.example.age.common.service.data.auth;
+package org.example.age.common.service.data;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.example.age.api.Sender;
-import org.example.age.common.api.data.auth.AuthMatchData;
-import org.example.age.common.api.data.auth.AuthMatchDataExtractor;
+import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 

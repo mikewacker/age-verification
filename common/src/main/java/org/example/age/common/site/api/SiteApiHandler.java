@@ -13,7 +13,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.common.api.data.account.AccountIdExtractor;
+import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.common.site.auth.internal.AuthManager;
 import org.example.age.common.site.config.AvsLocation;
