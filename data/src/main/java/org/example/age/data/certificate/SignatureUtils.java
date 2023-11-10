@@ -39,7 +39,7 @@ final class SignatureUtils {
             verifier.update(message);
             return verifier.verify(signature);
         } catch (SignatureException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
