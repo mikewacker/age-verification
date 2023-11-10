@@ -21,6 +21,7 @@
         <module>data</module>
         <module>demo</module>
         <module>infra-api</module>
+        <module>site-api</module>
         <module>testing</module>
         <module>testing-server</module>
         <module>testing-service</module>

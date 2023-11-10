@@ -1,4 +1,4 @@
-package org.example.age.avs.api;
+package org.example.age.site.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,10 +14,16 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
-import org.example.age.avs.api.testing.StubAvsService;
 import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.data.SecureId;
+import org.example.age.data.VerifiedUser;
+import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.certificate.DigitalSignature;
+import org.example.age.data.certificate.SignedAgeCertificate;
+import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.site.api.testing.StubSiteService;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.example.age.testing.server.undertow.TestUndertowModule;
@@ -25,76 +31,68 @@ import org.example.age.testing.service.data.TestAccountIdExtractorModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class AvsApiTest {
+public final class SiteApiTest {
 
     @RegisterExtension
-    private static final TestUndertowServer avsServer = TestUndertowServer.create(TestComponent::createServer);
+    private static final TestUndertowServer siteServer = TestUndertowServer.create(TestComponent::createServer);
 
     @Test
     public void verify() throws IOException {
-        String sessionUrl = avsServer.url("/api/verification-session?site-id=Site");
-        Response sessionResponse = TestClient.post(sessionUrl);
+        String sessionUrl = siteServer.url("/api/verification-session");
+        Map<String, String> userHeaders = Map.of("Account-Id", "username", "User-Agent", "agent");
+        Response sessionResponse = TestClient.post(sessionUrl, userHeaders);
         assertThat(sessionResponse.code()).isEqualTo(200);
         VerificationSession session = TestClient.readBody(sessionResponse, new TypeReference<>() {});
         assertThat(session.verificationRequest().siteId()).isEqualTo("Site");
 
-        SecureId requestId = session.verificationRequest().id();
-        String linkUrl = avsServer.url("/api/linked-verification-request?request-id=%s", requestId);
-        Map<String, String> userHeaders = Map.of("Account-Id", "username", "User-Agent", "agent");
-        Response linkResponse = TestClient.post(linkUrl, userHeaders);
-        assertThat(linkResponse.code()).isEqualTo(200);
-
-        String certificateUrl = avsServer.url("/api/age-certificate");
-        Response certificateResponse = TestClient.post(certificateUrl, userHeaders);
+        String certificateUrl = siteServer.url("/api/age-certificate");
+        SignedAgeCertificate signedCertificate = createSignedAgeCertificate(session);
+        Response certificateResponse = TestClient.post(certificateUrl, signedCertificate);
         assertThat(certificateResponse.code()).isEqualTo(200);
     }
 
     @Test
     public void error_MissingAccountId() throws IOException {
-        SecureId requestId = SecureId.generate();
-        String linkUrl = avsServer.url("/api/linked-verification-request?request-id=%s", requestId);
+        String sessionUrl = siteServer.url("/api/verification-session");
         Map<String, String> userHeaders = Map.of("User-Agent", "agent");
-        Response linkResponse = TestClient.post(linkUrl, userHeaders);
-        assertThat(linkResponse.code()).isEqualTo(401);
-
-        String certificateUrl = avsServer.url("/api/age-certificate");
-        Response certificateResponse = TestClient.post(certificateUrl, userHeaders);
-        assertThat(certificateResponse.code()).isEqualTo(401);
+        Response sessionResponse = TestClient.post(sessionUrl, userHeaders);
+        assertThat(sessionResponse.code()).isEqualTo(401);
     }
 
     @Test
-    public void error_MissingSiteId() throws IOException {
-        String sessionUrl = avsServer.url("/api/verification-session");
-        Response sessionResponse = TestClient.post(sessionUrl);
-        assertThat(sessionResponse.code()).isEqualTo(400);
-    }
-
-    @Test
-    public void error_MissingRequestId() throws IOException {
-        String linkUrl = avsServer.url("/api/linked-verification-request");
-        Map<String, String> userHeaders = Map.of("Account-Id", "username", "User-Agent", "agent");
-        Response linkResponse = TestClient.post(linkUrl, userHeaders);
-        assertThat(linkResponse.code()).isEqualTo(400);
+    public void error_MissingSignedAgeCertificate() throws IOException {
+        String certificateUrl = siteServer.url("/api/age-certificate");
+        Response certificateResponse = TestClient.post(certificateUrl);
+        assertThat(certificateResponse.code()).isEqualTo(400);
     }
 
     @Test
     public void error_BadPath() throws IOException {
-        String url = avsServer.url("/api/does-not-exist");
-        Response response = TestClient.get(url);
+        String url = siteServer.url("/api/does-not-exist");
+        Response response = TestClient.post(url);
         assertThat(response.code()).isEqualTo(404);
+    }
+
+    private static SignedAgeCertificate createSignedAgeCertificate(VerificationSession session) {
+        VerificationRequest request = session.verificationRequest();
+        VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
+        AuthToken authToken = AuthToken.empty();
+        AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
+        DigitalSignature signature = DigitalSignature.ofBytes(new byte[1024]);
+        return SignedAgeCertificate.of(certificate, signature);
     }
 
     /** Dagger module that binds dependencies needed to create a <code>@Named("api") {@link HttpHandler}</code>. */
     @Module(
             includes = {
-                AvsApiModule.class,
+                SiteApiModule.class,
                 UserAgentAuthMatchDataExtractorModule.class,
                 TestAccountIdExtractorModule.class
             })
     interface TestModule {
 
         @Binds
-        AvsApi bindAvsApi(StubAvsService impl);
+        SiteApi bindAvsApi(StubSiteService impl);
     }
 
     /** Dagger component that provides an {@link Undertow} server. */
@@ -103,7 +101,7 @@ public final class AvsApiTest {
     interface TestComponent {
 
         static Undertow createServer(int port) {
-            TestComponent component = DaggerAvsApiTest_TestComponent.factory().create(port);
+            TestComponent component = DaggerSiteApiTest_TestComponent.factory().create(port);
             return component.server();
         }
 
