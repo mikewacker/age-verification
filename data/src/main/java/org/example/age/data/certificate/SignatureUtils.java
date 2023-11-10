@@ -11,10 +11,9 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 /**
- * Utilities for digital signatures, where the signature is appended to the message.
+ * Utilities for digital signatures.
  *
- * <p>Only Ed25519 keys are supported, but no assumptions are made about the signature length,
- * should other types of keys be supported later.</p>
+ * <p>Only {@code Ed25519} keys are supported.</p>
  */
 final class SignatureUtils {
 
@@ -22,8 +21,30 @@ final class SignatureUtils {
 
     private static final int UNSIGNED_MASK = 0x7FFFFFFF;
 
-    /** Signs the message, returning the message with the signature appended. */
+    /** Signs the message, returning the signature. */
     public static byte[] sign(byte[] message, PrivateKey privateKey) {
+        Signature signer = Signatures.createSigner(privateKey);
+        try {
+            signer.update(message);
+            return signer.sign();
+        } catch (SignatureException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Verifies the signature against the message, returning whether verification succeeded. */
+    public static boolean verify(byte[] message, byte[] signature, PublicKey publicKey) {
+        Signature verifier = Signatures.createVerifier(publicKey);
+        try {
+            verifier.update(message);
+            return verifier.verify(signature);
+        } catch (SignatureException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Signs the message, returning the message with the signature appended. */
+    public static byte[] signLegacy(byte[] message, PrivateKey privateKey) {
         Signature signer = Signatures.createSigner(privateKey);
         try {
             signer.update(message);
@@ -38,7 +59,7 @@ final class SignatureUtils {
      * Verifies the signature of the message, returning the length of the message.
      * Throws an {@link IllegalArgumentException} if verification fails.
      */
-    public static int verify(byte[] signedMessage, PublicKey publicKey) {
+    public static int verifyLegacy(byte[] signedMessage, PublicKey publicKey) {
         // Calculate offsets and lengths.
         if (signedMessage.length <= MESSAGE_OFFSET) {
             throw new IllegalArgumentException("signed message is too short");
@@ -75,8 +96,8 @@ final class SignatureUtils {
 
         /** Creates a signer. */
         public static Signature createSigner(PrivateKey privateKey) {
+            Signature signer = createSignatureObject();
             try {
-                Signature signer = createSignatureObject();
                 signer.initSign(privateKey);
                 return signer;
             } catch (InvalidKeyException e) {
@@ -86,8 +107,8 @@ final class SignatureUtils {
 
         /** Creates a verifier. */
         public static Signature createVerifier(PublicKey publicKey) {
+            Signature verifier = createSignatureObject();
             try {
-                Signature verifier = createSignatureObject();
                 verifier.initVerify(publicKey);
                 return verifier;
             } catch (InvalidKeyException e) {
