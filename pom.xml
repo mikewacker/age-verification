@@ -20,6 +20,7 @@
         <module>common-service</module>
         <module>data</module>
         <module>demo</module>
+        <module>infra-api</module>
         <module>testing</module>
         <module>testing-server</module>
         <module>testing-service</module>

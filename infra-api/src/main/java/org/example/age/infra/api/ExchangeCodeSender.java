@@ -1,4 +1,4 @@
-package org.example.age.common.api;
+package org.example.age.infra.api;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.concurrent.atomic.AtomicBoolean;

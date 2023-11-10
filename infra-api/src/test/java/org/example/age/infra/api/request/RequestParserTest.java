@@ -1,4 +1,4 @@
-package org.example.age.common.api.request.impl;
+package org.example.age.infra.api.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.api.JsonSender;
-import org.example.age.common.api.ExchangeJsonSender;
+import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
