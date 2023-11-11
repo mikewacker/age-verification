@@ -31,9 +31,19 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
             <version>${dagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
@@ -45,14 +55,13 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-api</artifactId>
+            <version>${xnio.version}</version>
+        </dependency>
 
         <!-- test -->
-        <dependency>
-            <groupId>org.example.age</groupId>
-            <artifactId>testing-server</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.example.age</groupId>
             <artifactId>testing-service</artifactId>
