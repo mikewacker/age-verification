@@ -1,5 +1,6 @@
 package org.example.age.site.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
@@ -15,6 +16,7 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
  *     <li>{@link SiteApi}</li>
  *     <li>{@link AccountIdExtractor}</li>
  *     <li>{@link AuthMatchDataExtractor}</li>
+ *     <li>{@link ObjectMapper}</li>
  * </ul>
  */
 @Module
