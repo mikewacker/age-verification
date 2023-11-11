@@ -10,26 +10,30 @@ import org.example.age.data.DataMapper;
 import org.example.age.data.internal.ImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
-/** Signature used to verify the sender's identity. */
+/**
+ * Signature used to verify the sender's identity.
+ *
+ * <p>The value to sign must be serializable using {@link DataMapper}.</p>
+ */
 @JsonSerialize(using = ToStringSerializer.class)
 @JsonDeserialize(using = DigitalSignature.Deserializer.class)
 public final class DigitalSignature extends ImmutableBytes {
 
-    /** Creates a signature for the value. */
-    public static DigitalSignature create(Object value, PrivateKey privateKey) {
-        byte[] rawValue = serialize(value);
-        byte[] rawSignature = SignatureUtils.sign(rawValue, privateKey);
-        return ofBytes(rawSignature);
-    }
-
     /** Creates a signature from a copy of the raw bytes. */
-    public static DigitalSignature ofBytes(byte[] bytes) {
-        return new DigitalSignature(bytes);
+    public static DigitalSignature ofBytes(byte[] rawSignature) {
+        return new DigitalSignature(rawSignature);
     }
 
     /** Creates a signature from URL-friendly base64 text. */
-    public static DigitalSignature fromString(String value) {
-        return new DigitalSignature(value);
+    public static DigitalSignature fromString(String rawSignature) {
+        return new DigitalSignature(rawSignature);
+    }
+
+    /** Signs the value. */
+    public static DigitalSignature sign(Object value, PrivateKey privateKey) {
+        byte[] rawValue = serialize(value);
+        byte[] rawSignature = SignatureUtils.sign(rawValue, privateKey);
+        return ofBytes(rawSignature);
     }
 
     /** Verifies the signature against the value, returning whether verification succeeded. */
@@ -38,12 +42,12 @@ public final class DigitalSignature extends ImmutableBytes {
         return SignatureUtils.verify(rawValue, bytes, publicKey);
     }
 
-    private DigitalSignature(byte[] bytes) {
-        super(bytes);
+    private DigitalSignature(byte[] rawSignature) {
+        super(rawSignature);
     }
 
-    private DigitalSignature(String value) {
-        super(value);
+    private DigitalSignature(String rawSignature) {
+        super(rawSignature);
     }
 
     /** Serializes the value using {@link DataMapper}. */

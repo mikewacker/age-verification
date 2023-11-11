@@ -23,24 +23,32 @@ public final class DigitalSignatureTest {
 
     @Test
     public void signThenVerify() {
-        DigitalSignature signature = DigitalSignature.create(MESSAGE, keyPair.getPrivate());
+        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
         boolean wasVerified = signature.verify(MESSAGE, keyPair.getPublic());
         assertThat(wasVerified).isTrue();
     }
 
     @Test
+    public void verifyFailed() {
+        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
+        boolean wasVerified = signature.verify("other message", keyPair.getPublic());
+        assertThat(wasVerified).isFalse();
+    }
+
+    @Test
+    public void serializeThenDeserialize() throws IOException {
+        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
+        byte[] rawSignature = DataMapper.get().writeValueAsBytes(signature);
+        DigitalSignature rtSignature = DataMapper.get().readValue(rawSignature, new TypeReference<>() {});
+        assertThat(rtSignature).isEqualTo(signature);
+    }
+
+    @Test
     public void signThenSerializeThenDeserializeThenVerify() throws IOException {
-        DigitalSignature signature = DigitalSignature.create(MESSAGE, keyPair.getPrivate());
+        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
         byte[] rawSignature = DataMapper.get().writeValueAsBytes(signature);
         DigitalSignature rtSignature = DataMapper.get().readValue(rawSignature, new TypeReference<>() {});
         boolean wasVerified = rtSignature.verify(MESSAGE, keyPair.getPublic());
         assertThat(wasVerified).isTrue();
-    }
-
-    @Test
-    public void verifyFailed() {
-        DigitalSignature signature = DigitalSignature.create(MESSAGE, keyPair.getPrivate());
-        boolean wasVerified = signature.verify("other message", keyPair.getPublic());
-        assertThat(wasVerified).isFalse();
     }
 }
