@@ -14,7 +14,6 @@ import org.example.age.api.JsonSender;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.DataMapper;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.api.ExchangeCodeSender;
@@ -25,18 +24,21 @@ import org.example.age.infra.api.request.RequestParser;
 @Singleton
 final class SiteEndpointHandler implements HttpHandler {
 
-    private static final ObjectMapper mapper = DataMapper.get();
-
     private final SiteApi siteApi;
     private final AccountIdExtractor accountIdExtractor;
     private final AuthMatchDataExtractor authDataExtractor;
+    private final ObjectMapper mapper;
 
     @Inject
     public SiteEndpointHandler(
-            SiteApi siteApi, AccountIdExtractor accountIdExtractor, AuthMatchDataExtractor authDataExtractor) {
+            SiteApi siteApi,
+            AccountIdExtractor accountIdExtractor,
+            AuthMatchDataExtractor authDataExtractor,
+            ObjectMapper mapper) {
         this.siteApi = siteApi;
         this.accountIdExtractor = accountIdExtractor;
         this.authDataExtractor = authDataExtractor;
+        this.mapper = mapper;
     }
 
     @Override

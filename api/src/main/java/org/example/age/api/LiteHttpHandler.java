@@ -4,5 +4,5 @@ package org.example.age.api;
 @FunctionalInterface
 public interface LiteHttpHandler<S extends Sender> {
 
-    void handleRequest(S sender, Dispatcher executors) throws Exception;
+    void handleRequest(S sender, Dispatcher dispatcher) throws Exception;
 }

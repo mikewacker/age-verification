@@ -1,4 +1,6 @@
 module org.example.age.infra.service {
+    exports org.example.age.infra.service.client;
+
     requires com.fasterxml.jackson.databind;
     requires dagger;
     requires java.compiler;

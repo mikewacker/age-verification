@@ -3,10 +3,12 @@ package org.example.age.avs.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.avs.api.testing.StubAvsService;
 import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.data.DataMapper;
 import org.example.age.data.SecureId;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.testing.client.TestClient;
@@ -95,6 +98,12 @@ public final class AvsApiTest {
 
         @Binds
         AvsApi bindAvsApi(StubAvsService impl);
+
+        @Provides
+        @Singleton
+        static ObjectMapper provideObjectMapper() {
+            return DataMapper.get();
+        }
     }
 
     /** Dagger component that provides an {@link Undertow} server. */
