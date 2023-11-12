@@ -1,18 +1,15 @@
 package org.example.age.testing.service.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import dagger.Component;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HttpString;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.testing.api.FakeCodeSender;
-import org.example.age.testing.exchange.TestExchanges;
+import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +31,7 @@ public final class TestAccountIdExtractorTest {
 
     @Test
     public void extractAccountId() {
-        HttpServerExchange exchange = createStubExchange(Optional.of("username"));
+        HttpServerExchange exchange = StubExchanges.create(Map.of("Account-Id", "username"));
         Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         assertThat(maybeAccountId).hasValue("username");
         assertThat(sender.tryGet()).isEmpty();
@@ -42,18 +39,10 @@ public final class TestAccountIdExtractorTest {
 
     @Test
     public void sendError() {
-        HttpServerExchange exchange = createStubExchange(Optional.empty());
+        HttpServerExchange exchange = StubExchanges.create(Map.of());
         Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
         assertThat(maybeAccountId).isEmpty();
         assertThat(sender.tryGet()).hasValue(401);
-    }
-
-    private static HttpServerExchange createStubExchange(Optional<String> maybeAccountId) {
-        HttpServerExchange exchange = mock(HttpServerExchange.class);
-        Map<HttpString, String> headers = new HashMap<>();
-        maybeAccountId.ifPresent(accountId -> headers.put(HttpString.tryFromString("Account-Id"), accountId));
-        TestExchanges.addRequestHeaders(exchange, headers);
-        return exchange;
     }
 
     /** Dagger component that provides an {@link AccountIdExtractor}. */

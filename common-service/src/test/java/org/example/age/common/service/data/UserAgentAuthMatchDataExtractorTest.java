@@ -1,11 +1,9 @@
 package org.example.age.common.service.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import dagger.Component;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Singleton;
@@ -14,7 +12,7 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
 import org.example.age.testing.api.FakeCodeSender;
-import org.example.age.testing.exchange.TestExchanges;
+import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -31,22 +29,22 @@ public final class UserAgentAuthMatchDataExtractorTest {
 
     @Test
     public void match_UserAgentsMatch() {
-        HttpServerExchange localExchange = createStubExchange("user agent");
-        HttpServerExchange remoteExchange = createStubExchange("user agent");
+        HttpServerExchange localExchange = StubExchanges.create(Map.of("User-Agent", "agent"));
+        HttpServerExchange remoteExchange = StubExchanges.create(Map.of("User-Agent", "agent"));
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
     }
 
     @Test
     public void match_UserAgentsDoNotMatch() {
-        HttpServerExchange localExchange = createStubExchange("user agent 1");
-        HttpServerExchange remoteExchange = createStubExchange("user agent 2");
+        HttpServerExchange localExchange = StubExchanges.create(Map.of("User-Agent", "agent1"));
+        HttpServerExchange remoteExchange = StubExchanges.create(Map.of("User-Agent", "agent2"));
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, false);
     }
 
     @Test
     public void match_UserAgentNotPresent() {
-        HttpServerExchange localExchange = createStubExchange("");
-        HttpServerExchange remoteExchange = createStubExchange("");
+        HttpServerExchange localExchange = StubExchanges.create(Map.of());
+        HttpServerExchange remoteExchange = StubExchanges.create(Map.of());
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
     }
 
@@ -57,12 +55,6 @@ public final class UserAgentAuthMatchDataExtractorTest {
         Optional<AuthMatchData> maybeData = extractor.tryDecrypt(token, key, sender);
         assertThat(maybeData).isEmpty();
         assertThat(sender.tryGet()).hasValue(401);
-    }
-
-    private static HttpServerExchange createStubExchange(String userAgent) {
-        HttpServerExchange exchange = mock(HttpServerExchange.class);
-        TestExchanges.addRequestHeaders(exchange, Map.of(Headers.USER_AGENT, userAgent));
-        return exchange;
     }
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */

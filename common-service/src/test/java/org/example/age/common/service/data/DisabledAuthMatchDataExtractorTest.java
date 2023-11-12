@@ -7,6 +7,7 @@ import io.undertow.server.HttpServerExchange;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
+import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -23,13 +24,9 @@ public final class DisabledAuthMatchDataExtractorTest {
 
     @Test
     public void match() {
-        HttpServerExchange localExchange = createStubExchange();
-        HttpServerExchange remoteExchange = createStubExchange();
+        HttpServerExchange localExchange = StubExchanges.create();
+        HttpServerExchange remoteExchange = StubExchanges.create();
         AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
-    }
-
-    private static HttpServerExchange createStubExchange() {
-        return mock(HttpServerExchange.class);
     }
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
