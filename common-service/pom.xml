@@ -64,6 +64,12 @@
         <!-- test -->
         <dependency>
             <groupId>org.example.age</groupId>
+            <artifactId>testing-api</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.example.age</groupId>
             <artifactId>testing-service</artifactId>
             <version>${revision}</version>
             <scope>test</scope>

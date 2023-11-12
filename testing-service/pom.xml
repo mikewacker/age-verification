@@ -50,6 +50,14 @@
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
         </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.example.age</groupId>
+            <artifactId>testing-api</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

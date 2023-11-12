@@ -14,8 +14,11 @@
         <module>data</module>
         <module>testing</module>
 
-        <!-- api -->
+        <!-- api types -->
         <module>api</module>
+        <module>testing-api</module>
+
+        <!-- api -->
         <module>infra-api</module>
         <module>common-api</module>
         <module>avs-api</module>
