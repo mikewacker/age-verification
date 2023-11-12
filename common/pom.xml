@@ -87,6 +87,12 @@
         </dependency>
         <dependency>
             <groupId>org.example.age</groupId>
+            <artifactId>testing-api</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.example.age</groupId>
             <artifactId>testing-server</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
