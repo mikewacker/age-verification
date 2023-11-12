@@ -13,8 +13,8 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
+import org.example.age.testing.api.FakeCodeSender;
 import org.example.age.testing.exchange.TestExchanges;
-import org.example.age.testing.service.TestCodeSender;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -52,12 +52,11 @@ public final class UserAgentAuthMatchDataExtractorTest {
 
     @Test
     public void sendError_DecryptionFails() {
-        TestCodeSender sender = TestCodeSender.create();
+        FakeCodeSender sender = FakeCodeSender.create();
         AuthToken token = AuthToken.empty();
         Optional<AuthMatchData> maybeData = extractor.tryDecrypt(token, key, sender);
         assertThat(maybeData).isEmpty();
-        assertThat(sender.wasSent()).isTrue();
-        assertThat(sender.get()).isEqualTo(401);
+        assertThat(sender.tryGet()).hasValue(401);
     }
 
     private static HttpServerExchange createStubExchange(String userAgent) {

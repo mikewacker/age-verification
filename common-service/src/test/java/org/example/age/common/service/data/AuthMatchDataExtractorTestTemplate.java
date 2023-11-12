@@ -8,7 +8,7 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.AuthToken;
-import org.example.age.testing.service.TestCodeSender;
+import org.example.age.testing.api.FakeCodeSender;
 
 /** Test template for {@link AuthMatchDataExtractor}. */
 public final class AuthMatchDataExtractorTestTemplate {
@@ -28,20 +28,20 @@ public final class AuthMatchDataExtractorTestTemplate {
     }
 
     private static AuthMatchData extractAuthMatchData(AuthMatchDataExtractor extractor, HttpServerExchange exchange) {
-        TestCodeSender sender = TestCodeSender.create();
+        FakeCodeSender sender = FakeCodeSender.create();
         Optional<AuthMatchData> maybeData = extractor.tryExtract(exchange, sender);
         return getAuthMatchData(maybeData, sender);
     }
 
     private static AuthMatchData decryptAuthMatchData(AuthMatchDataExtractor extractor, AuthToken token, AuthKey key) {
-        TestCodeSender sender = TestCodeSender.create();
+        FakeCodeSender sender = FakeCodeSender.create();
         Optional<AuthMatchData> maybeData = extractor.tryDecrypt(token, key, sender);
         return getAuthMatchData(maybeData, sender);
     }
 
-    private static AuthMatchData getAuthMatchData(Optional<AuthMatchData> maybeData, TestCodeSender sender) {
+    private static AuthMatchData getAuthMatchData(Optional<AuthMatchData> maybeData, FakeCodeSender sender) {
         assertThat(maybeData).isPresent();
-        assertThat(sender.wasSent()).isFalse();
+        assertThat(sender.tryGet()).isEmpty();
         return maybeData.get();
     }
 }

@@ -1,4 +1,4 @@
-package org.example.age.testing.service;
+package org.example.age.testing.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,28 +7,20 @@ import org.example.age.api.HttpOptional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class TestJsonSenderTest {
+public final class FakeJsonSenderTest {
 
-    private TestJsonSender<String> sender;
+    private FakeJsonSender<String> sender;
 
     @BeforeEach
     public void createJsonSender() {
-        sender = TestJsonSender.create();
+        sender = FakeJsonSender.create();
     }
 
     @Test
     public void sendAndGet() {
-        assertThat(sender.wasSent()).isFalse();
+        assertThat(sender.tryGet()).isEmpty();
         sender.sendBody("test");
-        assertThat(sender.wasSent()).isTrue();
-        assertThat(sender.get()).isEqualTo(HttpOptional.of("test"));
-    }
-
-    @Test
-    public void error_GetWithoutSend() {
-        assertThatThrownBy(sender::get)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("response has not been sent");
+        assertThat(sender.tryGet()).hasValue(HttpOptional.of("test"));
     }
 
     @Test
