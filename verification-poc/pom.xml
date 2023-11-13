@@ -29,7 +29,7 @@
         <!-- test -->
         <dependency>
             <groupId>org.example.age</groupId>
-            <artifactId>testing</artifactId>
+            <artifactId>testing-data</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
