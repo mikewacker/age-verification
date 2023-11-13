@@ -34,6 +34,21 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.example.age</groupId>
+            <artifactId>testing-server</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

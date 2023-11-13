@@ -26,11 +26,11 @@ import org.example.age.data.certificate.DigitalSignature;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.site.api.testing.StubSiteService;
+import org.example.age.site.api.test.StubSiteService;
+import org.example.age.test.server.undertow.TestUndertowModule;
+import org.example.age.test.service.data.TestAccountIdExtractorModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
-import org.example.age.testing.server.undertow.TestUndertowModule;
-import org.example.age.testing.service.data.TestAccountIdExtractorModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

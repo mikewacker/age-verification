@@ -75,13 +75,13 @@
         <!-- test -->
         <dependency>
             <groupId>org.example.age</groupId>
-            <artifactId>common-server</artifactId>
+            <artifactId>test-server</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.example.age</groupId>
-            <artifactId>testing</artifactId>
+            <artifactId>test-service</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
@@ -93,13 +93,13 @@
         </dependency>
         <dependency>
             <groupId>org.example.age</groupId>
-            <artifactId>testing-server</artifactId>
+            <artifactId>testing-data</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.example.age</groupId>
-            <artifactId>testing-service</artifactId>
+            <artifactId>testing-server</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
