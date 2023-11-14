@@ -1,4 +1,4 @@
-package org.example.age.data.certificate;
+package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.security.KeyPair;
 import org.example.age.data.DataMapper;
-import org.example.age.data.crypto.SigningKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

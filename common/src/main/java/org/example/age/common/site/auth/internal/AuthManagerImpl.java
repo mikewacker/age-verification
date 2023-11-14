@@ -10,10 +10,10 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.store.PendingStore;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.base.utils.internal.PendingStoreUtils;
-import org.example.age.data.SecureId;
 import org.example.age.data.certificate.AgeCertificate;
-import org.example.age.data.certificate.AuthKey;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.SecureId;
 
 @Singleton
 final class AuthManagerImpl implements AuthManager {

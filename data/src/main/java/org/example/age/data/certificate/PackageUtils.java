@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /** Legacy utilities for packaging bytes together. */
-final class PackageUtils {
+public final class PackageUtils {
 
     private static final int MESSAGE_OFFSET = 4;
     private static final int CIPHERTEXT_OFFSET = 12;
@@ -58,7 +58,7 @@ final class PackageUtils {
         return MESSAGE_OFFSET + messageLength;
     }
 
-    record SignedMessage(byte[] message, byte[] signature) {}
+    public record SignedMessage(byte[] message, byte[] signature) {}
 
-    record EncryptionPackage(byte[] ciphertext, byte[] iv) {}
+    public record EncryptionPackage(byte[] ciphertext, byte[] iv) {}
 }

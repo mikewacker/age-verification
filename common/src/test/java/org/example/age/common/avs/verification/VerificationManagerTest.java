@@ -25,9 +25,9 @@ import org.example.age.common.avs.verification.internal.VerificationManagerModul
 import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
 import org.example.age.data.AgeThresholds;
-import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.crypto.SecureId;
 import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

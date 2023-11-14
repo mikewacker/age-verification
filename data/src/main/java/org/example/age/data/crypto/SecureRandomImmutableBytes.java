@@ -1,14 +1,14 @@
-package org.example.age.data.internal;
+package org.example.age.data.crypto;
 
-import org.example.age.data.crypto.SecureRandomUtils;
+import org.example.age.data.internal.ImmutableBytes;
 
 /**
  * Type that is backed by immutable bytes of a fixed length; the bytes are generated using
  * a cryptographically strong random number generator. The type can also be serialized as URL-friendly base64 text.
  */
-public abstract class SecureRandomImmutableBytes extends ImmutableBytes {
+abstract class SecureRandomImmutableBytes extends ImmutableBytes {
 
-    /** Creates immutable bytes from a copy of the bytes, checking the length of the bytes. */
+    /** Creates immutable bytes from a copy of the raw bytes, checking the length of the bytes. */
     protected SecureRandomImmutableBytes(byte[] bytes, int expectedLength) {
         super(bytes);
         checkLength(expectedLength);
@@ -20,9 +20,22 @@ public abstract class SecureRandomImmutableBytes extends ImmutableBytes {
         checkLength(expectedLength);
     }
 
-    /** Generates the specified number of bytes using a cryptographically strong random number generator. */
+    /**
+     * Creates immutable bytes by generating the specified number of raw bytes,
+     * using a cryptographically strong random number generator.
+     */
     protected SecureRandomImmutableBytes(int length) {
         super(SecureRandomUtils.generateBytes(length), false);
+    }
+
+    /**
+     * Creates immutable bytes from the raw bytes, which may be copied, checking the length of the bytes.
+     *
+     * <p>For internal use only.</p>
+     */
+    protected SecureRandomImmutableBytes(byte[] bytes, boolean copy, int expectedLength) {
+        super(bytes, copy);
+        checkLength(expectedLength);
     }
 
     /** Checks that the bytes have the expected length. */

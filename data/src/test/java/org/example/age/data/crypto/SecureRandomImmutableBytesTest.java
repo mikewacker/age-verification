@@ -1,4 +1,4 @@
-package org.example.age.data.internal;
+package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.io.IOException;
 import org.assertj.core.api.ThrowableAssert;
+import org.example.age.data.internal.StaticFromStringDeserializer;
 import org.junit.jupiter.api.Test;
 
 public final class SecureRandomImmutableBytesTest {

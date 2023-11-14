@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.DataStyle;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.crypto.AuthToken;
 import org.example.age.data.crypto.SignatureUtils;
 import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;

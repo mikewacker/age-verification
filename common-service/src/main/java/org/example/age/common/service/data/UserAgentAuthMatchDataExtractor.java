@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import org.example.age.api.Sender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.certificate.AuthKey;
-import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.AuthToken;
 
 /** Creates {@link UserAgentAuthMatchData}, or sends a 401 error if decryption fails. */
 final class UserAgentAuthMatchDataExtractor implements AuthMatchDataExtractor {

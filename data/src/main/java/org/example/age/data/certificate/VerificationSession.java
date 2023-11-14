@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.data.DataStyle;
+import org.example.age.data.crypto.AuthKey;
 import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;
 

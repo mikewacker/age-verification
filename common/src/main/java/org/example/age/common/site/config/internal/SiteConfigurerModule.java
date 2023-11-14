@@ -7,7 +7,7 @@ import java.time.Duration;
 import javax.inject.Named;
 import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.config.SiteConfig;
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 
 /**
  * Dagger module that publishes bindings for...

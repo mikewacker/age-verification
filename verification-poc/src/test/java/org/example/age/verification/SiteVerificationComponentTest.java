@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.ThrowableAssert;
 import org.example.age.data.AgeRange;
-import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
-import org.example.age.data.certificate.AuthToken;
 import org.example.age.data.certificate.VerificationRequest;
+import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.SecureId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

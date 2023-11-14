@@ -3,7 +3,7 @@ package org.example.age.data.crypto;
 import java.security.SecureRandom;
 
 /** Utilities for random numbers generated using a cryptographically strong random number generator. */
-public final class SecureRandomUtils {
+final class SecureRandomUtils {
 
     private static final SecureRandom random = new SecureRandom();
 

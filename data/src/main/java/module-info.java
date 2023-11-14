@@ -1,6 +1,7 @@
 module org.example.age.data {
     exports org.example.age.data;
     exports org.example.age.data.certificate;
+    exports org.example.age.data.crypto;
 
     requires static org.immutables.value.annotations;
     requires com.fasterxml.jackson.databind;
@@ -14,5 +15,7 @@ module org.example.age.data {
     opens org.example.age.data.certificate to
             com.fasterxml.jackson.databind;
     opens org.example.age.data.internal to
+            com.fasterxml.jackson.databind;
+    opens org.example.age.data.crypto to
             com.fasterxml.jackson.databind;
 }

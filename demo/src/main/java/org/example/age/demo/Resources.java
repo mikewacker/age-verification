@@ -18,7 +18,7 @@ import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.openssl.PEMException;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 
 /** Loads objects from resource files. */
 final class Resources {
