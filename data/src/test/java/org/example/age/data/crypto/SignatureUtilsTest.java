@@ -1,4 +1,4 @@
-package org.example.age.data.certificate;
+package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,7 +12,6 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
 import org.assertj.core.api.ThrowableAssert;
-import org.example.age.testing.crypto.TestKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +25,8 @@ public final class SignatureUtilsTest {
 
     @BeforeAll
     public static void generateKeys() {
-        keyPair = TestKeys.generateEd25519KeyPair();
-        otherKeyPair = TestKeys.generateEd25519KeyPair();
+        keyPair = SigningKeys.generateEd25519KeyPair();
+        otherKeyPair = SigningKeys.generateEd25519KeyPair();
         invalidKeyPair = generateNistP256KeyPair();
     }
 

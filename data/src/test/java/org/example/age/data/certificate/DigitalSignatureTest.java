@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.security.KeyPair;
 import org.example.age.data.DataMapper;
-import org.example.age.testing.crypto.TestKeys;
+import org.example.age.data.crypto.SigningKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ public final class DigitalSignatureTest {
 
     @BeforeAll
     public static void generateKeys() {
-        keyPair = TestKeys.generateEd25519KeyPair();
+        keyPair = SigningKeys.generateEd25519KeyPair();
     }
 
     @Test

@@ -21,13 +21,8 @@ public final class SerializationUtils {
 
     /** Deserializes bytes to an object, or throws an {@link IllegalArgumentException}. */
     public static <T> T deserialize(byte[] bytes, Class<T> clazz) {
-        return deserialize(bytes, 0, bytes.length, clazz);
-    }
-
-    /** Deserializes bytes to an object, or throws an {@link IllegalArgumentException}. */
-    public static <T> T deserialize(byte[] bytes, int offset, int length, Class<T> clazz) {
         try {
-            return mapper.readValue(bytes, offset, length, clazz);
+            return mapper.readValue(bytes, clazz);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("deserialization failed", e);
         } catch (IOException e) {

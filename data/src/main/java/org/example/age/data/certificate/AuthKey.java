@@ -3,8 +3,6 @@ package org.example.age.data.certificate;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import org.example.age.data.internal.SecureRandomImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
@@ -14,8 +12,6 @@ import org.example.age.data.internal.StaticFromStringDeserializer;
 public final class AuthKey extends SecureRandomImmutableBytes {
 
     private static final int EXPECTED_LENGTH = 32;
-
-    private final SecretKey secretKey;
 
     /** Generates a new key. */
     public static AuthKey generate() {
@@ -32,36 +28,16 @@ public final class AuthKey extends SecureRandomImmutableBytes {
         return new AuthKey(value);
     }
 
-    /** Converts the key to a {@link SecretKey}. */
-    public SecretKey toSecretKey() {
-        return secretKey;
-    }
-
     private AuthKey() {
         super(EXPECTED_LENGTH);
-        secretKey = SecretKeys.createAesKey(bytes);
     }
 
     private AuthKey(byte[] bytes) {
         super(bytes, EXPECTED_LENGTH);
-        secretKey = SecretKeys.createAesKey(bytes);
     }
 
     private AuthKey(String value) {
         super(value, EXPECTED_LENGTH);
-        secretKey = SecretKeys.createAesKey(bytes);
-    }
-
-    /** Creates {@link SecretKey}'s. */
-    private static final class SecretKeys {
-
-        /** Creates an AES key. */
-        public static SecretKey createAesKey(byte[] rawKey) {
-            return new SecretKeySpec(rawKey, "AES");
-        }
-
-        // static class
-        private SecretKeys() {}
     }
 
     /** JSON {@code fromString()} deserializer. */

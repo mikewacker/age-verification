@@ -7,7 +7,7 @@ import java.security.KeyPair;
 import java.time.Duration;
 import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
-import org.example.age.testing.crypto.TestKeys;
+import org.example.age.data.crypto.SigningKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +21,8 @@ public final class AgeCertificateTest {
 
     @BeforeAll
     public static void generateKeys() {
-        keyPair = TestKeys.generateEd25519KeyPair();
-        otherKeyPair = TestKeys.generateEd25519KeyPair();
+        keyPair = SigningKeys.generateEd25519KeyPair();
+        otherKeyPair = SigningKeys.generateEd25519KeyPair();
     }
 
     @Test

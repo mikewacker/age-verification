@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.DataStyle;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.crypto.SignatureUtils;
 import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;
 
@@ -33,10 +34,13 @@ public interface AgeCertificate {
      * Verifies a signed age certificate's signature, recipient, and expiration.
      * Throws an {@link IllegalArgumentException} if verification fails.
      */
-    static AgeCertificate verifyForSite(byte[] signedCertificate, PublicKey publicKey, String siteId) {
-        int certificateLength = SignatureUtils.verifyLegacy(signedCertificate, publicKey);
-        AgeCertificate certificate = SerializationUtils.deserialize(
-                signedCertificate, SignatureUtils.MESSAGE_OFFSET, certificateLength, AgeCertificate.class);
+    static AgeCertificate verifyForSite(byte[] rawSignedCertificate, PublicKey publicKey, String siteId) {
+        PackageUtils.SignedMessage signedCertificate = PackageUtils.parseSignedMessage(rawSignedCertificate);
+        if (!SignatureUtils.verify(signedCertificate.message(), signedCertificate.signature(), publicKey)) {
+            throw new IllegalArgumentException("invalid signature");
+        }
+
+        AgeCertificate certificate = SerializationUtils.deserialize(signedCertificate.message(), AgeCertificate.class);
         if (!certificate.verificationRequest().isIntendedRecipient(siteId)) {
             throw new IllegalArgumentException("wrong recipient");
         }
@@ -60,6 +64,7 @@ public interface AgeCertificate {
     /** Signs the certificate. */
     default byte[] sign(PrivateKey privateKey) {
         byte[] rawCertificate = SerializationUtils.serialize(this);
-        return SignatureUtils.signLegacy(rawCertificate, privateKey);
+        byte[] signature = SignatureUtils.sign(rawCertificate, privateKey);
+        return PackageUtils.createSignedMessage(rawCertificate, signature);
     }
 }
