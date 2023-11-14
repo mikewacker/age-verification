@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.DataMapper;
+import org.example.age.data.crypto.SignatureUtils;
 import org.example.age.data.internal.ImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 

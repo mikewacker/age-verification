@@ -3,11 +3,7 @@ package org.example.age.data;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
+import org.example.age.data.crypto.HmacUtils;
 import org.example.age.data.internal.SecureRandomImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
@@ -40,8 +36,7 @@ public final class SecureId extends SecureRandomImmutableBytes {
      * and it is impossible to figure out the new ID from the original ID (without knowledge of the key).</p>
      */
     public SecureId localize(SecureId key) {
-        Mac hmacGenerator = Macs.createHmacGenerator(key.bytes);
-        byte[] localBytes = hmacGenerator.doFinal(bytes);
+        byte[] localBytes = HmacUtils.createHmac(bytes, key.bytes);
         return new SecureId(localBytes);
     }
 
@@ -55,27 +50,6 @@ public final class SecureId extends SecureRandomImmutableBytes {
 
     private SecureId(String value) {
         super(value, EXPECTED_LENGTH);
-    }
-
-    /** Creates {@link Mac}'s. */
-    private static final class Macs {
-
-        private static final String ALGORITHM = "HmacSHA256";
-
-        /** Creates an HMAC generator. */
-        public static Mac createHmacGenerator(byte[] rawKey) {
-            try {
-                Mac hmacGenerator = Mac.getInstance(ALGORITHM);
-                Key hmacKey = new SecretKeySpec(rawKey, ALGORITHM);
-                hmacGenerator.init(hmacKey);
-                return hmacGenerator;
-            } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-                throw new RuntimeException("unexpected error", e);
-            }
-        }
-
-        // static class
-        private Macs() {}
     }
 
     /** JSON {@code fromString()} deserializer. */

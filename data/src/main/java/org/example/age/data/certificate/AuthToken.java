@@ -3,6 +3,8 @@ package org.example.age.data.certificate;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import java.util.Optional;
+import org.example.age.data.crypto.EncryptionUtils;
 import org.example.age.data.internal.ImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
@@ -17,8 +19,10 @@ public final class AuthToken extends ImmutableBytes {
 
     /** Creates a token by encrypting authentication data. */
     public static AuthToken encrypt(byte[] data, AuthKey key) {
-        byte[] bytes = EncryptionUtils.encrypt(data, key.toSecretKey());
-        return new AuthToken(bytes);
+        byte[] iv = EncryptionUtils.createIv();
+        byte[] ciphertext = EncryptionUtils.encrypt(data, key.bytes(), iv);
+        byte[] rawToken = PackageUtils.createEncryptionPackage(ciphertext, iv);
+        return new AuthToken(rawToken);
     }
 
     /** Creates an empty token. */
@@ -40,7 +44,12 @@ public final class AuthToken extends ImmutableBytes {
     /** Decrypts the token to get the authentication data. */
     public byte[] decrypt(AuthKey key) {
         checkNotEmpty();
-        return EncryptionUtils.decrypt(bytes, key.toSecretKey());
+        PackageUtils.EncryptionPackage token = PackageUtils.parseEncryptionPackage(bytes);
+        Optional<byte[]> maybeData = EncryptionUtils.tryDecrypt(token.ciphertext(), key.bytes(), token.iv());
+        if (maybeData.isEmpty()) {
+            throw new IllegalArgumentException("decryption failed");
+        }
+        return maybeData.get();
     }
 
     private AuthToken(byte[] bytes) {
