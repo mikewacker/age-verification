@@ -1,140 +1,88 @@
 package org.example.age.data.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.testing.EqualsTester;
+import java.io.IOException;
 import java.util.Arrays;
-import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {
 
-    private static final byte[] BYTES = new byte[] {
-        -31, 98, -36, -70, -19, 26, 103, 100, -116, -60, 47, 69, 97, 84, 30, -128, -85, -5, -46, 46, 53, -24, 47, -28,
-        -11, -11, -92, 98, 54, 33, 66, 80
-    };
-    private static final String BASE64_TEXT = "4WLcuu0aZ2SMxC9FYVQegKv70i416C_k9fWkYjYhQlA";
+    private static final byte[] RAW_O_BYTES = new byte[] {-4, 121, 24, 46, -125, 48, -125, -112};
+    private static final String RAW_O_TEXT = "_HkYLoMwg5A";
 
     @Test
     public void toString_() {
-        TestObject o = TestObject.ofBytes(BYTES);
-        assertThat(o.toString()).isEqualTo(BASE64_TEXT);
+        TestObject o = TestObject.ofBytes(RAW_O_BYTES);
+        assertThat(o.toString()).isEqualTo(RAW_O_TEXT);
     }
 
     @Test
     public void fromString() {
-        TestObject o = TestObject.fromString(BASE64_TEXT);
-        assertThat(o.bytes()).isEqualTo(BYTES);
+        TestObject o = TestObject.fromString(RAW_O_TEXT);
+        assertThat(o.bytes()).isEqualTo(RAW_O_BYTES);
     }
 
     @Test
-    public void generate() {
-        TestObject o = TestObject.generate();
-        assertThat(o.bytes()).hasSize(32);
-        assertThat(o.bytes()).isNotEqualTo(new byte[32]);
-    }
-
-    @Test
-    public void serializeThenDeserialize() {
-        TestObject o = TestObject.ofBytes(BYTES);
-        byte[] bytes = SerializationUtils.serialize(o);
-        TestObject deserializedO = SerializationUtils.deserialize(bytes, TestObject.class);
-        assertThat(deserializedO).isEqualTo(o);
+    public void serializeThenDeserialize() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        TestObject o = TestObject.ofBytes(RAW_O_BYTES);
+        byte[] rawO = mapper.writeValueAsBytes(o);
+        TestObject rtO = mapper.readValue(rawO, new TypeReference<>() {});
+        assertThat(rtO).isEqualTo(o);
     }
 
     @Test
     public void equals() {
-        TestObject o1 = TestObject.fromString(BASE64_TEXT);
-        TestObject o2 = TestObject.fromString(BASE64_TEXT);
-        TestObject o3 = TestObject.ofBytes(new byte[32]);
-        ImmutableBytes o4 = new ImmutableBytes(BASE64_TEXT) {};
         new EqualsTester()
-                .addEqualityGroup(o1, o2)
-                .addEqualityGroup(o3)
-                .addEqualityGroup(o4)
+                .addEqualityGroup(TestObject.ofBytes(RAW_O_BYTES), TestObject.ofBytes(RAW_O_BYTES))
+                .addEqualityGroup(TestObject.ofBytes(new byte[4]))
+                .addEqualityGroup(new ImmutableBytes(RAW_O_BYTES) {})
                 .testEquals();
     }
 
     @Test
     public void copyOnCreate() {
-        byte[] bytes = Arrays.copyOf(BYTES, BYTES.length);
-        TestObject o = TestObject.ofBytes(bytes);
-        bytes[0] = 0;
-        assertThat(bytes).isNotEqualTo(o.bytes());
+        byte[] rawO = Arrays.copyOf(RAW_O_BYTES, RAW_O_BYTES.length);
+        TestObject o = TestObject.ofBytes(rawO);
+        rawO[0] = 0;
+        assertThat(rawO).isNotEqualTo(o.bytes());
     }
 
     @Test
     public void copyOnRead() {
-        TestObject o = TestObject.ofBytes(BYTES);
-        byte[] bytes = o.bytes();
-        bytes[0] = 0;
-        assertThat(bytes).isNotEqualTo(o.bytes());
+        TestObject o = TestObject.ofBytes(RAW_O_BYTES);
+        byte[] rawO = o.bytes();
+        rawO[0] = 0;
+        assertThat(rawO).isNotEqualTo(o.bytes());
     }
 
-    @Test
-    public void ofBytes_AnyLength() {
-        new ImmutableBytes(new byte[4]) {};
-        new ImmutableBytes(new byte[8]) {};
-    }
-
-    @Test
-    public void error_IllegalLength_OfBytes() {
-        error_IllegalLength(() -> TestObject.ofBytes(new byte[4]));
-    }
-
-    @Test
-    public void error_IllegalLength_FromString() {
-        error_IllegalLength(() -> TestObject.fromString("123456"));
-    }
-
-    private void error_IllegalLength(ThrowableAssert.ThrowingCallable callable) {
-        assertThatThrownBy(callable)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("expected 256 bits");
-    }
-
-    @Test
-    public void error_Generate_WithoutLength() {
-        assertThatThrownBy(() -> new ImmutableBytes() {})
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("expected length must be set");
-    }
-
-    /** Serializable test object that's backed by 256 bits. */
+    /** Test {@link ImmutableBytes}. */
     @JsonSerialize(using = ToStringSerializer.class)
     @JsonDeserialize(using = TestObject.Deserializer.class)
     private static final class TestObject extends ImmutableBytes {
 
-        public static TestObject ofBytes(byte[] bytes) {
-            return new TestObject(bytes);
+        public static TestObject ofBytes(byte[] rawO) {
+            return new TestObject(rawO);
         }
 
-        public static TestObject fromString(String value) {
-            return new TestObject(value);
+        public static TestObject fromString(String rawO) {
+            return new TestObject(rawO);
         }
 
-        public static TestObject generate() {
-            return new TestObject();
+        private TestObject(byte[] rawO) {
+            super(rawO, true);
         }
 
-        @Override
-        protected int expectedLength() {
-            return 32;
+        private TestObject(String rawO) {
+            super(rawO);
         }
-
-        private TestObject(byte[] bytes) {
-            super(bytes);
-        }
-
-        private TestObject(String value) {
-            super(value);
-        }
-
-        private TestObject() {}
 
         /** JSON {@code fromString()} deserializer. */
         static final class Deserializer extends StaticFromStringDeserializer<TestObject> {
