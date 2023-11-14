@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.DataStyle;
+import org.example.age.data.crypto.DigitalSignature;
 import org.immutables.value.Value;
 
 /** Age certificate that is signed to verify the sender's identity. */

@@ -8,10 +8,10 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.example.age.data.AgeRange;
 import org.example.age.data.AgeThresholds;
-import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
+import org.example.age.data.crypto.SecureId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -4,10 +4,10 @@ import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.data.SecureId;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.crypto.SecureId;
 
 /** Asynchronous API for the age verification service. */
 public interface AvsApi {

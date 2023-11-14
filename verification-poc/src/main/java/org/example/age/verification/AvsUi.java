@@ -1,6 +1,6 @@
 package org.example.age.verification;
 
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 
 /** Encapsulates user interactions with the age verification service. */
 public interface AvsUi {

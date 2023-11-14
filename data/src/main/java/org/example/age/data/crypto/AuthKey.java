@@ -1,9 +1,8 @@
-package org.example.age.data.certificate;
+package org.example.age.data.crypto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import org.example.age.data.internal.SecureRandomImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /** Ephemeral AES-256 key used for encrypting authentication data. */

@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * <p>Keys will be generated internally.</p>
  */
-public final class HmacUtils {
+final class HmacUtils {
 
     /** Creates an HMAC from the message and the key. */
     public static byte[] createHmac(byte[] message, byte[] key) {

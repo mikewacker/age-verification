@@ -1,9 +1,11 @@
-package org.example.age.data;
+package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.example.age.data.internal.SerializationUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 public final class SecureIdTest {
@@ -12,6 +14,7 @@ public final class SecureIdTest {
     public void generate() {
         SecureId id = SecureId.generate();
         assertThat(id.bytes()).hasSize(32);
+        assertThat(id.bytes()).isNotEqualTo(new byte[32]);
     }
 
     @Test
@@ -23,11 +26,12 @@ public final class SecureIdTest {
     }
 
     @Test
-    public void serializeThenDeserialize() {
+    public void serializeThenDeserialize() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         SecureId id = SecureId.generate();
-        byte[] bytes = SerializationUtils.serialize(id);
-        SecureId deserializedId = SerializationUtils.deserialize(bytes, SecureId.class);
-        assertThat(deserializedId).isEqualTo(id);
+        byte[] rawId = mapper.writeValueAsBytes(id);
+        SecureId rtId = mapper.readValue(rawId, new TypeReference<>() {});
+        assertThat(rtId).isEqualTo(id);
     }
 
     @Test

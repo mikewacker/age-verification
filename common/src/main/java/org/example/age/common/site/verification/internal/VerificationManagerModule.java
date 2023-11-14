@@ -5,7 +5,7 @@ import dagger.Module;
 import java.time.Duration;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.site.store.VerificationStore;
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 
 /**
  * Dagger module that publishes a binding for {@link VerificationManager}.

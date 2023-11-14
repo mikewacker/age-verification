@@ -5,8 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.security.KeyPair;
 import java.time.Duration;
-import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

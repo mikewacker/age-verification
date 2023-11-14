@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
 import org.example.age.common.avs.config.SiteLocation;
 import org.example.age.data.AgeThresholds;
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

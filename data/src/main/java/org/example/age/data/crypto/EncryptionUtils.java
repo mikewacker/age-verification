@@ -18,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * <p>Keys will be generated internally.</p>
  */
-public final class EncryptionUtils {
+final class EncryptionUtils {
 
     /** Encrypts the plaintext using the key and the IV, returning the ciphertext. */
     public static byte[] encrypt(byte[] plaintext, byte[] key, byte[] iv) {

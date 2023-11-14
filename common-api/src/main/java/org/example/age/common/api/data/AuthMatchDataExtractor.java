@@ -3,8 +3,8 @@ package org.example.age.common.api.data;
 import io.undertow.server.HttpServerExchange;
 import java.util.Optional;
 import org.example.age.api.Sender;
-import org.example.age.data.certificate.AuthKey;
-import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.AuthToken;
 
 /**
  * Extracts {@link AuthMatchData} from an {@link HttpServerExchange} or an {@link AuthToken},

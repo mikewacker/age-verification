@@ -2,7 +2,7 @@ package org.example.age.common.site.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 import org.junit.jupiter.api.Test;
 
 public final class AvsLocationTest {

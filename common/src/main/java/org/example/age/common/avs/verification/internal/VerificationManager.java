@@ -2,9 +2,9 @@ package org.example.age.common.avs.verification.internal;
 
 import io.undertow.server.HttpServerExchange;
 import org.example.age.api.HttpOptional;
-import org.example.age.data.SecureId;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.crypto.SecureId;
 
 /** Manages the age verification process for accounts. */
 public interface VerificationManager {

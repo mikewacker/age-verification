@@ -6,8 +6,8 @@ import io.undertow.server.HttpServerExchange;
 import java.util.Optional;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.certificate.AuthKey;
-import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.AuthToken;
 import org.example.age.testing.api.FakeCodeSender;
 
 /** Test template for {@link AuthMatchDataExtractor}. */

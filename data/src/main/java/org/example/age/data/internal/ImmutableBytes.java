@@ -19,7 +19,7 @@ public abstract class ImmutableBytes {
 
     protected final byte[] bytes;
 
-    /** Creates immutable bytes from a copy of the bytes. */
+    /** Creates immutable bytes from a copy of the raw bytes. */
     protected ImmutableBytes(byte[] bytes) {
         this(bytes, true);
     }
@@ -29,7 +29,11 @@ public abstract class ImmutableBytes {
         this(decoder.decode(text), false);
     }
 
-    /** Creates immutable bytes from the bytes, which may be copied. */
+    /**
+     * Creates immutable bytes from the raw bytes, which may be copied.
+     *
+     * <p>For internal use only.</p>
+     */
     protected ImmutableBytes(byte[] bytes, boolean copy) {
         this.bytes = copy ? Arrays.copyOf(bytes, bytes.length) : bytes;
     }

@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
+import org.example.age.data.crypto.SecureId;
 
 /** In-memory {@link VerifiedUserStore}. */
 @Singleton

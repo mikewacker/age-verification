@@ -15,12 +15,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
-import org.example.age.data.SecureId;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
-import org.example.age.data.certificate.AuthToken;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.SecureId;
 import org.example.age.infra.api.exchange.ExchangeUtils;
 
 /**

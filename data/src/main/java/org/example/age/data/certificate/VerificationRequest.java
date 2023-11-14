@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import org.example.age.data.DataStyle;
-import org.example.age.data.SecureId;
+import org.example.age.data.crypto.SecureId;
 import org.immutables.value.Value;
 
 /** Request to verify an account on a social media site. */

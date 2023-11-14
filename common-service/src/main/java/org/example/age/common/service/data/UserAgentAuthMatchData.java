@@ -2,8 +2,8 @@ package org.example.age.common.service.data;
 
 import java.nio.charset.StandardCharsets;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.data.certificate.AuthKey;
-import org.example.age.data.certificate.AuthToken;
+import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.AuthToken;
 
 /** Matches the {@code User-Agent} header. */
 final class UserAgentAuthMatchData implements AuthMatchData {

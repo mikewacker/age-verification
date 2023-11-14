@@ -6,7 +6,7 @@ import dagger.Component;
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.certificate.AuthKey;
+import org.example.age.data.crypto.AuthKey;
 import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

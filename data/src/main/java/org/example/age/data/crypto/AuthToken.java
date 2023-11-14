@@ -1,10 +1,10 @@
-package org.example.age.data.certificate;
+package org.example.age.data.crypto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import java.util.Optional;
-import org.example.age.data.crypto.EncryptionUtils;
+import org.example.age.data.certificate.PackageUtils;
 import org.example.age.data.internal.ImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
