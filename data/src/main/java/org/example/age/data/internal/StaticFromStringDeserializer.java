@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer;
 import java.util.function.Function;
 
 /**
- * Deserializes a class using a static {@code fromString()} factory method.
+ * Deserializes JSON into a type using a static {@code fromString()} factory method.
  *
  * <p>Concrete implementations only need to provide a public no-arg constructor.</p>
  */
@@ -19,7 +19,7 @@ public abstract class StaticFromStringDeserializer<T> extends FromStringDeserial
     }
 
     @Override
-    protected T _deserialize(String value, DeserializationContext context) {
+    protected final T _deserialize(String value, DeserializationContext context) {
         return fromString.apply(value);
     }
 }

@@ -5,13 +5,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import org.example.age.data.internal.ImmutableBytes;
+import org.example.age.data.internal.SecureRandomImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /** Ephemeral AES-256 key used for encrypting authentication data. */
 @JsonSerialize(using = ToStringSerializer.class)
 @JsonDeserialize(using = AuthKey.Deserializer.class)
-public final class AuthKey extends ImmutableBytes {
+public final class AuthKey extends SecureRandomImmutableBytes {
+
+    private static final int EXPECTED_LENGTH = 32;
 
     private final SecretKey secretKey;
 
@@ -35,22 +37,18 @@ public final class AuthKey extends ImmutableBytes {
         return secretKey;
     }
 
-    @Override
-    protected int expectedLength() {
-        return 32;
-    }
-
     private AuthKey() {
+        super(EXPECTED_LENGTH);
         secretKey = SecretKeys.createAesKey(bytes);
     }
 
     private AuthKey(byte[] bytes) {
-        super(bytes);
+        super(bytes, EXPECTED_LENGTH);
         secretKey = SecretKeys.createAesKey(bytes);
     }
 
     private AuthKey(String value) {
-        super(value);
+        super(value, EXPECTED_LENGTH);
         secretKey = SecretKeys.createAesKey(bytes);
     }
 

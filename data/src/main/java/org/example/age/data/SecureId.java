@@ -8,13 +8,15 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import org.example.age.data.internal.ImmutableBytes;
+import org.example.age.data.internal.SecureRandomImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /** 256 random bits, generated via a secure random number generator. Can also be used as a key. */
 @JsonSerialize(using = ToStringSerializer.class)
 @JsonDeserialize(using = SecureId.Deserializer.class)
-public final class SecureId extends ImmutableBytes {
+public final class SecureId extends SecureRandomImmutableBytes {
+
+    private static final int EXPECTED_LENGTH = 32;
 
     /** Generates a new ID. */
     public static SecureId generate() {
@@ -43,19 +45,16 @@ public final class SecureId extends ImmutableBytes {
         return new SecureId(localBytes);
     }
 
-    @Override
-    protected int expectedLength() {
-        return 32;
+    private SecureId() {
+        super(EXPECTED_LENGTH);
     }
 
-    private SecureId() {}
-
     private SecureId(byte[] bytes) {
-        super(bytes);
+        super(bytes, EXPECTED_LENGTH);
     }
 
     private SecureId(String value) {
-        super(value);
+        super(value, EXPECTED_LENGTH);
     }
 
     /** Creates {@link Mac}'s. */
