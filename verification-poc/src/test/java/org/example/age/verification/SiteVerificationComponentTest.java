@@ -192,8 +192,7 @@ public final class SiteVerificationComponentTest {
         public void processVerificationRequest(String realName, SecureId requestId) {
             VerificationRequest request = retrievePendingVerificationRequest(requestId);
             VerifiedUser user = retrieveVerifiedUser(realName);
-            AesGcmEncryptionPackage authToken =
-                    AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
+            AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
             AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
             SignedAgeCertificate signedCertificate =
                     SignedAgeCertificate.sign(certificate, signingKeyPair.getPrivate());

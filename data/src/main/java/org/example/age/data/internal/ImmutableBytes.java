@@ -19,25 +19,6 @@ public abstract class ImmutableBytes {
 
     protected final byte[] bytes;
 
-    /** Creates immutable bytes from a copy of the raw bytes. */
-    protected ImmutableBytes(byte[] bytes) {
-        this(bytes, true);
-    }
-
-    /** Deserializes immutable bytes from URL-friendly base64 text. */
-    protected ImmutableBytes(String text) {
-        this(decoder.decode(text), false);
-    }
-
-    /**
-     * Creates immutable bytes from the raw bytes, which may be copied.
-     *
-     * <p>For internal use only.</p>
-     */
-    protected ImmutableBytes(byte[] bytes, boolean copy) {
-        this.bytes = copy ? Arrays.copyOf(bytes, bytes.length) : bytes;
-    }
-
     /** Gets a copy of the raw bytes. */
     public final byte[] bytes() {
         return Arrays.copyOf(bytes, bytes.length);
@@ -63,5 +44,32 @@ public abstract class ImmutableBytes {
     @Override
     public final int hashCode() {
         return Arrays.hashCode(bytes);
+    }
+
+    /** Creates immutable bytes from a copy of the raw bytes. */
+    protected ImmutableBytes(byte[] bytes) {
+        this(bytes, true);
+    }
+
+    /** Deserializes immutable bytes from URL-friendly base64 text. */
+    protected ImmutableBytes(String text) {
+        this(decoder.decode(text), false);
+    }
+
+    /**
+     * Creates immutable bytes from the raw bytes, which may be copied.
+     *
+     * <p>For internal use only.</p>
+     */
+    protected ImmutableBytes(byte[] bytes, boolean copy) {
+        this.bytes = copy ? Arrays.copyOf(bytes, bytes.length) : bytes;
+        checkNotEmpty();
+    }
+
+    /** Checks that the bytes are not empty. */
+    private void checkNotEmpty() {
+        if (bytes.length == 0) {
+            throw new IllegalArgumentException("empty bytes not allowed");
+        }
     }
 }

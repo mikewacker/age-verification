@@ -117,8 +117,7 @@ public final class VerificationManagerTest {
 
     private AgeCertificate createCertificate(VerificationSession session, VerifiedUser user) {
         VerificationRequest request = session.verificationRequest();
-        AesGcmEncryptionPackage authToken =
-                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
         return AgeCertificate.of(request, user, authToken);
     }
 

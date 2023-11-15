@@ -10,6 +10,12 @@ import org.junit.jupiter.api.Test;
 public class BytesValueTest {
 
     @Test
+    public void empty() {
+        BytesValue value = BytesValue.empty();
+        assertThat(value.bytes()).isEqualTo(new byte[1]);
+    }
+
+    @Test
     public void serializeThenDeserialize() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         BytesValue value = BytesValue.ofBytes(new byte[] {116, 101, 115, 116});
