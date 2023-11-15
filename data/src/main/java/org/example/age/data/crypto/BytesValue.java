@@ -21,6 +21,20 @@ public class BytesValue extends ImmutableBytes {
         return new BytesValue(rawValue);
     }
 
+    /**
+     * Creates an empty value.
+     *
+     * <p>The raw bytes are a single zero-filled byte; empty bytes cannot be deserialized properly.</p>
+     */
+    public static BytesValue empty() {
+        return new BytesValue(new byte[1], false);
+    }
+
+    /** Creates a value the raw bytes. */
+    static BytesValue ofUncopiedBytes(byte[] rawValue) {
+        return new BytesValue(rawValue, false);
+    }
+
     /** Gets the raw bytes. */
     byte[] uncopiedBytes() {
         return bytes;
@@ -32,6 +46,10 @@ public class BytesValue extends ImmutableBytes {
 
     private BytesValue(String rawValue) {
         super(rawValue);
+    }
+
+    private BytesValue(byte[] rawValue, boolean copy) {
+        super(rawValue, copy);
     }
 
     /** JSON {@code fromString()} deserializer. */

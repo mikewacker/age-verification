@@ -26,7 +26,7 @@ public interface AesGcmEncryptionPackage {
     static AesGcmEncryptionPackage encrypt(byte[] rawPlaintext, Aes256Key key) {
         byte[] rawIv = EncryptionUtils.createIv();
         byte[] rawCiphertext = EncryptionUtils.encrypt(rawPlaintext, key.uncopiedBytes(), rawIv);
-        return of(BytesValue.ofBytes(rawCiphertext), BytesValue.ofBytes(rawIv));
+        return of(BytesValue.ofUncopiedBytes(rawCiphertext), BytesValue.ofUncopiedBytes(rawIv));
     }
 
     /** Encrypted ciphertext. */

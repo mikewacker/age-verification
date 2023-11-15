@@ -15,6 +15,6 @@ final class DisabledAuthMatchData implements AuthMatchData {
 
     @Override
     public AesGcmEncryptionPackage encrypt(Aes256Key key) {
-        return AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
+        return AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
     }
 }

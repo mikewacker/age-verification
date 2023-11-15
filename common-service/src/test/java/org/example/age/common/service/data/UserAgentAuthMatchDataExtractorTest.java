@@ -52,8 +52,7 @@ public final class UserAgentAuthMatchDataExtractorTest {
     @Test
     public void sendError_DecryptionFails() {
         FakeCodeSender sender = FakeCodeSender.create();
-        AesGcmEncryptionPackage token =
-                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
+        AesGcmEncryptionPackage token = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
         Optional<AuthMatchData> maybeData = extractor.tryDecrypt(token, key, sender);
         assertThat(maybeData).isEmpty();
         assertThat(sender.tryGet()).hasValue(401);

@@ -117,8 +117,7 @@ public final class AvsVerificationComponent implements AvsUi, AvsApi, VerifiedUs
     /** Creates an age certificate to verify an account on the site. */
     private AgeCertificate createAgeCertificateForSite(VerifiedUser user, VerificationRequest request, Site site) {
         VerifiedUser localUser = user.anonymizeAge(site.ageThresholds()).localize(site.remotePseudonymKey());
-        AesGcmEncryptionPackage authToken =
-                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
         return AgeCertificate.of(request, localUser, authToken);
     }
 

@@ -1,6 +1,7 @@
 package org.example.age.data.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,6 +62,13 @@ public final class ImmutableBytesTest {
         byte[] rawO = o.bytes();
         rawO[0] = 0;
         assertThat(rawO).isNotEqualTo(o.bytes());
+    }
+
+    @Test
+    public void error_EmptyBytes() {
+        assertThatThrownBy(() -> TestObject.ofBytes(new byte[0]))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("empty bytes not allowed");
     }
 
     /** Test {@link ImmutableBytes}. */

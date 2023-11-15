@@ -80,8 +80,7 @@ public final class SiteApiTest {
     private static SignedAgeCertificate createSignedAgeCertificate(VerificationSession session) {
         VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        AesGcmEncryptionPackage authToken =
-                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
         AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
         DigitalSignature signature = DigitalSignature.ofBytes(new byte[1024]);
         return SignedAgeCertificate.of(certificate, signature);
