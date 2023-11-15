@@ -1,6 +1,7 @@
 package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -53,6 +54,35 @@ public final class EncryptionUtilsTest {
         byte[] ciphertext = EncryptionUtils.encrypt(PLAINTEXT, key, iv);
         Optional<byte[]> maybeRtPlaintext = EncryptionUtils.tryDecrypt(ciphertext, otherKey, iv);
         assertThat(maybeRtPlaintext).isEmpty();
+    }
+
+    @Test
+    public void decryptFailed_InvalidKey() {
+        // triggers an InvalidKeyException
+        Optional<byte[]> maybeRtPlaintext = EncryptionUtils.tryDecrypt(new byte[1024], new byte[1], new byte[12]);
+        assertThat(maybeRtPlaintext).isEmpty();
+    }
+
+    @Test
+    public void decryptFailed_EmptyKey() {
+        // triggers an IllegalArgumentException
+        Optional<byte[]> maybeRtPlaintext = EncryptionUtils.tryDecrypt(new byte[1024], new byte[0], new byte[12]);
+        assertThat(maybeRtPlaintext).isEmpty();
+    }
+
+    @Test
+    public void decryptFailed_ProviderException() {
+        // triggers a ProviderException
+        Optional<byte[]> maybeRtPlaintext = EncryptionUtils.tryDecrypt(new byte[1], key, new byte[12]);
+        assertThat(maybeRtPlaintext).isEmpty();
+    }
+
+    @Test
+    public void error_Encrypt_InvalidKey() {
+        byte[] iv = EncryptionUtils.createIv();
+        assertThatThrownBy(() -> EncryptionUtils.encrypt(PLAINTEXT, new byte[1], iv))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("encryption failed");
     }
 
     private static byte[] tamper(byte[] bytes) {

@@ -6,17 +6,17 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * Utilities for HMACs.
- *
- * <p>Keys will be generated internally.</p>
- */
+/** Utilities for HMACs. */
 final class HmacUtils {
 
     /** Creates an HMAC from the message and the key. */
     public static byte[] createHmac(byte[] message, byte[] key) {
-        Mac hmacFactory = Macs.createHmacFactory(key);
-        return hmacFactory.doFinal(message);
+        try {
+            Mac hmacFactory = Macs.createHmacFactory(key);
+            return hmacFactory.doFinal(message);
+        } catch (Exception e) {
+            throw new RuntimeException("HMAC creation failed", e);
+        }
     }
 
     // static class
@@ -28,15 +28,11 @@ final class HmacUtils {
         private static final String ALGORITHM = "HmacSHA256";
 
         /** Creates an HMAC factory. */
-        public static Mac createHmacFactory(byte[] rawKey) {
+        public static Mac createHmacFactory(byte[] rawKey) throws InvalidKeyException {
             Mac hmacFactory = newHmacFactory();
             Key key = createKey(rawKey);
-            try {
-                hmacFactory.init(key);
-                return hmacFactory;
-            } catch (InvalidKeyException e) {
-                throw new RuntimeException(e);
-            }
+            hmacFactory.init(key);
+            return hmacFactory;
         }
 
         /** Creates an uninitialized HMAC factory. */
@@ -44,7 +40,7 @@ final class HmacUtils {
             try {
                 return Mac.getInstance(ALGORITHM);
             } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("unexpected error", e);
             }
         }
 

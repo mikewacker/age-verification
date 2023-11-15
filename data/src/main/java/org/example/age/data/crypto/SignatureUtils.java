@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
-import java.security.SignatureException;
 
 /**
  * Utilities for digital signatures.
@@ -16,22 +15,22 @@ public final class SignatureUtils {
 
     /** Signs the message, returning the signature. */
     public static byte[] sign(byte[] message, PrivateKey privateKey) {
-        Signature signer = Signatures.createSigner(privateKey);
         try {
+            Signature signer = Signatures.createSigner(privateKey);
             signer.update(message);
             return signer.sign();
-        } catch (SignatureException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException("signing failed", e);
         }
     }
 
     /** Verifies the signature against the message, returning whether verification succeeded. */
     public static boolean verify(byte[] message, byte[] signature, PublicKey publicKey) {
-        Signature verifier = Signatures.createVerifier(publicKey);
         try {
+            Signature verifier = Signatures.createVerifier(publicKey);
             verifier.update(message);
             return verifier.verify(signature);
-        } catch (SignatureException e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -45,25 +44,17 @@ public final class SignatureUtils {
         private static final String ALGORITHM = "Ed25519";
 
         /** Creates a signer. */
-        public static Signature createSigner(PrivateKey privateKey) {
+        public static Signature createSigner(PrivateKey privateKey) throws InvalidKeyException {
             Signature signer = newSignatureObject();
-            try {
-                signer.initSign(privateKey);
-                return signer;
-            } catch (InvalidKeyException e) {
-                throw new IllegalArgumentException("key must be an ed25519 key", e);
-            }
+            signer.initSign(privateKey);
+            return signer;
         }
 
         /** Creates a verifier. */
-        public static Signature createVerifier(PublicKey publicKey) {
+        public static Signature createVerifier(PublicKey publicKey) throws InvalidKeyException {
             Signature verifier = newSignatureObject();
-            try {
-                verifier.initVerify(publicKey);
-                return verifier;
-            } catch (InvalidKeyException e) {
-                throw new IllegalArgumentException("key must be an ed25519 key", e);
-            }
+            verifier.initVerify(publicKey);
+            return verifier;
         }
 
         /** Creates an uninitialized signer or verifier. */
@@ -71,7 +62,7 @@ public final class SignatureUtils {
             try {
                 return Signature.getInstance(ALGORITHM);
             } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("unexpected error", e);
             }
         }
 
