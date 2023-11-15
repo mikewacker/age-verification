@@ -21,10 +21,10 @@ import org.example.age.common.avs.store.InMemoryRegisteredSiteConfigStoreModule;
 import org.example.age.common.avs.store.InMemoryVerifiedUserStoreModule;
 import org.example.age.common.base.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.data.crypto.SigningKeys;
 import org.example.age.test.server.undertow.TestUndertowModule;
 import org.example.age.test.service.data.TestAccountIdExtractorModule;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.crypto.TestKeys;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public final class AvsApiHttpHandlerTest {
 
     @BeforeAll
     public static void generateKeys() {
-        avsSigningKeyPair = TestKeys.generateEd25519KeyPair();
+        avsSigningKeyPair = SigningKeys.generateEd25519KeyPair();
     }
 
     @Test

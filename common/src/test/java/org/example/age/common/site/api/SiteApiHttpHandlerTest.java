@@ -28,10 +28,10 @@ import org.example.age.common.site.config.SiteConfig;
 import org.example.age.common.site.store.InMemoryVerificationStoreModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.crypto.SigningKeys;
 import org.example.age.test.server.undertow.TestUndertowModule;
 import org.example.age.test.service.data.TestAccountIdExtractorModule;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.crypto.TestKeys;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public final class SiteApiHttpHandlerTest {
 
     @BeforeAll
     public static void generateKeys() {
-        avsSigningKeyPair = TestKeys.generateEd25519KeyPair();
+        avsSigningKeyPair = SigningKeys.generateEd25519KeyPair();
         sitePseudonymKey = SecureId.generate();
     }
 

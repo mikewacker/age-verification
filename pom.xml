@@ -10,9 +10,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <!-- data -->
+        <!-- data types -->
         <module>data</module>
-        <module>testing-data</module>
 
         <!-- api types -->
         <module>api</module>
