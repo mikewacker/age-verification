@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
-import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -61,20 +60,17 @@ public final class SignatureUtilsTest {
     }
 
     @Test
-    public void error_InvalidKey_Sign() {
-        error_InvalidKey(() -> SignatureUtils.sign(MESSAGE, invalidKeyPair.getPrivate()));
+    public void verifyFailed_InvalidKey() {
+        byte[] signature = SignatureUtils.sign(MESSAGE, keyPair.getPrivate());
+        boolean wasVerified = SignatureUtils.verify(MESSAGE, signature, invalidKeyPair.getPublic());
+        assertThat(wasVerified).isFalse();
     }
 
     @Test
-    public void error_InvalidKey_Verify() {
-        byte[] signature = new byte[1024];
-        error_InvalidKey(() -> SignatureUtils.verify(MESSAGE, signature, invalidKeyPair.getPublic()));
-    }
-
-    private void error_InvalidKey(ThrowableAssert.ThrowingCallable callable) {
-        assertThatThrownBy(callable)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("key must be an ed25519 key");
+    public void error_Sign_InvalidKey() {
+        assertThatThrownBy(() -> SignatureUtils.sign(MESSAGE, invalidKeyPair.getPrivate()))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("signing failed");
     }
 
     private static byte[] tamper(byte[] bytes) {

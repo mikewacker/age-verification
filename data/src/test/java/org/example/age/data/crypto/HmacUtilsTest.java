@@ -1,6 +1,7 @@
 package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,5 +23,12 @@ public final class HmacUtilsTest {
         byte[] hmac = HmacUtils.createHmac(MESSAGE, key);
         assertThat(hmac).hasSize(32);
         assertThat(hmac).isNotEqualTo(new byte[32]);
+    }
+
+    @Test
+    public void error_EmptyKey() {
+        assertThatThrownBy(() -> HmacUtils.createHmac(MESSAGE, new byte[0]))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("HMAC creation failed");
     }
 }

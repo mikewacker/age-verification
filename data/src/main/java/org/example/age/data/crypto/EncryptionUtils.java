@@ -5,38 +5,32 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Optional;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * Utilities for encryption using AES/GCM.
- *
- * <p>Keys will be generated internally.</p>
- */
+/** Utilities for encryption using AES/GCM. */
 final class EncryptionUtils {
 
     /** Encrypts the plaintext using the key and the IV, returning the ciphertext. */
     public static byte[] encrypt(byte[] plaintext, byte[] key, byte[] iv) {
-        Cipher encryptor = Ciphers.createEncryptor(key, iv);
         try {
+            Cipher encryptor = Ciphers.createEncryptor(key, iv);
             return encryptor.doFinal(plaintext);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException("encryption failed", e);
         }
     }
 
     /** Decrypts the ciphertext using the key and the IV, returning the plaintext, or empty if decryption fails. */
     public static Optional<byte[]> tryDecrypt(byte[] ciphertext, byte[] key, byte[] iv) {
-        Cipher decryptor = Ciphers.createDecryptor(key, iv);
         try {
+            Cipher decryptor = Ciphers.createDecryptor(key, iv);
             byte[] plaintext = decryptor.doFinal(ciphertext);
             return Optional.of(plaintext);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
+        } catch (Exception e) {
             // most likely, an AEADBadTagException when the authentication tag cannot be verified
             return Optional.empty();
         }
@@ -59,29 +53,23 @@ final class EncryptionUtils {
         private static final int TAG_LENGTH_BITS = 128;
 
         /** Creates an encryptor. */
-        public static Cipher createEncryptor(byte[] rawKey, byte[] rawIv) {
+        public static Cipher createEncryptor(byte[] rawKey, byte[] rawIv)
+                throws InvalidKeyException, InvalidAlgorithmParameterException {
             Cipher encryptor = newCipher();
             SecretKey key = createKey(rawKey);
             AlgorithmParameterSpec gcmParam = createGcmParam(rawIv);
-            try {
-                encryptor.init(Cipher.ENCRYPT_MODE, key, gcmParam);
-                return encryptor;
-            } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-                throw new RuntimeException(e);
-            }
+            encryptor.init(Cipher.ENCRYPT_MODE, key, gcmParam);
+            return encryptor;
         }
 
         /** Creates a decryptor. */
-        public static Cipher createDecryptor(byte[] rawKey, byte[] rawIv) {
+        public static Cipher createDecryptor(byte[] rawKey, byte[] rawIv)
+                throws InvalidKeyException, InvalidAlgorithmParameterException {
             Cipher decryptor = newCipher();
             SecretKey key = createKey(rawKey);
             AlgorithmParameterSpec gcmParam = createGcmParam(rawIv);
-            try {
-                decryptor.init(Cipher.DECRYPT_MODE, key, gcmParam);
-                return decryptor;
-            } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-                throw new RuntimeException(e);
-            }
+            decryptor.init(Cipher.DECRYPT_MODE, key, gcmParam);
+            return decryptor;
         }
 
         /** Creates an uninitialized encryptor or decryptor. */
@@ -89,7 +77,7 @@ final class EncryptionUtils {
             try {
                 return Cipher.getInstance(ALGORITHM);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("unexpected error", e);
             }
         }
 

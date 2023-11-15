@@ -19,7 +19,7 @@ public final class SigningKeys {
         try {
             return KeyPairGenerator.getInstance("Ed25519");
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("unexpected error", e);
         }
     }
 
