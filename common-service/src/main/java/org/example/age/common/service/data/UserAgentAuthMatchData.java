@@ -2,8 +2,8 @@ package org.example.age.common.service.data;
 
 import java.nio.charset.StandardCharsets;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.data.crypto.AuthKey;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 
 /** Matches the {@code User-Agent} header. */
 final class UserAgentAuthMatchData implements AuthMatchData {
@@ -26,8 +26,8 @@ final class UserAgentAuthMatchData implements AuthMatchData {
     }
 
     @Override
-    public AuthToken encrypt(AuthKey key) {
+    public AesGcmEncryptionPackage encrypt(Aes256Key key) {
         byte[] bytes = userAgent.getBytes(StandardCharsets.UTF_8);
-        return AuthToken.encrypt(bytes, key);
+        return AesGcmEncryptionPackage.encrypt(bytes, key);
     }
 }

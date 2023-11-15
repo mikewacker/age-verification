@@ -23,7 +23,8 @@ import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
+import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.api.test.StubSiteService;
@@ -79,7 +80,8 @@ public final class SiteApiTest {
     private static SignedAgeCertificate createSignedAgeCertificate(VerificationSession session) {
         VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        AuthToken authToken = AuthToken.empty();
+        AesGcmEncryptionPackage authToken =
+                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
         AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
         DigitalSignature signature = DigitalSignature.ofBytes(new byte[1024]);
         return SignedAgeCertificate.of(certificate, signature);

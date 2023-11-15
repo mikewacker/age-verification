@@ -21,8 +21,9 @@ import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.AuthKey;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
+import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
@@ -106,7 +107,7 @@ public final class VerificationManagerTest {
 
     private static VerificationSession createSession() {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
-        AuthKey authKey = AuthKey.ofBytes(new byte[32]);
+        Aes256Key authKey = Aes256Key.ofBytes(new byte[32]);
         return VerificationSession.of(request, authKey);
     }
 
@@ -116,7 +117,8 @@ public final class VerificationManagerTest {
 
     private AgeCertificate createCertificate(VerificationSession session, VerifiedUser user) {
         VerificationRequest request = session.verificationRequest();
-        AuthToken authToken = AuthToken.empty();
+        AesGcmEncryptionPackage authToken =
+                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
         return AgeCertificate.of(request, user, authToken);
     }
 

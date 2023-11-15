@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import org.example.age.api.Sender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.crypto.AuthKey;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 
 /** Creates {@link UserAgentAuthMatchData}, or sends a 401 error if decryption fails. */
 final class UserAgentAuthMatchDataExtractor implements AuthMatchDataExtractor {
@@ -26,14 +26,13 @@ final class UserAgentAuthMatchDataExtractor implements AuthMatchDataExtractor {
     }
 
     @Override
-    public Optional<AuthMatchData> tryDecrypt(AuthToken token, AuthKey key, Sender sender) {
-        byte[] bytes;
-        try {
-            bytes = token.decrypt(key);
-        } catch (RuntimeException e) {
+    public Optional<AuthMatchData> tryDecrypt(AesGcmEncryptionPackage token, Aes256Key key, Sender sender) {
+        Optional<byte[]> maybeBytes = token.tryDecrypt(key);
+        if (maybeBytes.isEmpty()) {
             sender.sendError(StatusCodes.UNAUTHORIZED);
             return Optional.empty();
         }
+        byte[] bytes = maybeBytes.get();
 
         String userAgent = new String(bytes, StandardCharsets.UTF_8);
         return Optional.of(new UserAgentAuthMatchData(userAgent));

@@ -4,11 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.time.Duration;
 import org.example.age.data.DataMapper;
 import org.example.age.data.VerifiedUser;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
@@ -65,7 +67,9 @@ public final class SignedAgeCertificateTest {
     private static AgeCertificate createAgeCertificate() {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        AuthToken authToken = AuthToken.empty();
+        byte[] authData = "auth data".getBytes(StandardCharsets.UTF_8);
+        Aes256Key authKey = Aes256Key.generate();
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.encrypt(authData, authKey);
         return AgeCertificate.of(request, user, authToken);
     }
 }

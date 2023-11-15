@@ -6,7 +6,7 @@ import dagger.Component;
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.Aes256Key;
 import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 public final class DisabledAuthMatchDataExtractorTest {
 
     private static AuthMatchDataExtractor extractor;
-    private static AuthKey key;
+    private static Aes256Key key;
 
     @BeforeAll
     public static void createAuthMatchDataExtractorEtAl() {
         extractor = TestComponent.createAuthMatchDataExtractor();
-        key = mock(AuthKey.class);
+        key = mock(Aes256Key.class);
     }
 
     @Test

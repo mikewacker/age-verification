@@ -6,7 +6,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.DataStyle;
 import org.example.age.data.VerifiedUser;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SignatureUtils;
 import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;
@@ -23,11 +23,11 @@ import org.immutables.value.Value;
 public interface AgeCertificate {
 
     /** Creates an unsigned age certificate to fulfill a verification request for a verified user. */
-    static AgeCertificate of(VerificationRequest request, VerifiedUser user, AuthToken token) {
+    static AgeCertificate of(VerificationRequest request, VerifiedUser user, AesGcmEncryptionPackage authToken) {
         return ImmutableAgeCertificate.builder()
                 .verificationRequest(request)
                 .verifiedUser(user)
-                .authToken(token)
+                .authToken(authToken)
                 .build();
     }
 
@@ -59,8 +59,8 @@ public interface AgeCertificate {
     /** Verified user. */
     VerifiedUser verifiedUser();
 
-    /** Authentication data, which is encrypted using an ephemeral key. */
-    AuthToken authToken();
+    /** Encrypted authentication data. */
+    AesGcmEncryptionPackage authToken();
 
     /** Signs the certificate. */
     default byte[] sign(PrivateKey privateKey) {
