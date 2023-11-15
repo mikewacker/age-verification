@@ -25,13 +25,5 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
-
-        <!-- test -->
-        <dependency>
-            <groupId>org.example.age</groupId>
-            <artifactId>testing-data</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
