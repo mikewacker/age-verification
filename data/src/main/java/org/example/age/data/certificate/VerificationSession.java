@@ -1,11 +1,9 @@
 package org.example.age.data.certificate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.data.DataStyle;
 import org.example.age.data.crypto.Aes256Key;
-import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;
 
 /** Session to pseudonymously verify a person's age (and guardians, if applicable). */
@@ -29,21 +27,9 @@ public interface VerificationSession {
         return of(request, authKey);
     }
 
-    /** Deserializes the session from raw bytes. */
-    static VerificationSession deserialize(byte[] bytes) {
-        return SerializationUtils.deserialize(bytes, VerificationSession.class);
-    }
-
     /** Verification request. */
     VerificationRequest verificationRequest();
 
     /** Ephemeral key used to encrypt and decrypt authentication data. */
     Aes256Key authKey();
-
-    /** Serializes the session to raw bytes. */
-    @Value.Lazy
-    @JsonIgnore
-    default byte[] serialize() {
-        return SerializationUtils.serialize(this);
-    }
 }

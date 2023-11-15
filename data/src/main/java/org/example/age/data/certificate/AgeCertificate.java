@@ -2,20 +2,12 @@ package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import org.example.age.data.DataStyle;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.SignatureUtils;
-import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;
 
-/**
- * Certificate that pseudonymously verifies the age (and guardians, if applicable) of a person.
- *
- * <p>Only Ed25519 keys are supported.</p>
- */
+/** Certificate that pseudonymously verifies the age (and guardians, if applicable) of a person. */
 @Value.Immutable
 @DataStyle
 @JsonSerialize(as = ImmutableAgeCertificate.class)
@@ -31,28 +23,6 @@ public interface AgeCertificate {
                 .build();
     }
 
-    /**
-     * Verifies a signed age certificate's signature, recipient, and expiration.
-     * Throws an {@link IllegalArgumentException} if verification fails.
-     */
-    static AgeCertificate verifyForSite(byte[] rawSignedCertificate, PublicKey publicKey, String siteId) {
-        PackageUtils.SignedMessage signedCertificate = PackageUtils.parseSignedMessage(rawSignedCertificate);
-        if (!SignatureUtils.verify(signedCertificate.message(), signedCertificate.signature(), publicKey)) {
-            throw new IllegalArgumentException("invalid signature");
-        }
-
-        AgeCertificate certificate = SerializationUtils.deserialize(signedCertificate.message(), AgeCertificate.class);
-        if (!certificate.verificationRequest().isIntendedRecipient(siteId)) {
-            throw new IllegalArgumentException("wrong recipient");
-        }
-
-        if (certificate.verificationRequest().isExpired()) {
-            throw new IllegalArgumentException("expired age certificate");
-        }
-
-        return certificate;
-    }
-
     /** Verification request to fulfill. */
     VerificationRequest verificationRequest();
 
@@ -61,11 +31,4 @@ public interface AgeCertificate {
 
     /** Encrypted authentication data. */
     AesGcmEncryptionPackage authToken();
-
-    /** Signs the certificate. */
-    default byte[] sign(PrivateKey privateKey) {
-        byte[] rawCertificate = SerializationUtils.serialize(this);
-        byte[] signature = SignatureUtils.sign(rawCertificate, privateKey);
-        return PackageUtils.createSignedMessage(rawCertificate, signature);
-    }
 }

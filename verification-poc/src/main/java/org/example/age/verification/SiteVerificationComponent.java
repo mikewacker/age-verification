@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.example.age.data.AgeRange;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.SecureId;
 
@@ -75,13 +76,31 @@ public final class SiteVerificationComponent implements SiteUi, SiteApi, Verifie
     }
 
     @Override
-    public void processAgeCertificate(byte[] signedCertificate) {
-        AgeCertificate certificate =
-                AgeCertificate.verifyForSite(signedCertificate, avsApi.getPublicSigningKey(), siteId);
+    public void processAgeCertificate(SignedAgeCertificate signedCertificate) {
+        AgeCertificate certificate = verifySignedAgeCertificate(signedCertificate);
         String username = matchVerificationRequestToUsername(certificate.verificationRequest());
         VerifiedUser localUser = localizeVerifiedUser(certificate.verifiedUser());
         checkNoDuplicatePseudonyms(username, localUser);
         storeVerifiedUser(username, localUser);
+    }
+
+    /** Verifies a {@link SignedAgeCertificate}. */
+    private AgeCertificate verifySignedAgeCertificate(SignedAgeCertificate signedCertificate) {
+        if (!signedCertificate.verify(avsApi.getPublicSigningKey())) {
+            throw new IllegalArgumentException("invalid signature");
+        }
+
+        AgeCertificate certificate = signedCertificate.ageCertificate();
+        VerificationRequest request = certificate.verificationRequest();
+        if (!request.isIntendedRecipient(siteId)) {
+            throw new IllegalArgumentException("wrong recipient");
+        }
+
+        if (request.isExpired()) {
+            throw new IllegalArgumentException("expired age certificate");
+        }
+
+        return certificate;
     }
 
     /** Matches the verification request to a username. */

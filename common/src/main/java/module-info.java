@@ -8,6 +8,7 @@ module org.example.age.common {
     exports org.example.age.common.site.store;
 
     requires static org.immutables.value.annotations;
+    requires com.fasterxml.jackson.databind;
     requires com.google.common;
     requires com.google.errorprone.annotations;
     requires dagger;

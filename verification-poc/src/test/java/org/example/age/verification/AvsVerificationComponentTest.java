@@ -10,6 +10,7 @@ import org.example.age.data.AgeRange;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.SecureId;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,10 +130,8 @@ public final class AvsVerificationComponentTest {
         }
 
         @Override
-        public void processAgeCertificate(byte[] signedCertificate) {
-            AgeCertificate certificate =
-                    AgeCertificate.verifyForSite(signedCertificate, avsApi.getPublicSigningKey(), siteId);
-            maybeCertificate = Optional.of(certificate);
+        public void processAgeCertificate(SignedAgeCertificate signedCertificate) {
+            maybeCertificate = Optional.of(signedCertificate.ageCertificate());
         }
 
         @Override

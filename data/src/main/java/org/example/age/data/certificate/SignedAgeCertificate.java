@@ -10,7 +10,11 @@ import org.example.age.data.DataStyle;
 import org.example.age.data.crypto.DigitalSignature;
 import org.immutables.value.Value;
 
-/** Age certificate that is signed to verify the sender's identity. */
+/**
+ * Age certificate that is signed to verify the sender's identity.
+ *
+ * <p>Only {@code Ed25519} keys are supported.</p>
+ */
 @Value.Immutable
 @DataStyle
 @JsonSerialize(as = ImmutableSignedAgeCertificate.class)

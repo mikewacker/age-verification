@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
@@ -121,9 +122,9 @@ public final class AvsVerificationComponent implements AvsUi, AvsApi, VerifiedUs
         return AgeCertificate.of(request, localUser, authToken);
     }
 
-    /** Transmits an age certificate to the site. */
+    /** Transmits a signed age certificate to the site. */
     private void transmitAgeCertificateToSite(AgeCertificate certificate, Site site) {
-        byte[] signedCertificate = certificate.sign(signingKeyPair.getPrivate());
+        SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, signingKeyPair.getPrivate());
         site.api().processAgeCertificate(signedCertificate);
     }
 

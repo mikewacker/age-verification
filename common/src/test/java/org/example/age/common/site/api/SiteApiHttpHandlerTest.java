@@ -2,6 +2,7 @@ package org.example.age.common.site.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
 import dagger.BindsInstance;
@@ -61,8 +62,7 @@ public final class SiteApiHttpHandlerTest {
         Response sessionResponse = TestClient.execute(sessionRequest);
         assertThat(sessionResponse.code()).isEqualTo(200);
         assertThat(sessionResponse.header("Content-Type")).isEqualTo("application/json");
-        VerificationSession session =
-                VerificationSession.deserialize(sessionResponse.body().bytes());
+        VerificationSession session = TestClient.readBody(sessionResponse, new TypeReference<>() {});
         assertThat(session.verificationRequest().siteId()).isEqualTo("Site");
 
         SecureId pseudonym = SecureId.generate();
@@ -127,7 +127,7 @@ public final class SiteApiHttpHandlerTest {
         String certificateUrl = fakeAvsServer.url("/api/age-certificate?pseudonym=%s", pseudonym);
         Request certificateRequest = createPostRequest(certificateUrl, "", "user agent");
         Response certificateResponse = TestClient.execute(certificateRequest);
-        assertThat(certificateResponse.code()).isEqualTo(400);
+        assertThat(certificateResponse.code()).isEqualTo(403);
     }
 
     private static Request createPostRequest(String url, String accountId, String userAgent) {

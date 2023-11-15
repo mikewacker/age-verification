@@ -8,7 +8,11 @@ import java.security.PublicKey;
 import org.example.age.data.internal.ImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
-/** Signature used to verify the sender's identity. */
+/**
+ * Signature used to verify the sender's identity.
+ *
+ * <p>Only {@code Ed25519} keys are supported.</p>
+ */
 @JsonSerialize(using = ToStringSerializer.class)
 @JsonDeserialize(using = DigitalSignature.Deserializer.class)
 public final class DigitalSignature extends ImmutableBytes {

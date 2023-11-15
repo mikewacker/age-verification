@@ -11,7 +11,7 @@ import java.security.Signature;
  *
  * <p>Only {@code Ed25519} keys are supported.</p>
  */
-public final class SignatureUtils {
+final class SignatureUtils {
 
     /** Signs the message, returning the signature. */
     public static byte[] sign(byte[] message, PrivateKey privateKey) {

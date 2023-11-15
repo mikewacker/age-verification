@@ -1,8 +1,11 @@
 package org.example.age.common.site.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
+import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -18,7 +21,10 @@ import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.common.site.auth.internal.AuthManager;
 import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.verification.internal.VerificationManager;
+import org.example.age.data.DataMapper;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
+import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.api.exchange.ExchangeUtils;
 
@@ -63,7 +69,7 @@ final class SiteApiHandler implements HttpHandler {
         switch (exchange.getRelativePath()) {
             case "/verification-session" -> handleVerificationSessionRequest(exchange);
             case "/age-certificate" -> ExchangeUtils.handleRequestWithBody(
-                    exchange, this::verifyAgeCertificate, this::handleAgeCertificateRequest);
+                    exchange, SiteApiHandler::deserializeSignedAgeCertificate, this::handleSignedAgeCertificateRequest);
             default -> ExchangeUtils.sendStatusCode(exchange, StatusCodes.NOT_FOUND);
         }
     }
@@ -81,7 +87,7 @@ final class SiteApiHandler implements HttpHandler {
         requestDispatcher.dispatchWithResponseBody(
                 request,
                 exchange,
-                VerificationSession::deserialize,
+                SiteApiHandler::deserializeVerificationSession,
                 (response, session, ex) -> onVerificationSessionResponseReceived(accountId, response, session, ex));
     }
 
@@ -103,16 +109,17 @@ final class SiteApiHandler implements HttpHandler {
 
         authManager.onVerificationSessionReceived(session, exchange);
         verificationManager.onVerificationSessionReceived(accountId, session, exchange);
-        ExchangeUtils.sendResponseBody(exchange, "application/json", session, VerificationSession::serialize);
+        ExchangeUtils.sendResponseBody(exchange, "application/json", session, SiteApiHandler::serialize);
     }
 
-    /** Verifies a signed {@link AgeCertificate}. */
-    private AgeCertificate verifyAgeCertificate(byte[] signedCertificate) {
-        return AgeCertificate.verifyForSite(signedCertificate, avsPublicSigningKeyProvider.get(), siteIdProvider.get());
-    }
+    /** Processes a {@link SignedAgeCertificate}. */
+    private void handleSignedAgeCertificateRequest(
+            HttpServerExchange exchange, SignedAgeCertificate signedCertificate) {
+        if (!verifySignedAgeCertificate(exchange, signedCertificate)) {
+            return;
+        }
+        AgeCertificate certificate = signedCertificate.ageCertificate();
 
-    /** Handles a request to process an {@link AgeCertificate}. */
-    private void handleAgeCertificateRequest(HttpServerExchange exchange, AgeCertificate certificate) {
         int authStatusCode = authManager.onAgeCertificateReceived(certificate);
         if (authStatusCode != StatusCodes.OK) {
             ExchangeUtils.sendStatusCode(exchange, authStatusCode);
@@ -126,5 +133,51 @@ final class SiteApiHandler implements HttpHandler {
         }
 
         ExchangeUtils.sendStatusCode(exchange, StatusCodes.OK);
+    }
+
+    /** Verifies a {@link SignedAgeCertificate}, sending an error code if verification fails. */
+    private boolean verifySignedAgeCertificate(HttpServerExchange exchange, SignedAgeCertificate signedCertificate) {
+        if (!signedCertificate.verify(avsPublicSigningKeyProvider.get())) {
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.UNAUTHORIZED);
+            return false;
+        }
+
+        AgeCertificate certificate = signedCertificate.ageCertificate();
+        VerificationRequest request = certificate.verificationRequest();
+        if (!request.isIntendedRecipient(siteIdProvider.get())) {
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.FORBIDDEN);
+            return false;
+        }
+
+        if (request.isExpired()) {
+            ExchangeUtils.sendStatusCode(exchange, StatusCodes.GONE);
+            return false;
+        }
+
+        return true;
+    }
+
+    private static byte[] serialize(Object value) {
+        try {
+            return DataMapper.get().writeValueAsBytes(value);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("serialization failed", e);
+        }
+    }
+
+    private static VerificationSession deserializeVerificationSession(byte[] rawSession) {
+        return deserialize(rawSession, new TypeReference<>() {});
+    }
+
+    private static SignedAgeCertificate deserializeSignedAgeCertificate(byte[] rawSignedCertificate) {
+        return deserialize(rawSignedCertificate, new TypeReference<>() {});
+    }
+
+    private static <V> V deserialize(byte[] rawOjbect, TypeReference<V> valueTypeRef) {
+        try {
+            return DataMapper.get().readValue(rawOjbect, valueTypeRef);
+        } catch (IOException e) {
+            throw new RuntimeException("deserialization failed", e);
+        }
     }
 }
