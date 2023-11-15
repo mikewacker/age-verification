@@ -1,4 +1,4 @@
-package org.example.age.data;
+package org.example.age.data.user;
 
 import java.util.ArrayList;
 import java.util.Arrays;

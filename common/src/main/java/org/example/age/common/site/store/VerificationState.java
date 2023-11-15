@@ -1,6 +1,6 @@
 package org.example.age.common.site.store;
 
-import org.example.age.data.VerifiedUser;
+import org.example.age.data.user.VerifiedUser;
 
 /** Current state for age verification. Some fields may be conditionally present based on the status. */
 public final class VerificationState {

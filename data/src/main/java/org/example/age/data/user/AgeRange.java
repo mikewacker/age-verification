@@ -1,4 +1,4 @@
-package org.example.age.data;
+package org.example.age.data.user;
 
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -1,9 +1,9 @@
-package org.example.age.data.crypto;
+package org.example.age.data.crypto.internal;
 
 import java.security.SecureRandom;
 
 /** Utilities for random numbers generated using a cryptographically strong random number generator. */
-final class SecureRandomUtils {
+public final class SecureRandomUtils {
 
     private static final SecureRandom random = new SecureRandom();
 

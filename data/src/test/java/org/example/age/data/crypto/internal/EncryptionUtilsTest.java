@@ -1,4 +1,4 @@
-package org.example.age.data.crypto;
+package org.example.age.data.crypto.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

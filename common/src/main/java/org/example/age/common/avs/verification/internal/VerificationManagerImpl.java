@@ -18,12 +18,12 @@ import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.base.store.PendingStore;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.base.utils.internal.PendingStoreUtils;
-import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.user.VerifiedUser;
 
 @Singleton
 final class VerificationManagerImpl implements VerificationManager {

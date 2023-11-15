@@ -1,4 +1,4 @@
-package org.example.age.data.crypto;
+package org.example.age.data.crypto.internal;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -11,7 +11,7 @@ import java.security.Signature;
  *
  * <p>Only {@code Ed25519} keys are supported.</p>
  */
-final class SignatureUtils {
+public final class SignatureUtils {
 
     /** Signs the message, returning the signature. */
     public static byte[] sign(byte[] message, PrivateKey privateKey) {

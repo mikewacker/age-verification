@@ -1,4 +1,4 @@
-package org.example.age.data;
+package org.example.age.data.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.util.List;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.utils.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class VerifiedUserTest {

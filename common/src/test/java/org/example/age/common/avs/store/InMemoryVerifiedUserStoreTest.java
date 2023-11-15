@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import java.util.Optional;
 import javax.inject.Singleton;
-import org.example.age.data.VerifiedUser;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

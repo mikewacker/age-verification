@@ -1,9 +1,10 @@
-package org.example.age.data;
+package org.example.age.data.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /**

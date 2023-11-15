@@ -2,7 +2,7 @@ package org.example.age.common.avs.config;
 
 import java.security.PrivateKey;
 import java.time.Duration;
-import org.example.age.data.DataStyle;
+import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the age verification service. */

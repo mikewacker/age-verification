@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.data.DataMapper;
+import org.example.age.data.utils.DataMapper;
 
 /** Shared HTTP client for testing. */
 public final class TestClient {
