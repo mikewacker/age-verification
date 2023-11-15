@@ -1,7 +1,7 @@
 package org.example.age.common.api.data;
 
-import org.example.age.data.crypto.AuthKey;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 
 /**
  * Authentication data that is used to determine if two actions were performed by the same person.
@@ -14,6 +14,6 @@ public interface AuthMatchData {
     /** Matches two sets of data, determining if they came from the same person. */
     boolean match(AuthMatchData other);
 
-    /** Encrypts the data into an {@link AuthToken} (or returns an empty token). */
-    AuthToken encrypt(AuthKey key);
+    /** Encrypts the data into an {@link AesGcmEncryptionPackage} (or returns an empty token). */
+    AesGcmEncryptionPackage encrypt(Aes256Key key);
 }

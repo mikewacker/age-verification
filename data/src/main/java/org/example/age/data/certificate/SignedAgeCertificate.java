@@ -1,9 +1,11 @@
 package org.example.age.data.certificate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import org.example.age.data.DataMapper;
 import org.example.age.data.DataStyle;
 import org.example.age.data.crypto.DigitalSignature;
 import org.immutables.value.Value;
@@ -25,7 +27,8 @@ public interface SignedAgeCertificate {
 
     /** Signs the age certificate. */
     static SignedAgeCertificate sign(AgeCertificate certificate, PrivateKey privateKey) {
-        DigitalSignature signature = DigitalSignature.sign(certificate, privateKey);
+        byte[] rawCertificate = serialize(certificate);
+        DigitalSignature signature = DigitalSignature.sign(rawCertificate, privateKey);
         return of(certificate, signature);
     }
 
@@ -37,6 +40,16 @@ public interface SignedAgeCertificate {
 
     /** Verifies the signature against the age certificate, returning whether verification succeeded. */
     default boolean verify(PublicKey publicKey) {
-        return signature().verify(ageCertificate(), publicKey);
+        byte[] rawCertificate = serialize(ageCertificate());
+        return signature().verify(rawCertificate, publicKey);
+    }
+
+    /** Serializes an {@link AgeCertificate}. */
+    private static byte[] serialize(AgeCertificate certificate) {
+        try {
+            return DataMapper.get().writeValueAsBytes(certificate);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("serialization failed", e);
+        }
     }
 }

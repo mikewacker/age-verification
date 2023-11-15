@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.data.DataStyle;
-import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.internal.SerializationUtils;
 import org.immutables.value.Value;
 
@@ -16,17 +16,17 @@ import org.immutables.value.Value;
 public interface VerificationSession {
 
     /** Creates a verification session. */
-    static VerificationSession of(VerificationRequest request, AuthKey key) {
+    static VerificationSession of(VerificationRequest request, Aes256Key authKey) {
         return ImmutableVerificationSession.builder()
                 .verificationRequest(request)
-                .authKey(key)
+                .authKey(authKey)
                 .build();
     }
 
     /** Creates a verification session for the verification request. */
     static VerificationSession create(VerificationRequest request) {
-        AuthKey key = AuthKey.generate();
-        return of(request, key);
+        Aes256Key authKey = Aes256Key.generate();
+        return of(request, authKey);
     }
 
     /** Deserializes the session from raw bytes. */
@@ -37,8 +37,8 @@ public interface VerificationSession {
     /** Verification request. */
     VerificationRequest verificationRequest();
 
-    /** Ephemeral key used to encrypt any authentication data. */
-    AuthKey authKey();
+    /** Ephemeral key used to encrypt and decrypt authentication data. */
+    Aes256Key authKey();
 
     /** Serializes the session to raw bytes. */
     @Value.Lazy

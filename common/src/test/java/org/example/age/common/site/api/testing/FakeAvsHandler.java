@@ -19,7 +19,7 @@ import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.infra.api.exchange.ExchangeUtils;
 
@@ -106,7 +106,7 @@ public final class FakeAvsHandler implements HttpHandler {
     private AgeCertificate createAgeCertificate(SecureId pseudonym, HttpServerExchange exchange) {
         VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(pseudonym, 18);
-        AuthToken authToken =
+        AesGcmEncryptionPackage authToken =
                 authDataExtractor.tryExtract(exchange, code -> {}).get().encrypt(session.authKey());
         return AgeCertificate.of(request, user, authToken);
     }

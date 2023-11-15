@@ -12,7 +12,7 @@ import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.base.utils.internal.PendingStoreUtils;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.AuthKey;
+import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.SecureId;
 
 @Singleton
@@ -61,5 +61,5 @@ final class AuthManagerImpl implements AuthManager {
     }
 
     @SuppressWarnings("UnusedVariable") // false positive, see https://github.com/google/error-prone/issues/2713
-    private record PendingAuth(AuthMatchData localData, AuthKey key) {}
+    private record PendingAuth(AuthMatchData localData, Aes256Key key) {}
 }

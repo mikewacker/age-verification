@@ -19,8 +19,8 @@ import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.AuthKey;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,8 +32,8 @@ public final class AuthManagerTest {
     private AuthManager authManager;
     private AuthMatchDataExtractor authDataExtractor;
 
-    private static AuthKey authKey;
-    private static AuthKey otherAuthKey;
+    private static Aes256Key authKey;
+    private static Aes256Key otherAuthKey;
 
     @BeforeEach
     public void createAuthManagerEtAl() {
@@ -44,8 +44,8 @@ public final class AuthManagerTest {
 
     @BeforeAll
     public static void generateKeys() {
-        authKey = AuthKey.generate();
-        otherAuthKey = AuthKey.generate();
+        authKey = Aes256Key.generate();
+        otherAuthKey = Aes256Key.generate();
     }
 
     @Test
@@ -104,7 +104,7 @@ public final class AuthManagerTest {
         return createSession(authKey);
     }
 
-    private static VerificationSession createSession(AuthKey authKey) {
+    private static VerificationSession createSession(Aes256Key authKey) {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         return VerificationSession.of(request, authKey);
     }
@@ -114,7 +114,7 @@ public final class AuthManagerTest {
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
         AuthMatchData authData =
                 authDataExtractor.tryExtract(exchange, code -> {}).get();
-        AuthToken authToken = authData.encrypt(authKey);
+        AesGcmEncryptionPackage authToken = authData.encrypt(authKey);
         return AgeCertificate.of(request, user, authToken);
     }
 

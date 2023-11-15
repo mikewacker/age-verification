@@ -9,8 +9,9 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.data.crypto.AuthKey;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
+import org.example.age.data.crypto.BytesValue;
 import org.example.age.testing.api.FakeCodeSender;
 import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,12 +20,12 @@ import org.junit.jupiter.api.Test;
 public final class UserAgentAuthMatchDataExtractorTest {
 
     private static AuthMatchDataExtractor extractor;
-    private static AuthKey key;
+    private static Aes256Key key;
 
     @BeforeAll
     public static void createAuthMatchDataExtractorEtAl() {
         extractor = TestComponent.createAuthMatchDataExtractor();
-        key = AuthKey.generate();
+        key = Aes256Key.generate();
     }
 
     @Test
@@ -51,7 +52,8 @@ public final class UserAgentAuthMatchDataExtractorTest {
     @Test
     public void sendError_DecryptionFails() {
         FakeCodeSender sender = FakeCodeSender.create();
-        AuthToken token = AuthToken.empty();
+        AesGcmEncryptionPackage token =
+                AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
         Optional<AuthMatchData> maybeData = extractor.tryDecrypt(token, key, sender);
         assertThat(maybeData).isEmpty();
         assertThat(sender.tryGet()).hasValue(401);

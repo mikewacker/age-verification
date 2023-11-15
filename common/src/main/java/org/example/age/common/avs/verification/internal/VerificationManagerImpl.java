@@ -22,7 +22,7 @@ import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.AuthToken;
+import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 
 @Singleton
@@ -99,12 +99,13 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         PendingVerification pendingVerification = maybePendingVerification.get();
-        Optional<AuthToken> maybeAuthToken = tryExtractAuthToken(exchange, pendingVerification.verificationSession());
+        Optional<AesGcmEncryptionPackage> maybeAuthToken =
+                tryExtractAuthToken(exchange, pendingVerification.verificationSession());
         if (maybeAuthToken.isEmpty()) {
             return HttpOptional.empty(StatusCodes.BAD_REQUEST);
         }
 
-        AuthToken authToken = maybeAuthToken.get();
+        AesGcmEncryptionPackage authToken = maybeAuthToken.get();
         AgeCertificate certificate = createAgeCertificate(user, pendingVerification, authToken);
         SiteLocation location = pendingVerification.siteConfig().siteLocation();
         Verification verification = Verification.of(certificate, location);
@@ -119,7 +120,7 @@ final class VerificationManagerImpl implements VerificationManager {
 
     /** Creates an {@link AgeCertificate} from a {@link VerifiedUser} and a pending verification request. */
     private AgeCertificate createAgeCertificate(
-            VerifiedUser user, PendingVerification pendingVerification, AuthToken authToken) {
+            VerifiedUser user, PendingVerification pendingVerification, AesGcmEncryptionPackage authToken) {
         VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
         VerifiedUser localizedUser = localizeUser(user, pendingVerification.siteConfig());
         return AgeCertificate.of(request, localizedUser, authToken);
@@ -130,15 +131,16 @@ final class VerificationManagerImpl implements VerificationManager {
         return user.localize(siteConfig.pseudonymKey()).anonymizeAge(siteConfig.ageThresholds());
     }
 
-    /** Extracts an encrypted {@link AuthToken} from an {@link HttpServerExchange}. */
-    private Optional<AuthToken> tryExtractAuthToken(HttpServerExchange exchange, VerificationSession session) {
+    /** Extracts an auth token from an {@link HttpServerExchange}. */
+    private Optional<AesGcmEncryptionPackage> tryExtractAuthToken(
+            HttpServerExchange exchange, VerificationSession session) {
         Optional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange, code -> {});
         if (maybeAuthData.isEmpty()) {
             return Optional.empty();
         }
 
         AuthMatchData authData = maybeAuthData.get();
-        AuthToken authToken = authData.encrypt(session.authKey());
+        AesGcmEncryptionPackage authToken = authData.encrypt(session.authKey());
         return Optional.of(authToken);
     }
 
