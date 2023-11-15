@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Optional;
-import org.example.age.data.DataMapper;
-import org.example.age.data.VerifiedUser;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.user.VerifiedUser;
+import org.example.age.data.utils.DataMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

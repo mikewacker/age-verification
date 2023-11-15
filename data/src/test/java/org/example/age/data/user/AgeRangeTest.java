@@ -1,4 +1,4 @@
-package org.example.age.data;
+package org.example.age.data.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
 import java.io.IOException;
+import org.example.age.data.utils.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {

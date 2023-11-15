@@ -2,7 +2,7 @@ package org.example.age.common.avs.config;
 
 import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;
-import org.example.age.data.DataStyle;
+import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /**

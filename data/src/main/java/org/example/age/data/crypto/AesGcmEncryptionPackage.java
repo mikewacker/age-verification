@@ -3,7 +3,8 @@ package org.example.age.data.crypto;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Optional;
-import org.example.age.data.DataStyle;
+import org.example.age.data.crypto.internal.EncryptionUtils;
+import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** Encryption package for plaintext encrypted using AES-256/GCM. */

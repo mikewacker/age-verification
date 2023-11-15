@@ -3,6 +3,7 @@ package org.example.age.data.crypto;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.example.age.data.crypto.internal.SecureRandomImmutableBytes;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /** AES-256 key. */

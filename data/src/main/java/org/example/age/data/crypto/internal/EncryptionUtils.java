@@ -1,4 +1,4 @@
-package org.example.age.data.crypto;
+package org.example.age.data.crypto.internal;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -12,7 +12,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /** Utilities for encryption using AES/GCM. */
-final class EncryptionUtils {
+public final class EncryptionUtils {
 
     /** Encrypts the plaintext using the key and the IV, returning the ciphertext. */
     public static byte[] encrypt(byte[] plaintext, byte[] key, byte[] iv) {

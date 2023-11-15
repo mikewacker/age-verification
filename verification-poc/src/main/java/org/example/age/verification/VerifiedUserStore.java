@@ -1,7 +1,7 @@
 package org.example.age.verification;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.example.age.data.VerifiedUser;
+import org.example.age.data.user.VerifiedUser;
 
 /** Site or service that stores users whose age and guardians (if applicable) are verified. */
 @VisibleForTesting // and for demo

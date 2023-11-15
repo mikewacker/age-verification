@@ -1,4 +1,4 @@
-package org.example.age.data;
+package org.example.age.data.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -1,4 +1,4 @@
-package org.example.age.data;
+package org.example.age.data.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -13,6 +13,7 @@ public final class DataMapper {
         return mapper;
     }
 
+    /** Creates the {@link ObjectMapper} singleton. */
     private static ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new GuavaModule());

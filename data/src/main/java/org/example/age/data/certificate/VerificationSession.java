@@ -2,8 +2,8 @@ package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.example.age.data.DataStyle;
 import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** Session to pseudonymously verify a person's age (and guardians, if applicable). */

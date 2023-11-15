@@ -2,8 +2,8 @@ package org.example.age.common.site.config;
 
 import java.security.PublicKey;
 import java.time.Duration;
-import org.example.age.data.DataStyle;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */

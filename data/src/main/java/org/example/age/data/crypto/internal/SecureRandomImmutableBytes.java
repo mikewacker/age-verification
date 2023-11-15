@@ -1,4 +1,4 @@
-package org.example.age.data.crypto;
+package org.example.age.data.crypto.internal;
 
 import org.example.age.data.internal.ImmutableBytes;
 
@@ -6,7 +6,7 @@ import org.example.age.data.internal.ImmutableBytes;
  * Type that is backed by immutable bytes of a fixed length; the bytes are generated using
  * a cryptographically strong random number generator. The type can also be serialized as URL-friendly base64 text.
  */
-abstract class SecureRandomImmutableBytes extends ImmutableBytes {
+public abstract class SecureRandomImmutableBytes extends ImmutableBytes {
 
     /** Creates immutable bytes from a copy of the raw bytes, checking the length of the bytes. */
     protected SecureRandomImmutableBytes(byte[] bytes, int expectedLength) {

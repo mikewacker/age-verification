@@ -1,7 +1,7 @@
 package org.example.age.common.avs.store;
 
 import java.util.Optional;
-import org.example.age.data.VerifiedUser;
+import org.example.age.data.user.VerifiedUser;
 
 /**
  * Persistent store of {@link VerifiedUser}'s for accounts.

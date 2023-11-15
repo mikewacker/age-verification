@@ -6,13 +6,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.example.age.data.AgeRange;
-import org.example.age.data.AgeThresholds;
-import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.user.AgeRange;
+import org.example.age.data.user.AgeThresholds;
+import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
