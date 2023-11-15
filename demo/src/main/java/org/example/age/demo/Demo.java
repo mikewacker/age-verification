@@ -9,6 +9,7 @@ import java.util.Map;
 import org.example.age.data.AgeThresholds;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.verification.AvsApi;
 import org.example.age.verification.AvsUi;
@@ -141,10 +142,9 @@ public final class Demo {
             implements SiteApi {
 
         @Override
-        public void processAgeCertificate(byte[] signedCertificate) {
+        public void processAgeCertificate(SignedAgeCertificate signedCertificate) {
             delegate.processAgeCertificate(signedCertificate);
-            AgeCertificate certificate =
-                    AgeCertificate.verifyForSite(signedCertificate, avsApi.getPublicSigningKey(), siteId);
+            AgeCertificate certificate = signedCertificate.ageCertificate();
             certificateStore.put(certificate.verificationRequest().id(), certificate);
         }
     }

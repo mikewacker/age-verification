@@ -38,7 +38,7 @@ public interface VerificationRequest {
     /** ID of the site. */
     String siteId();
 
-    /** Epoch time when the request expires. */
+    /** Timestamp (in seconds) when the request expires. */
     long expiration();
 
     /** Determines if the request is intended for a site. */

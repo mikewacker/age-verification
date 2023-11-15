@@ -1,5 +1,6 @@
 package org.example.age.common.site.api.testing;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.net.HostAndPort;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -15,8 +16,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
+import org.example.age.data.DataMapper;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
@@ -70,7 +73,7 @@ public final class FakeAvsHandler implements HttpHandler {
 
         String siteId = maybeSiteId.get();
         session = createVerificationSession(siteId);
-        ExchangeUtils.sendResponseBody(exchange, "application/json", session, VerificationSession::serialize);
+        ExchangeUtils.sendResponseBody(exchange, "application/json", session, FakeAvsHandler::serialize);
     }
 
     /** Handles a request to send an {@link AgeCertificate} for the provided pseudonym. */
@@ -89,7 +92,8 @@ public final class FakeAvsHandler implements HttpHandler {
 
         SecureId pseudonym = maybePseudonym.get();
         AgeCertificate certificate = createAgeCertificate(pseudonym, exchange);
-        byte[] signedCertificate = certificate.sign(privateSigningKeyProvider.get());
+        SignedAgeCertificate signedCertificate =
+                SignedAgeCertificate.sign(certificate, privateSigningKeyProvider.get());
         session = null;
         Request request = createAgeCertificateRequest(signedCertificate);
         requestDispatcher.dispatchWithoutResponseBody(
@@ -112,7 +116,8 @@ public final class FakeAvsHandler implements HttpHandler {
     }
 
     /** Creates a request to transmit the signed age certificate. */
-    private Request createAgeCertificateRequest(byte[] signedCertificate) {
+    private Request createAgeCertificateRequest(SignedAgeCertificate signedCertificate) {
+        byte[] rawSignedCertificate = serialize(signedCertificate);
         HostAndPort siteHostAndPort = siteHostAndPortProvider.get();
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
@@ -122,7 +127,15 @@ public final class FakeAvsHandler implements HttpHandler {
                 .build();
         return new Request.Builder()
                 .url(url)
-                .post(RequestBody.create(signedCertificate))
+                .post(RequestBody.create(rawSignedCertificate))
                 .build();
+    }
+
+    private static byte[] serialize(Object value) {
+        try {
+            return DataMapper.get().writeValueAsBytes(value);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("serialization failed", e);
+        }
     }
 }

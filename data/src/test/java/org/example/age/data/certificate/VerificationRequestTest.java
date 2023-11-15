@@ -2,14 +2,16 @@ package org.example.age.data.certificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.data.internal.SerializationUtils;
+import org.example.age.data.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {
 
-    private static final String SITE_ID = "MySite";
+    private static final String SITE_ID = "Site";
     private static final Duration EXPIRES_IN = Duration.ofMinutes(5);
 
     @Test
@@ -47,10 +49,10 @@ public final class VerificationRequestTest {
     }
 
     @Test
-    public void serializeThenDeserialize() {
+    public void serializeThenDeserialize() throws IOException {
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
-        byte[] bytes = SerializationUtils.serialize(request);
-        VerificationRequest deserializedRequest = SerializationUtils.deserialize(bytes, VerificationRequest.class);
-        assertThat(deserializedRequest).isEqualTo(request);
+        byte[] rawRequest = DataMapper.get().writeValueAsBytes(request);
+        VerificationRequest rtRequest = DataMapper.get().readValue(rawRequest, new TypeReference<>() {});
+        assertThat(rtRequest).isEqualTo(request);
     }
 }

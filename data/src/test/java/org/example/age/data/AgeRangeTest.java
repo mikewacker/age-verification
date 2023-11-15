@@ -3,8 +3,9 @@ package org.example.age.data;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
-import org.example.age.data.internal.SerializationUtils;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {
@@ -80,45 +81,41 @@ public final class AgeRangeTest {
     }
 
     @Test
-    public void serializeThenDeserialize_Of() {
+    public void serializeThenDeserialize_Of() throws IOException {
         AgeRange ageRange = AgeRange.of(13, 18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_At() {
+    public void serializeThenDeserialize_At() throws IOException {
         AgeRange ageRange = AgeRange.at(18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_AtOrAbove() {
+    public void serializeThenDeserialize_AtOrAbove() throws IOException {
         AgeRange ageRange = AgeRange.atOrAbove(18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_Below() {
+    public void serializeThenDeserialize_Below() throws IOException {
         AgeRange ageRange = AgeRange.below(13);
         serializeThenDeserialize(ageRange);
     }
 
-    private void serializeThenDeserialize(AgeRange ageRange) {
-        byte[] bytes = SerializationUtils.serialize(ageRange);
-        AgeRange deserializedAgeRange = SerializationUtils.deserialize(bytes, AgeRange.class);
-        assertThat(deserializedAgeRange).isEqualTo(ageRange);
+    private void serializeThenDeserialize(AgeRange ageRange) throws IOException {
+        byte[] rawAgeRange = DataMapper.get().writeValueAsBytes(ageRange);
+        AgeRange rtAgeRange = DataMapper.get().readValue(rawAgeRange, new TypeReference<>() {});
+        assertThat(rtAgeRange).isEqualTo(ageRange);
     }
 
     @Test
     public void equals() {
-        AgeRange ageRange1 = AgeRange.of(13, 18);
-        AgeRange ageRange2 = AgeRange.of(13, 18);
-        AgeRange ageRange3 = AgeRange.atOrAbove(18);
-        AgeRange ageRange4 = AgeRange.below(13);
         new EqualsTester()
-                .addEqualityGroup(ageRange1, ageRange2)
-                .addEqualityGroup(ageRange3)
-                .addEqualityGroup(ageRange4)
+                .addEqualityGroup(AgeRange.of(13, 18), AgeRange.of(13, 18))
+                .addEqualityGroup(AgeRange.atOrAbove(18))
+                .addEqualityGroup(AgeRange.below(13))
                 .testEquals();
     }
 

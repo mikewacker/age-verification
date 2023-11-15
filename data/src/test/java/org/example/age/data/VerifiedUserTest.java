@@ -2,9 +2,10 @@ package org.example.age.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
 import java.util.List;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.internal.SerializationUtils;
 import org.junit.jupiter.api.Test;
 
 public final class VerifiedUserTest {
@@ -36,10 +37,10 @@ public final class VerifiedUserTest {
     }
 
     @Test
-    public void serializeThenDeserialize() {
+    public void serializeThenDeserialize() throws IOException {
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        byte[] bytes = SerializationUtils.serialize(user);
-        VerifiedUser deserializedUser = SerializationUtils.deserialize(bytes, VerifiedUser.class);
-        assertThat(deserializedUser).isEqualTo(user);
+        byte[] rawUser = DataMapper.get().writeValueAsBytes(user);
+        VerifiedUser rtUser = DataMapper.get().readValue(rawUser, new TypeReference<>() {});
+        assertThat(rtUser).isEqualTo(user);
     }
 }

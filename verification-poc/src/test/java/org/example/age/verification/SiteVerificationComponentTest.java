@@ -13,6 +13,7 @@ import org.assertj.core.api.ThrowableAssert;
 import org.example.age.data.AgeRange;
 import org.example.age.data.VerifiedUser;
 import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
@@ -194,7 +195,8 @@ public final class SiteVerificationComponentTest {
             AesGcmEncryptionPackage authToken =
                     AesGcmEncryptionPackage.of(BytesValue.ofBytes(new byte[1]), BytesValue.ofBytes(new byte[1]));
             AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
-            byte[] signedCertificate = certificate.sign(signingKeyPair.getPrivate());
+            SignedAgeCertificate signedCertificate =
+                    SignedAgeCertificate.sign(certificate, signingKeyPair.getPrivate());
             siteApi.processAgeCertificate(signedCertificate);
         }
 
