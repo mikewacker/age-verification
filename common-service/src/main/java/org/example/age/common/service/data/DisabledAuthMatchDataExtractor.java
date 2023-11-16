@@ -1,6 +1,5 @@
 package org.example.age.common.service.data;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Inject;
@@ -15,7 +14,7 @@ final class DisabledAuthMatchDataExtractor extends AuthMatchDataExtractor {
 
     @Inject
     public DisabledAuthMatchDataExtractor(ObjectMapper mapper) {
-        super(mapper, new TypeReference<DisabledAuthMatchData>() {});
+        super(mapper);
     }
 
     @Override
