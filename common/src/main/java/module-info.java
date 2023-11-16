@@ -4,8 +4,6 @@ module org.example.age.common {
     exports org.example.age.common.avs.store;
     exports org.example.age.common.base.store;
     exports org.example.age.common.site.api;
-    exports org.example.age.common.site.config;
-    exports org.example.age.common.site.store;
 
     requires static org.immutables.value.annotations;
     requires com.fasterxml.jackson.databind;
@@ -20,6 +18,7 @@ module org.example.age.common {
     requires org.example.age.common.api;
     requires org.example.age.data;
     requires org.example.age.infra.api;
+    requires org.example.age.site.service;
     requires undertow.core;
     requires xnio.api;
 }

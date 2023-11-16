@@ -11,12 +11,12 @@ import javax.inject.Singleton;
 import org.example.age.common.base.store.PendingStore;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.base.utils.internal.PendingStoreUtils;
-import org.example.age.common.site.store.VerificationState;
-import org.example.age.common.site.store.VerificationStore;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.site.service.store.VerificationState;
+import org.example.age.site.service.store.VerificationStore;
 
 @Singleton
 final class VerificationManagerImpl implements VerificationManager {

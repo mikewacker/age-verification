@@ -1,4 +1,4 @@
-package org.example.age.common.site.store;
+package org.example.age.site.service.store;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

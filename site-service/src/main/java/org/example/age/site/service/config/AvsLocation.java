@@ -1,4 +1,4 @@
-package org.example.age.common.site.config;
+package org.example.age.site.service.config;
 
 import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;

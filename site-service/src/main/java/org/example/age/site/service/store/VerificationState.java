@@ -1,4 +1,4 @@
-package org.example.age.common.site.store;
+package org.example.age.site.service.store;
 
 import org.example.age.data.user.VerifiedUser;
 
@@ -6,7 +6,7 @@ import org.example.age.data.user.VerifiedUser;
 public final class VerificationState {
 
     private final VerificationStatus status;
-    private final VerifiedUser verifiedUser;
+    private final VerifiedUser user;
     private final Long expiration;
 
     /** Creates an unverified state. */
@@ -14,12 +14,12 @@ public final class VerificationState {
         return new VerificationState(VerificationStatus.UNVERIFIED, null, null);
     }
 
-    /** Creates a verified state. */
-    public static VerificationState verified(VerifiedUser verifiedUser, long expiration) {
-        return new VerificationState(VerificationStatus.VERIFIED, verifiedUser, expiration);
+    /** Creates a verified state with an expiration timestamp (in seconds). */
+    public static VerificationState verified(VerifiedUser user, long expiration) {
+        return new VerificationState(VerificationStatus.VERIFIED, user, expiration);
     }
 
-    /** Creates an expired state. */
+    /** Creates an expired state with an expiration timestamp (in seconds). */
     public static VerificationState expired(long expiration) {
         return new VerificationState(VerificationStatus.EXPIRED, null, expiration);
     }
@@ -36,7 +36,7 @@ public final class VerificationState {
 
     /** Gets the verified user, once the user is verified. */
     public VerifiedUser verifiedUser() {
-        return checkAttributeSet(verifiedUser);
+        return checkAttributeSet(user);
     }
 
     /** Gets the epoch time when the user's verified status expired or will expire. */
@@ -51,7 +51,7 @@ public final class VerificationState {
         }
 
         long now = System.currentTimeMillis() / 1000;
-        if (now < expiration) {
+        if (now <= expiration) {
             return this;
         }
 
@@ -68,9 +68,9 @@ public final class VerificationState {
         return attribute;
     }
 
-    private VerificationState(VerificationStatus status, VerifiedUser verifiedUser, Long expiration) {
+    private VerificationState(VerificationStatus status, VerifiedUser user, Long expiration) {
         this.status = status;
-        this.verifiedUser = verifiedUser;
+        this.user = user;
         this.expiration = expiration;
     }
 }
