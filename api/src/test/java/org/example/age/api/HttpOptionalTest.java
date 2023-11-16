@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.testing.EqualsTester;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 public final class HttpOptionalTest {
@@ -26,6 +27,20 @@ public final class HttpOptionalTest {
         assertThat(maybeValue.isPresent()).isFalse();
         assertThat(maybeValue.statusCode()).isEqualTo(500);
         assertThat(maybeValue.toString()).isEqualTo("HttpOptional.empty[500]");
+    }
+
+    @Test
+    public void fromOptional_Of() {
+        HttpOptional<String> maybeValue = HttpOptional.fromOptional(Optional.of("a"), 500);
+        assertThat(maybeValue.isPresent()).isTrue();
+        assertThat(maybeValue.get()).isEqualTo("a");
+    }
+
+    @Test
+    public void fromOptional_Empty() {
+        HttpOptional<String> maybeValue = HttpOptional.fromOptional(Optional.empty(), 500);
+        assertThat(maybeValue.isPresent()).isFalse();
+        assertThat(maybeValue.statusCode()).isEqualTo(500);
     }
 
     @Test

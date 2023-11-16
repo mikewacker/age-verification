@@ -2,6 +2,7 @@ package org.example.age.api;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 
 /** A non-null value and a 200 status code, or an error status code if the value is empty. */
 public final class HttpOptional<V> {
@@ -9,15 +10,20 @@ public final class HttpOptional<V> {
     private final V value;
     private final int statusCode;
 
-    /** Creates a {@link HttpOptional} with the provided value and a 200 status code. */
+    /** Creates an {@link HttpOptional} with a value and a 200 status code. */
     public static <V> HttpOptional<V> of(V value) {
         Objects.requireNonNull(value);
         return new HttpOptional<>(value, 200);
     }
 
-    /** Creates an empty {@link HttpOptional} with the provided status code. */
+    /** Creates an empty {@link HttpOptional} with an error status code. */
     public static <V> HttpOptional<V> empty(int statusCode) {
         return new HttpOptional<>(null, statusCode);
+    }
+
+    /** Creates an {@link HttpOptional} from an {@link Optional} and an error status code to use for empty values. */
+    public static <V> HttpOptional<V> fromOptional(Optional<V> maybeValue, int statusCode) {
+        return maybeValue.isPresent() ? of(maybeValue.get()) : empty(statusCode);
     }
 
     /** Determines if a value is empty. */
