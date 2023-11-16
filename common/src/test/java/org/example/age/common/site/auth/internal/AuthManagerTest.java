@@ -115,8 +115,7 @@ public final class AuthManagerTest {
     private AgeCertificate createCertification(VerificationSession session, HttpServerExchange exchange) {
         VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        AuthMatchData authData =
-                authDataExtractor.tryExtract(exchange, code -> {}).get();
+        AuthMatchData authData = authDataExtractor.tryExtract(exchange).get();
         AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, authKey);
         return AgeCertificate.of(request, user, authToken);
     }

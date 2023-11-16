@@ -99,10 +99,10 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         PendingVerification pendingVerification = maybePendingVerification.get();
-        Optional<AesGcmEncryptionPackage> maybeAuthToken =
+        HttpOptional<AesGcmEncryptionPackage> maybeAuthToken =
                 tryExtractAuthToken(exchange, pendingVerification.verificationSession());
         if (maybeAuthToken.isEmpty()) {
-            return HttpOptional.empty(StatusCodes.BAD_REQUEST);
+            return HttpOptional.empty(maybeAuthToken.statusCode());
         }
 
         AesGcmEncryptionPackage authToken = maybeAuthToken.get();
@@ -132,16 +132,16 @@ final class VerificationManagerImpl implements VerificationManager {
     }
 
     /** Extracts an auth token from an {@link HttpServerExchange}. */
-    private Optional<AesGcmEncryptionPackage> tryExtractAuthToken(
+    private HttpOptional<AesGcmEncryptionPackage> tryExtractAuthToken(
             HttpServerExchange exchange, VerificationSession session) {
-        Optional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange, code -> {});
+        HttpOptional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange);
         if (maybeAuthData.isEmpty()) {
-            return Optional.empty();
+            return HttpOptional.empty(maybeAuthData.statusCode());
         }
 
         AuthMatchData authData = maybeAuthData.get();
         AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, session.authKey());
-        return Optional.of(authToken);
+        return HttpOptional.of(authToken);
     }
 
     /** Pending verification request for a specific site. */

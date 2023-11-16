@@ -5,6 +5,7 @@ import io.undertow.util.StatusCodes;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.store.PendingStore;
@@ -14,6 +15,7 @@ import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.infra.api.exchange.ExchangeUtils;
 
 @Singleton
 final class AuthManagerImpl implements AuthManager {
@@ -30,8 +32,9 @@ final class AuthManagerImpl implements AuthManager {
     @Override
     public void onVerificationSessionReceived(VerificationSession session, HttpServerExchange exchange) {
         SecureId requestId = session.verificationRequest().id();
-        Optional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange, code -> {});
+        HttpOptional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange);
         if (maybeAuthData.isEmpty()) {
+            ExchangeUtils.sendStatusCode(exchange, maybeAuthData.statusCode());
             return;
         }
 
@@ -49,10 +52,10 @@ final class AuthManagerImpl implements AuthManager {
         }
 
         PendingAuth pendingAuth = maybePendingAuth.get();
-        Optional<AuthMatchData> maybeRemoteAuthData =
-                authDataExtractor.tryDecrypt(certificate.authToken(), pendingAuth.key(), code -> {});
+        HttpOptional<AuthMatchData> maybeRemoteAuthData =
+                authDataExtractor.tryDecrypt(certificate.authToken(), pendingAuth.key());
         if (maybeRemoteAuthData.isEmpty()) {
-            return StatusCodes.UNAUTHORIZED;
+            return maybeRemoteAuthData.statusCode();
         }
 
         AuthMatchData remoteAuthData = maybeRemoteAuthData.get();

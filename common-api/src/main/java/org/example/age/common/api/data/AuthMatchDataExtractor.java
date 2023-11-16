@@ -7,12 +7,12 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.util.Optional;
-import org.example.age.api.Sender;
+import org.example.age.api.HttpOptional;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 
 /**
- * Extracts {@link AuthMatchData} from an {@link HttpServerExchange}, or sends an error status code.
+ * Extracts {@link AuthMatchData} from an {@link HttpServerExchange}, or returns an error status code.
  *
  * <p>Also encrypts and decrypts the {@link AuthMatchData}.</p>
  */
@@ -21,8 +21,8 @@ public abstract class AuthMatchDataExtractor {
     private final ObjectMapper mapper;
     private final TypeReference<? extends AuthMatchData> dataTypeRef;
 
-    /** Extracts {@link AuthMatchData} from an {@link HttpServerExchange}, or sends an error status code. */
-    public abstract Optional<AuthMatchData> tryExtract(HttpServerExchange exchange, Sender sender);
+    /** Extracts {@link AuthMatchData} from an {@link HttpServerExchange}, or returns an error status code. */
+    public abstract HttpOptional<AuthMatchData> tryExtract(HttpServerExchange exchange);
 
     /** Encrypts {@link AuthMatchData}. */
     public final AesGcmEncryptionPackage encrypt(AuthMatchData data, Aes256Key key) {
@@ -30,16 +30,15 @@ public abstract class AuthMatchDataExtractor {
         return AesGcmEncryptionPackage.encrypt(rawData, key);
     }
 
-    /** Decrypts {@link AuthMatchData}, or sends an error status code. */
-    public final Optional<AuthMatchData> tryDecrypt(AesGcmEncryptionPackage token, Aes256Key key, Sender sender) {
+    /** Decrypts {@link AuthMatchData}, or returns an error status code. */
+    public final HttpOptional<AuthMatchData> tryDecrypt(AesGcmEncryptionPackage token, Aes256Key key) {
         Optional<byte[]> maybeRawData = token.tryDecrypt(key);
         if (maybeRawData.isEmpty()) {
-            sender.sendError(StatusCodes.UNAUTHORIZED);
-            return Optional.empty();
+            return HttpOptional.empty(StatusCodes.UNAUTHORIZED);
         }
         byte[] rawData = maybeRawData.get();
 
-        return tryDeserialize(rawData, sender);
+        return tryDeserialize(rawData);
     }
 
     protected AuthMatchDataExtractor(ObjectMapper mapper, TypeReference<? extends AuthMatchData> dataTypeRef) {
@@ -56,14 +55,13 @@ public abstract class AuthMatchDataExtractor {
         }
     }
 
-    /** Deserializes {@link AuthMatchData}, or sends a 400 error. */
-    private Optional<AuthMatchData> tryDeserialize(byte[] rawData, Sender sender) {
+    /** Deserializes {@link AuthMatchData}, or returns a 400 error. */
+    private HttpOptional<AuthMatchData> tryDeserialize(byte[] rawData) {
         try {
             AuthMatchData data = mapper.readValue(rawData, dataTypeRef);
-            return Optional.of(data);
+            return HttpOptional.of(data);
         } catch (IOException e) {
-            sender.sendError(StatusCodes.BAD_REQUEST);
-            return Optional.empty();
+            return HttpOptional.empty(StatusCodes.BAD_REQUEST);
         }
     }
 }

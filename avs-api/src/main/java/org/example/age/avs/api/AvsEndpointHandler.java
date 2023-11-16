@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.api.data.AuthMatchData;
@@ -55,8 +55,9 @@ final class AvsEndpointHandler implements HttpHandler {
     private void handleVerificationSession(HttpServerExchange exchange, RequestParser parser) {
         JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange, mapper);
 
-        Optional<String> maybeSiteId = parser.tryGetQueryParameter("site-id");
+        HttpOptional<String> maybeSiteId = parser.tryGetQueryParameter("site-id");
         if (maybeSiteId.isEmpty()) {
+            sender.sendError(maybeSiteId.statusCode());
             return;
         }
         String siteId = maybeSiteId.get();
@@ -68,14 +69,16 @@ final class AvsEndpointHandler implements HttpHandler {
     private void handleLinkedVerificationRequest(HttpServerExchange exchange, RequestParser parser) {
         CodeSender sender = ExchangeCodeSender.create(exchange);
 
-        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
+        HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
+            sender.sendError(maybeAccountId.statusCode());
             return;
         }
         String accountId = maybeAccountId.get();
 
-        Optional<SecureId> maybeRequestId = parser.tryGetQueryParameter("request-id", new TypeReference<>() {});
+        HttpOptional<SecureId> maybeRequestId = parser.tryGetQueryParameter("request-id", new TypeReference<>() {});
         if (maybeRequestId.isEmpty()) {
+            sender.sendError(maybeRequestId.statusCode());
             return;
         }
         SecureId requestId = maybeRequestId.get();
@@ -87,14 +90,16 @@ final class AvsEndpointHandler implements HttpHandler {
     private void handleAgeCertificate(HttpServerExchange exchange) {
         CodeSender sender = ExchangeCodeSender.create(exchange);
 
-        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, sender);
+        HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
+            sender.sendError(maybeAccountId.statusCode());
             return;
         }
         String accountId = maybeAccountId.get();
 
-        Optional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange, sender);
+        HttpOptional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange);
         if (maybeAuthData.isEmpty()) {
+            sender.sendError(maybeAuthData.statusCode());
             return;
         }
         AuthMatchData authData = maybeAuthData.get();

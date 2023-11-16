@@ -5,7 +5,7 @@ import io.undertow.util.StatusCodes;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.Sender;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AccountIdExtractor;
 
 /** Extracts an account ID from the custom {@code Account-Id} header, or sends a 401 error. */
@@ -16,12 +16,9 @@ final class TestAccountIdExtractor implements AccountIdExtractor {
     public TestAccountIdExtractor() {}
 
     @Override
-    public Optional<String> tryExtract(HttpServerExchange exchange, Sender sender) {
+    public HttpOptional<String> tryExtract(HttpServerExchange exchange) {
         Optional<String> maybeAccountId =
                 Optional.ofNullable(exchange.getRequestHeaders().getFirst("Account-Id"));
-        if (maybeAccountId.isEmpty()) {
-            sender.sendError(StatusCodes.UNAUTHORIZED);
-        }
-        return maybeAccountId;
+        return HttpOptional.fromOptional(maybeAccountId, StatusCodes.UNAUTHORIZED);
     }
 }

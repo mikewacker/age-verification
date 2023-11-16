@@ -7,7 +7,6 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.security.PublicKey;
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -16,6 +15,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.common.site.auth.internal.AuthManager;
@@ -76,9 +76,9 @@ final class SiteApiHandler implements HttpHandler {
 
     /** Handles a request to create a {@link VerificationSession} for an account. */
     private void handleVerificationSessionRequest(HttpServerExchange exchange) {
-        Optional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange, code -> {});
+        HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
-            ExchangeUtils.sendStatusCode(exchange, StatusCodes.UNAUTHORIZED);
+            ExchangeUtils.sendStatusCode(exchange, maybeAccountId.statusCode());
             return;
         }
 
