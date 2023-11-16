@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.data.certificate.AgeCertificate;
@@ -110,8 +111,9 @@ public final class FakeAvsHandler implements HttpHandler {
     private AgeCertificate createAgeCertificate(SecureId pseudonym, HttpServerExchange exchange) {
         VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(pseudonym, 18);
-        AesGcmEncryptionPackage authToken =
-                authDataExtractor.tryExtract(exchange, code -> {}).get().encrypt(session.authKey());
+        AuthMatchData authData =
+                authDataExtractor.tryExtract(exchange, code -> {}).get();
+        AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, session.authKey());
         return AgeCertificate.of(request, user, authToken);
     }
 

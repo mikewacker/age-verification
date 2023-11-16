@@ -1,20 +1,25 @@
 package org.example.age.common.service.data;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.data.crypto.Aes256Key;
-import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
+import org.example.age.data.utils.DataStyle;
+import org.immutables.value.Value;
 
-/** Always returns a successful match. */
-final class DisabledAuthMatchData implements AuthMatchData {
+/** {@link AuthMatchData} that always returns a successful match. */
+@Value.Immutable
+@DataStyle
+@JsonSerialize(as = ImmutableDisabledAuthMatchData.class)
+@JsonDeserialize(as = ImmutableDisabledAuthMatchData.class)
+public interface DisabledAuthMatchData extends AuthMatchData {
 
-    @Override
-    public boolean match(AuthMatchData other) {
-        return true;
+    /** Creates authentication data. */
+    static AuthMatchData of() {
+        return ImmutableDisabledAuthMatchData.builder().build();
     }
 
     @Override
-    public AesGcmEncryptionPackage encrypt(Aes256Key key) {
-        return AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+    default boolean match(AuthMatchData other) {
+        return true;
     }
 }

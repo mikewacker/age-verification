@@ -2,7 +2,10 @@ package org.example.age.common.service.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import java.util.Map;
 import java.util.Optional;
@@ -11,55 +14,70 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
 import org.example.age.testing.api.FakeCodeSender;
 import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public final class UserAgentAuthMatchDataExtractorTest {
 
-    private static AuthMatchDataExtractor extractor;
+    private static AuthMatchDataExtractor dataExtractor;
+
     private static Aes256Key key;
+    private FakeCodeSender sender;
 
     @BeforeAll
     public static void createAuthMatchDataExtractorEtAl() {
-        extractor = TestComponent.createAuthMatchDataExtractor();
+        dataExtractor = TestComponent.createAuthMatchDataExtractor();
         key = Aes256Key.generate();
     }
 
-    @Test
-    public void match_UserAgentsMatch() {
-        HttpServerExchange localExchange = StubExchanges.create(Map.of("User-Agent", "agent"));
-        HttpServerExchange remoteExchange = StubExchanges.create(Map.of("User-Agent", "agent"));
-        AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
+    @BeforeEach
+    public void createSender() {
+        sender = FakeCodeSender.create();
     }
 
     @Test
-    public void match_UserAgentsDoNotMatch() {
-        HttpServerExchange localExchange = StubExchanges.create(Map.of("User-Agent", "agent1"));
-        HttpServerExchange remoteExchange = StubExchanges.create(Map.of("User-Agent", "agent2"));
-        AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, false);
+    public void extract_HeaderPresent() {
+        HttpServerExchange exchange = StubExchanges.create(Map.of("User-Agent", "agent"));
+        Optional<AuthMatchData> maybeData = dataExtractor.tryExtract(exchange, sender);
+        AuthMatchData expectedData = UserAgentAuthMatchData.of("agent");
+        assertThat(maybeData).hasValue(expectedData);
+        assertThat(sender.tryGet()).isEmpty();
     }
 
     @Test
-    public void match_UserAgentNotPresent() {
-        HttpServerExchange localExchange = StubExchanges.create(Map.of());
-        HttpServerExchange remoteExchange = StubExchanges.create(Map.of());
-        AuthMatchDataExtractorTestTemplate.match(extractor, key, localExchange, remoteExchange, true);
+    public void extract_HeaderNotPresent() {
+        HttpServerExchange exchange = StubExchanges.create(Map.of());
+        Optional<AuthMatchData> maybeData = dataExtractor.tryExtract(exchange, sender);
+        AuthMatchData expectedData = UserAgentAuthMatchData.of("");
+        assertThat(maybeData).hasValue(expectedData);
+        assertThat(sender.tryGet()).isEmpty();
     }
 
     @Test
-    public void sendError_DecryptionFails() {
-        FakeCodeSender sender = FakeCodeSender.create();
-        AesGcmEncryptionPackage token = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
-        Optional<AuthMatchData> maybeData = extractor.tryDecrypt(token, key, sender);
-        assertThat(maybeData).isEmpty();
-        assertThat(sender.tryGet()).hasValue(401);
+    public void encryptThenDecrypt() {
+        AuthMatchData data = UserAgentAuthMatchData.of("agent");
+        AesGcmEncryptionPackage token = dataExtractor.encrypt(data, key);
+        Optional<AuthMatchData> maybeRtData = dataExtractor.tryDecrypt(token, key, sender);
+        assertThat(maybeRtData).hasValue(data);
+        assertThat(sender.tryGet()).isEmpty();
+    }
+
+    /** Dagger module that binds dependencies for {@link AuthMatchDataExtractor}. */
+    @Module(includes = UserAgentAuthMatchDataExtractorModule.class)
+    interface TestModule {
+
+        @Provides
+        @Singleton
+        static ObjectMapper provideObjectMapper() {
+            return new ObjectMapper();
+        }
     }
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
-    @Component(modules = UserAgentAuthMatchDataExtractorModule.class)
+    @Component(modules = TestModule.class)
     @Singleton
     interface TestComponent {
 

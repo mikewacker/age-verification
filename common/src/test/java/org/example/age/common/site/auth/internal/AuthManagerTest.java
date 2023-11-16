@@ -3,8 +3,10 @@ package org.example.age.common.site.auth.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
@@ -22,6 +24,7 @@ import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.data.utils.DataMapper;
 import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,7 +117,7 @@ public final class AuthManagerTest {
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
         AuthMatchData authData =
                 authDataExtractor.tryExtract(exchange, code -> {}).get();
-        AesGcmEncryptionPackage authToken = authData.encrypt(authKey);
+        AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, authKey);
         return AgeCertificate.of(request, user, authToken);
     }
 
@@ -125,7 +128,14 @@ public final class AuthManagerTest {
                 UserAgentAuthMatchDataExtractorModule.class,
                 InMemoryPendingStoreFactoryModule.class,
             })
-    interface TestModule {}
+    interface TestModule {
+
+        @Provides
+        @Singleton
+        static ObjectMapper provideObjectMapper() {
+            return DataMapper.get();
+        }
+    }
 
     /** Dagger component that provides an {@link AuthManager}, and also an {@link AuthMatchDataExtractor}. */
     @Component(modules = TestModule.class)

@@ -140,7 +140,7 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         AuthMatchData authData = maybeAuthData.get();
-        AesGcmEncryptionPackage authToken = authData.encrypt(session.authKey());
+        AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, session.authKey());
         return Optional.of(authToken);
     }
 

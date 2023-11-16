@@ -1,9 +1,12 @@
 package org.example.age.common.avs.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.avs.config.AvsConfig;
@@ -13,6 +16,7 @@ import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.avs.verification.internal.VerificationManagerModule;
 import org.example.age.common.base.client.internal.RequestDispatcherModule;
 import org.example.age.common.base.store.PendingStoreFactory;
+import org.example.age.data.utils.DataMapper;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.
@@ -33,4 +37,10 @@ public interface AvsApiModule {
     @Binds
     @Named("api")
     HttpHandler bindApiHttpHandler(AvsApiHandler impl);
+
+    @Provides
+    @Singleton
+    static ObjectMapper provideObjectMapper() {
+        return DataMapper.get();
+    }
 }
