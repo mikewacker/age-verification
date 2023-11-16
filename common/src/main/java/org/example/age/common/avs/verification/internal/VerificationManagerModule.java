@@ -1,5 +1,6 @@
 package org.example.age.common.avs.verification.internal;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
 import java.time.Duration;
@@ -17,6 +18,7 @@ import org.example.age.common.base.store.PendingStoreFactory;
  *     <li>{@link RegisteredSiteConfigStore}</li>
  *     <li>{@link VerifiedUserStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
+ *     <li>{@link ObjectMapper}</li>
  *     <li><code>@Named("expiresIn") Provider&lt;{@link Duration}&gt;</code></li>
  * </ul>
  */

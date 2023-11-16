@@ -3,6 +3,7 @@ package org.example.age.common.avs.verification;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -28,6 +29,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.data.utils.DataMapper;
 import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -178,6 +180,12 @@ public final class VerificationManagerTest {
         @Singleton
         static Consumer<VerifiedUserStore> provideVerifiedUserStoreInitializer() {
             return VerificationManagerTest::initVerifiedUserStore;
+        }
+
+        @Provides
+        @Singleton
+        static ObjectMapper provideObjectMapper() {
+            return DataMapper.get();
         }
 
         @Provides

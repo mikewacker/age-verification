@@ -3,6 +3,7 @@ package org.example.age.common.site.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
 import dagger.BindsInstance;
@@ -30,6 +31,7 @@ import org.example.age.common.site.store.InMemoryVerificationStoreModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
+import org.example.age.data.utils.DataMapper;
 import org.example.age.test.server.undertow.TestUndertowModule;
 import org.example.age.test.service.data.TestAccountIdExtractorModule;
 import org.example.age.testing.client.TestClient;
@@ -213,6 +215,12 @@ public final class SiteApiHttpHandlerTest {
         @Singleton
         static PrivateKey providePrivateSigningKey() {
             return avsSigningKeyPair.getPrivate();
+        }
+
+        @Provides
+        @Singleton
+        static ObjectMapper provideObjectMapper() {
+            return DataMapper.get();
         }
     }
 
