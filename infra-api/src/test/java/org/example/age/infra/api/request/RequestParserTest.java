@@ -7,11 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
-import java.util.Optional;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
@@ -90,8 +90,9 @@ public final class RequestParserTest {
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
             JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, mapper);
-            Optional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", INT_TYPE);
+            HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", INT_TYPE);
             if (maybeOperand1.isEmpty()) {
+                sender.sendError(maybeOperand1.statusCode());
                 return;
             }
 

@@ -8,7 +8,7 @@ import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Optional;
+import org.example.age.api.HttpOptional;
 
 /** Parses API arguments from an HTTP request. */
 public final class RequestParser {
@@ -37,44 +37,36 @@ public final class RequestParser {
     /**
      * Gets the (first) value of a query parameter, if present.
      *
-     * <p>Sends a 400 error if the parameter is missing or cannot be deserialized.</p>
+     * <p>Returns a 400 error if the parameter is missing or cannot be deserialized.</p>
      */
-    public <P> Optional<P> tryGetQueryParameter(String name, TypeReference<P> bodyTypeRef) {
-        Optional<String> maybeRawValue = tryGetQueryParameter(name);
+    public <P> HttpOptional<P> tryGetQueryParameter(String name, TypeReference<P> bodyTypeRef) {
+        HttpOptional<String> maybeRawValue = tryGetQueryParameter(name);
         if (maybeRawValue.isEmpty()) {
-            return Optional.empty();
+            return HttpOptional.empty(maybeRawValue.statusCode());
         }
 
         String rawValue = maybeRawValue.get();
         try {
             String json = mapper.writeValueAsString(rawValue);
             P value = mapper.readValue(json, bodyTypeRef);
-            return Optional.of(value);
+            return HttpOptional.of(value);
         } catch (IOException e) {
-            sendError(StatusCodes.BAD_REQUEST);
-            return Optional.empty();
+            return HttpOptional.empty(StatusCodes.BAD_REQUEST);
         }
     }
 
     /**
-     * Tries to get the (first) value of a query parameter, if present.
+     * Gets the (first) value of a query parameter, if present.
      *
-     * <p>Sends a 400 error if the parameter is missing.</p>
+     * <p>Returns a 400 error if the parameter is missing.</p>
      */
-    public Optional<String> tryGetQueryParameter(String name) {
+    public HttpOptional<String> tryGetQueryParameter(String name) {
         Deque<String> values = exchange.getQueryParameters().getOrDefault(name, EMPTY_VALUES);
         if (values.isEmpty()) {
-            sendError(StatusCodes.BAD_REQUEST);
-            return Optional.empty();
+            return HttpOptional.empty(StatusCodes.BAD_REQUEST);
         }
 
-        return Optional.of(values.getFirst());
-    }
-
-    /** Sends an error status code. */
-    private void sendError(int statusCode) {
-        exchange.setStatusCode(statusCode);
-        exchange.endExchange();
+        return HttpOptional.of(values.getFirst());
     }
 
     private RequestParser(HttpServerExchange exchange, ObjectMapper mapper) {
@@ -109,6 +101,12 @@ public final class RequestParser {
             } catch (Exception e) {
                 sendError(StatusCodes.INTERNAL_SERVER_ERROR);
             }
+        }
+
+        /** Sends an error status code. */
+        private void sendError(int statusCode) {
+            exchange.setStatusCode(statusCode);
+            exchange.endExchange();
         }
     }
 }
