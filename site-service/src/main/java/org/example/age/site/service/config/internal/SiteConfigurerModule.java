@@ -1,13 +1,13 @@
-package org.example.age.common.site.config.internal;
+package org.example.age.site.service.config.internal;
 
 import dagger.Module;
 import dagger.Provides;
 import java.security.PublicKey;
 import java.time.Duration;
 import javax.inject.Named;
-import org.example.age.common.site.config.AvsLocation;
-import org.example.age.common.site.config.SiteConfig;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.site.service.config.AvsLocation;
+import org.example.age.site.service.config.SiteConfig;
 
 /**
  * Dagger module that publishes bindings for...

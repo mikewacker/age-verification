@@ -26,6 +26,7 @@
         <!-- service -->
         <module>infra-service</module>
         <module>common-service</module>
+        <module>site-service</module>
         <module>common</module>
         <module>verification-poc</module>
         <module>test-service</module>

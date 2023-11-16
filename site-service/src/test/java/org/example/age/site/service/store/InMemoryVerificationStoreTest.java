@@ -1,4 +1,4 @@
-package org.example.age.common.site.store;
+package org.example.age.site.service.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +27,7 @@ public final class InMemoryVerificationStoreTest {
 
     @Test
     public void verify() {
-        VerificationState state = createVerifiedState();
+        VerificationState state = createAndVerifyUser();
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username", state);
         assertThat(maybeDuplicateAccountId).isEmpty();
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
@@ -35,7 +35,7 @@ public final class InMemoryVerificationStoreTest {
 
     @Test
     public void verifySameAccountTwice() {
-        VerificationState state = createVerifiedState();
+        VerificationState state = createAndVerifyUser();
         verificationStore.trySave("username", state);
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
 
@@ -46,15 +46,14 @@ public final class InMemoryVerificationStoreTest {
 
     @Test
     public void updateState() {
-        long past = (System.currentTimeMillis() / 1000) - 10;
-        VerificationState state = createVerifiedState(past);
+        VerificationState state = createAndVerifyUser(-10);
         verificationStore.trySave("username", state);
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.EXPIRED);
     }
 
     @Test
     public void switchVerifiedAccount() {
-        VerificationState state = createVerifiedState();
+        VerificationState state = createAndVerifyUser();
         verificationStore.trySave("username1", state);
         assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.VERIFIED);
 
@@ -67,7 +66,7 @@ public final class InMemoryVerificationStoreTest {
 
     @Test
     public void delete() {
-        VerificationState state = createVerifiedState();
+        VerificationState state = createAndVerifyUser();
         verificationStore.trySave("username", state);
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
 
@@ -77,7 +76,7 @@ public final class InMemoryVerificationStoreTest {
 
     @Test
     public void error_DuplicateVerification() {
-        VerificationState state = createVerifiedState();
+        VerificationState state = createAndVerifyUser();
         verificationStore.trySave("username1", state);
         assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.VERIFIED);
 
@@ -86,13 +85,14 @@ public final class InMemoryVerificationStoreTest {
         assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 
-    private static VerificationState createVerifiedState() {
-        long future = (System.currentTimeMillis() / 1000) + 10;
-        return createVerifiedState(future);
+    private static VerificationState createAndVerifyUser() {
+        return createAndVerifyUser(10);
     }
 
-    private static VerificationState createVerifiedState(long expiration) {
+    private static VerificationState createAndVerifyUser(long expiresIn) {
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
+        long now = System.currentTimeMillis() / 1000;
+        long expiration = now + expiresIn;
         return VerificationState.verified(user, expiration);
     }
 

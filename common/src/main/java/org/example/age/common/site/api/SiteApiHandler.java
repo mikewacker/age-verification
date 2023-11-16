@@ -19,7 +19,6 @@ import okhttp3.Response;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcher;
 import org.example.age.common.site.auth.internal.AuthManager;
-import org.example.age.common.site.config.AvsLocation;
 import org.example.age.common.site.verification.internal.VerificationManager;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -27,6 +26,7 @@ import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.utils.DataMapper;
 import org.example.age.infra.api.exchange.ExchangeUtils;
+import org.example.age.site.service.config.AvsLocation;
 
 /**
  * HTTP handler for a site's age verification API.

@@ -12,11 +12,11 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.base.client.internal.RequestDispatcherModule;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.site.auth.internal.AuthManagerModule;
-import org.example.age.common.site.config.SiteConfig;
-import org.example.age.common.site.config.internal.SiteConfigurerModule;
-import org.example.age.common.site.store.VerificationStore;
 import org.example.age.common.site.verification.internal.VerificationManagerModule;
 import org.example.age.data.utils.DataMapper;
+import org.example.age.site.service.config.SiteConfig;
+import org.example.age.site.service.config.internal.SiteConfigurerModule;
+import org.example.age.site.service.store.VerificationStore;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.

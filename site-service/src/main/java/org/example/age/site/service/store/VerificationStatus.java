@@ -1,4 +1,4 @@
-package org.example.age.common.site.store;
+package org.example.age.site.service.store;
 
 /** Age verification status for a user. */
 public enum VerificationStatus {
