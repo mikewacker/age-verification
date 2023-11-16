@@ -2,7 +2,6 @@ package org.example.age.common.api.data;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -63,7 +62,7 @@ public final class AuthMatchDataExtractorTest {
         }
 
         private TestAuthMatchDataExtractor() {
-            super(new ObjectMapper(), new TypeReference<TestAuthMatchData>() {});
+            super(new ObjectMapper());
         }
     }
 

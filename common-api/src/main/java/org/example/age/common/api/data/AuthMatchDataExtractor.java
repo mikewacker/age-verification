@@ -19,7 +19,6 @@ import org.example.age.data.crypto.AesGcmEncryptionPackage;
 public abstract class AuthMatchDataExtractor {
 
     private final ObjectMapper mapper;
-    private final TypeReference<? extends AuthMatchData> dataTypeRef;
 
     /** Extracts {@link AuthMatchData} from an {@link HttpServerExchange}, or returns an error status code. */
     public abstract HttpOptional<AuthMatchData> tryExtract(HttpServerExchange exchange);
@@ -41,9 +40,8 @@ public abstract class AuthMatchDataExtractor {
         return tryDeserialize(rawData);
     }
 
-    protected AuthMatchDataExtractor(ObjectMapper mapper, TypeReference<? extends AuthMatchData> dataTypeRef) {
+    protected AuthMatchDataExtractor(ObjectMapper mapper) {
         this.mapper = mapper;
-        this.dataTypeRef = dataTypeRef;
     }
 
     /** Serializes {@link AuthMatchData}. */
@@ -58,7 +56,7 @@ public abstract class AuthMatchDataExtractor {
     /** Deserializes {@link AuthMatchData}, or returns a 400 error. */
     private HttpOptional<AuthMatchData> tryDeserialize(byte[] rawData) {
         try {
-            AuthMatchData data = mapper.readValue(rawData, dataTypeRef);
+            AuthMatchData data = mapper.readValue(rawData, new TypeReference<>() {});
             return HttpOptional.of(data);
         } catch (IOException e) {
             return HttpOptional.empty(StatusCodes.BAD_REQUEST);

@@ -1,5 +1,7 @@
 package org.example.age.common.api.data;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * Authentication data that is used to determine if two actions were performed by the same person.
  *
@@ -8,6 +10,7 @@ package org.example.age.common.api.data;
  *
  * <p>The data should be serializable as JSON.</p>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public interface AuthMatchData {
 
     /** Matches two sets of data, determining if they came from the same person. */
