@@ -16,6 +16,7 @@ module org.example.age.site.service {
     requires org.example.age.common.api;
     requires org.example.age.common.service;
     requires org.example.age.data;
+    requires org.example.age.site.api;
 
     opens org.example.age.site.service.verification.internal to
             com.fasterxml.jackson.databind;

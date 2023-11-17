@@ -6,7 +6,7 @@ import java.security.PublicKey;
 import java.time.Duration;
 import javax.inject.Named;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.site.service.config.AvsLocation;
+import org.example.age.site.api.AvsLocation;
 import org.example.age.site.service.config.SiteConfig;
 
 /**

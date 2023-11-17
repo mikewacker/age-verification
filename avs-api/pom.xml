@@ -46,6 +46,16 @@
             <version>${dagger.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>${undertow.version}</version>
@@ -54,6 +64,11 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.immutables</groupId>
+            <artifactId>value-annotations</artifactId>
+            <version>${immutables.version}</version>
         </dependency>
 
         <!-- test -->
@@ -81,13 +96,6 @@
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -102,6 +110,11 @@
                             <groupId>com.google.dagger</groupId>
                             <artifactId>dagger-compiler</artifactId>
                             <version>${dagger.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.immutables</groupId>
+                            <artifactId>value</artifactId>
+                            <version>${immutables.version}</version>
                         </dependency>
                     </annotationProcessorPaths>
                 </configuration>

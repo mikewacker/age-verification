@@ -15,10 +15,12 @@ module org.example.age.common {
     requires jsr305;
     requires okhttp3;
     requires org.example.age.api;
+    requires org.example.age.avs.api;
     requires org.example.age.common.api;
     requires org.example.age.common.service;
     requires org.example.age.data;
     requires org.example.age.infra.api;
+    requires org.example.age.site.api;
     requires org.example.age.site.service;
     requires undertow.core;
     requires xnio.api;

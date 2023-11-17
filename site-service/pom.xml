@@ -34,6 +34,11 @@
             <artifactId>data</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.example.age</groupId>
+            <artifactId>site-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
