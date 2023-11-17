@@ -15,6 +15,7 @@ import org.example.age.site.service.config.SiteConfig;
  *     <li>{@link AvsLocation}</li>
  *     <li><code>@Named("avsSigning") {@link PublicKey}</code></li>
  *     <li><code>@Named("siteId") String</code></li>
+ *     <li><code>@Named("pseudonymKey") {@link SecureId}</code></li>
  *     <li><code>@Named("expiresIn") {@link Duration}</code></li>
  * </ul>
  *
