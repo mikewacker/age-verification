@@ -26,7 +26,7 @@ import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.utils.DataMapper;
 import org.example.age.infra.api.exchange.ExchangeUtils;
-import org.example.age.site.service.config.AvsLocation;
+import org.example.age.site.api.AvsLocation;
 
 /**
  * HTTP handler for a site's age verification API.

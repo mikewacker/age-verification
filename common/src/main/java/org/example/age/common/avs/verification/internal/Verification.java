@@ -1,6 +1,6 @@
 package org.example.age.common.avs.verification.internal;
 
-import org.example.age.common.avs.config.SiteLocation;
+import org.example.age.avs.api.SiteLocation;
 import org.example.age.data.certificate.AgeCertificate;
 import org.immutables.value.Value;
 

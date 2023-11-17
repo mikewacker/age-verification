@@ -1,4 +1,4 @@
-package org.example.age.common.avs.config;
+package org.example.age.avs.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

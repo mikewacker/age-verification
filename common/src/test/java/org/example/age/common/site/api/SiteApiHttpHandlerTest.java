@@ -29,7 +29,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.example.age.data.utils.DataMapper;
-import org.example.age.site.service.config.AvsLocation;
+import org.example.age.site.api.AvsLocation;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.test.server.undertow.TestUndertowModule;
