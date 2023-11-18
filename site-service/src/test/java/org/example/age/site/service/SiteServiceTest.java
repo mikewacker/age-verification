@@ -3,7 +3,6 @@ package org.example.age.site.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -118,7 +117,7 @@ public final class SiteServiceTest {
     /** Dagger components that provides an {@link Undertow} server. */
     @Component(modules = {TestUndertowModule.class, TestModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends TestUndertowServer.ServerComponent {
 
         static Undertow createServer(int port) {
             TestComponent component =
@@ -126,13 +125,8 @@ public final class SiteServiceTest {
             return component.server();
         }
 
-        Undertow server();
-
         @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
+        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
     }
 
     /** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
@@ -156,7 +150,7 @@ public final class SiteServiceTest {
     /** Dagger components that provides an {@link Undertow} server. */
     @Component(modules = {TestUndertowModule.class, FakeAvsModule.class})
     @Singleton
-    interface FakeAvsComponent {
+    interface FakeAvsComponent extends TestUndertowServer.ServerComponent {
 
         static Undertow createServer(int port) {
             FakeAvsComponent component =
@@ -164,12 +158,7 @@ public final class SiteServiceTest {
             return component.server();
         }
 
-        Undertow server();
-
         @Component.Factory
-        interface Factory {
-
-            FakeAvsComponent create(@BindsInstance @Named("port") int port);
-        }
+        interface Factory extends TestUndertowServer.ServerComponent.Factory<FakeAvsComponent> {}
     }
 }

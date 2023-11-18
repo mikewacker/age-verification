@@ -159,16 +159,14 @@ public final class RequestDispatcherTest {
         }
     }
 
-    /** Dagger component that provides an {@link HttpHandler}. */
+    /** Dagger component that provides the root {@link HttpHandler}. */
     @Component(modules = TestModule.class)
     @Singleton
-    public interface TestComponent {
+    public interface TestComponent extends TestUndertowServer.HandlerComponent {
 
         static HttpHandler createHandler() {
             TestComponent component = DaggerRequestDispatcherTest_TestComponent.create();
             return component.handler();
         }
-
-        HttpHandler handler();
     }
 }

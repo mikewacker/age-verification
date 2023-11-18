@@ -2,7 +2,9 @@ package org.example.age.adult.html;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dagger.Binds;
 import dagger.Component;
+import dagger.Module;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import javax.inject.Named;
@@ -41,17 +43,25 @@ public final class VerifyHtmlHttpHandlerTest {
         assertThat(response.body().bytes()).isNotEmpty();
     }
 
-    /** Dagger component that provides an {@link HttpHandler}. */
-    @Component(modules = VerifyHtmlModule.class)
+    /**
+     * Dagger module that publishes a binding for {@link HttpHandler},
+     * which delegates to <code>@Named("verifyHtml") {@link HttpHandler}</code>.
+     */
+    @Module(includes = VerifyHtmlModule.class)
+    interface TestModule {
+
+        @Binds
+        HttpHandler bindHandler(@Named("verifyHtml") HttpHandler delegate);
+    }
+
+    /** Dagger component that provides the root {@link HttpHandler}. */
+    @Component(modules = TestModule.class)
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends TestUndertowServer.HandlerComponent {
 
         static HttpHandler createHandler() {
             TestComponent component = DaggerVerifyHtmlHttpHandlerTest_TestComponent.create();
             return component.handler();
         }
-
-        @Named("verifyHtml")
-        HttpHandler handler();
     }
 }

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.net.HostAndPort;
 import dagger.Binds;
-import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -80,19 +79,14 @@ public final class UndertowTest {
     /** Dagger component that provides an {@link Undertow} server. */
     @Component(modules = TestModule.class)
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends TestUndertowServer.ServerComponent {
 
         static Undertow createServer(int port) {
             TestComponent component = DaggerUndertowTest_TestComponent.factory().create(port);
             return component.server();
         }
 
-        Undertow server();
-
         @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
+        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
     }
 }

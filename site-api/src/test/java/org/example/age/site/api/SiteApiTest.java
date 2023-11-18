@@ -3,12 +3,10 @@ package org.example.age.site.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.BindsInstance;
 import dagger.Component;
 import io.undertow.Undertow;
 import java.io.IOException;
 import java.util.Map;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.data.certificate.AgeCertificate;
@@ -81,19 +79,14 @@ public final class SiteApiTest {
     /** Dagger component that provides an {@link Undertow} server. */
     @Component(modules = {TestUndertowModule.class, StubSiteServiceModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends TestUndertowServer.ServerComponent {
 
         static Undertow createServer(int port) {
             TestComponent component = DaggerSiteApiTest_TestComponent.factory().create(port);
             return component.server();
         }
 
-        Undertow server();
-
         @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
+        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
     }
 }
