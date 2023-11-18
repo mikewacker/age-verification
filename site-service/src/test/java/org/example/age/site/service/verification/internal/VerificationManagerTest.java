@@ -2,7 +2,6 @@ package org.example.age.site.service.verification.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -14,6 +13,7 @@ import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.service.data.DataMapperModule;
 import org.example.age.common.service.data.UserAgentAuthMatchData;
 import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
@@ -27,7 +27,6 @@ import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.data.utils.DataMapper;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.site.service.store.VerificationState;
 import org.example.age.site.service.store.VerificationStatus;
@@ -213,14 +212,9 @@ public final class VerificationManagerTest {
                 UserAgentAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
+                DataMapperModule.class,
             })
     interface TestModule {
-
-        @Provides
-        @Singleton
-        static ObjectMapper provideObjectMapper() {
-            return DataMapper.get();
-        }
 
         @Provides
         @Named("avsSigning")
@@ -253,7 +247,7 @@ public final class VerificationManagerTest {
 
     /**
      * Dagger component that provides a {@link VerificationManager},
-     * and also a {@link VerificationStore} and {@link AuthMatchDataExtractor}.
+     * and also a {@link VerificationStore} and an {@link AuthMatchDataExtractor}.
      */
     @Component(modules = TestModule.class)
     @Singleton

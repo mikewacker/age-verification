@@ -2,10 +2,8 @@ package org.example.age.common.service.data;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
 import dagger.Module;
-import dagger.Provides;
 import io.undertow.server.HttpServerExchange;
 import java.util.Map;
 import javax.inject.Singleton;
@@ -55,15 +53,8 @@ public final class UserAgentAuthMatchDataExtractorTest {
     }
 
     /** Dagger module that binds dependencies for {@link AuthMatchDataExtractor}. */
-    @Module(includes = UserAgentAuthMatchDataExtractorModule.class)
-    interface TestModule {
-
-        @Provides
-        @Singleton
-        static ObjectMapper provideObjectMapper() {
-            return new ObjectMapper();
-        }
-    }
+    @Module(includes = {UserAgentAuthMatchDataExtractorModule.class, DataMapperModule.class})
+    interface TestModule {}
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
     @Component(modules = TestModule.class)

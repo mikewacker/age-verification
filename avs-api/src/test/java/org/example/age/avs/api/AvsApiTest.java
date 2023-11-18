@@ -3,26 +3,18 @@ package org.example.age.avs.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dagger.Binds;
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
-import org.example.age.avs.api.test.StubAvsService;
-import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.avs.api.test.StubAvsServiceModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.utils.DataMapper;
 import org.example.age.test.server.undertow.TestUndertowModule;
-import org.example.age.test.service.data.TestAccountIdExtractorModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -87,27 +79,8 @@ public final class AvsApiTest {
         assertThat(response.code()).isEqualTo(404);
     }
 
-    /** Dagger module that binds dependencies needed to create a <code>@Named("api") {@link HttpHandler}</code>. */
-    @Module(
-            includes = {
-                AvsApiModule.class,
-                UserAgentAuthMatchDataExtractorModule.class,
-                TestAccountIdExtractorModule.class
-            })
-    interface TestModule {
-
-        @Binds
-        AvsApi bindAvsApi(StubAvsService impl);
-
-        @Provides
-        @Singleton
-        static ObjectMapper provideObjectMapper() {
-            return DataMapper.get();
-        }
-    }
-
     /** Dagger component that provides an {@link Undertow} server. */
-    @Component(modules = {TestUndertowModule.class, TestModule.class})
+    @Component(modules = {TestUndertowModule.class, StubAvsServiceModule.class})
     @Singleton
     interface TestComponent {
 

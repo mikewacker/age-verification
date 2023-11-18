@@ -1,14 +1,11 @@
 package org.example.age.site.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.service.data.DataMapperModule;
 import org.example.age.common.service.store.PendingStoreFactory;
-import org.example.age.data.utils.DataMapper;
 import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.api.SiteApiModule;
@@ -34,16 +31,11 @@ import org.example.age.site.service.verification.internal.VerificationManagerMod
             SiteApiModule.class,
             VerificationManagerModule.class,
             RequestDispatcherModule.class,
+            DataMapperModule.class,
             SiteConfigurerModule.class,
         })
 public interface SiteServiceModule {
 
     @Binds
     SiteApi bindSiteApi(SiteService service);
-
-    @Provides
-    @Singleton
-    static ObjectMapper provideObjectMapper() {
-        return DataMapper.get();
-    }
 }
