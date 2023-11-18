@@ -14,7 +14,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class TestUndertowServerTest {
 
     @RegisterExtension
-    private static final TestUndertowServer server = TestUndertowServer.create(TestUndertowServerTest::stubHandle);
+    private static final TestUndertowServer server =
+            TestUndertowServer.create(() -> TestUndertowServerTest::stubHandle);
 
     @Test
     public void exchange() throws IOException {
@@ -39,7 +40,7 @@ public final class TestUndertowServerTest {
 
     @Test
     public void error_ServerNotStarted() {
-        TestUndertowServer inactiveServer = TestUndertowServer.create(TestUndertowServerTest::stubHandle);
+        TestUndertowServer inactiveServer = TestUndertowServer.create(() -> TestUndertowServerTest::stubHandle);
         error_ServerNotStarted(inactiveServer::get);
         error_ServerNotStarted(inactiveServer::hostAndPort);
         error_ServerNotStarted(inactiveServer::rootUrl);

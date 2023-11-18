@@ -74,6 +74,7 @@ public final class StubDispatcher implements Dispatcher {
     }
 
     /** Creates a stub {@link ExecutorService} for the worker. */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static ExecutorService createStubWorker() {
         Future future = StubFuture.create();
         ExecutorService worker = mock(ExecutorService.class);

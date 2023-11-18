@@ -18,8 +18,8 @@ public final class ExchangeJsonSender<B> implements JsonSender<B> {
     private final AtomicBoolean wasSent = new AtomicBoolean(false);
 
     /** Creates the {@link JsonSender} from the {@link HttpServerExchange}. */
-    public static JsonSender create(HttpServerExchange exchange, ObjectMapper mapper) {
-        return new ExchangeJsonSender(exchange, mapper);
+    public static <B> JsonSender<B> create(HttpServerExchange exchange, ObjectMapper mapper) {
+        return new ExchangeJsonSender<>(exchange, mapper);
     }
 
     @Override

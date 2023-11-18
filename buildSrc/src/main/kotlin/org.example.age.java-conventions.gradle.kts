@@ -32,7 +32,7 @@ spotless {
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Werror")
+    options.compilerArgs.addAll(listOf("-Xlint:all,-classfile,-processing,-serial", "-Werror"))
     options.errorprone.disableWarningsInGeneratedCode.set(true)
 }
 

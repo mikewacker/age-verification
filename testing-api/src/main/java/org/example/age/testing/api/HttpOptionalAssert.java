@@ -11,8 +11,8 @@ public final class HttpOptionalAssert<V> {
     private final HttpOptional<V> maybeValue;
 
     /** Entry point for assertions. */
-    public static <V> HttpOptionalAssert assertThat(HttpOptional<V> maybeValue) {
-        return new HttpOptionalAssert(maybeValue);
+    public static <V> HttpOptionalAssert<V> assertThat(HttpOptional<V> maybeValue) {
+        return new HttpOptionalAssert<>(maybeValue);
     }
 
     /** Verifies that a value is present. */
