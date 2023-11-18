@@ -13,12 +13,9 @@ dependencies {
     implementation(project(":common-api"))
     implementation(project(":data"))
     implementation(project(":infra-api"))
-    implementation(project(":site-api"))
-    implementation(project(":site-service"))
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.google.dagger:dagger")
     implementation("com.google.guava:guava")
-    implementation("com.squareup.okhttp3:okhttp")
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
 
@@ -32,5 +29,6 @@ dependencies {
     testImplementation(project(":testing-api"))
     testImplementation(project(":testing-server"))
     testImplementation("com.squareup.okhttp3:mockwebserver")
+    testImplementation("com.squareup.okhttp3:okhttp")
     testImplementation("org.mockito:mockito-core")
 }
