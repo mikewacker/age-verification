@@ -45,7 +45,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         /** Creates an adapted callback from the exchange and the callback. */
         public static <T> Callback create(
                 HttpServerExchange exchange, BytesDeserializer<T> deserializer, ExchangeCallback<T> callback) {
-            return new AdaptedCallback(exchange, deserializer, callback);
+            return new AdaptedCallback<>(exchange, deserializer, callback);
         }
 
         @Override

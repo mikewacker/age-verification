@@ -10,8 +10,8 @@ public final class FakeJsonSender<B> implements JsonSender<B> {
     private Optional<HttpOptional<B>> maybeResponse = Optional.empty();
 
     /** Creates a {@link FakeJsonSender}. */
-    public static FakeJsonSender create() {
-        return new FakeJsonSender();
+    public static <B> FakeJsonSender<B> create() {
+        return new FakeJsonSender<>();
     }
 
     /** Gets the body (or error status code) that was sent, if a response was sent. */
@@ -20,7 +20,7 @@ public final class FakeJsonSender<B> implements JsonSender<B> {
     }
 
     @Override
-    public void send(HttpOptional maybeBody) {
+    public void send(HttpOptional<B> maybeBody) {
         if (maybeResponse.isPresent()) {
             throw new IllegalStateException("response was already sent");
         }

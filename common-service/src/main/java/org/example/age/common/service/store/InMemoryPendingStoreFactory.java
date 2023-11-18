@@ -22,6 +22,7 @@ final class InMemoryPendingStoreFactory implements PendingStoreFactory {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <V> PendingStore<V> getOrCreate(String name, TypeReference<V> valueTypeRef) {
         InMemoryPendingStore<?> store =
                 stores.computeIfAbsent(name, n -> new InMemoryPendingStore<>(mapper, valueTypeRef));

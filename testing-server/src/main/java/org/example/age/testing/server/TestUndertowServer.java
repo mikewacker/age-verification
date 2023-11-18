@@ -26,21 +26,12 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
     private HostAndPort hostAndPort = null;
     private String rootUrl = null;
 
-    /** Creates a test server with the provided handler. */
-    public static TestUndertowServer create(HttpHandler handler) {
-        return create(() -> handler);
-    }
-
-    /**
-     * Creates a test server with a handler that's provided by the factory.
-     *
-     * <p>Used when creating the handler is not a trivial task.</p>
-     */
+    /** Creates a test server from a handler that's created by the factory. */
     public static TestUndertowServer create(Supplier<HttpHandler> handlerFactory) {
-        return create((int port) -> TestUndertowServer.createServer(handlerFactory, port));
+        return create(port -> TestUndertowServer.createServer(handlerFactory, port));
     }
 
-    /** Creates a test server using the provided factory. */
+    /** Creates a test server from a server that's created by the factory. */
     public static TestUndertowServer create(Factory serverFactory) {
         return new TestUndertowServer(serverFactory);
     }

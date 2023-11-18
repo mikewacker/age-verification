@@ -31,7 +31,7 @@ final class InMemoryPendingStore<K, V> implements PendingStore<K, V> {
             maybeExpirationKey.ifPresent(XnioExecutor.Key::remove);
 
             // Insert the value and an expiration task.
-            Holder holder = new Holder(value);
+            Holder<V> holder = new Holder<>(value);
             XnioExecutor.Key expirationKey = executor.executeAfter(() -> expire(holder), expiresIn, TimeUnit.SECONDS);
             store.put(key, holder);
             expirationKeys.put(key, expirationKey);
