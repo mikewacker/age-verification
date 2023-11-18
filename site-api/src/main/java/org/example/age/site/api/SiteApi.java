@@ -12,7 +12,7 @@ public interface SiteApi {
 
     /** Creates a {@link VerificationSession} for the account. */
     void createVerificationSession(
-            JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatchers);
+            JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher);
 
     /** Processes a {@link SignedAgeCertificate} from the age verification service. */
     void processAgeCertificate(CodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher);
