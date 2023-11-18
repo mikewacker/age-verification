@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
@@ -24,6 +25,7 @@ import org.example.age.data.user.VerifiedUser;
 import org.example.age.site.service.store.VerificationState;
 import org.example.age.site.service.store.VerificationStore;
 
+@Singleton
 final class VerificationManagerImpl implements VerificationManager {
 
     private static final String VERIFICATION_STORE_NAME = "verification";
