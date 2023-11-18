@@ -9,7 +9,7 @@ import java.security.PrivateKey;
 import javax.inject.Singleton;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.api.AvsApiModule;
-import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
 import org.example.age.data.utils.DataMapper;
 import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.site.api.AvsLocation;
@@ -28,7 +28,7 @@ import org.example.age.test.service.data.TestAccountIdExtractorModule;
         includes = {
             AvsApiModule.class,
             TestAccountIdExtractorModule.class,
-            UserAgentAuthMatchDataExtractorModule.class,
+            DisabledAuthMatchDataExtractorModule.class,
             RequestDispatcherModule.class,
         })
 public interface FakeAvsServiceModule {

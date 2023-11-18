@@ -1,19 +1,26 @@
 package org.example.age.site.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Duration;
+import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import okhttp3.Response;
 import org.example.age.avs.api.SiteLocation;
-import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
+import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.example.age.site.api.AvsLocation;
@@ -22,8 +29,10 @@ import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.site.service.test.FakeAvsServiceModule;
 import org.example.age.test.server.undertow.TestUndertowModule;
 import org.example.age.test.service.data.TestAccountIdExtractorModule;
+import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class SiteServiceTest {
@@ -39,6 +48,35 @@ public final class SiteServiceTest {
     @BeforeAll
     public static void generateKeys() {
         avsSigningKeyPair = SigningKeys.generateEd25519KeyPair();
+    }
+
+    @Test
+    public void verify() throws IOException {
+        verify("publius-jr", "Billy Smith", 200);
+    }
+
+    @Test
+    public void verifyFailed_DuplicateVerification() throws IOException {
+        verify("publius", "John Smith", 200);
+        verify("drop-table", "John Smith", 409);
+    }
+
+    private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
+        String sessionUrl = siteServer.url("/api/verification-session");
+        Map<String, String> siteHeaders = Map.of("Account-Id", siteAccountId);
+        Response sessionResponse = TestClient.post(sessionUrl, siteHeaders);
+        assertThat(sessionResponse.code()).isEqualTo(200);
+        VerificationSession session = TestClient.readBody(sessionResponse, new TypeReference<>() {});
+        SecureId requestId = session.verificationRequest().id();
+
+        String linkUrl = fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId);
+        Map<String, String> avsHeaders = Map.of("Account-Id", avsAccountId);
+        Response linkResponse = TestClient.post(linkUrl, avsHeaders);
+        assertThat(linkResponse.code()).isEqualTo(200);
+
+        String certificateUrl = fakeAvsServer.url("/api/age-certificate");
+        Response certificateResponse = TestClient.post(certificateUrl, avsHeaders);
+        assertThat(certificateResponse.code()).isEqualTo(expectedStatusCode);
     }
 
     private static AvsLocation createAvsLocation() {
@@ -64,7 +102,7 @@ public final class SiteServiceTest {
             includes = {
                 SiteServiceModule.class,
                 TestAccountIdExtractorModule.class,
-                UserAgentAuthMatchDataExtractorModule.class,
+                DisabledAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
             })
