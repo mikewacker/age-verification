@@ -16,15 +16,13 @@ import org.example.age.data.crypto.SecureId;
 @Singleton
 public final class StubAvsService implements AvsApi {
 
-    private static final Duration EXPIRES_IN = Duration.ofMinutes(5);
-
     @Inject
     public StubAvsService() {}
 
     @Override
     public void createVerificationSession(
             JsonSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, EXPIRES_IN);
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, Duration.ofMinutes(5));
         VerificationSession session = VerificationSession.create(request);
         sender.sendBody(session);
     }

@@ -16,16 +16,13 @@ import org.example.age.site.api.SiteApi;
 @Singleton
 public final class StubSiteService implements SiteApi {
 
-    private static final String SITE_ID = "Site";
-    private static final Duration EXPIRES_IN = Duration.ofMinutes(5);
-
     @Inject
     public StubSiteService() {}
 
     @Override
     public void createVerificationSession(
             JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
+        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         VerificationSession session = VerificationSession.create(request);
         sender.sendBody(session);
     }

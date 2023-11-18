@@ -4,13 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
 import dagger.Module;
-import dagger.Provides;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
+import org.example.age.common.service.data.DataMapperModule;
 import org.example.age.common.service.store.testing.FakeXnioExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.Test;
 public final class InMemoryPendingStoreFactoryTest {
 
     private PendingStoreFactory storeFactory;
+
     private FakeXnioExecutor executor;
 
     @BeforeEach
@@ -98,15 +98,8 @@ public final class InMemoryPendingStoreFactoryTest {
     }
 
     /** Dagger module that binds dependencies for {@link PendingStoreFactory}. */
-    @Module(includes = InMemoryPendingStoreFactoryModule.class)
-    interface TestModule {
-
-        @Provides
-        @Singleton
-        static ObjectMapper provideObjectMapper() {
-            return new ObjectMapper();
-        }
-    }
+    @Module(includes = {InMemoryPendingStoreFactoryModule.class, DataMapperModule.class})
+    interface TestModule {}
 
     /** Dagger component that provides a {@link PendingStoreFactory}. */
     @Component(modules = TestModule.class)
