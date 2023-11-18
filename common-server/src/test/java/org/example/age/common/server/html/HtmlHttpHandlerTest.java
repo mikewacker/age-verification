@@ -2,8 +2,10 @@ package org.example.age.common.server.html;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dagger.BindsInstance;
+import dagger.Binds;
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import javax.inject.Named;
@@ -27,25 +29,34 @@ public final class HtmlHttpHandlerTest {
         assertThat(response.body().string()).isEqualTo("<p>test</p>");
     }
 
-    /** Dagger component that provides a <code>@Named("html") {@link HttpHandler}</code>. */
-    @Component(modules = HtmlModule.class)
+    /**
+     * Dagger module that publishes a binding for {@link HttpHandler},
+     * which delegates to <code>@Named("html") {@link HttpHandler}</code>.
+     *
+     * <p>Also binds dependencies for <code>@Named("html") {@link HttpHandler}</code>.</p>
+     */
+    @Module(includes = HtmlModule.class)
+    interface TestModule {
+
+        @Binds
+        HttpHandler bindHandler(@Named("html") HttpHandler delegate);
+
+        @Provides
+        @Named("html")
+        @Singleton
+        static Class<?> provideHtmlClass() {
+            return HtmlHttpHandlerTest.class;
+        }
+    }
+
+    /** Dagger component that provides the root {@link HttpHandler}. */
+    @Component(modules = TestModule.class)
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends TestUndertowServer.HandlerComponent {
 
         static HttpHandler createHandler() {
-            Class<?> clazz = HtmlHttpHandlerTest.class;
-            TestComponent component =
-                    DaggerHtmlHttpHandlerTest_TestComponent.factory().create(clazz);
+            TestComponent component = DaggerHtmlHttpHandlerTest_TestComponent.create();
             return component.handler();
-        }
-
-        @Named("html")
-        HttpHandler handler();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("html") Class<?> clazz);
         }
     }
 }

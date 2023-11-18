@@ -2,7 +2,6 @@ package org.example.age.test.server.undertow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -59,7 +58,7 @@ public final class TestUndertowTest {
     /** Dagger component that provides an {@link Undertow} server. */
     @Component(modules = TestModule.class)
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends TestUndertowServer.ServerComponent {
 
         static Undertow createServer(int port) {
             TestComponent component =
@@ -67,12 +66,7 @@ public final class TestUndertowTest {
             return component.server();
         }
 
-        Undertow server();
-
         @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
+        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
     }
 }
