@@ -38,7 +38,7 @@ public final class AuthMatchDataExtractorTest {
     public void decryptFailed_Decryption() {
         AesGcmEncryptionPackage token = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
         HttpOptional<AuthMatchData> maybeRtData = dataExtractor.tryDecrypt(token, key);
-        assertThat(maybeRtData).isEmptyWithStatusCode(401);
+        assertThat(maybeRtData).isEmptyWithErrorCode(401);
     }
 
     @Test
@@ -46,7 +46,7 @@ public final class AuthMatchDataExtractorTest {
         byte[] rawData = new byte[4];
         AesGcmEncryptionPackage token = AesGcmEncryptionPackage.encrypt(rawData, key);
         HttpOptional<AuthMatchData> maybeRtData = dataExtractor.tryDecrypt(token, key);
-        assertThat(maybeRtData).isEmptyWithStatusCode(400);
+        assertThat(maybeRtData).isEmptyWithErrorCode(400);
     }
 
     /** Test {@link AuthMatchDataExtractor}. */

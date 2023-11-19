@@ -32,14 +32,14 @@ public final class HttpOptionalTest {
     @Test
     public void fromOptional_Of() {
         HttpOptional<String> maybeValue = HttpOptional.fromOptional(Optional.of("a"), 500);
-        assertThat(maybeValue.isPresent()).isTrue();
+        assertThat(maybeValue.isEmpty()).isFalse();
         assertThat(maybeValue.get()).isEqualTo("a");
     }
 
     @Test
     public void fromOptional_Empty() {
         HttpOptional<String> maybeValue = HttpOptional.fromOptional(Optional.empty(), 500);
-        assertThat(maybeValue.isPresent()).isFalse();
+        assertThat(maybeValue.isEmpty()).isTrue();
         assertThat(maybeValue.statusCode()).isEqualTo(500);
     }
 

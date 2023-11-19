@@ -16,7 +16,7 @@ public final class HttpOptionalAssertTest {
         assertThat(maybeValue).hasValue("a");
         assertionFailed(() -> assertThat(maybeValue).hasValue("b"));
         assertionFailed(() -> assertThat(maybeValue).isEmpty());
-        assertionFailed(() -> assertThat(maybeValue).isEmptyWithStatusCode(500));
+        assertionFailed(() -> assertThat(maybeValue).isEmptyWithErrorCode(500));
     }
 
     @Test
@@ -25,8 +25,8 @@ public final class HttpOptionalAssertTest {
         assertionFailed(() -> assertThat(maybeValue).isPresent());
         assertionFailed(() -> assertThat(maybeValue).hasValue("a"));
         assertThat(maybeValue).isEmpty();
-        assertThat(maybeValue).isEmptyWithStatusCode(500);
-        assertionFailed(() -> assertThat(maybeValue).isEmptyWithStatusCode(400));
+        assertThat(maybeValue).isEmptyWithErrorCode(500);
+        assertionFailed(() -> assertThat(maybeValue).isEmptyWithErrorCode(400));
     }
 
     private void assertionFailed(ThrowableAssert.ThrowingCallable callable) {
