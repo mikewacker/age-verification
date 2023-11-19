@@ -1,4 +1,4 @@
-package org.example.age.test.service.data;
+package org.example.age.test.common.service.data;
 
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;

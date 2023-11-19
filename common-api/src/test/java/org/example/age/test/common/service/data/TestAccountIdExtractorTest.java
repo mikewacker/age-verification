@@ -1,4 +1,4 @@
-package org.example.age.test.service.data;
+package org.example.age.test.common.service.data;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 

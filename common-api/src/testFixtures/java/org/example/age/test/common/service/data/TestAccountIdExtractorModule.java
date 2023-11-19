@@ -1,4 +1,4 @@
-package org.example.age.test.service.data;
+package org.example.age.test.common.service.data;
 
 import dagger.Binds;
 import dagger.Module;

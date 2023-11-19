@@ -1,4 +1,4 @@
-package org.example.age.site.api.test;
+package org.example.age.test.site.service;
 
 import java.time.Duration;
 import javax.inject.Inject;

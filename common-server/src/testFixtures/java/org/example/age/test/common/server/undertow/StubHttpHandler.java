@@ -1,4 +1,4 @@
-package org.example.age.test.server.undertow;
+package org.example.age.test.common.server.undertow;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
