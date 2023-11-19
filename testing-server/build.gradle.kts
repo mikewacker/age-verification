@@ -1,15 +1,23 @@
 plugins {
     id("org.example.age.java-conventions")
-    `java-library`
+    `java-test-fixtures`
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.google.dagger:dagger")
-    implementation("com.google.guava:guava")
-    implementation("com.squareup.okhttp3:mockwebserver")
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("io.undertow:undertow-core")
-    implementation("org.junit.jupiter:junit-jupiter-api")
+    // test fixtures
+    testFixturesImplementation(project(":data"))
+    testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
+    testFixturesImplementation("com.google.dagger:dagger")
+    testFixturesImplementation("com.google.guava:guava")
+    testFixturesImplementation("com.squareup.okhttp3:mockwebserver")
+    testFixturesImplementation("com.squareup.okhttp3:okhttp")
+    testFixturesImplementation("io.undertow:undertow-core")
+    testFixturesImplementation("org.junit.jupiter:junit-jupiter-api")
+
+    // test
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
+    testImplementation("com.google.guava:guava")
+    testImplementation("com.squareup.okhttp3:mockwebserver")
+    testImplementation("com.squareup.okhttp3:okhttp")
+    testImplementation("io.undertow:undertow-core")
 }

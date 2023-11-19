@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    // main
     compileOnly("org.immutables:value-annotations")
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
@@ -22,13 +23,8 @@ dependencies {
     testCompileOnly("org.immutables:value-annotations")
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":common-server"))
+    // test
     testImplementation(project(":common-service"))
-    testImplementation(project(":test-server"))
-    testImplementation(project(":test-service"))
-    testImplementation(project(":testing-api"))
-    testImplementation(project(":testing-server"))
-    testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("com.squareup.okhttp3:okhttp")
+    testImplementation(testFixtures(project(":common-api")))
     testImplementation("org.mockito:mockito-core")
 }

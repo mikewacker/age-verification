@@ -6,7 +6,6 @@ include(
 
         // api types
         "api",
-        "testing-api",
 
         // api
         "infra-api",
@@ -20,11 +19,9 @@ include(
         "site-service",
         "common",
         "verification-poc",
-        "test-service",
 
         // server
         "common-server",
-        "test-server",
         "testing-server",
 
         // demo
