@@ -9,8 +9,8 @@ public interface CodeSender extends Sender {
     }
 
     @Override
-    default void sendError(int statusCode) {
-        send(statusCode);
+    default void sendError(int errorCode) {
+        send(errorCode);
     }
 
     void send(int statusCode);
