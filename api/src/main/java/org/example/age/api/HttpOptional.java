@@ -17,13 +17,13 @@ public final class HttpOptional<V> {
     }
 
     /** Creates an empty {@link HttpOptional} with an error status code. */
-    public static <V> HttpOptional<V> empty(int statusCode) {
-        return new HttpOptional<>(null, statusCode);
+    public static <V> HttpOptional<V> empty(int errorCode) {
+        return new HttpOptional<>(null, errorCode);
     }
 
     /** Creates an {@link HttpOptional} from an {@link Optional} and an error status code to use for empty values. */
-    public static <V> HttpOptional<V> fromOptional(Optional<V> maybeValue, int statusCode) {
-        return maybeValue.isPresent() ? of(maybeValue.get()) : empty(statusCode);
+    public static <V> HttpOptional<V> fromOptional(Optional<V> maybeValue, int errorCode) {
+        return maybeValue.isPresent() ? of(maybeValue.get()) : empty(errorCode);
     }
 
     /** Determines if a value is empty. */
