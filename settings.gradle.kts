@@ -24,7 +24,6 @@ include(
 
         // server
         "common-server",
-        "adult",
         "test-server",
         "testing-server",
 
