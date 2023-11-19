@@ -1,4 +1,4 @@
-package org.example.age.avs.api.test;
+package org.example.age.test.avs.service;
 
 import java.time.Duration;
 import javax.inject.Inject;
