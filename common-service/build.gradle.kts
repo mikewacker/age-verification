@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    // main
     compileOnly("org.immutables:value-annotations")
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
@@ -17,7 +18,9 @@ dependencies {
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
 
+    // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":testing-api"))
+    implementation(testFixtures(project(":api")))
+    implementation(testFixtures(project(":common-api")))
 }

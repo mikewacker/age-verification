@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     implementation(project(":api"))
@@ -12,10 +13,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("javax.inject:javax.inject")
 
+    // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
+    testImplementation(testFixtures(project(":testing-server")))
     testImplementation(project(":infra-api"))
-    testImplementation(project(":testing-server"))
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.undertow:undertow-core")
 }

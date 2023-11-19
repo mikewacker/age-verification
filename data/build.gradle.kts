@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    // main
     compileOnly("org.immutables:value-annotations")
     annotationProcessor("org.immutables:value")
 
@@ -11,5 +12,6 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava")
     implementation("com.google.guava:guava")
 
+    // test
     testImplementation("com.google.guava:guava-testlib")
 }

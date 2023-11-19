@@ -1,9 +1,11 @@
 plugins {
     id("org.example.age.java-conventions")
     `java-library`
+    `java-test-fixtures`
 }
 
 dependencies {
+    // main
     compileOnly("org.immutables:value-annotations")
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
@@ -19,11 +21,23 @@ dependencies {
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
 
+    // test fixtures
+    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
+
+    testFixturesImplementation(project(":api"))
+    testFixturesImplementation(project(":common-api"))
+    testFixturesImplementation(project(":common-service"))
+    testFixturesImplementation(project(":data"))
+    testFixturesImplementation(testFixtures(project(":common-api")))
+    testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
+    testFixturesImplementation("com.google.dagger:dagger")
+    testFixturesImplementation("javax.inject:javax.inject")
+
+    // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":common-server"))
     testImplementation(project(":common-service"))
-    testImplementation(project(":test-server"))
-    testImplementation(project(":test-service"))
-    testImplementation(project(":testing-server"))
+    testImplementation(testFixtures(project(":common-api")))
+    testImplementation(testFixtures(project(":common-server")))
+    testImplementation(testFixtures(project(":testing-server")))
 }
