@@ -31,10 +31,10 @@ public final class HttpOptionalAssert<V> {
         Assertions.assertThat(maybeValue.isEmpty()).isTrue();
     }
 
-    /** Verifies that a value is not present and that the status code is the expected status code. */
-    public void isEmptyWithStatusCode(int expectedStatusCode) {
+    /** Verifies that a value is not present and that the status code is the expected error status code. */
+    public void isEmptyWithErrorCode(int expectedErrorCode) {
         isEmpty();
-        Assertions.assertThat(maybeValue.statusCode()).isEqualTo(expectedStatusCode);
+        Assertions.assertThat(maybeValue.statusCode()).isEqualTo(expectedErrorCode);
     }
 
     private HttpOptionalAssert(HttpOptional<V> maybeValue) {

@@ -32,7 +32,7 @@ public final class TestAccountIdExtractorTest {
     public void extractEmpty_HeaderNotPresent() {
         HttpServerExchange exchange = StubExchanges.create(Map.of());
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
-        assertThat(maybeAccountId).isEmptyWithStatusCode(401);
+        assertThat(maybeAccountId).isEmptyWithErrorCode(401);
     }
 
     /** Dagger component that provides an {@link AccountIdExtractor}. */
