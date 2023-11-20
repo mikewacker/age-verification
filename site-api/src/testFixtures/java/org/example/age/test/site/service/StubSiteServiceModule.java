@@ -2,8 +2,8 @@ package org.example.age.test.site.service;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.service.data.DataMapperModule;
 import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.api.SiteApiModule;
 import org.example.age.test.common.service.data.TestAccountIdExtractorModule;
