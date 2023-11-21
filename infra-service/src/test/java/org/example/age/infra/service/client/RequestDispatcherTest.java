@@ -3,7 +3,6 @@ package org.example.age.infra.service.client;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -20,9 +19,11 @@ import okhttp3.mockwebserver.SocketPolicy;
 import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.infra.api.ExchangeCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
+import org.example.age.infra.api.data.JsonSerializerModule;
 import org.example.age.test.infra.service.data.TestMapperModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
@@ -98,12 +99,12 @@ public final class RequestDispatcherTest {
     static final class TestHandler implements HttpHandler {
 
         private final RequestDispatcher requestDispatcher;
-        private final ObjectMapper mapper;
+        private final JsonSerializer serializer;
 
         @Inject
-        public TestHandler(RequestDispatcher requestDispatcher, ObjectMapper mapper) {
+        public TestHandler(RequestDispatcher requestDispatcher, JsonSerializer serializer) {
             this.requestDispatcher = requestDispatcher;
-            this.mapper = mapper;
+            this.serializer = serializer;
         }
 
         @Override
@@ -123,7 +124,7 @@ public final class RequestDispatcherTest {
         }
 
         private void handleResponseBody(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, mapper);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             requestDispatcher.dispatch(
@@ -150,7 +151,7 @@ public final class RequestDispatcherTest {
      *
      * <p>Also binds dependencies for {@link RequestDispatcher}.</p>
      */
-    @Module(includes = {RequestDispatcherModule.class, TestMapperModule.class})
+    @Module(includes = {RequestDispatcherModule.class, JsonSerializerModule.class, TestMapperModule.class})
     interface TestModule {
 
         @Binds

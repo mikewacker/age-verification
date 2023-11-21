@@ -1,7 +1,6 @@
 package org.example.age.avs.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
@@ -11,6 +10,7 @@ import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
@@ -27,23 +27,23 @@ final class AvsEndpointHandler implements HttpHandler {
     private final AvsApi avsApi;
     private final AccountIdExtractor accountIdExtractor;
     private final AuthMatchDataExtractor authDataExtractor;
-    private final ObjectMapper mapper;
+    private final JsonSerializer serializer;
 
     @Inject
     public AvsEndpointHandler(
             AvsApi avsApi,
             AccountIdExtractor accountIdExtractor,
             AuthMatchDataExtractor authDataExtractor,
-            ObjectMapper mapper) {
+            JsonSerializer serializer) {
         this.avsApi = avsApi;
         this.accountIdExtractor = accountIdExtractor;
         this.authDataExtractor = authDataExtractor;
-        this.mapper = mapper;
+        this.serializer = serializer;
     }
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        RequestParser parser = RequestParser.create(exchange, mapper);
+        RequestParser parser = RequestParser.create(exchange, serializer);
         switch (exchange.getRelativePath()) {
             case "/verification-session" -> handleVerificationSession(exchange, parser);
             case "/linked-verification-request" -> handleLinkedVerificationRequest(exchange, parser);
@@ -53,7 +53,7 @@ final class AvsEndpointHandler implements HttpHandler {
     }
 
     private void handleVerificationSession(HttpServerExchange exchange, RequestParser parser) {
-        JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange, mapper);
+        JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange, serializer);
 
         HttpOptional<String> maybeSiteId = parser.tryGetQueryParameter("site-id");
         if (maybeSiteId.isEmpty()) {

@@ -3,7 +3,6 @@ package org.example.age.infra.service.client.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -19,9 +18,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
+import org.example.age.infra.api.data.JsonSerializerModule;
+import org.example.age.test.infra.service.data.TestMapperModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
 import org.example.age.testing.server.TestUndertowServer;
@@ -53,28 +56,29 @@ public final class ExchangeClientTest {
     @Singleton
     static final class TestHandler implements HttpHandler {
 
-        private static final ObjectMapper mapper = new ObjectMapper();
-
         private final ExchangeClient client;
+        private final JsonSerializer serializer;
 
         @Inject
-        public TestHandler(ExchangeClient client) {
+        public TestHandler(ExchangeClient client, JsonSerializer serializer) {
             this.client = client;
+            this.serializer = serializer;
         }
 
         @Override
-        public void handleRequest(HttpServerExchange exchange) throws IOException {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, mapper);
+        public void handleRequest(HttpServerExchange exchange) {
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             Call call = client.getInstance(dispatcher).newCall(request);
-            Callback callback = new RecipientCallback(sender, dispatcher);
+            Callback callback = new RecipientCallback(serializer, sender, dispatcher);
             call.enqueue(callback);
             dispatcher.dispatched();
         }
 
-        private record RecipientCallback(JsonSender<String> sender, Dispatcher dispatcher) implements Callback {
+        private record RecipientCallback(JsonSerializer serializer, JsonSender<String> sender, Dispatcher dispatcher)
+                implements Callback {
 
             @Override
             public void onResponse(Call call, Response response) {
@@ -86,8 +90,15 @@ public final class ExchangeClientTest {
                 sender.sendError(StatusCodes.BAD_GATEWAY);
             }
 
-            private static void onRecipientReceived(Response response, JsonSender<String> sender) throws IOException {
-                String recipient = mapper.readValue(response.body().bytes(), new TypeReference<>() {});
+            private void onRecipientReceived(Response response, JsonSender<String> sender) throws IOException {
+                HttpOptional<String> maybeRecipient =
+                        serializer.tryDeserialize(response.body().bytes(), new TypeReference<>() {}, 400);
+                if (maybeRecipient.isEmpty()) {
+                    sender.sendError(maybeRecipient.statusCode());
+                    return;
+                }
+                String recipient = maybeRecipient.get();
+
                 String greeting = String.format("Hello, %s!", recipient);
                 sender.sendBody(greeting);
             }
@@ -95,7 +106,7 @@ public final class ExchangeClientTest {
     }
 
     /** Dagger module that publishes a binding for {@link HttpHandler}, which uses an {@link ExchangeClient}. */
-    @Module(includes = ExchangeClientModule.class)
+    @Module(includes = {ExchangeClientModule.class, JsonSerializerModule.class, TestMapperModule.class})
     public interface TestModule {
 
         @Binds
