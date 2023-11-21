@@ -9,12 +9,9 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.api.SiteLocation;
@@ -35,7 +32,6 @@ final class FakeAvsService implements AvsApi {
 
     private final AuthMatchDataEncryptor authDataEncryptor;
     private final RequestDispatcher requestDispatcher;
-    private final JsonSerializer serializer;
     private final Provider<SiteLocation> siteLocationProvider;
     private final Provider<PrivateKey> privateSigningKeyProvider;
 
@@ -49,13 +45,11 @@ final class FakeAvsService implements AvsApi {
     public FakeAvsService(
             AuthMatchDataEncryptor authDataEncryptor,
             RequestDispatcher requestDispatcher,
-            JsonSerializer serializer,
             Provider<SiteLocation> siteLocationProvider,
             @Named("signing") Provider<PrivateKey> privateSigningKeyProvider) {
         this.authDataEncryptor = authDataEncryptor;
         this.requestDispatcher = requestDispatcher;
         this.siteLocationProvider = siteLocationProvider;
-        this.serializer = serializer;
         this.privateSigningKeyProvider = privateSigningKeyProvider;
     }
 
@@ -100,8 +94,12 @@ final class FakeAvsService implements AvsApi {
 
         SignedAgeCertificate signedCertificate = createSignedAgeCertificate(authData);
         clearStoredVerificationData();
-        Request request = createAgeCertificateRequest(signedCertificate);
-        requestDispatcher.dispatch(request, sender, dispatcher, this::onAgeCertificateResponseReceived);
+
+        HttpUrl certificateUrl = siteLocationProvider.get().ageCertificateUrl();
+        requestDispatcher
+                .createExchangeBuilder(certificateUrl, sender, dispatcher)
+                .post(signedCertificate)
+                .dispatchWithoutResponseBody(this::onAgeCertificateResponseReceived);
     }
 
     /** Populates preset accounts for this service. */
@@ -126,16 +124,8 @@ final class FakeAvsService implements AvsApi {
         return SignedAgeCertificate.sign(certificate, privateSigningKeyProvider.get());
     }
 
-    /** Creates a request to send a {@link SignedAgeCertificate} to a site. */
-    private Request createAgeCertificateRequest(SignedAgeCertificate signedCertificate) {
-        HttpUrl url = siteLocationProvider.get().ageCertificateUrl();
-        byte[] rawSignedCertificate = serializer.serialize(signedCertificate);
-        RequestBody body = RequestBody.create(rawSignedCertificate);
-        return new Request.Builder().url(url).post(body).build();
-    }
-
     /** Called when a response is received for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void onAgeCertificateResponseReceived(Response response, StatusCodeSender sender, Dispatcher dispatcher) {
+    private void onAgeCertificateResponseReceived(StatusCodeSender sender, Response response, Dispatcher dispatcher) {
         sender.send(response.code());
     }
 }
