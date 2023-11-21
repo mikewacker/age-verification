@@ -1,7 +1,5 @@
 package org.example.age.test.avs.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.PrivateKey;
 import java.time.Duration;
 import java.util.List;
@@ -17,10 +15,11 @@ import okhttp3.Response;
 import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.api.SiteLocation;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptor;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -34,9 +33,9 @@ import org.example.age.infra.service.client.RequestDispatcher;
 @Singleton
 final class FakeAvsService implements AvsApi {
 
-    private final AuthMatchDataExtractor authDataExtractor;
+    private final AuthMatchDataEncryptor authDataEncryptor;
     private final RequestDispatcher requestDispatcher;
-    private final ObjectMapper mapper;
+    private final JsonSerializer serializer;
     private final Provider<SiteLocation> siteLocationProvider;
     private final Provider<PrivateKey> privateSigningKeyProvider;
 
@@ -48,15 +47,15 @@ final class FakeAvsService implements AvsApi {
 
     @Inject
     public FakeAvsService(
-            AuthMatchDataExtractor authDataExtractor,
+            AuthMatchDataEncryptor authDataEncryptor,
             RequestDispatcher requestDispatcher,
-            ObjectMapper mapper,
+            JsonSerializer serializer,
             Provider<SiteLocation> siteLocationProvider,
             @Named("signing") Provider<PrivateKey> privateSigningKeyProvider) {
-        this.authDataExtractor = authDataExtractor;
+        this.authDataEncryptor = authDataEncryptor;
         this.requestDispatcher = requestDispatcher;
         this.siteLocationProvider = siteLocationProvider;
-        this.mapper = mapper;
+        this.serializer = serializer;
         this.privateSigningKeyProvider = privateSigningKeyProvider;
     }
 
@@ -121,7 +120,7 @@ final class FakeAvsService implements AvsApi {
     /** Creates a {@link SignedAgeCertificate} using the stored verification data. */
     private SignedAgeCertificate createSignedAgeCertificate(AuthMatchData authData) {
         VerificationRequest request = storedSession.verificationRequest();
-        AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, storedSession.authKey());
+        AesGcmEncryptionPackage authToken = authDataEncryptor.encrypt(authData, storedSession.authKey());
         AgeCertificate certificate = AgeCertificate.of(request, storedUser, authToken);
         return SignedAgeCertificate.sign(certificate, privateSigningKeyProvider.get());
     }
@@ -129,7 +128,7 @@ final class FakeAvsService implements AvsApi {
     /** Creates a request to send a {@link SignedAgeCertificate} to a site. */
     private Request createAgeCertificateRequest(SignedAgeCertificate signedCertificate) {
         HttpUrl url = siteLocationProvider.get().ageCertificateUrl();
-        byte[] rawSignedCertificate = serialize(signedCertificate);
+        byte[] rawSignedCertificate = serializer.serialize(signedCertificate);
         RequestBody body = RequestBody.create(rawSignedCertificate);
         return new Request.Builder().url(url).post(body).build();
     }
@@ -137,13 +136,5 @@ final class FakeAvsService implements AvsApi {
     /** Called when a response is received for the request to send a {@link SignedAgeCertificate} to a site. */
     private void onAgeCertificateResponseReceived(Response response, CodeSender sender, Dispatcher dispatcher) {
         sender.send(response.code());
-    }
-
-    private byte[] serialize(Object value) {
-        try {
-            return mapper.writeValueAsBytes(value);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("serialization failed", e);
-        }
     }
 }

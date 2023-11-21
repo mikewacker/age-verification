@@ -18,6 +18,7 @@ import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.base.store.PendingStore;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.base.utils.internal.PendingStoreUtils;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptor;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
@@ -31,6 +32,7 @@ final class VerificationManagerImpl implements VerificationManager {
     private final AuthMatchDataExtractor authDataExtractor;
     private final RegisteredSiteConfigStore siteConfigStore;
     private final VerifiedUserStore userStore;
+    private final AuthMatchDataEncryptor authDataEncryptor;
     private final PendingStore<SecureId, PendingVerification> unlinkedPendingVerifications;
     private final PendingStore<String, PendingVerification> linkedPendingVerifications;
     private final Provider<Duration> expiresInProvider;
@@ -40,11 +42,13 @@ final class VerificationManagerImpl implements VerificationManager {
             AuthMatchDataExtractor authDataExtractor,
             RegisteredSiteConfigStore siteConfigStore,
             VerifiedUserStore userStore,
+            AuthMatchDataEncryptor authDataEncryptor,
             PendingStoreFactory pendingStoreFactory,
             @Named("expiresIn") Provider<Duration> expiresInProvider) {
         this.authDataExtractor = authDataExtractor;
         this.siteConfigStore = siteConfigStore;
         this.userStore = userStore;
+        this.authDataEncryptor = authDataEncryptor;
         unlinkedPendingVerifications = pendingStoreFactory.create();
         linkedPendingVerifications = pendingStoreFactory.create();
         this.expiresInProvider = expiresInProvider;
@@ -140,7 +144,7 @@ final class VerificationManagerImpl implements VerificationManager {
         }
 
         AuthMatchData authData = maybeAuthData.get();
-        AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, session.authKey());
+        AesGcmEncryptionPackage authToken = authDataEncryptor.encrypt(authData, session.authKey());
         return HttpOptional.of(authToken);
     }
 

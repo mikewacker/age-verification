@@ -21,9 +21,7 @@ dependencies {
     testFixturesImplementation("javax.inject:javax.inject")
 
     // test
-    testCompileOnly("org.immutables:value-annotations")
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
-    testAnnotationProcessor("org.immutables:value")
 
     testImplementation(testFixtures(project(":api")))
     testImplementation("com.google.dagger:dagger")

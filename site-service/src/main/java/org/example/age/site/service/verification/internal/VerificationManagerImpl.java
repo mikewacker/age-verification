@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.store.PendingStore;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.data.certificate.AgeCertificate;
@@ -30,9 +30,9 @@ final class VerificationManagerImpl implements VerificationManager {
 
     private static final String VERIFICATION_STORE_NAME = "verification";
 
-    private final AuthMatchDataExtractor authDataExtractor;
     private final VerificationStore verificationStore;
     private final PendingStoreFactory pendingStoreFactory;
+    private final AuthMatchDataEncryptor authDataEncryptor;
     private final Provider<PublicKey> avsPublicSigningKeyProvider;
     private final Provider<String> siteIdProvider;
     private final Provider<SecureId> pseudonymKeyProvider;
@@ -40,16 +40,16 @@ final class VerificationManagerImpl implements VerificationManager {
 
     @Inject
     public VerificationManagerImpl(
-            AuthMatchDataExtractor authDataExtractor,
             VerificationStore verificationStore,
             PendingStoreFactory pendingStoreFactory,
+            AuthMatchDataEncryptor authDataEncryptor,
             @Named("avsSigning") Provider<PublicKey> avsPublicSigningKeyProvider,
             @Named("siteId") Provider<String> siteIdProvider,
             @Named("pseudonymKey") Provider<SecureId> pseudonymKeyProvider,
             @Named("expiresIn") Provider<Duration> expiresInProvider) {
-        this.authDataExtractor = authDataExtractor;
         this.verificationStore = verificationStore;
         this.pendingStoreFactory = pendingStoreFactory;
+        this.authDataEncryptor = authDataEncryptor;
         this.avsPublicSigningKeyProvider = avsPublicSigningKeyProvider;
         this.siteIdProvider = siteIdProvider;
         this.pseudonymKeyProvider = pseudonymKeyProvider;
@@ -128,7 +128,7 @@ final class VerificationManagerImpl implements VerificationManager {
 
     /** Runs an authentication check, returning a status code. */
     private int authenticate(AuthMatchData authData, AesGcmEncryptionPackage remoteAuthToken, Aes256Key key) {
-        HttpOptional<AuthMatchData> maybeRemoteAuthData = authDataExtractor.tryDecrypt(remoteAuthToken, key);
+        HttpOptional<AuthMatchData> maybeRemoteAuthData = authDataEncryptor.tryDecrypt(remoteAuthToken, key);
         if (maybeRemoteAuthData.isEmpty()) {
             return maybeRemoteAuthData.statusCode();
         }

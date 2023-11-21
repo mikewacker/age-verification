@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":avs-api"))
     implementation(project(":common-api"))
+    implementation(project(":common-service"))
     implementation(project(":data"))
     implementation(project(":infra-api"))
     implementation("com.fasterxml.jackson.core:jackson-databind")

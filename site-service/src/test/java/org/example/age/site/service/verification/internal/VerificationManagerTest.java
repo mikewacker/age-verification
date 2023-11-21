@@ -12,9 +12,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.service.data.UserAgentAuthMatchData;
-import org.example.age.common.service.data.UserAgentAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.certificate.AgeCertificate;
@@ -42,7 +41,7 @@ public final class VerificationManagerTest {
 
     private VerificationStore verificationStore;
 
-    private AuthMatchDataExtractor authDataExtractor;
+    private static AuthMatchDataEncryptor authDataEncryptor;
     private static KeyPair avsSigningKeyPair;
     private static SecureId pseudonymKey;
 
@@ -51,7 +50,7 @@ public final class VerificationManagerTest {
         TestComponent component = TestComponent.create();
         verificationManager = component.verificationManager();
         verificationStore = component.verificationStore();
-        authDataExtractor = component.authMatchDataExtractor();
+        authDataEncryptor = component.authMatchDataEncryptor();
     }
 
     @BeforeAll
@@ -194,7 +193,7 @@ public final class VerificationManagerTest {
 
     private SignedAgeCertificate createSignedAgeCertificate(
             VerificationSession session, VerifiedUser user, AuthMatchData authData) {
-        AesGcmEncryptionPackage authToken = authDataExtractor.encrypt(authData, session.authKey());
+        AesGcmEncryptionPackage authToken = authDataEncryptor.encrypt(authData, session.authKey());
         return createSignedAgeCertificate(session, user, authToken);
     }
 
@@ -209,7 +208,6 @@ public final class VerificationManagerTest {
     @Module(
             includes = {
                 VerificationManagerModule.class,
-                UserAgentAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
                 DataMapperModule.class,
@@ -247,7 +245,7 @@ public final class VerificationManagerTest {
 
     /**
      * Dagger component that provides a {@link VerificationManager},
-     * and also a {@link VerificationStore} and an {@link AuthMatchDataExtractor}.
+     * and also a {@link VerificationStore} and an {@link AuthMatchDataEncryptor}.
      */
     @Component(modules = TestModule.class)
     @Singleton
@@ -261,6 +259,6 @@ public final class VerificationManagerTest {
 
         VerificationStore verificationStore();
 
-        AuthMatchDataExtractor authMatchDataExtractor();
+        AuthMatchDataEncryptor authMatchDataEncryptor();
     }
 }

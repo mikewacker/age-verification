@@ -1,6 +1,5 @@
 package org.example.age.common.service.data;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import javax.inject.Inject;
@@ -11,12 +10,10 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
 
 /** {@link AuthMatchDataExtractor} that extracts {@link UserAgentAuthMatchData}. */
 @Singleton
-final class UserAgentAuthMatchDataExtractor extends AuthMatchDataExtractor {
+final class UserAgentAuthMatchDataExtractor implements AuthMatchDataExtractor {
 
     @Inject
-    public UserAgentAuthMatchDataExtractor(ObjectMapper mapper) {
-        super(mapper);
-    }
+    public UserAgentAuthMatchDataExtractor() {}
 
     @Override
     public HttpOptional<AuthMatchData> tryExtract(HttpServerExchange exchange) {

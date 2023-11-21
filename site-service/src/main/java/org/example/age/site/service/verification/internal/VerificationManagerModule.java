@@ -5,7 +5,7 @@ import dagger.Binds;
 import dagger.Module;
 import java.security.PublicKey;
 import java.time.Duration;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.store.VerificationStore;
@@ -15,7 +15,6 @@ import org.example.age.site.service.store.VerificationStore;
  *
  * <p>Depends on an unbound...</p>
  * <ul>
- *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
  *     <li>{@link ObjectMapper}</li>
@@ -25,7 +24,7 @@ import org.example.age.site.service.store.VerificationStore;
  *     <li><code>@Named("expiresIn") {@link Duration}</code></li>
  * </ul>
  */
-@Module
+@Module(includes = AuthMatchDataEncryptorModule.class)
 public interface VerificationManagerModule {
 
     @Binds
