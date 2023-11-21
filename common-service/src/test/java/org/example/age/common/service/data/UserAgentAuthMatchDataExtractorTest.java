@@ -3,62 +3,45 @@ package org.example.age.common.service.data;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import dagger.Component;
-import dagger.Module;
 import io.undertow.server.HttpServerExchange;
 import java.util.Map;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.common.service.data.internal.DataMapperModule;
-import org.example.age.data.crypto.Aes256Key;
-import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public final class UserAgentAuthMatchDataExtractorTest {
 
-    private static AuthMatchDataExtractor dataExtractor;
-
-    private static Aes256Key key;
+    private static AuthMatchDataExtractor authDataExtractor;
 
     @BeforeAll
     public static void createAuthMatchDataExtractorEtAl() {
-        dataExtractor = TestComponent.createAuthMatchDataExtractor();
-        key = Aes256Key.generate();
+        authDataExtractor = TestComponent.createAuthMatchDataExtractor();
     }
 
     @Test
-    public void extract() {
-        HttpServerExchange exchange = StubExchanges.create(Map.of("User-Agent", "agent"));
-        HttpOptional<AuthMatchData> maybeData = dataExtractor.tryExtract(exchange);
-        AuthMatchData expectedData = UserAgentAuthMatchData.of("agent");
-        assertThat(maybeData).hasValue(expectedData);
+    public void extract_HeaderPresent() {
+        AuthMatchData expectedAuthData = UserAgentAuthMatchData.of("agent");
+        extract(Map.of("User-Agent", "agent"), expectedAuthData);
     }
 
     @Test
-    public void extractFailed() {
-        HttpServerExchange exchange = StubExchanges.create(Map.of());
-        HttpOptional<AuthMatchData> maybeData = dataExtractor.tryExtract(exchange);
-        AuthMatchData expectedData = UserAgentAuthMatchData.of("");
-        assertThat(maybeData).hasValue(expectedData);
+    public void extract_HeaderNotPresent() {
+        AuthMatchData expectedAuthData = UserAgentAuthMatchData.of("");
+        extract(Map.of(), expectedAuthData);
     }
 
-    @Test
-    public void encryptThenDecrypt() {
-        AuthMatchData data = UserAgentAuthMatchData.of("agent");
-        AesGcmEncryptionPackage token = dataExtractor.encrypt(data, key);
-        HttpOptional<AuthMatchData> maybeRtData = dataExtractor.tryDecrypt(token, key);
-        assertThat(maybeRtData).hasValue(data);
+    private void extract(Map<String, String> headers, AuthMatchData expectedAuthData) {
+        HttpServerExchange exchange = StubExchanges.create(headers);
+        HttpOptional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange);
+        assertThat(maybeAuthData).hasValue(expectedAuthData);
     }
-
-    /** Dagger module that binds dependencies for {@link AuthMatchDataExtractor}. */
-    @Module(includes = {UserAgentAuthMatchDataExtractorModule.class, DataMapperModule.class})
-    interface TestModule {}
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
-    @Component(modules = TestModule.class)
+    @Component(modules = UserAgentAuthMatchDataExtractorModule.class)
     @Singleton
     interface TestComponent {
 

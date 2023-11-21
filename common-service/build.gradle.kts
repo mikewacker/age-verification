@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":common-api"))
     implementation(project(":data"))
+    implementation(project(":infra-api"))
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.google.dagger:dagger")
     implementation("com.google.guava:guava")
@@ -19,8 +20,11 @@ dependencies {
     implementation("javax.inject:javax.inject")
 
     // test
+    testCompileOnly("org.immutables:value-annotations")
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testAnnotationProcessor("org.immutables:value")
 
-    implementation(testFixtures(project(":api")))
-    implementation(testFixtures(project(":common-api")))
+    testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":common-api")))
+    testImplementation(testFixtures(project(":infra-api")))
 }

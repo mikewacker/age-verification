@@ -22,14 +22,14 @@ public final class TestAccountIdExtractorTest {
     }
 
     @Test
-    public void extract_HeaderPresent() {
+    public void extract() {
         HttpServerExchange exchange = StubExchanges.create(Map.of("Account-Id", "username"));
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         assertThat(maybeAccountId).hasValue("username");
     }
 
     @Test
-    public void extractEmpty_HeaderNotPresent() {
+    public void extractFailed() {
         HttpServerExchange exchange = StubExchanges.create(Map.of());
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         assertThat(maybeAccountId).isEmptyWithErrorCode(401);

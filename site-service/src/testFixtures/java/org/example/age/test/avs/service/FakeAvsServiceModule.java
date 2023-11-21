@@ -7,6 +7,7 @@ import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.api.AvsApiModule;
 import org.example.age.avs.api.SiteLocation;
 import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.test.common.service.data.TestAccountIdExtractorModule;
@@ -25,6 +26,7 @@ import org.example.age.test.common.service.data.TestAccountIdExtractorModule;
             AvsApiModule.class,
             TestAccountIdExtractorModule.class,
             DisabledAuthMatchDataExtractorModule.class,
+            AuthMatchDataEncryptorModule.class,
             RequestDispatcherModule.class,
             DataMapperModule.class,
         })

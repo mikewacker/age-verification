@@ -8,6 +8,7 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.base.store.PendingStoreFactory;
+import org.example.age.common.service.data.internal.AuthMatchDataEncryptorModule;
 
 /**
  * Dagger module that publishes a binding for {@link VerificationManager}.
@@ -22,7 +23,7 @@ import org.example.age.common.base.store.PendingStoreFactory;
  *     <li><code>@Named("expiresIn") Provider&lt;{@link Duration}&gt;</code></li>
  * </ul>
  */
-@Module
+@Module(includes = AuthMatchDataEncryptorModule.class)
 public interface VerificationManagerModule {
 
     @Binds

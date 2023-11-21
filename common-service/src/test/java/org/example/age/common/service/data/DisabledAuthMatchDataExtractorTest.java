@@ -3,53 +3,34 @@ package org.example.age.common.service.data;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import dagger.Component;
-import dagger.Module;
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
-import org.example.age.common.service.data.internal.DataMapperModule;
-import org.example.age.data.crypto.Aes256Key;
-import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.testing.exchange.StubExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public final class DisabledAuthMatchDataExtractorTest {
 
-    private static AuthMatchDataExtractor dataExtractor;
-
-    private static Aes256Key key;
+    private static AuthMatchDataExtractor authDataExtractor;
 
     @BeforeAll
-    public static void createAuthMatchDataExtractorEtAl() {
-        dataExtractor = TestComponent.createAuthMatchDataExtractor();
-        key = Aes256Key.generate();
+    public static void createAuthMatchDataExtractor() {
+        authDataExtractor = TestComponent.createAuthMatchDataExtractor();
     }
 
     @Test
     public void extract() {
         HttpServerExchange exchange = StubExchanges.create();
-        HttpOptional<AuthMatchData> maybeData = dataExtractor.tryExtract(exchange);
-        AuthMatchData expectedData = DisabledAuthMatchData.of();
-        assertThat(maybeData).hasValue(expectedData);
+        HttpOptional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange);
+        AuthMatchData expectedAuthData = DisabledAuthMatchData.of();
+        assertThat(maybeAuthData).hasValue(expectedAuthData);
     }
-
-    @Test
-    public void encryptThenDecrypt() {
-        AuthMatchData data = DisabledAuthMatchData.of();
-        AesGcmEncryptionPackage token = dataExtractor.encrypt(data, key);
-        HttpOptional<AuthMatchData> maybeRtData = dataExtractor.tryDecrypt(token, key);
-        assertThat(maybeRtData).hasValue(data);
-    }
-
-    /** Dagger module that binds dependencies for {@link AuthMatchDataExtractor}. */
-    @Module(includes = {DisabledAuthMatchDataExtractorModule.class, DataMapperModule.class})
-    interface TestModule {}
 
     /** Dagger component that provides an {@link AuthMatchDataExtractor}. */
-    @Component(modules = TestModule.class)
+    @Component(modules = DisabledAuthMatchDataExtractorModule.class)
     @Singleton
     interface TestComponent {
 
