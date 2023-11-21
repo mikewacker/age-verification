@@ -9,7 +9,7 @@ public interface JsonSender<B> extends Sender {
     }
 
     @Override
-    default void sendError(int errorCode) {
+    default void sendErrorCode(int errorCode) {
         send(HttpOptional.empty(errorCode));
     }
 

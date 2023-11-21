@@ -2,14 +2,14 @@ package org.example.age.api;
 
 /** Response sender that only sends a status code. */
 @FunctionalInterface
-public interface CodeSender extends Sender {
+public interface StatusCodeSender extends Sender {
 
     default void sendOk() {
         send(200);
     }
 
     @Override
-    default void sendError(int errorCode) {
+    default void sendErrorCode(int errorCode) {
         send(errorCode);
     }
 

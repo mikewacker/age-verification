@@ -9,9 +9,9 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
@@ -54,7 +54,7 @@ final class SiteService implements SiteApi {
 
     @Override
     public void processAgeCertificate(
-            CodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+            StatusCodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
         int statusCode = verificationManager.onSignedAgeCertificateReceived(signedCertificate);
         sender.send(statusCode);
     }
@@ -81,14 +81,14 @@ final class SiteService implements SiteApi {
                 Dispatcher dispatcher) {
             if (!response.isSuccessful()) {
                 int errorCode = ((response.code() / 100) == 5) ? 502 : 500;
-                sender.sendError(errorCode);
+                sender.sendErrorCode(errorCode);
                 return;
             }
 
             int statusCode =
                     verificationManager.onVerificationSessionReceived(accountId, authData, session, dispatcher);
             if (statusCode != 200) {
-                sender.sendError(statusCode);
+                sender.sendErrorCode(statusCode);
                 return;
             }
 

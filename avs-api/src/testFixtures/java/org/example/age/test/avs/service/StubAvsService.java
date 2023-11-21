@@ -3,9 +3,9 @@ package org.example.age.test.avs.service;
 import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.VerificationRequest;
@@ -29,12 +29,13 @@ public final class StubAvsService implements AvsApi {
 
     @Override
     public void linkVerificationRequest(
-            CodeSender sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
+            StatusCodeSender sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
         sender.sendOk();
     }
 
     @Override
-    public void sendAgeCertificate(CodeSender sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+    public void sendAgeCertificate(
+            StatusCodeSender sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         sender.sendOk();
     }
 }

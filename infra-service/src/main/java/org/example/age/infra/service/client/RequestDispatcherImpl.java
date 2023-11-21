@@ -52,7 +52,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
     /** Sends a 502 error when the request fails. */
     private static void requestFailed(Sender sender) {
-        sender.sendError(502);
+        sender.sendErrorCode(502);
     }
 
     /** Adapts a {@link ResponseCallback} to a {@link Callback}. */

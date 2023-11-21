@@ -6,19 +6,19 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AccountIdExtractor;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.infra.api.ExchangeCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
+import org.example.age.infra.api.ExchangeStatusCodeSender;
 import org.example.age.infra.api.request.RequestParser;
 
 @Singleton
@@ -47,7 +47,7 @@ final class SiteEndpointHandler implements HttpHandler {
         switch (exchange.getRelativePath()) {
             case "/verification-session" -> handleVerificationSession(exchange);
             case "/age-certificate" -> parser.parseBody(new TypeReference<>() {}, this::handleAgeCertificate);
-            default -> ExchangeCodeSender.create(exchange).sendError(StatusCodes.NOT_FOUND);
+            default -> ExchangeStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
         }
     }
 
@@ -56,14 +56,14 @@ final class SiteEndpointHandler implements HttpHandler {
 
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
-            sender.sendError(maybeAccountId.statusCode());
+            sender.sendErrorCode(maybeAccountId.statusCode());
             return;
         }
         String accountId = maybeAccountId.get();
 
         HttpOptional<AuthMatchData> maybeAuthData = authDataExtractor.tryExtract(exchange);
         if (maybeAuthData.isEmpty()) {
-            sender.sendError(maybeAuthData.statusCode());
+            sender.sendErrorCode(maybeAuthData.statusCode());
             return;
         }
         AuthMatchData authData = maybeAuthData.get();
@@ -74,7 +74,7 @@ final class SiteEndpointHandler implements HttpHandler {
 
     private void handleAgeCertificate(
             HttpServerExchange exchange, RequestParser parser, SignedAgeCertificate signedCertificate) {
-        CodeSender sender = ExchangeCodeSender.create(exchange);
+        StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
 
         Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
         siteApi.processAgeCertificate(sender, signedCertificate, dispatcher);

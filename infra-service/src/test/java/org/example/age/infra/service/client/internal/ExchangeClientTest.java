@@ -87,14 +87,14 @@ public final class ExchangeClientTest {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                sender.sendError(StatusCodes.BAD_GATEWAY);
+                sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
             }
 
             private void onRecipientReceived(Response response, JsonSender<String> sender) throws IOException {
                 HttpOptional<String> maybeRecipient =
                         serializer.tryDeserialize(response.body().bytes(), new TypeReference<>() {}, 400);
                 if (maybeRecipient.isEmpty()) {
-                    sender.sendError(maybeRecipient.statusCode());
+                    sender.sendErrorCode(maybeRecipient.statusCode());
                     return;
                 }
                 String recipient = maybeRecipient.get();

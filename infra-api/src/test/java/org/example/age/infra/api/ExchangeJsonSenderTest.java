@@ -26,7 +26,7 @@ public final class ExchangeJsonSenderTest {
     }
 
     @Test
-    public void send_Error() throws IOException {
+    public void send_ErrorCode() throws IOException {
         sendError("/forbidden", 403);
     }
 
@@ -68,10 +68,10 @@ public final class ExchangeJsonSenderTest {
             JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             switch (exchange.getRequestPath()) {
                 case "/body" -> sender.sendBody("test");
-                case "/forbidden" -> sender.sendError(StatusCodes.FORBIDDEN);
+                case "/forbidden" -> sender.sendErrorCode(StatusCodes.FORBIDDEN);
                 case "/send-twice" -> sendTwice(sender);
                 case "/serialization-failed" -> serializationFailed(exchange);
-                default -> sender.sendError(StatusCodes.NOT_FOUND);
+                default -> sender.sendErrorCode(StatusCodes.NOT_FOUND);
             }
         }
 

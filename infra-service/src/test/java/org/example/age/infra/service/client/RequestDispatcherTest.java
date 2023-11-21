@@ -16,13 +16,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
-import org.example.age.infra.api.ExchangeCodeSender;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
+import org.example.age.infra.api.ExchangeStatusCodeSender;
 import org.example.age.infra.api.data.JsonSerializerModule;
 import org.example.age.test.infra.service.data.TestMapperModule;
 import org.example.age.testing.client.TestClient;
@@ -112,12 +112,12 @@ public final class RequestDispatcherTest {
             switch (exchange.getRequestPath()) {
                 case "/response" -> handleResponse(exchange);
                 case "/response-body" -> handleResponseBody(exchange);
-                default -> ExchangeCodeSender.create(exchange).sendError(StatusCodes.NOT_FOUND);
+                default -> ExchangeStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
             }
         }
 
         private void handleResponse(HttpServerExchange exchange) {
-            CodeSender sender = ExchangeCodeSender.create(exchange);
+            StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             requestDispatcher.dispatch(request, sender, dispatcher, this::onResponseReceived);
@@ -131,14 +131,14 @@ public final class RequestDispatcherTest {
                     request, new TypeReference<>() {}, sender, dispatcher, this::onResponseBodyReceived);
         }
 
-        private void onResponseReceived(Response response, CodeSender sender, Dispatcher dispatcher) {
+        private void onResponseReceived(Response response, StatusCodeSender sender, Dispatcher dispatcher) {
             sender.send(response.code());
         }
 
         private void onResponseBodyReceived(
                 Response response, String responseBody, JsonSender<String> sender, Dispatcher dispatcher) {
             if (!response.isSuccessful()) {
-                sender.sendError(response.code());
+                sender.sendErrorCode(response.code());
                 return;
             }
 
