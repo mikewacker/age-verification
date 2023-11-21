@@ -13,6 +13,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
@@ -75,7 +76,7 @@ public final class RequestParserTest {
      */
     private static final class TestHandler implements HttpHandler {
 
-        private static final ObjectMapper mapper = new ObjectMapper();
+        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
         private static final TypeReference<Integer> INT_TYPE = new TypeReference<>() {};
 
         public static HttpHandler create() {
@@ -84,12 +85,12 @@ public final class RequestParserTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            RequestParser parser = RequestParser.create(exchange, mapper);
+            RequestParser parser = RequestParser.create(exchange, serializer);
             parser.parseBody(INT_TYPE, TestHandler::handleAddRequest);
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
-            JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, mapper);
+            JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, serializer);
             HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", INT_TYPE);
             if (maybeOperand1.isEmpty()) {
                 sender.sendError(maybeOperand1.statusCode());

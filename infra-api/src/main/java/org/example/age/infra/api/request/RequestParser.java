@@ -1,14 +1,13 @@
 package org.example.age.infra.api.request;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.io.Receiver;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSerializer;
 
 /** Parses API arguments from an HTTP request. */
 public final class RequestParser {
@@ -16,11 +15,11 @@ public final class RequestParser {
     private static final Deque<String> EMPTY_VALUES = new ArrayDeque<>();
 
     private final HttpServerExchange exchange;
-    private final ObjectMapper mapper;
+    private final JsonSerializer serializer;
 
     /** Creates a {@link RequestParser} for the {@link HttpServerExchange}. */
-    public static RequestParser create(HttpServerExchange exchange, ObjectMapper mapper) {
-        return new RequestParser(exchange, mapper);
+    public static RequestParser create(HttpServerExchange exchange, JsonSerializer serializer) {
+        return new RequestParser(exchange, serializer);
     }
 
     /**
@@ -46,13 +45,8 @@ public final class RequestParser {
         }
 
         String rawValue = maybeRawValue.get();
-        try {
-            String json = mapper.writeValueAsString(rawValue);
-            P value = mapper.readValue(json, bodyTypeRef);
-            return HttpOptional.of(value);
-        } catch (IOException e) {
-            return HttpOptional.empty(StatusCodes.BAD_REQUEST);
-        }
+        byte[] json = serializer.serialize(rawValue);
+        return serializer.tryDeserialize(json, bodyTypeRef, StatusCodes.BAD_REQUEST);
     }
 
     /**
@@ -69,9 +63,9 @@ public final class RequestParser {
         return HttpOptional.of(values.getFirst());
     }
 
-    private RequestParser(HttpServerExchange exchange, ObjectMapper mapper) {
+    private RequestParser(HttpServerExchange exchange, JsonSerializer serializer) {
         this.exchange = exchange;
-        this.mapper = mapper;
+        this.serializer = serializer;
     }
 
     /** Adapts a {@link RequestJsonCallback} to a {@link Receiver.FullBytesCallback}. */
@@ -87,25 +81,24 @@ public final class RequestParser {
 
         @Override
         public void handle(HttpServerExchange exchange, byte[] rawBody) {
-            B body;
-            try {
-                body = mapper.readValue(rawBody, bodyTypeRef);
-            } catch (IOException e) {
-                sendError(StatusCodes.BAD_REQUEST);
+            HttpOptional<B> maybeBody = serializer.tryDeserialize(rawBody, bodyTypeRef, StatusCodes.BAD_REQUEST);
+            if (maybeBody.isEmpty()) {
+                sendErrorCode(maybeBody.statusCode());
                 return;
             }
+            B body = maybeBody.get();
 
             // FullBytesCallback does not throw an exception, so we must handle exceptions here.
             try {
                 callback.handleRequest(exchange, RequestParser.this, body);
             } catch (Exception e) {
-                sendError(StatusCodes.INTERNAL_SERVER_ERROR);
+                sendErrorCode(StatusCodes.INTERNAL_SERVER_ERROR);
             }
         }
 
         /** Sends an error status code. */
-        private void sendError(int statusCode) {
-            exchange.setStatusCode(statusCode);
+        private void sendErrorCode(int errorCode) {
+            exchange.setStatusCode(errorCode);
             exchange.endExchange();
         }
     }

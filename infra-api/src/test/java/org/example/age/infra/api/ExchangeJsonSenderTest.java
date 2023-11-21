@@ -9,6 +9,7 @@ import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import okhttp3.Response;
 import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ public final class ExchangeJsonSenderTest {
     /** Test {@link HttpHandler} that uses an {@link ExchangeJsonSender}. */
     private static final class TestHandler implements HttpHandler {
 
-        private static final ObjectMapper mapper = new ObjectMapper();
+        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
 
         public static HttpHandler create() {
             return new TestHandler();
@@ -64,7 +65,7 @@ public final class ExchangeJsonSenderTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, mapper);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             switch (exchange.getRequestPath()) {
                 case "/body" -> sender.sendBody("test");
                 case "/forbidden" -> sender.sendError(StatusCodes.FORBIDDEN);
@@ -80,7 +81,7 @@ public final class ExchangeJsonSenderTest {
         }
 
         private static void serializationFailed(HttpServerExchange exchange) {
-            JsonSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange, mapper);
+            JsonSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange, serializer);
             sender.sendBody(exchange);
         }
 
