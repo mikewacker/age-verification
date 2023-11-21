@@ -27,7 +27,7 @@ public final class ExchangeJsonSender<B> implements JsonSender<B> {
         }
 
         if (maybeBody.isEmpty()) {
-            sendErrorCode(maybeBody.statusCode());
+            sendErrorCodeInternal(maybeBody.statusCode());
             return;
         }
 
@@ -43,7 +43,7 @@ public final class ExchangeJsonSender<B> implements JsonSender<B> {
     }
 
     /** Sends an error status code. */
-    private void sendErrorCode(int errorCode) {
+    private void sendErrorCodeInternal(int errorCode) {
         exchange.setStatusCode(errorCode);
         exchange.endExchange();
     }

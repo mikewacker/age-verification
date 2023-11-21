@@ -7,8 +7,8 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import okhttp3.Response;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ public final class ExchangeDispatcherTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            CodeSender sender = ExchangeCodeSender.create(exchange);
+            StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
             if (!dispatcher.isInIoThread()) {
                 sender.send(418);
                 return;
@@ -75,22 +75,22 @@ public final class ExchangeDispatcherTest {
             }
         }
 
-        private static void dispatchedIoThread(CodeSender sender, Dispatcher dispatcher) {
+        private static void dispatchedIoThread(StatusCodeSender sender, Dispatcher dispatcher) {
             dispatcher.getIoThread().execute(() -> dispatcher.executeHandler(sender, TestHandler::ioThreadHandler));
             dispatcher.dispatched();
         }
 
-        private static void dispatchedWorker(CodeSender sender, Dispatcher dispatcher) {
+        private static void dispatchedWorker(StatusCodeSender sender, Dispatcher dispatcher) {
             dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::handler));
             dispatcher.dispatched();
         }
 
-        private static void dispatchedBadHandler(CodeSender sender, Dispatcher dispatcher) {
+        private static void dispatchedBadHandler(StatusCodeSender sender, Dispatcher dispatcher) {
             dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::badHandler));
             dispatcher.dispatched();
         }
 
-        private static void handler(CodeSender sender, Dispatcher dispatcher) {
+        private static void handler(StatusCodeSender sender, Dispatcher dispatcher) {
             if (dispatcher.isInIoThread()) {
                 sender.send(418);
                 return;
@@ -99,7 +99,7 @@ public final class ExchangeDispatcherTest {
             sender.sendOk();
         }
 
-        private static void ioThreadHandler(CodeSender sender, Dispatcher dispatcher) {
+        private static void ioThreadHandler(StatusCodeSender sender, Dispatcher dispatcher) {
             if (!dispatcher.isInIoThread()) {
                 sender.send(418);
                 return;
@@ -108,7 +108,7 @@ public final class ExchangeDispatcherTest {
             sender.sendOk();
         }
 
-        private static void badHandler(CodeSender sender, Dispatcher dispatcher) {
+        private static void badHandler(StatusCodeSender sender, Dispatcher dispatcher) {
             throw new RuntimeException();
         }
 

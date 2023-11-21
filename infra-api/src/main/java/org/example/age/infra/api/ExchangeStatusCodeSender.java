@@ -2,17 +2,17 @@ package org.example.age.infra.api;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.example.age.api.CodeSender;
+import org.example.age.api.StatusCodeSender;
 
-/** {@link CodeSender} that is backed by an {@link HttpServerExchange}. */
-public final class ExchangeCodeSender implements CodeSender {
+/** {@link StatusCodeSender} that is backed by an {@link HttpServerExchange}. */
+public final class ExchangeStatusCodeSender implements StatusCodeSender {
 
     private final HttpServerExchange exchange;
     private final AtomicBoolean wasSent = new AtomicBoolean(false);
 
-    /** Creates the {@link CodeSender} from the {@link HttpServerExchange}. */
-    public static CodeSender create(HttpServerExchange exchange) {
-        return new ExchangeCodeSender(exchange);
+    /** Creates the {@link StatusCodeSender} from the {@link HttpServerExchange}. */
+    public static StatusCodeSender create(HttpServerExchange exchange) {
+        return new ExchangeStatusCodeSender(exchange);
     }
 
     @Override
@@ -25,7 +25,7 @@ public final class ExchangeCodeSender implements CodeSender {
         exchange.endExchange();
     }
 
-    private ExchangeCodeSender(HttpServerExchange exchange) {
+    private ExchangeStatusCodeSender(HttpServerExchange exchange) {
         this.exchange = exchange;
     }
 }

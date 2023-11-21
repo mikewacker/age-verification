@@ -12,10 +12,10 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.api.SiteLocation;
 import org.example.age.common.api.data.AuthMatchData;
@@ -70,11 +70,11 @@ final class FakeAvsService implements AvsApi {
 
     @Override
     public void linkVerificationRequest(
-            CodeSender sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
+            StatusCodeSender sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
         if ((storedSession == null)
                 || !requestId.equals(storedSession.verificationRequest().id())) {
             clearStoredVerificationData();
-            sender.sendError(418);
+            sender.sendErrorCode(418);
             return;
         }
 
@@ -82,7 +82,7 @@ final class FakeAvsService implements AvsApi {
         storedUser = users.get(accountId);
         if (storedUser == null) {
             clearStoredVerificationData();
-            sender.sendError(418);
+            sender.sendErrorCode(418);
             return;
         }
 
@@ -90,10 +90,11 @@ final class FakeAvsService implements AvsApi {
     }
 
     @Override
-    public void sendAgeCertificate(CodeSender sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+    public void sendAgeCertificate(
+            StatusCodeSender sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         if (!accountId.equals(storedAccountId)) {
             clearStoredVerificationData();
-            sender.sendError(418);
+            sender.sendErrorCode(418);
             return;
         }
 
@@ -134,7 +135,7 @@ final class FakeAvsService implements AvsApi {
     }
 
     /** Called when a response is received for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void onAgeCertificateResponseReceived(Response response, CodeSender sender, Dispatcher dispatcher) {
+    private void onAgeCertificateResponseReceived(Response response, StatusCodeSender sender, Dispatcher dispatcher) {
         sender.send(response.code());
     }
 }

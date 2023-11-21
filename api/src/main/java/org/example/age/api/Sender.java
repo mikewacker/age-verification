@@ -8,5 +8,5 @@ package org.example.age.api;
 @FunctionalInterface
 public interface Sender {
 
-    void sendError(int errorCode);
+    void sendErrorCode(int errorCode);
 }

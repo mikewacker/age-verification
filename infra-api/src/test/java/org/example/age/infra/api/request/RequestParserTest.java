@@ -93,7 +93,7 @@ public final class RequestParserTest {
             JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, serializer);
             HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", INT_TYPE);
             if (maybeOperand1.isEmpty()) {
-                sender.sendError(maybeOperand1.statusCode());
+                sender.sendErrorCode(maybeOperand1.statusCode());
                 return;
             }
 

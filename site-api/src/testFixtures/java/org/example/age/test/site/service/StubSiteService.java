@@ -3,9 +3,9 @@ package org.example.age.test.site.service;
 import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.CodeSender;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
+import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -29,7 +29,7 @@ public final class StubSiteService implements SiteApi {
 
     @Override
     public void processAgeCertificate(
-            CodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+            StatusCodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
         sender.sendOk();
     }
 }
