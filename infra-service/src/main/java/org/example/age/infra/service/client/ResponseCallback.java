@@ -8,5 +8,5 @@ import org.example.age.api.Sender;
 @FunctionalInterface
 public interface ResponseCallback<S extends Sender> {
 
-    void onResponse(Response response, S sender, Dispatcher dispatcher) throws Exception;
+    void onResponse(S sender, Response response, Dispatcher dispatcher) throws Exception;
 }

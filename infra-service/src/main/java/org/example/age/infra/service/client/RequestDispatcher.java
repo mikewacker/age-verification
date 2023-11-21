@@ -1,7 +1,7 @@
 package org.example.age.infra.service.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import okhttp3.Request;
+import okhttp3.HttpUrl;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.Sender;
 
@@ -12,14 +12,25 @@ import org.example.age.api.Sender;
  */
 public interface RequestDispatcher {
 
-    /** Dispatches a request whose response does not have a body. */
-    <S extends Sender> void dispatch(Request request, S sender, Dispatcher dispatcher, ResponseCallback<S> callback);
+    /** Creates a builder for an exchange with the backend server at the specified URL. */
+    <S extends Sender> ExchangeBuilder<S> createExchangeBuilder(HttpUrl url, S sender, Dispatcher dispatcher);
 
-    /** Dispatches a request whose response has a body. */
-    <B, S extends Sender> void dispatch(
-            Request request,
-            TypeReference<B> responseBodyTypeRef,
-            S sender,
-            Dispatcher dispatcher,
-            ResponseBodyCallback<B, S> callback);
+    /** Builder for an exchange with the backend server. */
+    interface ExchangeBuilder<S extends Sender> {
+
+        /** Uses a GET request. */
+        ExchangeBuilder<S> get();
+
+        /** Uses a POST request without a request body. */
+        ExchangeBuilder<S> post();
+
+        /** Uses a POST request with a request body. */
+        ExchangeBuilder<S> post(Object requestBody);
+
+        /** Dispatches the request, expecting a response without a body. */
+        void dispatchWithoutResponseBody(ResponseCallback<S> callback);
+
+        /** Dispatches the request, expecting a response with a body. */
+        <B> void dispatchWithResponseBody(TypeReference<B> responseBodyTypeRef, ResponseBodyCallback<S, B> callback);
+    }
 }

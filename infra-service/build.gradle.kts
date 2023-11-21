@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     implementation(project(":api"))
+    implementation(project(":infra-api"))
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.google.dagger:dagger")
     implementation("com.squareup.okhttp3:okhttp")
@@ -16,7 +17,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":infra-api"))
     testImplementation(testFixtures(project(":infra-api")))
     testImplementation(testFixtures(project(":testing-server")))
     testImplementation("com.squareup.okhttp3:mockwebserver")

@@ -6,8 +6,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
@@ -23,8 +21,6 @@ import org.example.age.site.service.verification.internal.VerificationManager;
 
 @Singleton
 final class SiteService implements SiteApi {
-
-    private static RequestBody EMPTY_BODY = RequestBody.create(new byte[0]);
 
     private final VerificationManager verificationManager;
     private final RequestDispatcher requestDispatcher;
@@ -46,10 +42,13 @@ final class SiteService implements SiteApi {
     @Override
     public void createVerificationSession(
             JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        Request sessionRequest = createVerificationSessionRequest(siteIdProvider.get());
-        ResponseBodyCallback<VerificationSession, JsonSender<VerificationSession>> sessionCallback =
+        HttpUrl sessionUrl = avsLocationProvider.get().verificationSessionUrl(siteIdProvider.get());
+        ResponseBodyCallback<JsonSender<VerificationSession>, VerificationSession> sessionCallback =
                 new VerificationSessionCallback(verificationManager, accountId, authData);
-        requestDispatcher.dispatch(sessionRequest, new TypeReference<>() {}, sender, dispatcher, sessionCallback);
+        requestDispatcher
+                .createExchangeBuilder(sessionUrl, sender, dispatcher)
+                .post()
+                .dispatchWithResponseBody(new TypeReference<>() {}, sessionCallback);
     }
 
     @Override
@@ -59,25 +58,19 @@ final class SiteService implements SiteApi {
         sender.send(statusCode);
     }
 
-    /** Creates a request to get a {@link VerificationSession} from the age verification service. */
-    private Request createVerificationSessionRequest(String siteId) {
-        HttpUrl url = avsLocationProvider.get().verificationSessionUrl(siteId);
-        return new Request.Builder().url(url).post(EMPTY_BODY).build();
-    }
-
     /**
      * Called when a response is received for the request
      * to get a {@link VerificationSession} from the age verification service.
      */
     private record VerificationSessionCallback(
             VerificationManager verificationManager, String accountId, AuthMatchData authData)
-            implements ResponseBodyCallback<VerificationSession, JsonSender<VerificationSession>> {
+            implements ResponseBodyCallback<JsonSender<VerificationSession>, VerificationSession> {
 
         @Override
         public void onResponse(
+                JsonSender<VerificationSession> sender,
                 Response response,
                 VerificationSession session,
-                JsonSender<VerificationSession> sender,
                 Dispatcher dispatcher) {
             if (!response.isSuccessful()) {
                 int errorCode = ((response.code() / 100) == 5) ? 502 : 500;

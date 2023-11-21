@@ -10,7 +10,7 @@ import org.example.age.api.Sender;
  * <p>The body will be null if the response is not successful.</p>
  */
 @FunctionalInterface
-public interface ResponseBodyCallback<B, S extends Sender> {
+public interface ResponseBodyCallback<S extends Sender, B> {
 
-    void onResponse(Response response, B responseBody, S sender, Dispatcher dispatcher) throws Exception;
+    void onResponse(S sender, Response response, B responseBody, Dispatcher dispatcher) throws Exception;
 }

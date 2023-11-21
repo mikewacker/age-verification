@@ -12,7 +12,7 @@ import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import okhttp3.Request;
+import okhttp3.HttpUrl;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -23,7 +23,6 @@ import org.example.age.api.StatusCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
-import org.example.age.infra.api.data.JsonSerializerModule;
 import org.example.age.test.infra.service.data.TestMapperModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
@@ -47,10 +46,10 @@ public final class RequestDispatcherTest {
     }
 
     @Test
-    public void backendRequestWithoutBody_Error() throws IOException {
-        backendServer.enqueue(new MockResponse().setResponseCode(400));
+    public void backendRequestWithoutBody_ErrorCode() throws IOException {
+        backendServer.enqueue(new MockResponse().setResponseCode(403));
         Response response = TestClient.get(frontendServer.url("/response"));
-        assertThat(response.code()).isEqualTo(400);
+        assertThat(response.code()).isEqualTo(403);
     }
 
     @Test
@@ -70,10 +69,10 @@ public final class RequestDispatcherTest {
     }
 
     @Test
-    public void backendRequestWithBody_Error() throws IOException {
-        backendServer.enqueue(new MockResponse().setResponseCode(400));
+    public void backendRequestWithBody_ErrorCode() throws IOException {
+        backendServer.enqueue(new MockResponse().setResponseCode(403));
         Response response = TestClient.get(frontendServer.url("/response-body"));
-        assertThat(response.code()).isEqualTo(400);
+        assertThat(response.code()).isEqualTo(403);
     }
 
     @Test
@@ -119,24 +118,31 @@ public final class RequestDispatcherTest {
         private void handleResponse(HttpServerExchange exchange) {
             StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            Request request = new Request.Builder().url(backendServer.rootUrl()).build();
-            requestDispatcher.dispatch(request, sender, dispatcher, this::onResponseReceived);
+
+            HttpUrl backendUrl = HttpUrl.parse(backendServer.rootUrl());
+            requestDispatcher
+                    .createExchangeBuilder(backendUrl, sender, dispatcher)
+                    .post()
+                    .dispatchWithoutResponseBody(this::onResponseReceived);
         }
 
         private void handleResponseBody(HttpServerExchange exchange) {
             JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            Request request = new Request.Builder().url(backendServer.rootUrl()).build();
-            requestDispatcher.dispatch(
-                    request, new TypeReference<>() {}, sender, dispatcher, this::onResponseBodyReceived);
+
+            HttpUrl backendUrl = HttpUrl.parse(backendServer.rootUrl());
+            requestDispatcher
+                    .createExchangeBuilder(backendUrl, sender, dispatcher)
+                    .post()
+                    .dispatchWithResponseBody(new TypeReference<>() {}, this::onResponseBodyReceived);
         }
 
-        private void onResponseReceived(Response response, StatusCodeSender sender, Dispatcher dispatcher) {
+        private void onResponseReceived(StatusCodeSender sender, Response response, Dispatcher dispatcher) {
             sender.send(response.code());
         }
 
         private void onResponseBodyReceived(
-                Response response, String responseBody, JsonSender<String> sender, Dispatcher dispatcher) {
+                JsonSender<String> sender, Response response, String responseBody, Dispatcher dispatcher) {
             if (!response.isSuccessful()) {
                 sender.sendErrorCode(response.code());
                 return;
@@ -151,7 +157,7 @@ public final class RequestDispatcherTest {
      *
      * <p>Also binds dependencies for {@link RequestDispatcher}.</p>
      */
-    @Module(includes = {RequestDispatcherModule.class, JsonSerializerModule.class, TestMapperModule.class})
+    @Module(includes = {RequestDispatcherModule.class, TestMapperModule.class})
     interface TestModule {
 
         @Binds
