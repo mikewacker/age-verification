@@ -52,32 +52,40 @@ public final class AgeRangeTest {
     }
 
     @Test
-    public void meetsThreshold_Met() {
-        AgeRange ageRange = AgeRange.of(13, 18);
-        meetsThreshold(ageRange, 10, true);
+    public void of_FloorAndCeiling() {
+        AgeRange ageRange = AgeRange.of(AgeRange.FLOOR, AgeRange.CEILING);
+        assertThat(ageRange.minAge()).isEmpty();
+        assertThat(ageRange.maxAge()).isEmpty();
+        assertThat(ageRange.toString()).isEqualTo("0+");
     }
 
     @Test
-    public void meetsThreshold_NotMet() {
+    public void meetsAgeThreshold_Met() {
         AgeRange ageRange = AgeRange.of(13, 18);
-        meetsThreshold(ageRange, 21, false);
+        meetsAgeThreshold(ageRange, 10, true);
     }
 
     @Test
-    public void meetsThreshold_NotMet_Uncertain() {
+    public void meetsAgeThreshold_NotMet() {
         AgeRange ageRange = AgeRange.of(13, 18);
-        meetsThreshold(ageRange, 16, false);
+        meetsAgeThreshold(ageRange, 21, false);
     }
 
     @Test
-    public void meetsThreshold_Boundaries() {
+    public void meetsAgeThreshold_NotMet_Uncertain() {
         AgeRange ageRange = AgeRange.of(13, 18);
-        meetsThreshold(ageRange, 13, true);
-        meetsThreshold(ageRange, 14, false);
+        meetsAgeThreshold(ageRange, 16, false);
     }
 
-    private void meetsThreshold(AgeRange ageRange, int ageThreshold, boolean expectedIsMet) {
-        boolean isMet = ageRange.meetsThreshold(ageThreshold);
+    @Test
+    public void meetsAgeThreshold_Boundaries() {
+        AgeRange ageRange = AgeRange.of(13, 18);
+        meetsAgeThreshold(ageRange, 13, true);
+        meetsAgeThreshold(ageRange, 14, false);
+    }
+
+    private void meetsAgeThreshold(AgeRange ageRange, int ageThreshold, boolean expectedIsMet) {
+        boolean isMet = ageRange.meetsAgeThreshold(ageThreshold);
         assertThat(isMet).isEqualTo(expectedIsMet);
     }
 

@@ -3,7 +3,12 @@ package org.example.age.data.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.testing.EqualsTester;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import org.example.age.data.utils.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class AgeThresholdsTest {
@@ -11,24 +16,26 @@ public final class AgeThresholdsTest {
     @Test
     public void of() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
-        assertThat(ageThresholds.getAgeRanges())
+        assertThat(ageThresholds.get()).containsExactly(13, 18);
+        assertThat(ageThresholds.toAgeRanges())
                 .containsExactly(AgeRange.below(13), AgeRange.of(13, 18), AgeRange.atOrAbove(18));
+        assertThat(ageThresholds.toString()).isEqualTo("AgeThresholds[13, 18]");
     }
 
     @Test
-    public void anonymize_Middle() {
+    public void anonymize_MiddleAgeRange() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         anonymize(ageThresholds, AgeRange.at(16), AgeRange.of(13, 18));
     }
 
     @Test
-    public void anonymize_First() {
+    public void anonymize_FirstAgeRange() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         anonymize(ageThresholds, AgeRange.at(10), AgeRange.below(13));
     }
 
     @Test
-    public void anonymize_Last() {
+    public void anonymize_LastAgeRange() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         anonymize(ageThresholds, AgeRange.at(21), AgeRange.atOrAbove(18));
     }
@@ -43,25 +50,13 @@ public final class AgeThresholdsTest {
     }
 
     @Test
-    public void anonymize_CrossesThreshold() {
+    public void anonymize_CrossesAgeThreshold() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         anonymize(ageThresholds, AgeRange.of(10, 16), AgeRange.below(18));
     }
 
     @Test
-    public void anonymize_CrossesThreshold_NoMinAge() {
-        AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
-        anonymize(ageThresholds, AgeRange.below(16), AgeRange.below(18));
-    }
-
-    @Test
-    public void anonymize_CrossesThreshold_NoMaxAge() {
-        AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
-        anonymize(ageThresholds, AgeRange.atOrAbove(16), AgeRange.atOrAbove(13));
-    }
-
-    @Test
-    public void anonymize_CrossesAllThresholds() {
+    public void anonymize_CrossesAllAgeThresholds() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         anonymize(ageThresholds, AgeRange.of(10, 21), AgeRange.anyAge());
     }
@@ -69,6 +64,31 @@ public final class AgeThresholdsTest {
     private void anonymize(AgeThresholds ageThresholds, AgeRange ageRange, AgeRange expectedAnonymizedAgeRange) {
         AgeRange anonymizedAgeRange = ageThresholds.anonymize(ageRange);
         assertThat(anonymizedAgeRange).isEqualTo(expectedAnonymizedAgeRange);
+    }
+
+    @Test
+    public void serializeThenDeserialize() throws IOException {
+        AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
+        byte[] rawAgeThresholds = DataMapper.get().writeValueAsBytes(ageThresholds);
+        AgeThresholds rtAgeThresholds = DataMapper.get().readValue(rawAgeThresholds, new TypeReference<>() {});
+        assertThat(rtAgeThresholds).isEqualTo(ageThresholds);
+    }
+
+    @Test
+    public void equals() {
+        new EqualsTester()
+                .addEqualityGroup(AgeThresholds.of(13, 18), AgeThresholds.of(13, 18))
+                .addEqualityGroup(AgeThresholds.of(18))
+                .testEquals();
+    }
+
+    @Test
+    public void copyOnCreate() {
+        List<Integer> underlyingAgeThresholds = new ArrayList<>();
+        underlyingAgeThresholds.addAll(List.of(13, 18));
+        AgeThresholds ageThresholds = AgeThresholds.of(underlyingAgeThresholds);
+        underlyingAgeThresholds.set(0, 19);
+        assertThat(ageThresholds.get()).containsExactly(13, 18);
     }
 
     @Test
@@ -94,10 +114,16 @@ public final class AgeThresholdsTest {
     }
 
     @Test
-    public void error_GetAndModifyAgeRanges() {
+    public void error_GetAndModify() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
-        List<AgeRange> ageRanges = ageThresholds.getAgeRanges();
-        assertThatThrownBy(() -> ageRanges.add(AgeRange.atOrAbove(21)))
-                .isInstanceOf(UnsupportedOperationException.class);
+        List<Integer> underlyingAgeThresholds = ageThresholds.get();
+        assertThatThrownBy(() -> underlyingAgeThresholds.set(0, 19)).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    public void error_ToAgeRangesAndModify() {
+        AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
+        List<AgeRange> ageRanges = ageThresholds.toAgeRanges();
+        assertThatThrownBy(() -> ageRanges.add(AgeRange.anyAge())).isInstanceOf(UnsupportedOperationException.class);
     }
 }

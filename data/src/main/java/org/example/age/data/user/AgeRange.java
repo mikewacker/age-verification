@@ -13,8 +13,8 @@ import java.util.OptionalInt;
 @JsonDeserialize(using = AgeRange.Deserializer.class)
 public final class AgeRange {
 
-    private static final int FLOOR = 0;
-    private static final int CEILING = Integer.MAX_VALUE;
+    static final int FLOOR = 0;
+    static final int CEILING = Integer.MAX_VALUE;
 
     private final int minAge;
     private final int maxAge;
@@ -56,7 +56,7 @@ public final class AgeRange {
     }
 
     /** Determines if the min age meets the age threshold. */
-    public boolean meetsThreshold(int ageThreshold) {
+    public boolean meetsAgeThreshold(int ageThreshold) {
         return minAge >= ageThreshold;
     }
 
