@@ -3,6 +3,8 @@ package org.example.age.data.user;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.primitives.Ints;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -33,6 +35,27 @@ public final class AgeThresholds {
         int minAge = findNearestMinAgeThreshold(ageRange.minAge());
         int maxAge = findNearestMaxAgeThreshold(ageRange.maxAge());
         return AgeRange.of(minAge, maxAge);
+    }
+
+    /** Converts these {@link AgeThresholds} to a list of {@link AgeRange}'s. */
+    public List<AgeRange> toAgeRanges() {
+        // Add the first age range.
+        List<AgeRange> ageRanges = new ArrayList<>();
+        int prevAgeThreshold = ageThresholds.get(0);
+        AgeRange ageRange = AgeRange.below(prevAgeThreshold);
+        ageRanges.add(ageRange);
+
+        // Add age ranges in the middle.
+        for (int ageThreshold : ageThresholds.subList(1, ageThresholds.size())) {
+            ageRange = AgeRange.of(prevAgeThreshold, ageThreshold);
+            ageRanges.add(ageRange);
+            prevAgeThreshold = ageThreshold;
+        }
+
+        // Add the last age range.
+        ageRange = AgeRange.atOrAbove(prevAgeThreshold);
+        ageRanges.add(ageRange);
+        return Collections.unmodifiableList(ageRanges);
     }
 
     @Override

@@ -17,6 +17,8 @@ public final class AgeThresholdsTest {
     public void of() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         assertThat(ageThresholds.get()).containsExactly(13, 18);
+        assertThat(ageThresholds.toAgeRanges())
+                .containsExactly(AgeRange.below(13), AgeRange.of(13, 18), AgeRange.atOrAbove(18));
         assertThat(ageThresholds.toString()).isEqualTo("AgeThresholds[13, 18]");
     }
 
@@ -116,5 +118,12 @@ public final class AgeThresholdsTest {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         List<Integer> underlyingAgeThresholds = ageThresholds.get();
         assertThatThrownBy(() -> underlyingAgeThresholds.set(0, 19)).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    public void error_ToAgeRangesAndModify() {
+        AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
+        List<AgeRange> ageRanges = ageThresholds.toAgeRanges();
+        assertThatThrownBy(() -> ageRanges.add(AgeRange.anyAge())).isInstanceOf(UnsupportedOperationException.class);
     }
 }

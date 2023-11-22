@@ -232,12 +232,8 @@ public final class Main {
 
     /** Formats age thresholds. */
     private static String ageThresholds(AgeThresholds ageThresholds) {
-        List<AgeRange> ageRanges = ageThresholds.getAgeRanges();
-        int lastIndex = ageRanges.size() - 1;
-        String last = ageRanges.get(lastIndex).toString();
-        String others =
-                ageRanges.subList(0, lastIndex).stream().map(AgeRange::toString).collect(Collectors.joining(", "));
-        return String.format("%s, %s", others, last);
+        List<AgeRange> ageRanges = ageThresholds.toAgeRanges();
+        return ageRanges.stream().map(AgeRange::toString).collect(Collectors.joining(", "));
     }
 
     /** Formats the URL to verify an account on the age verification service. */
