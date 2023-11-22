@@ -17,6 +17,7 @@ public final class HttpOptionalTest {
         assertThat(maybeValue.isPresent()).isTrue();
         assertThat(maybeValue.get()).isEqualTo("a");
         assertThat(maybeValue.statusCode()).isEqualTo(200);
+        assertThat(maybeValue.toOptional()).hasValue("a");
         assertThat(maybeValue.toString()).isEqualTo("HttpOptional[a]");
     }
 
@@ -26,6 +27,7 @@ public final class HttpOptionalTest {
         assertThat(maybeValue.isEmpty()).isTrue();
         assertThat(maybeValue.isPresent()).isFalse();
         assertThat(maybeValue.statusCode()).isEqualTo(500);
+        assertThat(maybeValue.toOptional()).isEmpty();
         assertThat(maybeValue.toString()).isEqualTo("HttpOptional.empty[500]");
     }
 

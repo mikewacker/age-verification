@@ -1,14 +1,14 @@
 package org.example.age.common.service.store;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSerializer;
 import org.xnio.XnioExecutor;
 
 /**
@@ -18,13 +18,13 @@ import org.xnio.XnioExecutor;
  */
 final class InMemoryPendingStore<V> implements PendingStore<V> {
 
-    private final ObjectMapper mapper;
+    private final JsonSerializer serializer;
     private final TypeReference<V> valueTypeRef;
 
     private final BiMap<String, ExpirableRawValue> store = Maps.synchronizedBiMap(HashBiMap.create());
 
-    public InMemoryPendingStore(ObjectMapper mapper, TypeReference<V> valueTypeRef) {
-        this.mapper = mapper;
+    public InMemoryPendingStore(JsonSerializer serializer, TypeReference<V> valueTypeRef) {
+        this.serializer = serializer;
         this.valueTypeRef = valueTypeRef;
     }
 
@@ -41,7 +41,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
             return;
         }
 
-        String rawValue = serialize(value);
+        byte[] rawValue = serializer.serialize(value);
         ExpirableRawValue expirableRawValue = new ExpirableRawValue(rawValue);
         Optional<ExpirableRawValue> maybeOldExpirableRawValue = Optional.ofNullable(store.put(key, expirableRawValue));
         expirableRawValue.scheduleExpiration(expiresIn, executor);
@@ -56,8 +56,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         }
         ExpirableRawValue expirableRawValue = maybeExpirableRawValue.get();
 
-        V value = deserialize(expirableRawValue.get());
-        return Optional.of(value);
+        return tryDeserialize(expirableRawValue.get());
     }
 
     @Override
@@ -69,26 +68,13 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         ExpirableRawValue expirableRawValue = maybeExpirableRawValue.get();
 
         expirableRawValue.cancelExpiration();
-        V value = deserialize(expirableRawValue.get());
-        return Optional.of(value);
+        return tryDeserialize(expirableRawValue.get());
     }
 
-    /** Serializes the value to JSON. */
-    private String serialize(V value) {
-        try {
-            return mapper.writeValueAsString(value);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("serialization failed", e);
-        }
-    }
-
-    /** Deserializes the value from JSON. */
-    private V deserialize(String rawValue) {
-        try {
-            return mapper.readValue(rawValue, valueTypeRef);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("deserialization failed", e);
-        }
+    /** Deserializes the raw value, or returns empty. */
+    private Optional<V> tryDeserialize(byte[] rawValue) {
+        HttpOptional<V> maybeValue = serializer.tryDeserialize(rawValue, valueTypeRef, 500);
+        return maybeValue.toOptional();
     }
 
     /**
@@ -100,16 +86,16 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
 
         private static final XnioExecutor.Key NO_OP_KEY = () -> false;
 
-        private final String rawValue;
+        private final byte[] rawValue;
         private XnioExecutor.Key expirationKey = NO_OP_KEY;
 
         /** Gets the raw value. */
-        String get() {
+        byte[] get() {
             return rawValue;
         }
 
         /** Creates an expirable raw value whose expiration has not been scheduled. */
-        public ExpirableRawValue(String rawValue) {
+        public ExpirableRawValue(byte[] rawValue) {
             this.rawValue = rawValue;
         }
 

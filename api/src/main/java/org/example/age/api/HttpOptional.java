@@ -50,6 +50,11 @@ public final class HttpOptional<V> {
         return statusCode;
     }
 
+    /** Converts this {@link HttpOptional} to an {@link Optional}. */
+    public Optional<V> toOptional() {
+        return isPresent() ? Optional.of(value) : Optional.empty();
+    }
+
     @Override
     public boolean equals(Object o) {
         HttpOptional<?> other = (o instanceof HttpOptional) ? (HttpOptional<?>) o : null;
