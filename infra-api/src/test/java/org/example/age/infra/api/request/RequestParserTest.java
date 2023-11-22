@@ -86,7 +86,7 @@ public final class RequestParserTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             RequestParser parser = RequestParser.create(exchange, serializer);
-            parser.parseBody(INT_TYPE, TestHandler::handleAddRequest);
+            parser.readBody(INT_TYPE, TestHandler::handleAddRequest);
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {

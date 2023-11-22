@@ -2,9 +2,9 @@ package org.example.age.infra.api.request;
 
 import io.undertow.server.HttpServerExchange;
 
-/** Handles a request with a JSON body. */
+/** Callback for a request whose body has been read. */
 @FunctionalInterface
-public interface RequestJsonCallback<B> {
+public interface RequestBodyCallback<B> {
 
     void handleRequest(HttpServerExchange exchange, RequestParser parser, B body) throws Exception;
 }
