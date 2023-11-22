@@ -1,43 +1,67 @@
 package org.example.age.data.user;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.primitives.Ints;
 import java.util.List;
 import java.util.OptionalInt;
 
 /** Ordered list of age thresholds. */
 public final class AgeThresholds {
 
-    private final List<AgeRange> ageRanges;
+    private final List<Integer> ageThresholds;
 
     /** Creates the age thresholds. */
+    @JsonCreator
     public static AgeThresholds of(List<Integer> ageThresholds) {
-        ageThresholds = new ArrayList<>(ageThresholds);
-        checkAgeThresholds(ageThresholds);
-        List<AgeRange> ageRanges = createAgeRanges(ageThresholds);
-        return new AgeThresholds(ageRanges);
+        return new AgeThresholds(ageThresholds);
     }
 
     /** Creates the age thresholds. */
     public static AgeThresholds of(int... ageThresholds) {
-        return of(Arrays.stream(ageThresholds).boxed().toList());
+        return of(Ints.asList(ageThresholds));
     }
 
-    /** Gets an immutable ordered list of the corresponding age ranges. */
-    public List<AgeRange> getAgeRanges() {
-        return ageRanges;
+    /** Gets the underlying age thresholds. */
+    @JsonValue
+    public List<Integer> get() {
+        return ageThresholds;
     }
 
     /** Anonymizes an age range, expanding it to align with the nearest age thresholds. */
     public AgeRange anonymize(AgeRange ageRange) {
-        int minIndex = findAgeRangeForMinAge(ageRange.minAge());
-        int maxIndex = findAgeRangeForMaxAge(ageRange.maxAge(), minIndex);
-        return (minIndex == maxIndex) ? ageRanges.get(minIndex) : createAgeRangeCrossingThreshold(minIndex, maxIndex);
+        int minAge = findNearestMinAgeThreshold(ageRange.minAge());
+        int maxAge = findNearestMaxAgeThreshold(ageRange.maxAge());
+        return AgeRange.of(minAge, maxAge);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        AgeThresholds other = (o instanceof AgeThresholds) ? (AgeThresholds) o : null;
+        if (other == null) {
+            return false;
+        }
+
+        return ageThresholds.equals(other.ageThresholds);
+    }
+
+    @Override
+    public int hashCode() {
+        return ageThresholds.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("AgeThresholds%s", ageThresholds);
+    }
+
+    private AgeThresholds(List<Integer> ageThresholds) {
+        this.ageThresholds = List.copyOf(ageThresholds);
+        checkAgeThresholds();
     }
 
     /** Checks that the age thresholds start at 1 or above and increase. */
-    private static void checkAgeThresholds(List<Integer> ageThresholds) {
+    private void checkAgeThresholds() {
         if (ageThresholds.isEmpty()) {
             throw new IllegalArgumentException("must have at least one age threshold");
         }
@@ -59,74 +83,41 @@ public final class AgeThresholds {
         }
     }
 
-    /** Creates the corresponding age ranges from the age thresholds. */
-    private static List<AgeRange> createAgeRanges(List<Integer> ageThresholds) {
-        // Add the first age range.
-        List<AgeRange> ageRanges = new ArrayList<>();
-        int prevAgeThreshold = ageThresholds.get(0);
-        AgeRange ageRange = AgeRange.below(prevAgeThreshold);
-        ageRanges.add(ageRange);
-
-        // Add age ranges in the middle.
-        for (int ageThreshold : ageThresholds.subList(1, ageThresholds.size())) {
-            ageRange = AgeRange.of(prevAgeThreshold, ageThreshold);
-            ageRanges.add(ageRange);
-            prevAgeThreshold = ageThreshold;
-        }
-
-        // Add the last age range.
-        ageRange = AgeRange.atOrAbove(prevAgeThreshold);
-        ageRanges.add(ageRange);
-        return Collections.unmodifiableList(ageRanges);
-    }
-
-    /** Finds the index of the age range that contains the min age. */
-    private int findAgeRangeForMinAge(OptionalInt maybeMinAge) {
+    /** Finds the closest min age threshold. */
+    private int findNearestMinAgeThreshold(OptionalInt maybeMinAge) {
         if (maybeMinAge.isEmpty()) {
-            return 0;
+            return AgeRange.FLOOR;
         }
         int minAge = maybeMinAge.getAsInt();
 
-        for (int index = 0; index < ageRanges.size() - 1; index++) {
-            AgeRange ageRange = ageRanges.get(index);
-            if (minAge < ageRange.maxAge().getAsInt()) {
-                return index;
+        int prevAgeThreshold = AgeRange.FLOOR;
+        for (int index = 0; index < ageThresholds.size(); index++) {
+            int ageThreshold = ageThresholds.get(index);
+            if (ageThreshold > minAge) {
+                return prevAgeThreshold;
             }
+
+            prevAgeThreshold = ageThreshold;
         }
-        return ageRanges.size() - 1;
+        return prevAgeThreshold;
     }
 
-    /** Finds the index of the age range that contains the max age. */
-    private int findAgeRangeForMaxAge(OptionalInt maybeMaxAge, int beginIndex) {
+    /** Finds the closest max age threshold. */
+    private int findNearestMaxAgeThreshold(OptionalInt maybeMaxAge) {
         if (maybeMaxAge.isEmpty()) {
-            return ageRanges.size() - 1;
+            return AgeRange.CEILING;
         }
         int maxAge = maybeMaxAge.getAsInt();
 
-        for (int index = beginIndex; index < ageRanges.size() - 1; index++) {
-            AgeRange ageRange = ageRanges.get(index);
-            if (maxAge <= ageRange.maxAge().getAsInt()) {
-                return index;
+        int nextAgeThreshold = AgeRange.CEILING;
+        for (int index = ageThresholds.size() - 1; index >= 0; index--) {
+            int ageThreshold = ageThresholds.get(index);
+            if (ageThreshold < maxAge) {
+                return nextAgeThreshold;
             }
+
+            nextAgeThreshold = ageThreshold;
         }
-        return ageRanges.size() - 1;
-    }
-
-    /** Creates an age range that crosses one or more thresholds. */
-    private AgeRange createAgeRangeCrossingThreshold(int minIndex, int maxIndex) {
-        // Get the min and (maybe) the max age.
-        AgeRange minAgeRange = ageRanges.get(minIndex);
-        OptionalInt maybeMinAge = minAgeRange.minAge();
-        int minAge = maybeMinAge.isPresent() ? maybeMinAge.getAsInt() : 0;
-
-        AgeRange maxAgeRange = ageRanges.get(maxIndex);
-        OptionalInt maybeMaxAge = maxAgeRange.maxAge();
-
-        // Create the age range.
-        return maybeMaxAge.isPresent() ? AgeRange.of(minAge, maybeMaxAge.getAsInt()) : AgeRange.atOrAbove(minAge);
-    }
-
-    private AgeThresholds(List<AgeRange> ageRanges) {
-        this.ageRanges = ageRanges;
+        return nextAgeThreshold;
     }
 }
