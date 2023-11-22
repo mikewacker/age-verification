@@ -115,7 +115,6 @@ public final class AgeThresholdsTest {
     public void error_GetAndModify() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
         List<Integer> underlyingAgeThresholds = ageThresholds.get();
-        assertThatThrownBy(() -> underlyingAgeThresholds.set(0, 19))
-                .isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> underlyingAgeThresholds.set(0, 19)).isInstanceOf(UnsupportedOperationException.class);
     }
 }
