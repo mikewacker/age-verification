@@ -46,7 +46,7 @@ final class SiteEndpointHandler implements HttpHandler {
         RequestParser parser = RequestParser.create(exchange, serializer);
         switch (exchange.getRelativePath()) {
             case "/verification-session" -> handleVerificationSession(exchange);
-            case "/age-certificate" -> parser.parseBody(new TypeReference<>() {}, this::handleAgeCertificate);
+            case "/age-certificate" -> parser.readBody(new TypeReference<>() {}, this::handleAgeCertificate);
             default -> ExchangeStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
         }
     }

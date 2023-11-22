@@ -8,6 +8,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSerializer;
+import org.xnio.IoUtils;
 
 /** Parses API arguments from an HTTP request. */
 public final class RequestParser {
@@ -28,8 +29,8 @@ public final class RequestParser {
      * <p>Sends a 400 error if the body cannot be deserialized,
      * or a 500 error if the callback throws an uncaught exception.</p>
      */
-    public <B> void parseBody(TypeReference<B> bodyTypeRef, RequestJsonCallback<B> callback) {
-        Receiver.FullBytesCallback adaptedCallback = new AdaptedFullBytesCallback<>(bodyTypeRef, callback);
+    public <B> void readBody(TypeReference<B> bodyTypeRef, RequestBodyCallback<B> callback) {
+        Receiver.FullBytesCallback adaptedCallback = new AdaptedRequestBodyCallback<>(bodyTypeRef, callback);
         exchange.getRequestReceiver().receiveFullBytes(adaptedCallback);
     }
 
@@ -38,7 +39,7 @@ public final class RequestParser {
      *
      * <p>Returns a 400 error if the parameter is missing or cannot be deserialized.</p>
      */
-    public <P> HttpOptional<P> tryGetQueryParameter(String name, TypeReference<P> bodyTypeRef) {
+    public <P> HttpOptional<P> tryGetQueryParameter(String name, TypeReference<P> paramTypeRef) {
         HttpOptional<String> maybeRawValue = tryGetQueryParameter(name);
         if (maybeRawValue.isEmpty()) {
             return HttpOptional.empty(maybeRawValue.statusCode());
@@ -46,7 +47,7 @@ public final class RequestParser {
 
         String rawValue = maybeRawValue.get();
         byte[] json = serializer.serialize(rawValue);
-        return serializer.tryDeserialize(json, bodyTypeRef, StatusCodes.BAD_REQUEST);
+        return serializer.tryDeserialize(json, paramTypeRef, StatusCodes.BAD_REQUEST);
     }
 
     /**
@@ -68,13 +69,13 @@ public final class RequestParser {
         this.serializer = serializer;
     }
 
-    /** Adapts a {@link RequestJsonCallback} to a {@link Receiver.FullBytesCallback}. */
-    private final class AdaptedFullBytesCallback<B> implements Receiver.FullBytesCallback {
+    /** Adapts a {@link RequestBodyCallback} to a {@link Receiver.FullBytesCallback}. */
+    private final class AdaptedRequestBodyCallback<B> implements Receiver.FullBytesCallback {
 
         private final TypeReference<B> bodyTypeRef;
-        private final RequestJsonCallback<B> callback;
+        private final RequestBodyCallback<B> callback;
 
-        public AdaptedFullBytesCallback(TypeReference<B> bodyTypeRef, RequestJsonCallback<B> callback) {
+        public AdaptedRequestBodyCallback(TypeReference<B> bodyTypeRef, RequestBodyCallback<B> callback) {
             this.bodyTypeRef = bodyTypeRef;
             this.callback = callback;
         }
@@ -98,6 +99,11 @@ public final class RequestParser {
 
         /** Sends an error status code. */
         private void sendErrorCode(int errorCode) {
+            if (exchange.isResponseStarted()) {
+                IoUtils.safeClose(exchange.getConnection());
+                return;
+            }
+
             exchange.setStatusCode(errorCode);
             exchange.endExchange();
         }
