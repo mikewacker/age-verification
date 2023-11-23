@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     // main
-    compileOnly("org.immutables:value-annotations")
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
@@ -20,6 +19,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
+    implementation("org.immutables:value-annotations")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")

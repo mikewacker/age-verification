@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     // main
-    compileOnly("org.immutables:value-annotations")
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
@@ -22,6 +21,7 @@ dependencies {
     implementation("com.google.guava:guava")
     implementation("com.squareup.okhttp3:okhttp")
     implementation("javax.inject:javax.inject")
+    implementation("org.immutables:value-annotations")
     implementation("org.jboss.xnio:xnio-api")
 
     // test fixtures
@@ -40,7 +40,6 @@ dependencies {
     testFixturesImplementation("javax.inject:javax.inject")
 
     // test
-    testCompileOnly("org.immutables:value-annotations")
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(project(":avs-api"))
