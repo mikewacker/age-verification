@@ -38,6 +38,4 @@ dependencies {
     testImplementation(testFixtures(project(":common-api")))
     testImplementation(testFixtures(project(":common-server")))
     testImplementation(testFixtures(project(":testing-server")))
-    testImplementation("com.google.guava:guava")
-    testImplementation("com.squareup.okhttp3:okhttp")
 }

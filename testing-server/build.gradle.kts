@@ -13,11 +13,4 @@ dependencies {
     testFixturesApi("com.squareup.okhttp3:okhttp")
     testFixturesApi("io.undertow:undertow-core")
     testFixturesApi("org.junit.jupiter:junit-jupiter-api")
-
-    // test
-    testImplementation("com.fasterxml.jackson.core:jackson-databind")
-    testImplementation("com.google.guava:guava")
-    testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("com.squareup.okhttp3:okhttp")
-    testImplementation("io.undertow:undertow-core")
 }

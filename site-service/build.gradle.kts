@@ -13,7 +13,6 @@ dependencies {
     api(project(":common-api"))
     api(project(":common-service"))
     api(project(":data"))
-    api(project(":infra-api"))
     api(project(":infra-service"))
     api(project(":site-api"))
     api("com.fasterxml.jackson.core:jackson-databind")
@@ -34,7 +33,6 @@ dependencies {
     testFixturesApi(project(":data"))
     testFixturesApi(project(":infra-service"))
     testFixturesApi(testFixtures(project(":common-api")))
-    testFixturesApi("com.fasterxml.jackson.core:jackson-databind")
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("com.squareup.okhttp3:okhttp")
     testFixturesApi("javax.inject:javax.inject")
@@ -42,7 +40,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":avs-api"))
     testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":common-api")))
     testImplementation(testFixtures(project(":common-server")))
