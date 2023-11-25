@@ -15,6 +15,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.google.dagger:dagger")
     implementation("com.google.guava:guava")
+    implementation("com.squareup.okhttp3:okhttp")
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
     implementation("org.immutables:value-annotations")

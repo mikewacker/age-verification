@@ -33,7 +33,7 @@ spotless {
 
 tasks.withType<JavaCompile> {
     // For -Xlint:classfile, see https://github.com/gradle/gradle/issues/27132
-    options.compilerArgs.addAll(listOf("-Xlint:all,-classfile,-processing,-serial", "-Werror"))
+    options.compilerArgs.addAll(listOf("-Xlint:all,-cast,-classfile,-processing,-serial", "-Werror"))
     options.errorprone.disableWarningsInGeneratedCode.set(true)
 }
 

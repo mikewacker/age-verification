@@ -11,11 +11,11 @@ import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.service.config.AvsLocation;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.service.client.RequestDispatcher;
 import org.example.age.infra.service.client.ResponseBodyCallback;
-import org.example.age.site.api.AvsLocation;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.service.verification.internal.VerificationManager;
 

@@ -1,5 +1,8 @@
-package org.example.age.avs.api;
+package org.example.age.common.service.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;
 import org.example.age.data.utils.DataStyle;
@@ -12,6 +15,8 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @DataStyle
+@JsonSerialize(as = ImmutableSiteLocation.class)
+@JsonDeserialize(as = ImmutableSiteLocation.class)
 public interface SiteLocation {
 
     /** Creates a builder for the location. */
@@ -38,6 +43,7 @@ public interface SiteLocation {
 
     /** URL of the API to process an age certificate. */
     @Value.Derived
+    @JsonIgnore
     default HttpUrl ageCertificateUrl() {
         return new HttpUrl.Builder()
                 .scheme("http")
@@ -49,6 +55,7 @@ public interface SiteLocation {
 
     /** URL to redirect users to in order to continue age verification. */
     @Value.Derived
+    @JsonIgnore
     default HttpUrl redirectUrl() {
         return new HttpUrl.Builder()
                 .scheme("http")

@@ -1,6 +1,6 @@
 package org.example.age.common.avs.config;
 
-import org.example.age.avs.api.SiteLocation;
+import org.example.age.common.service.config.SiteLocation;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.data.utils.DataStyle;
