@@ -7,7 +7,6 @@ plugins {
 dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
-    annotationProcessor("org.immutables:value")
 
     api(project(":api"))
     api(project(":common-api"))
@@ -22,20 +21,13 @@ dependencies {
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":api"))
-    testFixturesApi(project(":common-api"))
-    testFixturesApi(project(":common-service"))
-    testFixturesApi(project(":data"))
-    testFixturesApi(testFixtures(project(":common-api")))
-    testFixturesApi("com.fasterxml.jackson.core:jackson-databind")
-    testFixturesApi("com.google.dagger:dagger")
-    testFixturesApi("javax.inject:javax.inject")
+    testFixturesApi(project(":common-data"))
+    testFixturesApi(testFixtures(project(":common-data")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":common-service"))
-    testImplementation(testFixtures(project(":common-api")))
     testImplementation(testFixtures(project(":common-server")))
     testImplementation(testFixtures(project(":testing-server")))
+    testImplementation("com.squareup.okhttp3:okhttp")
 }

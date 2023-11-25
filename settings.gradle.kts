@@ -19,6 +19,7 @@ include(
         "site-api",
 
         // service
+        "common-data",
         "common-service",
         "site-service",
         "common",

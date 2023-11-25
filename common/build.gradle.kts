@@ -10,6 +10,7 @@ dependencies {
 
     api(project(":api"))
     api(project(":common-api"))
+    api(project(":common-data"))
     api(project(":common-service"))
     api(project(":data"))
     api(project(":infra-api"))
@@ -23,7 +24,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":common-service"))
     testImplementation(testFixtures(project(":testing-api")))
     testImplementation("org.mockito:mockito-core")
 }
