@@ -12,7 +12,7 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
-import org.example.age.test.infra.service.data.TestMapperModule;
+import org.example.age.test.data.TestMapperModule;
 import org.immutables.value.Value;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

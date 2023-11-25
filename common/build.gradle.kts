@@ -24,6 +24,6 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(project(":common-service"))
-    testImplementation(testFixtures(project(":common-api")))
+    testImplementation(testFixtures(project(":testing-api")))
     testImplementation("org.mockito:mockito-core")
 }

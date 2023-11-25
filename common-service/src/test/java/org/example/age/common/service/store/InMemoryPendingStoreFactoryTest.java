@@ -9,8 +9,8 @@ import dagger.Module;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
-import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.common.service.store.testing.FakeXnioExecutor;
+import org.example.age.test.data.TestMapperModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -98,7 +98,7 @@ public final class InMemoryPendingStoreFactoryTest {
     }
 
     /** Dagger module that binds dependencies for {@link PendingStoreFactory}. */
-    @Module(includes = {InMemoryPendingStoreFactoryModule.class, DataMapperModule.class})
+    @Module(includes = {InMemoryPendingStoreFactoryModule.class, TestMapperModule.class})
     interface TestModule {}
 
     /** Dagger component that provides a {@link PendingStoreFactory}. */

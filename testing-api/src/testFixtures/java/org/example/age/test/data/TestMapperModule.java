@@ -1,4 +1,4 @@
-package org.example.age.test.infra.service.data;
+package org.example.age.test.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
