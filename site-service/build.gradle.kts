@@ -11,6 +11,7 @@ dependencies {
 
     api(project(":api"))
     api(project(":common-api"))
+    api(project(":common-data"))
     api(project(":common-service"))
     api(project(":data"))
     api(project(":infra-service"))
@@ -26,22 +27,13 @@ dependencies {
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":api"))
     testFixturesApi(project(":avs-api"))
-    testFixturesApi(project(":common-api"))
-    testFixturesApi(project(":common-service"))
-    testFixturesApi(project(":data"))
-    testFixturesApi(project(":infra-service"))
-    testFixturesApi(testFixtures(project(":common-api")))
-    testFixturesApi("com.google.dagger:dagger")
-    testFixturesApi("com.squareup.okhttp3:okhttp")
-    testFixturesApi("javax.inject:javax.inject")
+    testFixturesApi(testFixtures(project(":common-data")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
-    testImplementation(testFixtures(project(":common-api")))
     testImplementation(testFixtures(project(":common-server")))
     testImplementation(testFixtures(project(":testing-server")))
     testImplementation("io.undertow:undertow-core")
