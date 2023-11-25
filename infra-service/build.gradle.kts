@@ -7,12 +7,12 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    implementation(project(":api"))
-    implementation(project(":infra-api"))
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.google.dagger:dagger")
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("javax.inject:javax.inject")
+    api(project(":api"))
+    api(project(":infra-api"))
+    api("com.fasterxml.jackson.core:jackson-databind")
+    api("com.google.dagger:dagger")
+    api("com.squareup.okhttp3:okhttp")
+    api("javax.inject:javax.inject")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")

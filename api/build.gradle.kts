@@ -6,13 +6,13 @@ plugins {
 
 dependencies {
     // main
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("org.jboss.xnio:xnio-api")
+    api("com.fasterxml.jackson.core:jackson-databind")
+    api("org.jboss.xnio:xnio-api")
 
     // test fixtures
-    testFixturesImplementation("org.assertj:assertj-core")
-    testFixturesImplementation("org.jboss.xnio:xnio-api")
-    testFixturesImplementation("org.mockito:mockito-core")
+    testFixturesApi("org.assertj:assertj-core")
+    testFixturesApi("org.jboss.xnio:xnio-api")
+    testFixturesApi("org.mockito:mockito-core")
 
     // test
     testImplementation("com.google.guava:guava-testlib")

@@ -7,10 +7,10 @@ dependencies {
     // main
     annotationProcessor("org.immutables:value")
 
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava")
-    implementation("com.google.guava:guava")
-    implementation("org.immutables:value-annotations")
+    api("com.fasterxml.jackson.core:jackson-databind")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-guava")
+    api("com.google.guava:guava")
+    api("org.immutables:value-annotations")
 
     // test
     testImplementation("com.google.guava:guava-testlib")

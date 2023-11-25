@@ -8,19 +8,19 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    implementation(project(":api"))
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.google.dagger:dagger")
-    implementation("io.undertow:undertow-core")
-    implementation("javax.inject:javax.inject")
-    implementation("org.jboss.xnio:xnio-api")
+    api(project(":api"))
+    api("com.fasterxml.jackson.core:jackson-databind")
+    api("com.google.dagger:dagger")
+    api("io.undertow:undertow-core")
+    api("javax.inject:javax.inject")
+    api("org.jboss.xnio:xnio-api")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
-    testFixturesImplementation("com.google.dagger:dagger")
-    testFixturesImplementation("javax.inject:javax.inject")
+    testFixturesApi("com.fasterxml.jackson.core:jackson-databind")
+    testFixturesApi("com.google.dagger:dagger")
+    testFixturesApi("javax.inject:javax.inject")
 
     // test
     testImplementation(testFixtures(project(":testing-server")))

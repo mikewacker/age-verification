@@ -6,19 +6,19 @@ plugins {
 
 dependencies {
     // main
-    implementation(project(":api"))
-    implementation(project(":data"))
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("io.undertow:undertow-core")
+    api(project(":api"))
+    api(project(":data"))
+    api("com.fasterxml.jackson.core:jackson-databind")
+    api("io.undertow:undertow-core")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesImplementation(project(":api"))
-    testFixturesImplementation("com.google.dagger:dagger")
-    testFixturesImplementation("io.undertow:undertow-core")
-    testFixturesImplementation("org.mockito:mockito-core")
-    testFixturesImplementation("javax.inject:javax.inject")
+    testFixturesApi(project(":api"))
+    testFixturesApi("com.google.dagger:dagger")
+    testFixturesApi("io.undertow:undertow-core")
+    testFixturesApi("org.mockito:mockito-core")
+    testFixturesApi("javax.inject:javax.inject")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
