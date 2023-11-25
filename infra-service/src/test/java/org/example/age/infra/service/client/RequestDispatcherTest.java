@@ -23,7 +23,7 @@ import org.example.age.api.StatusCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
-import org.example.age.test.infra.service.data.TestMapperModule;
+import org.example.age.test.data.TestMapperModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
 import org.example.age.testing.server.TestUndertowServer;

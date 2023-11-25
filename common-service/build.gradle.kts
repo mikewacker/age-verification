@@ -26,5 +26,5 @@ dependencies {
 
     testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":common-api")))
-    testImplementation(testFixtures(project(":infra-api")))
+    testImplementation(testFixtures(project(":testing-api")))
 }

@@ -4,17 +4,21 @@ include(
         // data types
         "data",
 
-        // api types
+        // generic api types
         "api",
 
-        // api
+        // generic infrastructure
         "infra-api",
+        "infra-service",
+        "testing-api",
+        "testing-server", // mostly generic; uses DataMapper from :data to get an ObjectMapper
+
+        // api
         "common-api",
         "avs-api",
         "site-api",
 
         // service
-        "infra-service",
         "common-service",
         "site-service",
         "common",
@@ -22,7 +26,6 @@ include(
 
         // server
         "common-server",
-        "testing-server",
 
         // demo
         "demo",

@@ -17,7 +17,7 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":infra-api")))
+    testImplementation(testFixtures(project(":testing-api")))
     testImplementation(testFixtures(project(":testing-server")))
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.undertow:undertow-core")
