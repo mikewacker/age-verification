@@ -9,7 +9,6 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     implementation(project(":api"))
-    implementation(project(":avs-api"))
     implementation(project(":common-api"))
     implementation(project(":common-service"))
     implementation(project(":data"))

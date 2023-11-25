@@ -1,5 +1,7 @@
-package org.example.age.site.api;
+package org.example.age.common.service.config;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;
 import org.example.age.data.crypto.SecureId;
@@ -13,6 +15,8 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @DataStyle
+@JsonSerialize(as = ImmutableAvsLocation.class)
+@JsonDeserialize(as = ImmutableAvsLocation.class)
 public interface AvsLocation {
 
     /** Creates a builder for the location. */

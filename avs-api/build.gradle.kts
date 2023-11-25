@@ -15,8 +15,6 @@ dependencies {
     implementation(project(":infra-api"))
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.google.dagger:dagger")
-    implementation("com.google.guava:guava")
-    implementation("com.squareup.okhttp3:okhttp")
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
     implementation("org.immutables:value-annotations")
@@ -40,4 +38,6 @@ dependencies {
     testImplementation(testFixtures(project(":common-api")))
     testImplementation(testFixtures(project(":common-server")))
     testImplementation(testFixtures(project(":testing-server")))
+    testImplementation("com.google.guava:guava")
+    testImplementation("com.squareup.okhttp3:okhttp")
 }

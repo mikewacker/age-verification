@@ -2,9 +2,9 @@ package org.example.age.site.service.config;
 
 import java.security.PublicKey;
 import java.time.Duration;
+import org.example.age.common.service.config.AvsLocation;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.utils.DataStyle;
-import org.example.age.site.api.AvsLocation;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */

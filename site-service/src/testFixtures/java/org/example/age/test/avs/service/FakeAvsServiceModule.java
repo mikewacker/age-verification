@@ -5,7 +5,7 @@ import dagger.Module;
 import java.security.PrivateKey;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.api.AvsApiModule;
-import org.example.age.avs.api.SiteLocation;
+import org.example.age.common.service.config.SiteLocation;
 import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
 import org.example.age.common.service.data.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.data.internal.DataMapperModule;
