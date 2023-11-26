@@ -9,8 +9,8 @@ import dagger.Module;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
-import org.example.age.common.service.store.testing.FakeXnioExecutor;
 import org.example.age.test.data.TestMapperModule;
+import org.example.age.testing.api.FakeXnioExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -78,6 +78,16 @@ public final class InMemoryPendingStoreFactoryTest {
     public void tryRemoveEmptyValue() {
         PendingStore<String> store = storeFactory.getOrCreate("name", new TypeReference<>() {});
         assertThat(store.tryRemove("key")).isEmpty();
+    }
+
+    @Test
+    public void putTwoKeysWithSameValue() {
+        PendingStore<String> store = storeFactory.getOrCreate("name", new TypeReference<>() {});
+        long expiration = createExpiration();
+        store.put("key1", "value", expiration, executor);
+        store.put("key2", "value", expiration, executor);
+        assertThat(store.tryGet("key1")).hasValue("value");
+        assertThat(store.tryGet("key2")).hasValue("value");
     }
 
     @Test

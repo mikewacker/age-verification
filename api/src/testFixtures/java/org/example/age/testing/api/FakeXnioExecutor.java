@@ -1,9 +1,9 @@
-package org.example.age.common.service.store.testing;
+package org.example.age.testing.api;
 
 import java.util.concurrent.TimeUnit;
 import org.xnio.XnioExecutor;
 
-/** Fake {@link XnioExecutor} where scheduled tasks have to be run manually. */
+/** Fake same-thread {@link XnioExecutor} where scheduled tasks have to be run manually. */
 public final class FakeXnioExecutor implements XnioExecutor {
 
     private ScheduledTask lastScheduledTask = null;
@@ -12,6 +12,7 @@ public final class FakeXnioExecutor implements XnioExecutor {
         return new FakeXnioExecutor();
     }
 
+    /** Gets the last scheduled task. */
     public ScheduledTask getLastScheduledTask() {
         if (lastScheduledTask == null) {
             throw new IllegalStateException();
@@ -22,7 +23,7 @@ public final class FakeXnioExecutor implements XnioExecutor {
 
     @Override
     public void execute(Runnable command) {
-        throw new UnsupportedOperationException();
+        command.run();
     }
 
     @Override
@@ -33,7 +34,8 @@ public final class FakeXnioExecutor implements XnioExecutor {
 
     @Override
     public Key executeAtInterval(Runnable command, long time, TimeUnit unit) {
-        throw new UnsupportedOperationException();
+        lastScheduledTask = new ScheduledTask(command, time, unit);
+        return lastScheduledTask;
     }
 
     private FakeXnioExecutor() {}
@@ -47,10 +49,12 @@ public final class FakeXnioExecutor implements XnioExecutor {
 
         private boolean wasRemoved = false;
 
+        /** Gets the scheduled time. */
         public long getTime() {
             return time;
         }
 
+        /** Gets the scheduled unit. */
         public TimeUnit getUnit() {
             return unit;
         }
