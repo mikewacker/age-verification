@@ -13,7 +13,7 @@ dependencies {
     api(project(":common-api"))
     api(project(":common-crypto"))
     api(project(":common-data"))
-    api(project(":common-service"))
+    api(project(":common-store"))
     api(project(":data"))
     api(project(":infra-service"))
     api(project(":site-api"))

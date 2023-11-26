@@ -2,7 +2,7 @@ package org.example.age.common.avs.config;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.example.age.common.service.config.SiteLocation;
+import org.example.age.common.service.data.SiteLocation;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.data.utils.DataStyle;

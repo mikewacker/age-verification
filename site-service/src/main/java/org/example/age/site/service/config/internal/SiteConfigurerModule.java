@@ -5,7 +5,7 @@ import dagger.Provides;
 import java.security.PublicKey;
 import java.time.Duration;
 import javax.inject.Named;
-import org.example.age.common.service.config.AvsLocation;
+import org.example.age.common.service.data.AvsLocation;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;
 
