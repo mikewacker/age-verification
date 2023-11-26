@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import javax.inject.Singleton;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
-import org.example.age.common.service.config.SiteLocation;
+import org.example.age.common.service.data.SiteLocation;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeThresholds;
 import org.junit.jupiter.api.BeforeEach;

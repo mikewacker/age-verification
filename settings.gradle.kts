@@ -21,7 +21,7 @@ include(
         // service
         "common-data",
         "common-crypto",
-        "common-service",
+        "common-store",
         "site-service",
         "common",
         "verification-poc",

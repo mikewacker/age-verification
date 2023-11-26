@@ -1,23 +1,23 @@
-package org.example.age.common.service.config;
+package org.example.age.common.service.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;
-import org.example.age.data.crypto.SecureId;
 import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /**
- * URL location of the age verification service.
+ * URL location of a site.
  *
- * <p>A real implementation would use HTTPS.</p>
+ * <p>A real implementation would used HTTPS.</p>
  */
 @Value.Immutable
 @DataStyle
-@JsonSerialize(as = ImmutableAvsLocation.class)
-@JsonDeserialize(as = ImmutableAvsLocation.class)
-public interface AvsLocation {
+@JsonSerialize(as = ImmutableSiteLocation.class)
+@JsonDeserialize(as = ImmutableSiteLocation.class)
+public interface SiteLocation {
 
     /** Creates a builder for the location. */
     static Builder builder(String host, int port) {
@@ -29,41 +29,41 @@ public interface AvsLocation {
         return new Builder().hostAndPort(hostAndPort);
     }
 
-    /** Host and port of the age verification service. */
+    /** Host and port of the site. */
     HostAndPort hostAndPort();
 
-    /** Path of the API to create a verification session. */
+    /** Path of the API to process an age certificate. */
     @Value.Default
-    default String verificationSessionPath() {
-        return "api/verification-session";
+    default String ageCertificatePath() {
+        return "api/age-certificate";
     }
 
     /** Path to redirect users to in order to continue age verification. */
     String redirectPath();
 
-    /** URL of the API to create a verification session. */
+    /** URL of the API to process an age certificate. */
     @Value.Derived
-    default HttpUrl verificationSessionUrl(String siteId) {
+    @JsonIgnore
+    default HttpUrl ageCertificateUrl() {
         return new HttpUrl.Builder()
                 .scheme("http")
                 .host(hostAndPort().getHost())
                 .port(hostAndPort().getPort())
-                .addPathSegments(verificationSessionPath())
-                .addQueryParameter("site-id", siteId)
+                .addPathSegments(ageCertificatePath())
                 .build();
     }
 
     /** URL to redirect users to in order to continue age verification. */
     @Value.Derived
-    default HttpUrl redirectUrl(SecureId requestId) {
+    @JsonIgnore
+    default HttpUrl redirectUrl() {
         return new HttpUrl.Builder()
                 .scheme("http")
                 .host(hostAndPort().getHost())
                 .port(hostAndPort().getPort())
                 .addPathSegments(redirectPath())
-                .addQueryParameter("request-id", requestId.toString())
                 .build();
     }
 
-    final class Builder extends ImmutableAvsLocation.Builder {}
+    final class Builder extends ImmutableSiteLocation.Builder {}
 }
