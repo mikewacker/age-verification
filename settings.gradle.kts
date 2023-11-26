@@ -20,6 +20,7 @@ include(
 
         // service
         "common-data",
+        "common-crypto",
         "common-service",
         "site-service",
         "common",

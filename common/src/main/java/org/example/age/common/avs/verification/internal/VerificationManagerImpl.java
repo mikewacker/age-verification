@@ -18,7 +18,7 @@ import org.example.age.common.base.store.PendingStore;
 import org.example.age.common.base.store.PendingStoreFactory;
 import org.example.age.common.base.utils.internal.PendingStoreUtils;
 import org.example.age.common.service.config.SiteLocation;
-import org.example.age.common.service.data.internal.AuthMatchDataEncryptor;
+import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;

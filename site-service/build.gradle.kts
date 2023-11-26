@@ -11,6 +11,7 @@ dependencies {
 
     api(project(":api"))
     api(project(":common-api"))
+    api(project(":common-crypto"))
     api(project(":common-data"))
     api(project(":common-service"))
     api(project(":data"))

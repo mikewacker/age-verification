@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.service.data.internal.AuthMatchDataEncryptor;
+import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.store.PendingStore;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.data.certificate.AgeCertificate;

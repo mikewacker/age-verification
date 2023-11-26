@@ -5,7 +5,7 @@ import dagger.Binds;
 import dagger.Module;
 import java.security.PublicKey;
 import java.time.Duration;
-import org.example.age.common.service.data.internal.AuthMatchDataEncryptorModule;
+import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.store.VerificationStore;

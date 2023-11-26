@@ -1,4 +1,4 @@
-package org.example.age.common.service.data.internal;
+package org.example.age.common.service.crypto.internal;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Optional;

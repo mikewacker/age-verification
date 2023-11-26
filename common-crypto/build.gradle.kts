@@ -1,30 +1,29 @@
 plugins {
     id("org.example.age.java-conventions")
     `java-library`
+    `java-test-fixtures`
 }
 
 dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
-    annotationProcessor("org.immutables:value")
 
     api(project(":api"))
-    api(project(":common-api"))
-    api(project(":common-crypto"))
-    api(project(":common-data"))
-    api(project(":common-service"))
     api(project(":data"))
+    api(project(":common-api"))
     api(project(":infra-api"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
-    api("com.google.guava:guava")
-    api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
-    api("org.immutables:value-annotations")
+
+    // test fixtures
+    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testAnnotationProcessor("org.immutables:value")
 
+    testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":testing-api")))
-    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.immutables:value-annotations")
 }
