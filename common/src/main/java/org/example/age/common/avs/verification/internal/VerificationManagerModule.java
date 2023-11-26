@@ -8,7 +8,7 @@ import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.base.store.PendingStoreFactory;
-import org.example.age.common.service.data.internal.AuthMatchDataEncryptorModule;
+import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 
 /**
  * Dagger module that publishes a binding for {@link VerificationManager}.

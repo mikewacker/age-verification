@@ -1,0 +1,50 @@
+package org.example.age.common.service.crypto.internal;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import dagger.Component;
+import dagger.Module;
+import javax.inject.Singleton;
+import org.example.age.data.crypto.SecureId;
+import org.example.age.data.user.VerifiedUser;
+import org.example.age.test.common.service.crypto.TestPseudonymKeyModule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+public final class VerifiedUserLocalizerTest {
+
+    private static VerifiedUserLocalizer userLocalizer;
+
+    @BeforeAll
+    public static void createVerifiedUserLocalizer() {
+        userLocalizer = TestComponent.createVerifiedUserLocalizer();
+    }
+
+    @Test
+    public void localize() {
+        VerifiedUser user = createVerifiedUser();
+        VerifiedUser localUser = userLocalizer.localize(user, "local");
+        assertThat(localUser).isNotEqualTo(user);
+    }
+
+    private static VerifiedUser createVerifiedUser() {
+        return VerifiedUser.of(SecureId.generate(), 18);
+    }
+
+    /** Dagger module that binds dependencies for {@link VerifiedUserLocalizer}. */
+    @Module(includes = {VerifiedUserLocalizerModule.class, TestPseudonymKeyModule.class})
+    interface TestModule {}
+
+    /** Dagger component that provides a {@link VerifiedUserLocalizer}. */
+    @Component(modules = TestModule.class)
+    @Singleton
+    interface TestComponent {
+
+        static VerifiedUserLocalizer createVerifiedUserLocalizer() {
+            TestComponent component = DaggerVerifiedUserLocalizerTest_TestComponent.create();
+            return component.verifiedUserLocalizer();
+        }
+
+        VerifiedUserLocalizer verifiedUserLocalizer();
+    }
+}

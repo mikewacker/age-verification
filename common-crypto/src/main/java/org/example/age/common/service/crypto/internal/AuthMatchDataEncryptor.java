@@ -1,4 +1,4 @@
-package org.example.age.common.service.data.internal;
+package org.example.age.common.service.crypto.internal;
 
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
