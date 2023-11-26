@@ -1,7 +1,10 @@
 package org.example.age.common.avs.verification;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
@@ -30,10 +33,11 @@ import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.data.utils.DataMapper;
-import org.example.age.testing.exchange.TestExchanges;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xnio.XnioExecutor;
+import org.xnio.XnioIoThread;
 
 public final class VerificationManagerTest {
 
@@ -135,7 +139,10 @@ public final class VerificationManagerTest {
 
     private static HttpServerExchange createStubExchange() {
         HttpServerExchange exchange = mock(HttpServerExchange.class);
-        TestExchanges.addStubIoThread(exchange);
+        XnioIoThread ioThread = mock(XnioIoThread.class);
+        when(exchange.getIoThread()).thenReturn(ioThread);
+        XnioExecutor.Key key = mock(XnioExecutor.Key.class);
+        when(ioThread.executeAfter(any(), anyLong(), any())).thenReturn(key);
         return exchange;
     }
 
