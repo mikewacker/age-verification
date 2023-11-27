@@ -9,8 +9,7 @@ import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.time.Duration;
 import java.util.Map;
 import javax.inject.Named;
@@ -18,19 +17,19 @@ import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.common.service.data.AvsLocation;
 import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
-import org.example.age.common.service.data.SiteLocation;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.crypto.SigningKeys;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.test.avs.service.FakeAvsServiceModule;
 import org.example.age.test.common.server.undertow.TestUndertowModule;
+import org.example.age.test.common.service.crypto.TestSigningKeyModule;
 import org.example.age.test.common.service.data.TestAccountIdExtractorModule;
+import org.example.age.test.common.service.data.TestAvsLocationModule;
 import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.TestUndertowServer;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -41,13 +40,6 @@ public final class SiteServiceTest {
 
     @RegisterExtension
     private static final TestUndertowServer fakeAvsServer = TestUndertowServer.create(FakeAvsComponent::createServer);
-
-    private static KeyPair avsSigningKeyPair;
-
-    @BeforeAll
-    public static void generateKeys() {
-        avsSigningKeyPair = SigningKeys.generateEd25519KeyPair();
-    }
 
     @Test
     public void verify() throws IOException {
@@ -78,18 +70,10 @@ public final class SiteServiceTest {
         assertThat(certificateResponse.code()).isEqualTo(expectedStatusCode);
     }
 
-    private static AvsLocation createAvsLocation() {
-        return AvsLocation.builder(fakeAvsServer.hostAndPort()).redirectPath("").build();
-    }
-
-    private static SiteLocation createSiteLocation() {
-        return SiteLocation.builder(siteServer.hostAndPort()).redirectPath("").build();
-    }
-
-    private static SiteConfig createSiteConfig() {
+    private static SiteConfig createSiteConfig(AvsLocation location, PublicKey publicSigningKey) {
         return SiteConfig.builder()
-                .avsLocation(createAvsLocation())
-                .avsPublicSigningKey(avsSigningKeyPair.getPublic())
+                .avsLocation(location)
+                .avsPublicSigningKey(publicSigningKey)
                 .siteId("Site")
                 .pseudonymKey(SecureId.generate())
                 .expiresIn(Duration.ofDays(30))
@@ -104,13 +88,20 @@ public final class SiteServiceTest {
                 DisabledAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
+                TestAvsLocationModule.class,
+                TestSigningKeyModule.class,
             })
     interface TestModule {
 
         @Provides
         @Singleton
-        static SiteConfig provideSiteConfig() {
-            return createSiteConfig();
+        static SiteConfig provideSiteConfig(AvsLocation location, @Named("signing") PublicKey publicSigningKey) {
+            return createSiteConfig(location, publicSigningKey);
+        }
+
+        @Provides
+        static TestServer<?> provideAvsServer() {
+            return fakeAvsServer;
         }
     }
 
@@ -134,16 +125,8 @@ public final class SiteServiceTest {
     interface FakeAvsModule {
 
         @Provides
-        @Singleton
-        static SiteLocation provideAvsLocation() {
-            return createSiteLocation();
-        }
-
-        @Provides
-        @Named("signing")
-        @Singleton
-        static PrivateKey providePrivateSigningKey() {
-            return avsSigningKeyPair.getPrivate();
+        static TestServer<?> provideSiteServer() {
+            return siteServer;
         }
     }
 

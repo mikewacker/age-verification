@@ -43,7 +43,7 @@ final class VerificationManagerImpl implements VerificationManager {
             VerificationStore verificationStore,
             PendingStoreFactory pendingStoreFactory,
             AuthMatchDataEncryptor authDataEncryptor,
-            @Named("avsSigning") Provider<PublicKey> avsPublicSigningKeyProvider,
+            @Named("bridgedSigning") Provider<PublicKey> avsPublicSigningKeyProvider,
             @Named("siteId") Provider<String> siteIdProvider,
             @Named("pseudonymKey") Provider<SecureId> pseudonymKeyProvider,
             @Named("expiresIn") Provider<Duration> expiresInProvider) {

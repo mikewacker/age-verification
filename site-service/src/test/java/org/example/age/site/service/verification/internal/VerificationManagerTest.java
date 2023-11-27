@@ -215,7 +215,7 @@ public final class VerificationManagerTest {
     interface TestModule {
 
         @Provides
-        @Named("avsSigning")
+        @Named("bridgedSigning")
         @Singleton
         static PublicKey provideAvsPublicSigningKey() {
             return avsSigningKeyPair.getPublic();
