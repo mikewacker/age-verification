@@ -12,8 +12,8 @@ import org.example.age.site.service.config.SiteConfig;
 /**
  * Dagger module that publishes bindings for...
  * <ul>
- *     <li>{@link AvsLocation}</li>
- *     <li><code>@Named("avsSigning") {@link PublicKey}</code></li>
+ *     <li><code>@Named("bridged") {@link AvsLocation}</code></li>
+ *     <li><code>@Named("bridgedSigning") {@link PublicKey}</code></li>
  *     <li><code>@Named("siteId") String</code></li>
  *     <li><code>@Named("pseudonymKey") {@link SecureId}</code></li>
  *     <li><code>@Named("expiresIn") {@link Duration}</code></li>
@@ -25,12 +25,13 @@ import org.example.age.site.service.config.SiteConfig;
 public interface SiteConfigurerModule {
 
     @Provides
+    @Named("bridged")
     static AvsLocation provideAvsLocation(SiteConfig siteConfig) {
         return siteConfig.avsLocation();
     }
 
     @Provides
-    @Named("avsSigning")
+    @Named("bridgedSigning")
     static PublicKey provideAvsPublicSigningKey(SiteConfig siteConfig) {
         return siteConfig.avsPublicSigningKey();
     }

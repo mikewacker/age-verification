@@ -31,7 +31,7 @@ final class SiteService implements SiteApi {
     public SiteService(
             VerificationManager verificationManager,
             RequestDispatcher requestDispatcher,
-            Provider<AvsLocation> avsLocationProvider,
+            @Named("bridged") Provider<AvsLocation> avsLocationProvider,
             @Named("siteId") Provider<String> siteIdProvider) {
         this.verificationManager = verificationManager;
         this.requestDispatcher = requestDispatcher;

@@ -29,13 +29,14 @@ dependencies {
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testFixturesApi(project(":avs-api"))
+    testFixturesApi(testFixtures(project(":common-crypto")))
     testFixturesApi(testFixtures(project(":common-data")))
+    testFixturesApi(testFixtures(project(":testing-server")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":common-server")))
-    testImplementation(testFixtures(project(":testing-server")))
     testImplementation("io.undertow:undertow-core")
 }
