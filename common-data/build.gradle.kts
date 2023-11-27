@@ -19,7 +19,9 @@ dependencies {
     api("org.immutables:value-annotations")
 
     // test fixtures
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
+
+    testFixturesApi(testFixtures(project(":testing-server")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
