@@ -3,6 +3,7 @@ package org.example.age.testing.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import java.io.IOException;
 import java.util.Map;
 import okhttp3.MediaType;
@@ -10,7 +11,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.data.utils.DataMapper;
 
 /** Shared HTTP client for testing. */
 public final class TestClient {
@@ -19,7 +19,7 @@ public final class TestClient {
     private static final MediaType JSON_CONTENT_TYPE = MediaType.get("application/json");
     private static final RequestBody EMPTY_REQUEST_BODY = RequestBody.create(new byte[0]);
 
-    private static final ObjectMapper mapper = DataMapper.get();
+    private static final ObjectMapper mapper = createObjectMapper();
 
     /** Issues a simple, synchronous HTTP GET request, returning the response. */
     public static Response get(String url) throws IOException {
@@ -77,6 +77,13 @@ public final class TestClient {
         headers.forEach((name, value) -> requestBuilder.header(name, value));
         Request request = requestBuilder.post(requestBody).build();
         return execute(request);
+    }
+
+    /** Creates the {@link ObjectMapper}. */
+    private static ObjectMapper createObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new GuavaModule());
+        return mapper;
     }
 
     /** Holder for the shared client. */
