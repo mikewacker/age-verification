@@ -1,17 +1,21 @@
 rootProject.name = "age-verification"
 
 include(
-        // data types
-        "data",
+        /* generic modules */
 
-        // generic api types
+        // api types (does not depend on Undertow)
         "api",
 
-        // generic infrastructure
+        // infrastructure (depends on Undertow)
         "infra-api",
         "infra-service",
         "testing-api",
-        "testing-server", // mostly generic; uses DataMapper from :data to get an ObjectMapper
+        "testing-server",
+
+        /* product modules */
+
+        // data types
+        "data",
 
         // api
         "common-api",
