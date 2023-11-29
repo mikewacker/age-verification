@@ -3,9 +3,11 @@ package org.example.age.infra.service.client;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
@@ -22,7 +24,7 @@ import org.example.age.api.StatusCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
-import org.example.age.test.data.TestMapperModule;
+import org.example.age.infra.api.data.JsonSerializerModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
 import org.example.age.testing.server.TestUndertowServer;
@@ -155,11 +157,17 @@ public final class RequestDispatcherTest {
      *
      * <p>Also binds dependencies for {@link RequestDispatcher}.</p>
      */
-    @Module(includes = {RequestDispatcherModule.class, TestMapperModule.class})
+    @Module(includes = {RequestDispatcherModule.class, JsonSerializerModule.class})
     interface TestModule {
 
         @Binds
         HttpHandler bindHttpHandler(TestHandler impl);
+
+        @Provides
+        @Singleton
+        static ObjectMapper provideObjectMapper() {
+            return new ObjectMapper();
+        }
     }
 
     /** Dagger component that provides an {@link HttpHandler}. */
