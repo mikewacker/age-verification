@@ -1,7 +1,6 @@
 package org.example.age.infra.service.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import okhttp3.HttpUrl;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.Sender;
 
@@ -12,25 +11,25 @@ import org.example.age.api.Sender;
  */
 public interface RequestDispatcher {
 
-    /** Creates a builder for an exchange with the backend server at the specified URL. */
-    <S extends Sender> ExchangeBuilder<S> createExchangeBuilder(HttpUrl url, S sender, Dispatcher dispatcher);
+    /** Creates a builder for a request to the backend server at the specified URL. */
+    <S extends Sender> RequestBuilder<S> requestBuilder(String url, S sender, Dispatcher dispatcher);
 
-    /** Builder for an exchange with the backend server. */
-    interface ExchangeBuilder<S extends Sender> {
+    /** Builder for a request to the backend server. */
+    interface RequestBuilder<S extends Sender> {
 
         /** Uses a GET request. */
-        ExchangeBuilder<S> get();
+        RequestBuilder<S> get();
 
         /** Uses a POST request without a request body. */
-        ExchangeBuilder<S> post();
+        RequestBuilder<S> post();
 
         /** Uses a POST request with a request body. */
-        ExchangeBuilder<S> post(Object requestBody);
+        RequestBuilder<S> post(Object requestBody);
 
-        /** Dispatches the request, expecting a response without a body. */
-        void dispatchWithoutResponseBody(ResponseCallback<S> callback);
+        /** Builds and dispatches the request, expecting a response with only a status code. */
+        void dispatchWithStatusCodeResponse(ResponseStatusCodeCallback<S> callback);
 
-        /** Dispatches the request, expecting a response with a body. */
-        <B> void dispatchWithResponseBody(TypeReference<B> responseBodyTypeRef, ResponseBodyCallback<S, B> callback);
+        /** Builds and dispatches the request, expecting a response with a JSON body. */
+        <B> void dispatchWithJsonResponse(TypeReference<B> responseBodyTypeRef, ResponseJsonCallback<S, B> callback);
     }
 }

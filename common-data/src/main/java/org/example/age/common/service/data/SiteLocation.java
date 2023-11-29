@@ -3,7 +3,6 @@ package org.example.age.common.service.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import okhttp3.HttpUrl;
 import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
@@ -32,7 +31,7 @@ public interface SiteLocation {
     /** Path of the API to process an age certificate. */
     @Value.Default
     default String ageCertificatePath() {
-        return "api/age-certificate";
+        return "/api/age-certificate";
     }
 
     /** Path to redirect users to in order to continue age verification. */
@@ -41,25 +40,17 @@ public interface SiteLocation {
     /** URL of the API to process an age certificate. */
     @Value.Derived
     @JsonIgnore
-    default HttpUrl ageCertificateUrl() {
-        return new HttpUrl.Builder()
-                .scheme("http")
-                .host(host())
-                .port(port())
-                .addPathSegments(ageCertificatePath())
-                .build();
+    default String ageCertificateUrl() {
+        String path = ageCertificatePath().replaceFirst("^/", "");
+        return String.format("http://%s:%d/%s", host(), port(), path);
     }
 
     /** URL to redirect users to in order to continue age verification. */
     @Value.Derived
     @JsonIgnore
-    default HttpUrl redirectUrl() {
-        return new HttpUrl.Builder()
-                .scheme("http")
-                .host(host())
-                .port(port())
-                .addPathSegments(redirectPath())
-                .build();
+    default String redirectUrl() {
+        String path = redirectPath().replaceFirst("^/", "");
+        return String.format("http://%s:%d/%s", host(), port(), path);
     }
 
     final class Builder extends ImmutableSiteLocation.Builder {}

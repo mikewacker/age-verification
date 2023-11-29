@@ -12,7 +12,6 @@ dependencies {
     api(project(":common-api"))
     api(project(":infra-api"))
     api("com.fasterxml.jackson.core:jackson-databind")
-    api("com.squareup.okhttp3:okhttp")
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
@@ -28,4 +27,5 @@ dependencies {
 
     testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":testing-api")))
+    testImplementation("com.squareup.okhttp3:okhttp")
 }

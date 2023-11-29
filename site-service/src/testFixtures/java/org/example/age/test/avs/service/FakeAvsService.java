@@ -5,8 +5,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import okhttp3.HttpUrl;
-import okhttp3.Response;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.Sender;
@@ -84,11 +82,10 @@ final class FakeAvsService implements AvsApi {
                 verificationFactory.createSignedAgeCertificate(storedSession, storedUser, authData);
         reset();
 
-        HttpUrl certificateUrl = getAgeCertificateUrl();
         requestDispatcher
-                .createExchangeBuilder(certificateUrl, sender, dispatcher)
+                .requestBuilder(getAgeCertificateUrl(), sender, dispatcher)
                 .post(signedCertificate)
-                .dispatchWithoutResponseBody(this::onAgeCertificateResponseReceived);
+                .dispatchWithStatusCodeResponse(this::onAgeCertificateResponseReceived);
     }
 
     /** Populates preset accounts for this service. */
@@ -99,13 +96,13 @@ final class FakeAvsService implements AvsApi {
     }
 
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
-    private HttpUrl getAgeCertificateUrl() {
+    private String getAgeCertificateUrl() {
         return siteLocationProvider.get().ageCertificateUrl();
     }
 
     /** Called when a response is received for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void onAgeCertificateResponseReceived(StatusCodeSender sender, Response response, Dispatcher dispatcher) {
-        sender.send(response.code());
+    private void onAgeCertificateResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+        sender.send(statusCode);
     }
 
     /** Clears the stored verification data. */

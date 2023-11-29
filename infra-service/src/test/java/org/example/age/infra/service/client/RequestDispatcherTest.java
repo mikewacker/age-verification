@@ -12,7 +12,6 @@ import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import okhttp3.HttpUrl;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -120,32 +119,30 @@ public final class RequestDispatcherTest {
             StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
-            HttpUrl backendUrl = HttpUrl.parse(backendServer.rootUrl());
             requestDispatcher
-                    .createExchangeBuilder(backendUrl, sender, dispatcher)
+                    .requestBuilder(backendServer.rootUrl(), sender, dispatcher)
                     .post()
-                    .dispatchWithoutResponseBody(this::onResponseReceived);
+                    .dispatchWithStatusCodeResponse(this::onResponseReceived);
         }
 
         private void handleResponseBody(HttpServerExchange exchange) {
             JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
-            HttpUrl backendUrl = HttpUrl.parse(backendServer.rootUrl());
             requestDispatcher
-                    .createExchangeBuilder(backendUrl, sender, dispatcher)
+                    .requestBuilder(backendServer.rootUrl(), sender, dispatcher)
                     .post()
-                    .dispatchWithResponseBody(new TypeReference<>() {}, this::onResponseBodyReceived);
+                    .dispatchWithJsonResponse(new TypeReference<>() {}, this::onResponseBodyReceived);
         }
 
-        private void onResponseReceived(StatusCodeSender sender, Response response, Dispatcher dispatcher) {
-            sender.send(response.code());
+        private void onResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+            sender.send(statusCode);
         }
 
         private void onResponseBodyReceived(
-                JsonSender<String> sender, Response response, String responseBody, Dispatcher dispatcher) {
-            if (!response.isSuccessful()) {
-                sender.sendErrorCode(response.code());
+                JsonSender<String> sender, int statusCode, String responseBody, Dispatcher dispatcher) {
+            if (statusCode != StatusCodes.OK) {
+                sender.sendErrorCode(statusCode);
                 return;
             }
 

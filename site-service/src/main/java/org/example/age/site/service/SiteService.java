@@ -5,8 +5,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import okhttp3.HttpUrl;
-import okhttp3.Response;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
@@ -15,7 +13,7 @@ import org.example.age.common.service.data.AvsLocation;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.service.client.RequestDispatcher;
-import org.example.age.infra.service.client.ResponseBodyCallback;
+import org.example.age.infra.service.client.ResponseJsonCallback;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.service.verification.internal.VerificationManager;
 
@@ -42,13 +40,13 @@ final class SiteService implements SiteApi {
     @Override
     public void createVerificationSession(
             JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        HttpUrl sessionUrl = avsLocationProvider.get().verificationSessionUrl(siteIdProvider.get());
-        ResponseBodyCallback<JsonSender<VerificationSession>, VerificationSession> sessionCallback =
+        String sessionUrl = avsLocationProvider.get().verificationSessionUrl(siteIdProvider.get());
+        ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> sessionCallback =
                 new VerificationSessionCallback(verificationManager, accountId, authData);
         requestDispatcher
-                .createExchangeBuilder(sessionUrl, sender, dispatcher)
+                .requestBuilder(sessionUrl, sender, dispatcher)
                 .post()
-                .dispatchWithResponseBody(new TypeReference<>() {}, sessionCallback);
+                .dispatchWithJsonResponse(new TypeReference<>() {}, sessionCallback);
     }
 
     @Override
@@ -64,24 +62,24 @@ final class SiteService implements SiteApi {
      */
     private record VerificationSessionCallback(
             VerificationManager verificationManager, String accountId, AuthMatchData authData)
-            implements ResponseBodyCallback<JsonSender<VerificationSession>, VerificationSession> {
+            implements ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> {
 
         @Override
         public void onResponse(
                 JsonSender<VerificationSession> sender,
-                Response response,
+                int statusCode,
                 VerificationSession session,
                 Dispatcher dispatcher) {
-            if (!response.isSuccessful()) {
-                int errorCode = ((response.code() / 100) == 5) ? 502 : 500;
+            if (statusCode != 200) {
+                int errorCode = (statusCode / 100 == 5) ? 502 : 500;
                 sender.sendErrorCode(errorCode);
                 return;
             }
 
-            int statusCode =
+            int sessionStatusCode =
                     verificationManager.onVerificationSessionReceived(accountId, authData, session, dispatcher);
-            if (statusCode != 200) {
-                sender.sendErrorCode(statusCode);
+            if (sessionStatusCode != 200) {
+                sender.sendErrorCode(sessionStatusCode);
                 return;
             }
 

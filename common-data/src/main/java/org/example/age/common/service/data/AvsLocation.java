@@ -2,7 +2,6 @@ package org.example.age.common.service.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import okhttp3.HttpUrl;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
@@ -32,34 +31,22 @@ public interface AvsLocation {
     /** Path of the API to create a verification session. */
     @Value.Default
     default String verificationSessionPath() {
-        return "api/verification-session";
+        return "/api/verification-session";
     }
 
     /** Path to redirect users to in order to continue age verification. */
     String redirectPath();
 
     /** URL of the API to create a verification session. */
-    @Value.Derived
-    default HttpUrl verificationSessionUrl(String siteId) {
-        return new HttpUrl.Builder()
-                .scheme("http")
-                .host(host())
-                .port(port())
-                .addPathSegments(verificationSessionPath())
-                .addQueryParameter("site-id", siteId)
-                .build();
+    default String verificationSessionUrl(String siteId) {
+        String path = verificationSessionPath().replaceFirst("^/", "");
+        return String.format("http://%s:%d/%s?site-id=%s", host(), port(), path, siteId);
     }
 
     /** URL to redirect users to in order to continue age verification. */
-    @Value.Derived
-    default HttpUrl redirectUrl(SecureId requestId) {
-        return new HttpUrl.Builder()
-                .scheme("http")
-                .host(host())
-                .port(port())
-                .addPathSegments(redirectPath())
-                .addQueryParameter("request-id", requestId.toString())
-                .build();
+    default String redirectUrl(SecureId requestId) {
+        String path = redirectPath().replaceFirst("^/", "");
+        return String.format("http://%s:%d/%s?request-id=%s", host(), port(), path, requestId);
     }
 
     final class Builder extends ImmutableAvsLocation.Builder {}
