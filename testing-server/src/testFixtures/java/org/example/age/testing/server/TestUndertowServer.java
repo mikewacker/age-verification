@@ -1,6 +1,5 @@
 package org.example.age.testing.server;
 
-import com.google.common.net.HostAndPort;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.PathHandler;
@@ -27,7 +26,7 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
     private final TestUndertowFactory serverFactory;
 
     private Undertow server = null;
-    private HostAndPort hostAndPort = null;
+    private int port = 0;
     private String rootUrl = null;
 
     /** Creates a test server from a root {@link HttpHandler}, which is created by a factory. */
@@ -56,9 +55,15 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
     }
 
     @Override
-    public HostAndPort hostAndPort() {
+    public String host() {
         checkServerStarted();
-        return hostAndPort;
+        return "localhost";
+    }
+
+    @Override
+    public int port() {
+        checkServerStarted();
+        return port;
     }
 
     @Override
@@ -89,7 +94,7 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
         }
 
         server = null;
-        hostAndPort = null;
+        port = 0;
         rootUrl = null;
     }
 
@@ -112,11 +117,10 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
 
     /** Starts the server. */
     private void startServer() {
-        int port = RANDOM.nextInt(1024, 65536);
+        port = RANDOM.nextInt(1024, 65536);
+        rootUrl = String.format("http://localhost:%d", port);
         server = serverFactory.create(port);
         server.start();
-        hostAndPort = HostAndPort.fromParts("localhost", port);
-        rootUrl = String.format("http://localhost:%d", port);
     }
 
     /** Gets the message and stack trace as text. */

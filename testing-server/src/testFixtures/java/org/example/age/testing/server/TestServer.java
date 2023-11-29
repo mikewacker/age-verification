@@ -1,6 +1,5 @@
 package org.example.age.testing.server;
 
-import com.google.common.net.HostAndPort;
 import com.google.errorprone.annotations.FormatMethod;
 
 /**
@@ -13,8 +12,11 @@ public interface TestServer<T> {
     /** Gets the underlying server. */
     T get();
 
-    /** Gets the host and port of the server. */
-    HostAndPort hostAndPort();
+    /** Gets the host of the server. */
+    String host();
+
+    /** Gets the port of the server. */
+    int port();
 
     /** Gets the root URL for the server. */
     String rootUrl();
@@ -28,8 +30,8 @@ public interface TestServer<T> {
     /** Gets the URL at the provided path. */
     @FormatMethod
     default String url(String pathFormat, Object... args) {
-        pathFormat = pathFormat.startsWith("/") ? pathFormat : String.format("/%s", pathFormat);
+        pathFormat = pathFormat.replaceFirst("^/", "");
         String path = String.format(pathFormat, args);
-        return String.format("%s%s", rootUrl(), path);
+        return String.format("%s/%s", rootUrl(), path);
     }
 }

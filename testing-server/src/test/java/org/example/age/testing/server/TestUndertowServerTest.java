@@ -37,10 +37,9 @@ public final class TestUndertowServerTest {
 
     @Test
     public void getLocation() {
-        assertThat(server.hostAndPort().getHost()).isEqualTo("localhost");
-        assertThat(server.hostAndPort().getPort()).isBetween(1024, 65535);
-        String expectedUrl =
-                String.format("http://localhost:%d", server.hostAndPort().getPort());
+        assertThat(server.host()).isEqualTo("localhost");
+        assertThat(server.port()).isBetween(1024, 65535);
+        String expectedUrl = String.format("http://localhost:%d", server.port());
         assertThat(server.rootUrl()).isEqualTo(expectedUrl);
     }
 
@@ -48,7 +47,8 @@ public final class TestUndertowServerTest {
     public void error_ServerNotStarted() {
         TestUndertowServer inactiveServer = TestUndertowServer.fromHandler(() -> TestUndertowServerTest::stubHandle);
         error_ServerNotStarted(inactiveServer::get);
-        error_ServerNotStarted(inactiveServer::hostAndPort);
+        error_ServerNotStarted(inactiveServer::host);
+        error_ServerNotStarted(inactiveServer::port);
         error_ServerNotStarted(inactiveServer::rootUrl);
     }
 

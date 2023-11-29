@@ -3,7 +3,6 @@ package org.example.age.common.service.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;
 import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
@@ -20,17 +19,15 @@ import org.immutables.value.Value;
 public interface SiteLocation {
 
     /** Creates a builder for the location. */
-    static Builder builder(String host, int port) {
-        return builder(HostAndPort.fromParts(host, port));
+    static SiteLocation.Builder builder(String host, int port) {
+        return new Builder().host(host).port(port);
     }
 
-    /** Creates a builder for the location. */
-    static Builder builder(HostAndPort hostAndPort) {
-        return new Builder().hostAndPort(hostAndPort);
-    }
+    /** Host of the site. */
+    String host();
 
-    /** Host and port of the site. */
-    HostAndPort hostAndPort();
+    /** Port of the site. */
+    int port();
 
     /** Path of the API to process an age certificate. */
     @Value.Default
@@ -47,8 +44,8 @@ public interface SiteLocation {
     default HttpUrl ageCertificateUrl() {
         return new HttpUrl.Builder()
                 .scheme("http")
-                .host(hostAndPort().getHost())
-                .port(hostAndPort().getPort())
+                .host(host())
+                .port(port())
                 .addPathSegments(ageCertificatePath())
                 .build();
     }
@@ -59,8 +56,8 @@ public interface SiteLocation {
     default HttpUrl redirectUrl() {
         return new HttpUrl.Builder()
                 .scheme("http")
-                .host(hostAndPort().getHost())
-                .port(hostAndPort().getPort())
+                .host(host())
+                .port(port())
                 .addPathSegments(redirectPath())
                 .build();
     }

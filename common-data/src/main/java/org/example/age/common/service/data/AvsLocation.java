@@ -2,7 +2,6 @@ package org.example.age.common.service.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.net.HostAndPort;
 import okhttp3.HttpUrl;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.utils.DataStyle;
@@ -21,16 +20,14 @@ public interface AvsLocation {
 
     /** Creates a builder for the location. */
     static Builder builder(String host, int port) {
-        return builder(HostAndPort.fromParts(host, port));
+        return new Builder().host(host).port(port);
     }
 
-    /** Creates a builder for the location. */
-    static Builder builder(HostAndPort hostAndPort) {
-        return new Builder().hostAndPort(hostAndPort);
-    }
+    /** Host of the age verification service. */
+    String host();
 
-    /** Host and port of the age verification service. */
-    HostAndPort hostAndPort();
+    /** Port of the age verification service. */
+    int port();
 
     /** Path of the API to create a verification session. */
     @Value.Default
@@ -46,8 +43,8 @@ public interface AvsLocation {
     default HttpUrl verificationSessionUrl(String siteId) {
         return new HttpUrl.Builder()
                 .scheme("http")
-                .host(hostAndPort().getHost())
-                .port(hostAndPort().getPort())
+                .host(host())
+                .port(port())
                 .addPathSegments(verificationSessionPath())
                 .addQueryParameter("site-id", siteId)
                 .build();
@@ -58,8 +55,8 @@ public interface AvsLocation {
     default HttpUrl redirectUrl(SecureId requestId) {
         return new HttpUrl.Builder()
                 .scheme("http")
-                .host(hostAndPort().getHost())
-                .port(hostAndPort().getPort())
+                .host(host())
+                .port(port())
                 .addPathSegments(redirectPath())
                 .addQueryParameter("request-id", requestId.toString())
                 .build();
