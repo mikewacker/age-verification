@@ -9,14 +9,14 @@ final class TestLocations {
 
     /** Gets the {@link AvsLocation} from the corresponding {@link TestServer}. */
     public static AvsLocation avs(TestServer<?> avsServer) {
-        return AvsLocation.builder(avsServer.hostAndPort())
+        return AvsLocation.builder(avsServer.host(), avsServer.port())
                 .redirectPath("verify")
                 .build();
     }
 
     /** Gets the {@link SiteLocation} from the corresponding {@link TestServer}. */
     public static SiteLocation site(TestServer<?> siteServer) {
-        return SiteLocation.builder(siteServer.hostAndPort())
+        return SiteLocation.builder(siteServer.host(), siteServer.port())
                 .redirectPath("verify")
                 .build();
     }

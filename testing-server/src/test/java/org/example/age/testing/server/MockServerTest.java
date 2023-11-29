@@ -31,9 +31,8 @@ public final class MockServerTest {
 
     @Test
     public void getLocation() {
-        assertThat(server.hostAndPort().getHost()).isEqualTo("localhost");
-        String expectedUrl =
-                String.format("http://localhost:%d", server.hostAndPort().getPort());
+        assertThat(server.host()).isEqualTo("localhost");
+        String expectedUrl = String.format("http://localhost:%d", server.port());
         assertThat(server.rootUrl()).isEqualTo(expectedUrl);
     }
 
@@ -41,7 +40,8 @@ public final class MockServerTest {
     public void error_ServerNotStarted() {
         MockServer inactiveServer = MockServer.create();
         error_ServerNotStarted(inactiveServer::get);
-        error_ServerNotStarted(inactiveServer::hostAndPort);
+        error_ServerNotStarted(inactiveServer::host);
+        error_ServerNotStarted(inactiveServer::port);
         error_ServerNotStarted(inactiveServer::rootUrl);
         error_ServerNotStarted(() -> inactiveServer.enqueue(new MockResponse()));
     }

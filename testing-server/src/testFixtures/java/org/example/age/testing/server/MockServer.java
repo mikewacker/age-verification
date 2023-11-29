@@ -1,6 +1,5 @@
 package org.example.age.testing.server;
 
-import com.google.common.net.HostAndPort;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public final class MockServer implements TestServer<MockWebServer>, BeforeEachCallback, AfterEachCallback {
 
     private MockWebServer server = null;
-    private HostAndPort hostAndPort = null;
     private String rootUrl = null;
 
     /** Creates a mock server. */
@@ -30,9 +28,15 @@ public final class MockServer implements TestServer<MockWebServer>, BeforeEachCa
     }
 
     @Override
-    public HostAndPort hostAndPort() {
+    public String host() {
         checkServerStarted();
-        return hostAndPort;
+        return server.getHostName();
+    }
+
+    @Override
+    public int port() {
+        checkServerStarted();
+        return server.getPort();
     }
 
     @Override
@@ -51,7 +55,6 @@ public final class MockServer implements TestServer<MockWebServer>, BeforeEachCa
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
         server = new MockWebServer();
         server.start();
-        hostAndPort = HostAndPort.fromParts(server.getHostName(), server.getPort());
         rootUrl = String.format("http://%s:%d", server.getHostName(), server.getPort());
     }
 
@@ -62,7 +65,6 @@ public final class MockServer implements TestServer<MockWebServer>, BeforeEachCa
         }
 
         server = null;
-        hostAndPort = null;
         rootUrl = null;
     }
 
