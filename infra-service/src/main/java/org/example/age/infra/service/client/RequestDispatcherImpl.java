@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -29,12 +28,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     @Override
-    public <S extends Sender> ExchangeBuilder<S> createExchangeBuilder(HttpUrl url, S sender, Dispatcher dispatcher) {
-        return new ExchangeBuilderImpl<>(url, sender, dispatcher);
+    public <S extends Sender> RequestBuilder<S> requestBuilder(String url, S sender, Dispatcher dispatcher) {
+        return new RequestBuilderImpl<>(url, sender, dispatcher);
     }
 
-    /** {@link ExchangeBuilder} that builds the underlying {@link Request}. */
-    private final class ExchangeBuilderImpl<S extends Sender> implements ExchangeBuilder<S> {
+    /** {@link RequestBuilder} that builds the underlying {@link Request}. */
+    private final class RequestBuilderImpl<S extends Sender> implements RequestBuilder<S> {
 
         private static final RequestBody EMPTY_BODY = RequestBody.create(new byte[0]);
 
@@ -42,40 +41,40 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         private final S sender;
         private final Dispatcher dispatcher;
 
-        public ExchangeBuilderImpl(HttpUrl url, S sender, Dispatcher dispatcher) {
+        public RequestBuilderImpl(String url, S sender, Dispatcher dispatcher) {
             requestBuilder = new Request.Builder().url(url);
             this.sender = sender;
             this.dispatcher = dispatcher;
         }
 
         @Override
-        public ExchangeBuilder<S> get() {
+        public RequestBuilder<S> get() {
             requestBuilder.get();
             return this;
         }
 
         @Override
-        public ExchangeBuilder<S> post() {
+        public RequestBuilder<S> post() {
             requestBuilder.post(EMPTY_BODY);
             return this;
         }
 
         @Override
-        public ExchangeBuilder<S> post(Object requestBody) {
+        public RequestBuilder<S> post(Object requestBody) {
             byte[] rawRequestBody = serializer.serialize(requestBody);
             requestBuilder.post(RequestBody.create(rawRequestBody));
             return this;
         }
 
         @Override
-        public void dispatchWithoutResponseBody(ResponseCallback<S> callback) {
+        public void dispatchWithStatusCodeResponse(ResponseStatusCodeCallback<S> callback) {
             Callback adaptedCallback = new AdaptedResponseCallback<>(sender, dispatcher, callback);
             dispatch(adaptedCallback);
         }
 
         @Override
-        public <B> void dispatchWithResponseBody(
-                TypeReference<B> responseBodyTypeRef, ResponseBodyCallback<S, B> callback) {
+        public <B> void dispatchWithJsonResponse(
+                TypeReference<B> responseBodyTypeRef, ResponseJsonCallback<S, B> callback) {
             Callback adaptedCallback =
                     new AdaptedResponseBodyCallback<>(sender, dispatcher, responseBodyTypeRef, callback);
             dispatch(adaptedCallback);
@@ -115,33 +114,33 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         protected abstract void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception;
     }
 
-    /** Adapts a {@link ResponseCallback} to a {@link Callback}. */
+    /** Adapts a {@link ResponseStatusCodeCallback} to a {@link Callback}. */
     private static final class AdaptedResponseCallback<S extends Sender> extends AdaptedCallback<S> {
 
-        private final ResponseCallback<S> callback;
+        private final ResponseStatusCodeCallback<S> callback;
 
-        public AdaptedResponseCallback(S sender, Dispatcher dispatcher, ResponseCallback<S> callback) {
+        public AdaptedResponseCallback(S sender, Dispatcher dispatcher, ResponseStatusCodeCallback<S> callback) {
             super(sender, dispatcher);
             this.callback = callback;
         }
 
         @Override
         protected void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception {
-            callback.onResponse(sender, response, dispatcher);
+            callback.onResponse(sender, response.code(), dispatcher);
         }
     }
 
-    /** Adapts a {@link ResponseBodyCallback} to a {@link Callback}. */
+    /** Adapts a {@link ResponseJsonCallback} to a {@link Callback}. */
     private final class AdaptedResponseBodyCallback<S extends Sender, B> extends AdaptedCallback<S> {
 
         private final TypeReference<B> responseBodyTypeRef;
-        private final ResponseBodyCallback<S, B> callback;
+        private final ResponseJsonCallback<S, B> callback;
 
         public AdaptedResponseBodyCallback(
                 S sender,
                 Dispatcher dispatcher,
                 TypeReference<B> responseBodyTypeRef,
-                ResponseBodyCallback<S, B> callback) {
+                ResponseJsonCallback<S, B> callback) {
             super(sender, dispatcher);
             this.responseBodyTypeRef = responseBodyTypeRef;
             this.callback = callback;
@@ -150,7 +149,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         @Override
         protected void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception {
             if (!response.isSuccessful()) {
-                callback.onResponse(sender, response, null, dispatcher);
+                callback.onResponse(sender, response.code(), null, dispatcher);
                 return;
             }
 
@@ -168,7 +167,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
             }
             B responseBody = maybeResponseBody.get();
 
-            callback.onResponse(sender, response, responseBody, dispatcher);
+            callback.onResponse(sender, response.code(), responseBody, dispatcher);
         }
 
         /** Reads the raw response body, or returns a 502 error. */

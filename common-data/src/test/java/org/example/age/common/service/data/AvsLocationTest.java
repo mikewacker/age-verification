@@ -15,16 +15,16 @@ public final class AvsLocationTest {
 
     @BeforeEach
     public void createAvsLocation() {
-        location = AvsLocation.builder("localhost", 80).redirectPath("verify").build();
+        location = AvsLocation.builder("localhost", 80).redirectPath("/verify").build();
     }
 
     @Test
     public void urls() {
-        assertThat(location.verificationSessionUrl("Site").toString())
-                .isEqualTo("http://localhost/api/verification-session?site-id=Site");
+        assertThat(location.verificationSessionUrl("Site"))
+                .isEqualTo("http://localhost:80/api/verification-session?site-id=Site");
         SecureId requestId = SecureId.fromString("4WLcuu0aZ2SMxC9FYVQegKv70i416C_k9fWkYjYhQlA");
-        assertThat(location.redirectUrl(requestId).toString())
-                .isEqualTo("http://localhost/verify?request-id=4WLcuu0aZ2SMxC9FYVQegKv70i416C_k9fWkYjYhQlA");
+        assertThat(location.redirectUrl(requestId))
+                .isEqualTo("http://localhost:80/verify?request-id=4WLcuu0aZ2SMxC9FYVQegKv70i416C_k9fWkYjYhQlA");
     }
 
     @Test

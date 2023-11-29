@@ -29,8 +29,8 @@ public final class RequestParser {
      * <p>Sends a 400 error if the body cannot be deserialized,
      * or a 500 error if the callback throws an uncaught exception.</p>
      */
-    public <B> void readBody(TypeReference<B> bodyTypeRef, RequestBodyCallback<B> callback) {
-        Receiver.FullBytesCallback adaptedCallback = new AdaptedRequestBodyCallback<>(bodyTypeRef, callback);
+    public <B> void readBody(TypeReference<B> bodyTypeRef, RequestJsonCallback<B> callback) {
+        Receiver.FullBytesCallback adaptedCallback = new AdaptedRequestJsonCallback<>(bodyTypeRef, callback);
         exchange.getRequestReceiver().receiveFullBytes(adaptedCallback);
     }
 
@@ -69,13 +69,13 @@ public final class RequestParser {
         this.serializer = serializer;
     }
 
-    /** Adapts a {@link RequestBodyCallback} to a {@link Receiver.FullBytesCallback}. */
-    private final class AdaptedRequestBodyCallback<B> implements Receiver.FullBytesCallback {
+    /** Adapts a {@link RequestJsonCallback} to a {@link Receiver.FullBytesCallback}. */
+    private final class AdaptedRequestJsonCallback<B> implements Receiver.FullBytesCallback {
 
         private final TypeReference<B> bodyTypeRef;
-        private final RequestBodyCallback<B> callback;
+        private final RequestJsonCallback<B> callback;
 
-        public AdaptedRequestBodyCallback(TypeReference<B> bodyTypeRef, RequestBodyCallback<B> callback) {
+        public AdaptedRequestJsonCallback(TypeReference<B> bodyTypeRef, RequestJsonCallback<B> callback) {
             this.bodyTypeRef = bodyTypeRef;
             this.callback = callback;
         }

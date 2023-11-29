@@ -14,13 +14,13 @@ public final class SiteLocationTest {
 
     @BeforeEach
     public void createSiteLocation() {
-        location = SiteLocation.builder("localhost", 80).redirectPath("verify").build();
+        location = SiteLocation.builder("localhost", 80).redirectPath("/verify").build();
     }
 
     @Test
     public void urls() {
-        assertThat(location.ageCertificateUrl().toString()).isEqualTo("http://localhost/api/age-certificate");
-        assertThat(location.redirectUrl().toString()).isEqualTo("http://localhost/verify");
+        assertThat(location.ageCertificateUrl()).isEqualTo("http://localhost:80/api/age-certificate");
+        assertThat(location.redirectUrl()).isEqualTo("http://localhost:80/verify");
     }
 
     @Test

@@ -20,7 +20,6 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("com.google.guava:guava")
-    api("com.squareup.okhttp3:okhttp")
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
     api("org.jboss.xnio:xnio-api")
@@ -37,5 +36,6 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
+    testImplementation("com.squareup.okhttp3:okhttp")
     testImplementation("io.undertow:undertow-core")
 }
