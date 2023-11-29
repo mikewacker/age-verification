@@ -23,7 +23,7 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
     testAnnotationProcessor("org.immutables:value")
 
+    testImplementation(project(":common-data"))
     testImplementation(testFixtures(project(":api")))
-    testImplementation(testFixtures(project(":testing-api")))
     testImplementation("org.immutables:value-annotations")
 }
