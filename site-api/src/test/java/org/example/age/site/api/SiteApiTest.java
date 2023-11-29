@@ -4,9 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
-import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Map;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.data.certificate.AgeCertificate;
@@ -18,7 +19,6 @@ import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.test.common.server.undertow.TestUndertowModule;
 import org.example.age.test.site.service.StubSiteServiceModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
@@ -28,7 +28,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class SiteApiTest {
 
     @RegisterExtension
-    private static final TestUndertowServer siteServer = TestUndertowServer.create(TestComponent::createServer);
+    private static final TestUndertowServer siteServer =
+            TestUndertowServer.fromHandlerAtPath(TestComponent::createHandler, "/api/");
 
     @Test
     public void verify() throws IOException {
@@ -76,17 +77,17 @@ public final class SiteApiTest {
         return SignedAgeCertificate.of(certificate, signature);
     }
 
-    /** Dagger component that provides an {@link Undertow} server. */
-    @Component(modules = {TestUndertowModule.class, StubSiteServiceModule.class})
+    /** Dagger component that provides an {@link HttpHandler}. */
+    @Component(modules = StubSiteServiceModule.class)
     @Singleton
-    interface TestComponent extends TestUndertowServer.ServerComponent {
+    interface TestComponent {
 
-        static Undertow createServer(int port) {
-            TestComponent component = DaggerSiteApiTest_TestComponent.factory().create(port);
-            return component.server();
+        static HttpHandler createHandler() {
+            TestComponent component = DaggerSiteApiTest_TestComponent.create();
+            return component.handler();
         }
 
-        @Component.Factory
-        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
+        @Named("api")
+        HttpHandler handler();
     }
 }

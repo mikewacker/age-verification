@@ -7,7 +7,6 @@ dependencies {
     // test fixtures
     testFixturesApi("com.fasterxml.jackson.core:jackson-databind")
     testFixturesApi("com.fasterxml.jackson.datatype:jackson-datatype-guava")
-    testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("com.google.guava:guava")
     testFixturesApi("com.squareup.okhttp3:mockwebserver")
     testFixturesApi("com.squareup.okhttp3:okhttp")

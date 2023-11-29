@@ -25,5 +25,5 @@ public interface SiteApiModule {
 
     @Binds
     @Named("api")
-    HttpHandler bindApiHttpHandler(SiteEndpointHandler impl);
+    HttpHandler bindApiHandler(SiteEndpointHandler impl);
 }

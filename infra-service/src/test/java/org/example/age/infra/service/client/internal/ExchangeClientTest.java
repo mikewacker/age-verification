@@ -34,7 +34,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class ExchangeClientTest {
 
     @RegisterExtension
-    private static final TestUndertowServer frontendServer = TestUndertowServer.create(TestComponent::createHandler);
+    private static final TestUndertowServer frontendServer =
+            TestUndertowServer.fromHandler(TestComponent::createHandler);
 
     @RegisterExtension
     private static final MockServer backendServer = MockServer.create();
@@ -113,14 +114,16 @@ public final class ExchangeClientTest {
         HttpHandler bindHandler(TestHandler impl);
     }
 
-    /** Dagger component that provides the root {@link HttpHandler}. */
+    /** Dagger component that provides an {@link HttpHandler}. */
     @Component(modules = TestModule.class)
     @Singleton
-    public interface TestComponent extends TestUndertowServer.HandlerComponent {
+    public interface TestComponent {
 
         static HttpHandler createHandler() {
             TestComponent component = DaggerExchangeClientTest_TestComponent.create();
             return component.handler();
         }
+
+        HttpHandler handler();
     }
 }

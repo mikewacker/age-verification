@@ -15,13 +15,19 @@ public final class TestUndertowServerTest {
 
     @RegisterExtension
     private static final TestUndertowServer server =
-            TestUndertowServer.create(() -> TestUndertowServerTest::stubHandle);
+            TestUndertowServer.fromHandlerAtPath(() -> TestUndertowServerTest::stubHandle, "/api/");
 
     @Test
-    public void exchange() throws IOException {
-        Response response = TestClient.get(server.rootUrl());
+    public void exchange_AtHandledPath() throws IOException {
+        Response response = TestClient.get(server.url("/api/test"));
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.body().string()).isEqualTo("test");
+    }
+
+    @Test
+    public void exchange_AtRootUrl() throws IOException {
+        Response response = TestClient.get(server.rootUrl());
+        assertThat(response.code()).isEqualTo(404);
     }
 
     @Test
@@ -40,7 +46,7 @@ public final class TestUndertowServerTest {
 
     @Test
     public void error_ServerNotStarted() {
-        TestUndertowServer inactiveServer = TestUndertowServer.create(() -> TestUndertowServerTest::stubHandle);
+        TestUndertowServer inactiveServer = TestUndertowServer.fromHandler(() -> TestUndertowServerTest::stubHandle);
         error_ServerNotStarted(inactiveServer::get);
         error_ServerNotStarted(inactiveServer::hostAndPort);
         error_ServerNotStarted(inactiveServer::rootUrl);

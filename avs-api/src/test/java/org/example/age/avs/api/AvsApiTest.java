@@ -4,15 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
-import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Map;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Response;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.test.avs.service.StubAvsServiceModule;
-import org.example.age.test.common.server.undertow.TestUndertowModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class AvsApiTest {
 
     @RegisterExtension
-    private static final TestUndertowServer avsServer = TestUndertowServer.create(TestComponent::createServer);
+    private static final TestUndertowServer avsServer =
+            TestUndertowServer.fromHandlerAtPath(TestComponent::createHandler, "/api/");
 
     @Test
     public void verify() throws IOException {
@@ -77,17 +78,17 @@ public final class AvsApiTest {
         assertThat(response.code()).isEqualTo(404);
     }
 
-    /** Dagger component that provides an {@link Undertow} server. */
-    @Component(modules = {TestUndertowModule.class, StubAvsServiceModule.class})
+    /** Dagger component that provides an {@link HttpHandler}. */
+    @Component(modules = StubAvsServiceModule.class)
     @Singleton
-    interface TestComponent extends TestUndertowServer.ServerComponent {
+    interface TestComponent {
 
-        static Undertow createServer(int port) {
-            TestComponent component = DaggerAvsApiTest_TestComponent.factory().create(port);
-            return component.server();
+        static HttpHandler createHandler() {
+            TestComponent component = DaggerAvsApiTest_TestComponent.create();
+            return component.handler();
         }
 
-        @Component.Factory
-        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
+        @Named("api")
+        HttpHandler handler();
     }
 }
