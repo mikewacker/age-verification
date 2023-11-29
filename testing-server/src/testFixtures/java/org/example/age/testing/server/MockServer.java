@@ -7,7 +7,11 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-/** Mock server backed by {@link MockWebServer}. A fresh server is started for each test. */
+/**
+ * Test server backed by a {@link MockWebServer}.
+ *
+ * <p>A fresh server is started for each test.</p>
+ */
 public final class MockServer implements TestServer<MockWebServer>, BeforeEachCallback, AfterEachCallback {
 
     private MockWebServer server = null;

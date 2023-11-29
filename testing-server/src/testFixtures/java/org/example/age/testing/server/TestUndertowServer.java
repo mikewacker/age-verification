@@ -1,19 +1,22 @@
 package org.example.age.testing.server;
 
 import com.google.common.net.HostAndPort;
-import dagger.BindsInstance;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
+import io.undertow.server.handlers.PathHandler;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Random;
 import java.util.logging.Logger;
-import javax.inject.Named;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-/** Undertow server that tests a custom handler, or a full server. A single server is started for all tests. */
+/**
+ * Test server backed by an {@link Undertow} server, which tests an {@link HttpHandler} (or a full server).
+ *
+ * <p>A single server is started for all tests.</p>
+ */
 public final class TestUndertowServer implements TestServer<Undertow>, BeforeAllCallback, AfterAllCallback {
 
     private static final Logger log = Logger.getLogger(TestUndertowServer.class.getName());
@@ -21,19 +24,28 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
     private static final int NUM_ATTEMPTS = 3;
     private static final Random RANDOM = new Random();
 
-    private final ServerFactory serverFactory;
+    private final TestUndertowFactory serverFactory;
 
     private Undertow server = null;
     private HostAndPort hostAndPort = null;
     private String rootUrl = null;
 
-    /** Creates a test server from the root {@link HttpHandler}, which is created by a factory. */
-    public static TestUndertowServer create(HandlerFactory handlerFactory) {
+    /** Creates a test server from a root {@link HttpHandler}, which is created by a factory. */
+    public static TestUndertowServer fromHandler(TestHandlerFactory handlerFactory) {
         return create(port -> TestUndertowServer.createServer(handlerFactory, port));
     }
 
+    /**
+     * Creates a test server from an {@link HttpHandler}, which is created by a factory.
+     *
+     * <p>The root handler will delegate to this handler for requests at the specified path.</p>
+     */
+    public static TestUndertowServer fromHandlerAtPath(TestHandlerFactory handlerFactory, String prefixPath) {
+        return fromHandler(() -> createRootHandler(handlerFactory, prefixPath));
+    }
+
     /** Creates a test server from an {@link Undertow} server, which is created by a factory. */
-    public static TestUndertowServer create(ServerFactory serverFactory) {
+    public static TestUndertowServer create(TestUndertowFactory serverFactory) {
         return new TestUndertowServer(serverFactory);
     }
 
@@ -81,8 +93,16 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
         rootUrl = null;
     }
 
-    /** Creates an {@link Undertow} server from the root {@link HttpHandler}, which is created by a factory. */
-    private static Undertow createServer(HandlerFactory handlerFactory, int port) {
+    /** Creates a root {@link HttpHandler} that delegates to a handler for requests at the specified path. */
+    private static HttpHandler createRootHandler(TestHandlerFactory handlerFactory, String prefixPath) {
+        HttpHandler handler = handlerFactory.create();
+        PathHandler rootHandler = new PathHandler();
+        rootHandler.addPrefixPath(prefixPath, handler);
+        return rootHandler;
+    }
+
+    /** Creates an {@link Undertow} server from a root {@link HttpHandler}, which is created by a factory. */
+    private static Undertow createServer(TestHandlerFactory handlerFactory, int port) {
         HttpHandler handler = handlerFactory.create();
         return Undertow.builder()
                 .addHttpListener(port, "localhost")
@@ -113,46 +133,7 @@ public final class TestUndertowServer implements TestServer<Undertow>, BeforeAll
         }
     }
 
-    private TestUndertowServer(ServerFactory serverFactory) {
+    private TestUndertowServer(TestUndertowFactory serverFactory) {
         this.serverFactory = serverFactory;
-    }
-
-    /** Factory that creates the root {@link HttpHandler}. */
-    @FunctionalInterface
-    public interface HandlerFactory {
-
-        HttpHandler create();
-    }
-
-    /** Factory that creates an {@link Undertow} server that listens on the specified port. */
-    @FunctionalInterface
-    public interface ServerFactory {
-
-        Undertow create(int port);
-    }
-
-    /**
-     * Dagger component that provides the root {@link HttpHandler}.
-     *
-     * <p>Implementations will need to extend and annotate this interface.</p>
-     */
-    public interface HandlerComponent {
-
-        HttpHandler handler();
-    }
-
-    /**
-     * Dagger component that provides an {@link Undertow} server.
-     *
-     * <p>Implementations will need to extend and annotate this interface (and the factory sub-interface).</p>
-     */
-    public interface ServerComponent {
-
-        Undertow server();
-
-        interface Factory<C extends ServerComponent> {
-
-            C create(@BindsInstance @Named("port") int port);
-        }
     }
 }

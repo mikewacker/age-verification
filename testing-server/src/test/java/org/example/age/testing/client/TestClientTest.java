@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class TestClientTest {
 
     @RegisterExtension
-    private static final TestUndertowServer server = TestUndertowServer.create(TestHandler::create);
+    private static final TestUndertowServer server = TestUndertowServer.fromHandler(TestHandler::create);
 
     @Test
     public void get() throws IOException {

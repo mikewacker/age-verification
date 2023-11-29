@@ -9,6 +9,7 @@ include(
         // infrastructure (depends on Undertow)
         "infra-api",
         "infra-service",
+        "infra-server",
         "testing-api",
         "testing-server",
 
@@ -29,9 +30,6 @@ include(
         "site-service",
         "common",
         "verification-poc",
-
-        // server
-        "common-server",
 
         // demo
         "demo",

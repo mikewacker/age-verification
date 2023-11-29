@@ -25,5 +25,5 @@ public interface AvsApiModule {
 
     @Binds
     @Named("api")
-    HttpHandler bindApiHttpHandler(AvsEndpointHandler impl);
+    HttpHandler bindApiHandler(AvsEndpointHandler impl);
 }

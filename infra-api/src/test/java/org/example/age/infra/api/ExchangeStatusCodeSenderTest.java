@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class ExchangeStatusCodeSenderTest {
 
     @RegisterExtension
-    private static final TestUndertowServer server = TestUndertowServer.create(TestHandler::create);
+    private static final TestUndertowServer server = TestUndertowServer.fromHandler(TestHandler::create);
 
     @Test
     public void send_Ok() throws IOException {

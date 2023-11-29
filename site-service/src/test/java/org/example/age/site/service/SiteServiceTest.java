@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
-import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.security.PublicKey;
@@ -23,7 +22,6 @@ import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.test.avs.service.FakeAvsServiceModule;
-import org.example.age.test.common.server.undertow.TestUndertowModule;
 import org.example.age.test.common.service.crypto.TestSigningKeyModule;
 import org.example.age.test.common.service.data.TestAccountIdExtractorModule;
 import org.example.age.test.common.service.data.TestAvsLocationModule;
@@ -36,10 +34,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class SiteServiceTest {
 
     @RegisterExtension
-    private static final TestUndertowServer siteServer = TestUndertowServer.create(TestComponent::createServer);
+    private static final TestUndertowServer siteServer =
+            TestUndertowServer.fromHandlerAtPath(TestComponent::createHandler, "/api/");
 
     @RegisterExtension
-    private static final TestUndertowServer fakeAvsServer = TestUndertowServer.create(FakeAvsComponent::createServer);
+    private static final TestUndertowServer fakeAvsServer =
+            TestUndertowServer.fromHandlerAtPath(FakeAvsComponent::createHandler, "/api/");
 
     @Test
     public void verify() throws IOException {
@@ -105,19 +105,18 @@ public final class SiteServiceTest {
         }
     }
 
-    /** Dagger components that provides an {@link Undertow} server. */
-    @Component(modules = {TestUndertowModule.class, TestModule.class})
+    /** Dagger components that provides an {@link HttpHandler}. */
+    @Component(modules = TestModule.class)
     @Singleton
-    interface TestComponent extends TestUndertowServer.ServerComponent {
+    interface TestComponent {
 
-        static Undertow createServer(int port) {
-            TestComponent component =
-                    DaggerSiteServiceTest_TestComponent.factory().create(port);
-            return component.server();
+        static HttpHandler createHandler() {
+            TestComponent component = DaggerSiteServiceTest_TestComponent.create();
+            return component.handler();
         }
 
-        @Component.Factory
-        interface Factory extends TestUndertowServer.ServerComponent.Factory<TestComponent> {}
+        @Named("api")
+        HttpHandler handler();
     }
 
     /** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
@@ -130,18 +129,17 @@ public final class SiteServiceTest {
         }
     }
 
-    /** Dagger components that provides an {@link Undertow} server. */
-    @Component(modules = {TestUndertowModule.class, FakeAvsModule.class})
+    /** Dagger components that provides an {@link HttpHandler}. */
+    @Component(modules = FakeAvsModule.class)
     @Singleton
-    interface FakeAvsComponent extends TestUndertowServer.ServerComponent {
+    interface FakeAvsComponent {
 
-        static Undertow createServer(int port) {
-            FakeAvsComponent component =
-                    DaggerSiteServiceTest_FakeAvsComponent.factory().create(port);
-            return component.server();
+        static HttpHandler createHandler() {
+            FakeAvsComponent component = DaggerSiteServiceTest_FakeAvsComponent.create();
+            return component.handler();
         }
 
-        @Component.Factory
-        interface Factory extends TestUndertowServer.ServerComponent.Factory<FakeAvsComponent> {}
+        @Named("api")
+        HttpHandler handler();
     }
 }
