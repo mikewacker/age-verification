@@ -1,15 +1,12 @@
 package org.example.age.infra.service.client;
 
 import org.example.age.api.Dispatcher;
+import org.example.age.api.HttpOptional;
 import org.example.age.api.Sender;
 
-/**
- * Callback for a backend request made as part of a frontend exchange, where the response has a JSON body.
- *
- * <p>The body will be null if the status code is not successful.</p>
- */
+/** Callback for a backend request made as part of a frontend exchange, where the response has a JSON body. */
 @FunctionalInterface
-public interface ResponseJsonCallback<S extends Sender, B> {
+public interface ResponseJsonCallback<S extends Sender, V> {
 
-    void onResponse(S sender, int statusCode, B body, Dispatcher dispatcher) throws Exception;
+    void onResponse(S sender, HttpOptional<V> maybeValue, Dispatcher dispatcher) throws Exception;
 }

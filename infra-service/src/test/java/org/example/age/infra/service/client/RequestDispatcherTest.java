@@ -18,6 +18,7 @@ import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
 import org.example.age.api.StatusCodeSender;
@@ -41,53 +42,53 @@ public final class RequestDispatcherTest {
     private static final MockServer backendServer = MockServer.create();
 
     @Test
-    public void backendRequestWithoutBody_Ok() throws IOException {
+    public void backendRequest_StatusCodeResponse_Ok() throws IOException {
         backendServer.enqueue(new MockResponse());
-        Response response = TestClient.get(frontendServer.url("/response"));
+        Response response = TestClient.get(frontendServer.url("/status-code"));
         assertThat(response.code()).isEqualTo(200);
     }
 
     @Test
-    public void backendRequestWithoutBody_ErrorCode() throws IOException {
+    public void backendRequest_StatusCodeResponse_ErrorCode() throws IOException {
         backendServer.enqueue(new MockResponse().setResponseCode(403));
-        Response response = TestClient.get(frontendServer.url("/response"));
+        Response response = TestClient.get(frontendServer.url("/status-code"));
         assertThat(response.code()).isEqualTo(403);
     }
 
     @Test
-    public void backendRequestWithoutBody_RequestFails() throws IOException {
+    public void backendRequest_StatusCodeResponse_RequestFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        Response response = TestClient.get(frontendServer.url("/response"));
+        Response response = TestClient.get(frontendServer.url("/status-code"));
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
-    public void backendRequestWithBody_Ok() throws IOException {
+    public void backendRequest_JsonResponse_Ok() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"test\""));
-        Response response = TestClient.get(frontendServer.url("/response-body"));
+        Response response = TestClient.get(frontendServer.url("/json"));
         assertThat(response.code()).isEqualTo(200);
         String responseBody = TestClient.readBody(response, new TypeReference<>() {});
         assertThat(responseBody).isEqualTo("test");
     }
 
     @Test
-    public void backendRequestWithBody_ErrorCode() throws IOException {
+    public void backendRequest_JsonResponse_ErrorCode() throws IOException {
         backendServer.enqueue(new MockResponse().setResponseCode(403));
-        Response response = TestClient.get(frontendServer.url("/response-body"));
+        Response response = TestClient.get(frontendServer.url("/json"));
         assertThat(response.code()).isEqualTo(403);
     }
 
     @Test
-    public void backendRequestWithBody_RequestFails() throws IOException {
+    public void backendRequest_JsonResponse_RequestFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        Response response = TestClient.get(frontendServer.url("/response-body"));
+        Response response = TestClient.get(frontendServer.url("/json"));
         assertThat(response.code()).isEqualTo(502);
     }
 
     @Test
-    public void backendRequestWithBody_ReadResponseBodyFails() throws IOException {
+    public void backendRequest_JsonResponse_ReadResponseBodyFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
-        Response response = TestClient.get(frontendServer.url("/response-body"));
+        Response response = TestClient.get(frontendServer.url("/json"));
         assertThat(response.code()).isEqualTo(502);
     }
 
@@ -111,44 +112,41 @@ public final class RequestDispatcherTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             switch (exchange.getRequestPath()) {
-                case "/response" -> handleResponse(exchange);
-                case "/response-body" -> handleResponseBody(exchange);
+                case "/status-code" -> handleStatusCodeRequest(exchange);
+                case "/json" -> handleJsonRequest(exchange);
                 default -> ExchangeStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
             }
         }
 
-        private void handleResponse(HttpServerExchange exchange) {
+        private void handleStatusCodeRequest(HttpServerExchange exchange) {
             StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             requestDispatcher
-                    .requestBuilder(backendServer.rootUrl(), sender, dispatcher)
+                    .requestBuilder(sender, dispatcher)
+                    .url(backendServer.rootUrl())
                     .post()
-                    .dispatchWithStatusCodeResponse(this::onResponseReceived);
+                    .dispatchWithStatusCodeResponse(this::onStatusCodeResponseReceived);
         }
 
-        private void handleResponseBody(HttpServerExchange exchange) {
+        private void handleJsonRequest(HttpServerExchange exchange) {
             JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             requestDispatcher
-                    .requestBuilder(backendServer.rootUrl(), sender, dispatcher)
+                    .requestBuilder(sender, dispatcher)
+                    .url(backendServer.rootUrl())
                     .post()
-                    .dispatchWithJsonResponse(new TypeReference<>() {}, this::onResponseBodyReceived);
+                    .dispatchWithJsonResponse(new TypeReference<>() {}, this::onJsonResponseReceived);
         }
 
-        private void onResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+        private void onStatusCodeResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
             sender.send(statusCode);
         }
 
-        private void onResponseBodyReceived(
-                JsonSender<String> sender, int statusCode, String responseBody, Dispatcher dispatcher) {
-            if (statusCode != StatusCodes.OK) {
-                sender.sendErrorCode(statusCode);
-                return;
-            }
-
-            sender.sendBody(responseBody);
+        private void onJsonResponseReceived(
+                JsonSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
+            sender.send(maybeText);
         }
     }
 

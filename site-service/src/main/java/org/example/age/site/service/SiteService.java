@@ -6,6 +6,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
@@ -44,7 +45,8 @@ final class SiteService implements SiteApi {
         ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> sessionCallback =
                 new VerificationSessionCallback(verificationManager, accountId, authData);
         requestDispatcher
-                .requestBuilder(sessionUrl, sender, dispatcher)
+                .requestBuilder(sender, dispatcher)
+                .url(sessionUrl)
                 .post()
                 .dispatchWithJsonResponse(new TypeReference<>() {}, sessionCallback);
     }
@@ -67,19 +69,19 @@ final class SiteService implements SiteApi {
         @Override
         public void onResponse(
                 JsonSender<VerificationSession> sender,
-                int statusCode,
-                VerificationSession session,
+                HttpOptional<VerificationSession> maybeSession,
                 Dispatcher dispatcher) {
-            if (statusCode != 200) {
-                int errorCode = (statusCode / 100 == 5) ? 502 : 500;
+            if (maybeSession.isEmpty()) {
+                int errorCode = (maybeSession.statusCode() / 100 == 5) ? 502 : 500;
                 sender.sendErrorCode(errorCode);
                 return;
             }
+            VerificationSession session = maybeSession.get();
 
-            int sessionStatusCode =
+            int statusCode =
                     verificationManager.onVerificationSessionReceived(accountId, authData, session, dispatcher);
-            if (sessionStatusCode != 200) {
-                sender.sendErrorCode(sessionStatusCode);
+            if (statusCode != 200) {
+                sender.sendErrorCode(statusCode);
                 return;
             }
 

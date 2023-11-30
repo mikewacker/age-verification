@@ -11,13 +11,14 @@ dependencies {
     api(project(":infra-api"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
-    api("com.squareup.okhttp3:okhttp")
     api("javax.inject:javax.inject")
+
+    implementation(project(":infra-client"))
+    implementation("com.squareup.okhttp3:okhttp")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":testing-api")))
     testImplementation(testFixtures(project(":testing-server")))
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.undertow:undertow-core")

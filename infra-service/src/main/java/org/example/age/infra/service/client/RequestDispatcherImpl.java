@@ -6,13 +6,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSerializer;
 import org.example.age.api.Sender;
+import org.example.age.infra.client.JsonApiRequest;
 import org.example.age.infra.service.client.internal.ExchangeClient;
 
 @Singleton
@@ -28,23 +27,27 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     @Override
-    public <S extends Sender> RequestBuilder<S> requestBuilder(String url, S sender, Dispatcher dispatcher) {
-        return new RequestBuilderImpl<>(url, sender, dispatcher);
+    public <S extends Sender> RequestBuilder<S> requestBuilder(S sender, Dispatcher dispatcher) {
+        return new RequestBuilderImpl<>(sender, dispatcher);
     }
 
-    /** {@link RequestBuilder} that builds the underlying {@link Request}. */
+    /** internal {@link RequestBuilder} implementation. */
     private final class RequestBuilderImpl<S extends Sender> implements RequestBuilder<S> {
 
-        private static final RequestBody EMPTY_BODY = RequestBody.create(new byte[0]);
-
-        private final Request.Builder requestBuilder;
+        private final JsonApiRequest.Builder requestBuilder;
         private final S sender;
         private final Dispatcher dispatcher;
 
-        public RequestBuilderImpl(String url, S sender, Dispatcher dispatcher) {
-            requestBuilder = new Request.Builder().url(url);
+        private RequestBuilderImpl(S sender, Dispatcher dispatcher) {
+            requestBuilder = JsonApiRequest.builder(client.getInstance(dispatcher));
             this.sender = sender;
             this.dispatcher = dispatcher;
+        }
+
+        @Override
+        public RequestBuilder<S> url(String url) {
+            requestBuilder.url(url);
+            return this;
         }
 
         @Override
@@ -55,36 +58,34 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
         @Override
         public RequestBuilder<S> post() {
-            requestBuilder.post(EMPTY_BODY);
+            requestBuilder.post();
             return this;
         }
 
         @Override
-        public RequestBuilder<S> post(Object requestBody) {
-            byte[] rawRequestBody = serializer.serialize(requestBody);
-            requestBuilder.post(RequestBody.create(rawRequestBody));
+        public RequestBuilder<S> post(Object requestValue) {
+            byte[] rawRequestValue = serializer.serialize(requestValue);
+            requestBuilder.post(rawRequestValue);
             return this;
         }
 
         @Override
         public void dispatchWithStatusCodeResponse(ResponseStatusCodeCallback<S> callback) {
-            Callback adaptedCallback = new AdaptedResponseCallback<>(sender, dispatcher, callback);
+            Callback adaptedCallback = new AdaptedResponseStatusCodeCallback<>(sender, dispatcher, callback);
             dispatch(adaptedCallback);
         }
 
         @Override
-        public <B> void dispatchWithJsonResponse(
-                TypeReference<B> responseBodyTypeRef, ResponseJsonCallback<S, B> callback) {
+        public <V> void dispatchWithJsonResponse(
+                TypeReference<V> responseValueTypeRef, ResponseJsonCallback<S, V> callback) {
             Callback adaptedCallback =
-                    new AdaptedResponseBodyCallback<>(sender, dispatcher, responseBodyTypeRef, callback);
+                    new AdaptedResponseJsonCallback<>(sender, dispatcher, responseValueTypeRef, callback);
             dispatch(adaptedCallback);
         }
 
         /** Dispatches the request using a callback. */
         private void dispatch(Callback callback) {
-            Request request = requestBuilder.build();
-            Call call = client.getInstance(dispatcher).newCall(request);
-            call.enqueue(callback);
+            requestBuilder.enqueue(callback);
             dispatcher.dispatched();
         }
     }
@@ -115,11 +116,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     /** Adapts a {@link ResponseStatusCodeCallback} to a {@link Callback}. */
-    private static final class AdaptedResponseCallback<S extends Sender> extends AdaptedCallback<S> {
+    private static final class AdaptedResponseStatusCodeCallback<S extends Sender> extends AdaptedCallback<S> {
 
         private final ResponseStatusCodeCallback<S> callback;
 
-        public AdaptedResponseCallback(S sender, Dispatcher dispatcher, ResponseStatusCodeCallback<S> callback) {
+        public AdaptedResponseStatusCodeCallback(
+                S sender, Dispatcher dispatcher, ResponseStatusCodeCallback<S> callback) {
             super(sender, dispatcher);
             this.callback = callback;
         }
@@ -131,43 +133,43 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     /** Adapts a {@link ResponseJsonCallback} to a {@link Callback}. */
-    private final class AdaptedResponseBodyCallback<S extends Sender, B> extends AdaptedCallback<S> {
+    private final class AdaptedResponseJsonCallback<S extends Sender, V> extends AdaptedCallback<S> {
 
-        private final TypeReference<B> responseBodyTypeRef;
-        private final ResponseJsonCallback<S, B> callback;
+        private final TypeReference<V> responseValueTypeRef;
+        private final ResponseJsonCallback<S, V> callback;
 
-        public AdaptedResponseBodyCallback(
+        public AdaptedResponseJsonCallback(
                 S sender,
                 Dispatcher dispatcher,
-                TypeReference<B> responseBodyTypeRef,
-                ResponseJsonCallback<S, B> callback) {
+                TypeReference<V> responseBodyTypeRef,
+                ResponseJsonCallback<S, V> callback) {
             super(sender, dispatcher);
-            this.responseBodyTypeRef = responseBodyTypeRef;
+            this.responseValueTypeRef = responseBodyTypeRef;
             this.callback = callback;
         }
 
         @Override
         protected void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception {
             if (!response.isSuccessful()) {
-                callback.onResponse(sender, response.code(), null, dispatcher);
+                callback.onResponse(sender, HttpOptional.empty(response.code()), dispatcher);
                 return;
             }
 
-            HttpOptional<byte[]> maybeRawResponseBody = tryReadResponseBody(response);
-            if (maybeRawResponseBody.isEmpty()) {
-                sender.sendErrorCode(maybeRawResponseBody.statusCode());
+            HttpOptional<byte[]> maybeRawResponseValue = tryReadResponseBody(response);
+            if (maybeRawResponseValue.isEmpty()) {
+                sender.sendErrorCode(maybeRawResponseValue.statusCode());
                 return;
             }
-            byte[] rawResponseBody = maybeRawResponseBody.get();
+            byte[] rawResponseValue = maybeRawResponseValue.get();
 
-            HttpOptional<B> maybeResponseBody = serializer.tryDeserialize(rawResponseBody, responseBodyTypeRef, 502);
-            if (maybeResponseBody.isEmpty()) {
-                sender.sendErrorCode(maybeResponseBody.statusCode());
+            HttpOptional<V> maybeResponseValue = serializer.tryDeserialize(rawResponseValue, responseValueTypeRef, 502);
+            if (maybeResponseValue.isEmpty()) {
+                sender.sendErrorCode(maybeResponseValue.statusCode());
                 return;
             }
-            B responseBody = maybeResponseBody.get();
+            V responseValue = maybeResponseValue.get();
 
-            callback.onResponse(sender, response.code(), responseBody, dispatcher);
+            callback.onResponse(sender, HttpOptional.of(responseValue), dispatcher);
         }
 
         /** Reads the raw response body, or returns a 502 error. */
