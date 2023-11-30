@@ -1,7 +1,5 @@
 package org.example.age.test.avs.service;
 
-import java.util.List;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -15,7 +13,6 @@ import org.example.age.common.service.data.SiteLocation;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.user.VerifiedUser;
 import org.example.age.infra.service.client.RequestDispatcher;
 import org.example.age.test.avs.service.verification.internal.FakeAvsVerificationFactory;
 
@@ -27,11 +24,8 @@ final class FakeAvsService implements AvsApi {
     private final RequestDispatcher requestDispatcher;
     private final Provider<SiteLocation> siteLocationProvider;
 
-    private final Map<String, VerifiedUser> users = populateAccounts();
-
     private VerificationSession storedSession = null;
     private String storedAccountId = null;
-    private VerifiedUser storedUser = null;
 
     @Inject
     public FakeAvsService(
@@ -61,12 +55,6 @@ final class FakeAvsService implements AvsApi {
         }
 
         storedAccountId = accountId;
-        storedUser = users.get(accountId);
-        if (storedUser == null) {
-            resetAndSendUserError(sender);
-            return;
-        }
-
         sender.sendOk();
     }
 
@@ -79,7 +67,7 @@ final class FakeAvsService implements AvsApi {
         }
 
         SignedAgeCertificate signedCertificate =
-                verificationFactory.createSignedAgeCertificate(storedSession, storedUser, authData);
+                verificationFactory.createSignedAgeCertificate(accountId, authData, storedSession);
         reset();
 
         requestDispatcher
@@ -88,19 +76,12 @@ final class FakeAvsService implements AvsApi {
                 .dispatchWithStatusCodeResponse(this::onAgeCertificateResponseReceived);
     }
 
-    /** Populates preset accounts for this service. */
-    private static Map<String, VerifiedUser> populateAccounts() {
-        VerifiedUser parent = VerifiedUser.of(SecureId.generate(), 40);
-        VerifiedUser child = VerifiedUser.of(SecureId.generate(), 13, List.of(parent.pseudonym()));
-        return Map.of("John Smith", parent, "Billy Smith", child);
-    }
-
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
     private String getAgeCertificateUrl() {
         return siteLocationProvider.get().ageCertificateUrl();
     }
 
-    /** Called when a response is received for the request to send a {@link SignedAgeCertificate} to a site. */
+    /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */
     private void onAgeCertificateResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
         sender.send(statusCode);
     }
@@ -109,7 +90,6 @@ final class FakeAvsService implements AvsApi {
     private void reset() {
         storedSession = null;
         storedAccountId = null;
-        storedUser = null;
     }
 
     /** Clears the stored verification data and sends a 418 error. */
