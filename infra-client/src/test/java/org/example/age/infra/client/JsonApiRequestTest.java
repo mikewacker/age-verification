@@ -47,7 +47,8 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_Get() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response = JsonApiRequest.builder(client).url(mockServerUrl).get().execute();
+        Response response =
+                JsonApiRequest.builder(client).url(mockServerUrl).get().execute();
         assertThat(response.isSuccessful()).isTrue();
         RecordedRequest recordedRequest = mockServer.takeRequest();
         assertThat(recordedRequest.getPath()).isEqualTo("/");
