@@ -11,7 +11,6 @@ final class TestLocations {
     private static final int STUB_PORT = 80;
     private static final String REDIRECT_PATH = "/verify";
 
-
     /** Gets the {@link AvsLocation} from the corresponding {@link TestServer}. */
     public static AvsLocation avs(TestServer<?> avsServer) {
         return avs(avsServer.host(), avsServer.port());
