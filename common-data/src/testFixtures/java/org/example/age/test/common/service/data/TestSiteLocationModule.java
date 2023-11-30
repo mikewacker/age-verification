@@ -14,7 +14,7 @@ import org.example.age.testing.server.TestServer;
 public interface TestSiteLocationModule {
 
     @Provides
-    static SiteLocation provideAvsLocation(TestServer<?> siteServer) {
+    static SiteLocation provideSiteLocation(TestServer<?> siteServer) {
         return TestLocations.site(siteServer);
     }
 }
