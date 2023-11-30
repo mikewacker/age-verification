@@ -11,11 +11,14 @@ import org.example.age.api.Sender;
  */
 public interface RequestDispatcher {
 
-    /** Creates a builder for a request to the backend server at the specified URL. */
-    <S extends Sender> RequestBuilder<S> requestBuilder(String url, S sender, Dispatcher dispatcher);
+    /** Creates a builder for a request to the backend server. */
+    <S extends Sender> RequestBuilder<S> requestBuilder(S sender, Dispatcher dispatcher);
 
     /** Builder for a request to the backend server. */
     interface RequestBuilder<S extends Sender> {
+
+        /** Sets the URL. */
+        RequestBuilder<S> url(String url);
 
         /** Uses a GET request. */
         RequestBuilder<S> get();
@@ -24,12 +27,12 @@ public interface RequestDispatcher {
         RequestBuilder<S> post();
 
         /** Uses a POST request with a request body. */
-        RequestBuilder<S> post(Object requestBody);
+        RequestBuilder<S> post(Object requestValue);
 
-        /** Builds and dispatches the request, expecting a response with only a status code. */
+        /** Dispatches the request, expecting a response with only a status code. */
         void dispatchWithStatusCodeResponse(ResponseStatusCodeCallback<S> callback);
 
-        /** Builds and dispatches the request, expecting a response with a JSON body. */
-        <B> void dispatchWithJsonResponse(TypeReference<B> responseBodyTypeRef, ResponseJsonCallback<S, B> callback);
+        /** Dispatches the request, expecting a response with a JSON body. */
+        <V> void dispatchWithJsonResponse(TypeReference<V> responseValueTypeRef, ResponseJsonCallback<S, V> callback);
     }
 }

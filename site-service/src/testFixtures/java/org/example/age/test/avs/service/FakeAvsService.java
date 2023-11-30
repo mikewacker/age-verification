@@ -71,7 +71,8 @@ final class FakeAvsService implements AvsApi {
         reset();
 
         requestDispatcher
-                .requestBuilder(getAgeCertificateUrl(), sender, dispatcher)
+                .requestBuilder(sender, dispatcher)
+                .url(getAgeCertificateUrl())
                 .post(signedCertificate)
                 .dispatchWithStatusCodeResponse(this::onAgeCertificateResponseReceived);
     }
