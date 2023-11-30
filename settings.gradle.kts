@@ -10,6 +10,7 @@ include(
         "infra-api",
         "infra-service",
         "infra-server",
+        "infra-client",
         "testing-api",
         "testing-server",
 
