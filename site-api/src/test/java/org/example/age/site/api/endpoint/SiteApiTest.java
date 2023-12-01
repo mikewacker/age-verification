@@ -1,4 +1,4 @@
-package org.example.age.site.api;
+package org.example.age.site.api.endpoint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
@@ -19,7 +19,7 @@ import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.test.site.service.StubSiteServiceModule;
+import org.example.age.site.service.endpoint.test.StubSiteServiceModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;

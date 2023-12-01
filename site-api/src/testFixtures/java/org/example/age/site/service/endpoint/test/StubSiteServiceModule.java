@@ -1,13 +1,14 @@
-package org.example.age.test.site.service;
+package org.example.age.site.service.endpoint.test;
 
 import dagger.Binds;
 import dagger.Module;
+import io.undertow.server.HttpHandler;
 import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchDataExtractorModule;
 import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
-import org.example.age.site.api.SiteApi;
-import org.example.age.site.api.SiteApiModule;
+import org.example.age.site.api.endpoint.SiteApi;
+import org.example.age.site.api.endpoint.SiteApiModule;
 
-/** Dagger module that binds dependencies for <code>@Named("api") HttpHandler</code>. */
+/** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
 @Module(
         includes = {
             SiteApiModule.class,

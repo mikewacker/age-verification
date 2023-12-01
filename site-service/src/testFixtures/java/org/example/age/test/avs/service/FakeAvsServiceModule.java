@@ -2,8 +2,8 @@ package org.example.age.test.avs.service;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.avs.api.AvsApi;
-import org.example.age.avs.api.AvsApiModule;
+import org.example.age.avs.api.endpoint.AvsApi;
+import org.example.age.avs.api.endpoint.AvsApiModule;
 import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtractorModule;
 import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
 import org.example.age.common.service.data.internal.DataMapperModule;

@@ -1,4 +1,4 @@
-package org.example.age.site.api;
+package org.example.age.site.api.endpoint;
 
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;

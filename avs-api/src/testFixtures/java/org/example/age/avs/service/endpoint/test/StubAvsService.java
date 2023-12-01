@@ -1,4 +1,4 @@
-package org.example.age.test.avs.service;
+package org.example.age.avs.service.endpoint.test;
 
 import java.time.Duration;
 import javax.inject.Inject;
@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
-import org.example.age.avs.api.AvsApi;
+import org.example.age.avs.api.endpoint.AvsApi;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;

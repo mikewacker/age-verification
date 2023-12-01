@@ -1,4 +1,4 @@
-package org.example.age.avs.api;
+package org.example.age.avs.endpoint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
@@ -11,9 +11,9 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
+import org.example.age.avs.service.endpoint.test.StubAvsServiceModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.test.avs.service.StubAvsServiceModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;

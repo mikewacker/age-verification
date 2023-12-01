@@ -15,7 +15,7 @@ import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.service.client.RequestDispatcher;
 import org.example.age.infra.service.client.ResponseJsonCallback;
-import org.example.age.site.api.SiteApi;
+import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.service.verification.internal.VerificationManager;
 
 @Singleton
