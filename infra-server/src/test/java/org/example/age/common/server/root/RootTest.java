@@ -1,18 +1,21 @@
 package org.example.age.common.server.root;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.server.html.HtmlModule;
+import org.example.age.testing.api.HttpOptionalAssert;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -25,20 +28,23 @@ public final class RootTest {
 
     @Test
     public void apiExchange() throws IOException {
-        Response response = TestClient.get(server.url("/api/example"));
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body().string()).isEqualTo("test");
+        HttpOptional<String> maybeValue = TestClient.apiRequestBuilder()
+                .url(server.url("/api/test"))
+                .get()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeValue).hasValue("test");
     }
 
     @Test
     public void htmlExchange() throws IOException {
-        Response response = TestClient.get(server.rootUrl());
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body().string()).isEqualTo("<p>test</p>");
+        HttpOptional<String> maybeHtml = TestClient.getHtml(server.rootUrl());
+        HttpOptionalAssert.assertThat(maybeHtml).hasValue("<p>test</p>");
     }
 
+    /** {@link HttpHandler} for API requests that sends a stub response. */
     private static void handleApiRequest(HttpServerExchange exchange) {
-        exchange.getResponseSender().send("test");
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseSender().send("\"test\"");
     }
 
     /** Dagger module that binds dependencies for {@link HttpHandler}. */

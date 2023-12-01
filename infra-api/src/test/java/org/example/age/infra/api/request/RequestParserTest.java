@@ -1,16 +1,12 @@
 package org.example.age.infra.api.request;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
@@ -27,46 +23,39 @@ public final class RequestParserTest {
 
     @Test
     public void exchange() throws IOException {
-        exchange("/add?operand=2", "2", "4");
+        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", 2);
+        assertThat(maybeSum).hasValue(4);
     }
 
     @Test
-    public void error_ParamMissing() throws IOException {
-        error("/add", "2", 400);
+    public void error_MissingParam() throws IOException {
+        HttpOptional<Integer> maybeSum = executeAddRequest("/add", 2);
+        assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_InvalidParam() throws IOException {
-        error("/add?operand=a", "2", 400);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=a", 2);
+        assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_InvalidBody() throws IOException {
-        error("/add?operand=2", "a", 400);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", "a");
+        assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_UncaughtExceptionInCallback() throws IOException {
-        error("/add?operand=200", "300", 500);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=200", 300);
+        assertThat(maybeSum).isEmptyWithErrorCode(500);
     }
 
-    private void exchange(String path, String requestBody, String expectedResponseBody) throws IOException {
-        Request request = createRequest(path, requestBody);
-        Response response = TestClient.execute(request);
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body().string()).isEqualTo(expectedResponseBody);
-    }
-
-    private void error(String path, String requestBody, int expectedStatusCode) throws IOException {
-        Request request = createRequest(path, requestBody);
-        Response response = TestClient.execute(request);
-        assertThat(response.code()).isEqualTo(expectedStatusCode);
-    }
-
-    private static Request createRequest(String path, String body) {
-        String url = server.url(path);
-        RequestBody requestBody = RequestBody.create(body, MediaType.get("application/json"));
-        return new Request.Builder().url(url).post(requestBody).build();
+    private static HttpOptional<Integer> executeAddRequest(String path, Object bodyOperand) throws IOException {
+        return TestClient.apiRequestBuilder()
+                .url(server.url(path))
+                .post(bodyOperand)
+                .executeWithJsonResponse(new TypeReference<>() {});
     }
 
     /**
@@ -77,7 +66,6 @@ public final class RequestParserTest {
     private static final class TestHandler implements HttpHandler {
 
         private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-        private static final TypeReference<Integer> INT_TYPE = new TypeReference<>() {};
 
         public static HttpHandler create() {
             return new TestHandler();
@@ -86,18 +74,19 @@ public final class RequestParserTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             RequestParser parser = RequestParser.create(exchange, serializer);
-            parser.readBody(INT_TYPE, TestHandler::handleAddRequest);
+            parser.readBody(new TypeReference<>() {}, TestHandler::handleAddRequest);
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
             JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, serializer);
-            HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", INT_TYPE);
+
+            HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", new TypeReference<>() {});
             if (maybeOperand1.isEmpty()) {
                 sender.sendErrorCode(maybeOperand1.statusCode());
                 return;
             }
-
             int operand1 = maybeOperand1.get();
+
             int sum = operand1 + operand2;
             if (sum == 500) {
                 throw new RuntimeException();

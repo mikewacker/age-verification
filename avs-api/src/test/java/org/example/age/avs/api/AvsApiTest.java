@@ -1,6 +1,7 @@
 package org.example.age.avs.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.test.avs.service.StubAvsServiceModule;
@@ -26,56 +27,74 @@ public final class AvsApiTest {
 
     @Test
     public void verify() throws IOException {
-        String sessionUrl = avsServer.url("/api/verification-session?site-id=Site");
-        Response sessionResponse = TestClient.post(sessionUrl);
-        assertThat(sessionResponse.code()).isEqualTo(200);
-        VerificationSession session = TestClient.readBody(sessionResponse, new TypeReference<>() {});
+        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/verification-session?site-id=Site"))
+                .post()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeSession).isPresent();
+        VerificationSession session = maybeSession.get();
         assertThat(session.verificationRequest().siteId()).isEqualTo("Site");
 
         SecureId requestId = session.verificationRequest().id();
-        String linkUrl = avsServer.url("/api/linked-verification-request?request-id=%s", requestId);
-        Map<String, String> userHeaders = Map.of("Account-Id", "username", "User-Agent", "agent");
-        Response linkResponse = TestClient.post(linkUrl, userHeaders);
-        assertThat(linkResponse.code()).isEqualTo(200);
+        int linkStatusCode = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(linkStatusCode).isEqualTo(200);
 
-        String certificateUrl = avsServer.url("/api/age-certificate");
-        Response certificateResponse = TestClient.post(certificateUrl, userHeaders);
-        assertThat(certificateResponse.code()).isEqualTo(200);
+        int certificateStatusCode = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/age-certificate"))
+                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(certificateStatusCode).isEqualTo(200);
     }
 
     @Test
     public void error_MissingAccountId() throws IOException {
         SecureId requestId = SecureId.generate();
-        String linkUrl = avsServer.url("/api/linked-verification-request?request-id=%s", requestId);
-        Map<String, String> userHeaders = Map.of("User-Agent", "agent");
-        Response linkResponse = TestClient.post(linkUrl, userHeaders);
-        assertThat(linkResponse.code()).isEqualTo(401);
+        int linkStatusCode = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .headers(Map.of("User-Agent", "agent"))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(linkStatusCode).isEqualTo(401);
 
-        String certificateUrl = avsServer.url("/api/age-certificate");
-        Response certificateResponse = TestClient.post(certificateUrl, userHeaders);
-        assertThat(certificateResponse.code()).isEqualTo(401);
+        int certificateStatusCode = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/age-certificate"))
+                .headers(Map.of("User-Agent", "agent"))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(certificateStatusCode).isEqualTo(401);
     }
 
     @Test
     public void error_MissingSiteId() throws IOException {
-        String sessionUrl = avsServer.url("/api/verification-session");
-        Response sessionResponse = TestClient.post(sessionUrl);
-        assertThat(sessionResponse.code()).isEqualTo(400);
+        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/verification-session"))
+                .post()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeSession).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_MissingRequestId() throws IOException {
-        String linkUrl = avsServer.url("/api/linked-verification-request");
-        Map<String, String> userHeaders = Map.of("Account-Id", "username", "User-Agent", "agent");
-        Response linkResponse = TestClient.post(linkUrl, userHeaders);
-        assertThat(linkResponse.code()).isEqualTo(400);
+        int linkStatusCode = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/linked-verification-request"))
+                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(linkStatusCode).isEqualTo(400);
     }
 
     @Test
     public void error_BadPath() throws IOException {
-        String url = avsServer.url("/api/does-not-exist");
-        Response response = TestClient.get(url);
-        assertThat(response.code()).isEqualTo(404);
+        int statusCode = TestClient.apiRequestBuilder()
+                .url(avsServer.url("/api/does-not-exist"))
+                .get()
+                .executeWithStatusCodeResponse();
+        assertThat(statusCode).isEqualTo(404);
     }
 
     /** Dagger component that provides an {@link HttpHandler}. */

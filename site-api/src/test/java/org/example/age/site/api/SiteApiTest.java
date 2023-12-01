@@ -1,6 +1,7 @@
 package org.example.age.site.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
@@ -9,10 +10,9 @@ import java.io.IOException;
 import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
-import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
@@ -33,47 +33,55 @@ public final class SiteApiTest {
 
     @Test
     public void verify() throws IOException {
-        String sessionUrl = siteServer.url("/api/verification-session");
-        Map<String, String> userHeaders = Map.of("Account-Id", "username", "User-Agent", "agent");
-        Response sessionResponse = TestClient.post(sessionUrl, userHeaders);
-        assertThat(sessionResponse.code()).isEqualTo(200);
-        VerificationSession session = TestClient.readBody(sessionResponse, new TypeReference<>() {});
-        assertThat(session.verificationRequest().siteId()).isEqualTo("Site");
+        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+                .url(siteServer.url("/api/verification-session"))
+                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .post()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeSession).isPresent();
+        VerificationSession session = maybeSession.get();
 
-        String certificateUrl = siteServer.url("/api/age-certificate");
         SignedAgeCertificate signedCertificate = createSignedAgeCertificate(session);
-        Response certificateResponse = TestClient.post(certificateUrl, signedCertificate);
-        assertThat(certificateResponse.code()).isEqualTo(200);
+        int certificateStatusCode = TestClient.apiRequestBuilder()
+                .url(siteServer.url("/api/age-certificate"))
+                .post(signedCertificate)
+                .executeWithStatusCodeResponse();
+        assertThat(certificateStatusCode).isEqualTo(200);
     }
 
     @Test
     public void error_MissingAccountId() throws IOException {
-        String sessionUrl = siteServer.url("/api/verification-session");
-        Map<String, String> userHeaders = Map.of("User-Agent", "agent");
-        Response sessionResponse = TestClient.post(sessionUrl, userHeaders);
-        assertThat(sessionResponse.code()).isEqualTo(401);
+        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+                .url(siteServer.url("/api/verification-session"))
+                .headers(Map.of("User-Agent", "agent"))
+                .post()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeSession).isEmptyWithErrorCode(401);
     }
 
     @Test
     public void error_MissingSignedAgeCertificate() throws IOException {
-        String certificateUrl = siteServer.url("/api/age-certificate");
-        Response certificateResponse = TestClient.post(certificateUrl);
-        assertThat(certificateResponse.code()).isEqualTo(400);
+        int certificateStatusCode = TestClient.apiRequestBuilder()
+                .url(siteServer.url("/api/age-certificate"))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(certificateStatusCode).isEqualTo(400);
     }
 
     @Test
     public void error_BadPath() throws IOException {
-        String url = siteServer.url("/api/does-not-exist");
-        Response response = TestClient.post(url);
-        assertThat(response.code()).isEqualTo(404);
+        int statusCode = TestClient.apiRequestBuilder()
+                .url(siteServer.url("/api/does-not-exist"))
+                .get()
+                .executeWithStatusCodeResponse();
+        assertThat(statusCode).isEqualTo(404);
     }
 
     private static SignedAgeCertificate createSignedAgeCertificate(VerificationSession session) {
-        VerificationRequest request = session.verificationRequest();
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
         AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
-        AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
-        DigitalSignature signature = DigitalSignature.ofBytes(new byte[1024]);
+        AgeCertificate certificate = AgeCertificate.of(session.verificationRequest(), user, authToken);
+        DigitalSignature signature = DigitalSignature.ofBytes(new byte[32]);
         return SignedAgeCertificate.of(certificate, signature);
     }
 

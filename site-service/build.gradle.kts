@@ -36,6 +36,5 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
-    testImplementation("com.squareup.okhttp3:okhttp")
     testImplementation("io.undertow:undertow-core")
 }

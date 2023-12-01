@@ -1,6 +1,6 @@
 package org.example.age.common.server.html;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import dagger.Component;
 import dagger.Module;
@@ -9,7 +9,7 @@ import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -22,10 +22,8 @@ public final class HtmlTest {
 
     @Test
     public void getHtmlFile() throws IOException {
-        Response response = TestClient.get(server.rootUrl());
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.header("Content-Type")).endsWith("text/html");
-        assertThat(response.body().string()).isEqualTo("<p>test</p>");
+        HttpOptional<String> maybeHtml = TestClient.getHtml(server.rootUrl());
+        assertThat(maybeHtml).hasValue("<p>test</p>");
     }
 
     /** Dagger module that binds dependencies for <code>@Named("html") {@link HttpHandler}</code>. */

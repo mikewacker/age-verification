@@ -1,6 +1,7 @@
 package org.example.age.infra.service.client.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,10 +45,11 @@ public final class ExchangeClientTest {
     @Test
     public void exchange() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"world\""));
-        Response response = TestClient.get(frontendServer.rootUrl());
-        assertThat(response.code()).isEqualTo(200);
-        String greeting = TestClient.readBody(response, new TypeReference<>() {});
-        assertThat(greeting).isEqualTo("Hello, world!");
+        HttpOptional<String> maybeGreeting = TestClient.apiRequestBuilder()
+                .url(frontendServer.rootUrl())
+                .get()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeGreeting).hasValue("Hello, world!");
     }
 
     /**

@@ -5,10 +5,17 @@ plugins {
 
 dependencies {
     // test fixtures
-    testFixturesApi("com.fasterxml.jackson.core:jackson-databind")
-    testFixturesApi("com.fasterxml.jackson.datatype:jackson-datatype-guava")
+    testFixturesApi(project(":api"))
+    testFixturesApi("com.fasterxml.jackson.core:jackson-core")
     testFixturesApi("com.squareup.okhttp3:mockwebserver")
-    testFixturesApi("com.squareup.okhttp3:okhttp")
     testFixturesApi("io.undertow:undertow-core")
     testFixturesApi("org.junit.jupiter:junit-jupiter-api")
+
+    testFixturesImplementation(project(":infra-client"))
+    testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
+    testFixturesImplementation("com.fasterxml.jackson.datatype:jackson-datatype-guava")
+    testFixturesImplementation("com.squareup.okhttp3:okhttp")
+
+    // test
+    testImplementation(testFixtures(project(":api")))
 }

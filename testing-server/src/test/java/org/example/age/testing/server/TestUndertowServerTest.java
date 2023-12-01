@@ -2,11 +2,15 @@ package org.example.age.testing.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import java.io.IOException;
-import okhttp3.Response;
 import org.assertj.core.api.ThrowableAssert;
+import org.example.age.api.HttpOptional;
 import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -15,19 +19,24 @@ public final class TestUndertowServerTest {
 
     @RegisterExtension
     private static final TestUndertowServer server =
-            TestUndertowServer.fromHandlerAtPath(() -> TestUndertowServerTest::stubHandle, "/api/");
+            TestUndertowServer.fromHandlerAtPath(() -> TestUndertowServerTest::handleApiRequest, "/api/");
 
     @Test
-    public void exchange_AtHandledPath() throws IOException {
-        Response response = TestClient.get(server.url("/api/test"));
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body().string()).isEqualTo("test");
+    public void exchange_HandledPath() throws IOException {
+        HttpOptional<String> maybeValue = TestClient.apiRequestBuilder()
+                .url(server.url("/api/test"))
+                .get()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeValue).hasValue("test");
     }
 
     @Test
-    public void exchange_AtRootUrl() throws IOException {
-        Response response = TestClient.get(server.rootUrl());
-        assertThat(response.code()).isEqualTo(404);
+    public void exchange_UnhandledPath() throws IOException {
+        HttpOptional<String> maybeValue = TestClient.apiRequestBuilder()
+                .url(server.rootUrl())
+                .get()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeValue).isEmptyWithErrorCode(404);
     }
 
     @Test
@@ -45,7 +54,8 @@ public final class TestUndertowServerTest {
 
     @Test
     public void error_ServerNotStarted() {
-        TestUndertowServer inactiveServer = TestUndertowServer.fromHandler(() -> TestUndertowServerTest::stubHandle);
+        TestUndertowServer inactiveServer =
+                TestUndertowServer.fromHandler(() -> TestUndertowServerTest::handleApiRequest);
         error_ServerNotStarted(inactiveServer::get);
         error_ServerNotStarted(inactiveServer::host);
         error_ServerNotStarted(inactiveServer::port);
@@ -56,8 +66,9 @@ public final class TestUndertowServerTest {
         assertThatThrownBy(callable).isInstanceOf(IllegalStateException.class).hasMessage("server has not started");
     }
 
-    /** HTTP handler that sends a stub response. */
-    private static void stubHandle(HttpServerExchange exchange) {
-        exchange.getResponseSender().send("test");
+    /** {@link HttpHandler} for API requests that sends a stub response. */
+    private static void handleApiRequest(HttpServerExchange exchange) {
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        exchange.getResponseSender().send("\"test\"");
     }
 }

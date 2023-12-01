@@ -2,11 +2,12 @@ package org.example.age.testing.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import java.io.IOException;
-import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.ThrowableAssert;
+import org.example.age.api.HttpOptional;
 import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -18,10 +19,9 @@ public final class MockServerTest {
 
     @Test
     public void exchange() throws IOException {
-        server.enqueue(new MockResponse().setBody("test"));
-        Response response = TestClient.get(server.rootUrl());
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body().string()).isEqualTo("test");
+        server.enqueue(new MockResponse().setHeader("Content-Type", "text/html").setBody("<p>test</p>"));
+        HttpOptional<String> maybeHtml = TestClient.getHtml(server.rootUrl());
+        assertThat(maybeHtml).hasValue("<p>test</p>");
     }
 
     @Test
