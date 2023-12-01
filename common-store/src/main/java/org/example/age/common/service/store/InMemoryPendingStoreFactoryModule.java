@@ -3,14 +3,14 @@ package org.example.age.common.service.store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.infra.api.data.JsonSerializerModule;
+import org.example.age.infra.service.ServiceJsonSerializerModule;
 
 /**
  * Dagger module that publishes a binding for {@link PendingStoreFactory}, which creates in-memory stores.
  *
  * <p>Depends on an unbound {@link ObjectMapper}.</p>
  */
-@Module(includes = JsonSerializerModule.class)
+@Module(includes = ServiceJsonSerializerModule.class)
 public interface InMemoryPendingStoreFactoryModule {
 
     @Binds

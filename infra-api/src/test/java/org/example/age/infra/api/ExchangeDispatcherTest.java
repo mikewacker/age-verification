@@ -52,7 +52,7 @@ public final class ExchangeDispatcherTest {
         assertThat(maybeValue).isEmptyWithErrorCode(500);
     }
 
-    private HttpOptional<String> executeRequest(String path) throws IOException {
+    private static HttpOptional<String> executeRequest(String path) throws IOException {
         return TestClient.apiRequestBuilder()
                 .url(server.url(path))
                 .get()

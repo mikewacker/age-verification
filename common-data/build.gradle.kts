@@ -10,7 +10,6 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":common-api"))
-    api(project(":infra-api"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")

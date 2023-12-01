@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
-import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
@@ -26,7 +25,6 @@ import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
-import org.example.age.infra.api.data.JsonSerializerModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
 import org.example.age.testing.server.TestUndertowServer;
@@ -60,13 +58,13 @@ public final class ExchangeClientTest {
     @Singleton
     static final class TestHandler implements HttpHandler {
 
+        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
+
         private final ExchangeClient client;
-        private final JsonSerializer serializer;
 
         @Inject
-        public TestHandler(ExchangeClient client, JsonSerializer serializer) {
+        public TestHandler(ExchangeClient client) {
             this.client = client;
-            this.serializer = serializer;
         }
 
         @Override
@@ -110,17 +108,11 @@ public final class ExchangeClientTest {
     }
 
     /** Dagger module that publishes a binding for {@link HttpHandler}, which uses an {@link ExchangeClient}. */
-    @Module(includes = {ExchangeClientModule.class, JsonSerializerModule.class})
+    @Module(includes = ExchangeClientModule.class)
     public interface TestModule {
 
         @Binds
         HttpHandler bindHandler(TestHandler impl);
-
-        @Provides
-        @Singleton
-        static ObjectMapper provideObjectMapper() {
-            return new ObjectMapper();
-        }
     }
 
     /** Dagger component that provides an {@link HttpHandler}. */

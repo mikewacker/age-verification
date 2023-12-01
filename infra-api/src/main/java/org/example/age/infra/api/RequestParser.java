@@ -1,4 +1,4 @@
-package org.example.age.infra.api.request;
+package org.example.age.infra.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.undertow.io.Receiver;

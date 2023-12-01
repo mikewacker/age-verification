@@ -35,7 +35,7 @@ public final class ExchangeStatusCodeSenderTest {
         assertThat(statusCode).isEqualTo(200);
     }
 
-    private int executeRequest(String path) throws IOException {
+    private static int executeRequest(String path) throws IOException {
         return TestClient.apiRequestBuilder().url(server.url(path)).get().executeWithStatusCodeResponse();
     }
 

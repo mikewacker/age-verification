@@ -1,4 +1,4 @@
-package org.example.age.infra.api.data;
+package org.example.age.infra.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
@@ -12,11 +12,11 @@ import org.example.age.api.JsonSerializer;
  * <p>Depends on an unbound {@link ObjectMapper}.</p>
  */
 @Module
-public interface JsonSerializerModule {
+public interface ServiceJsonSerializerModule {
 
     @Provides
     @Singleton
-    static JsonSerializer provideJsonSerializer(ObjectMapper mapper) {
+    static JsonSerializer provideServiceJsonSerializer(ObjectMapper mapper) {
         return JsonSerializer.create(mapper);
     }
 }

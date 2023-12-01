@@ -6,8 +6,12 @@ plugins {
 
 dependencies {
     // main
+    annotationProcessor("com.google.dagger:dagger-compiler")
+
     api(project(":api"))
     api(project(":data"))
     api("com.fasterxml.jackson.core:jackson-databind")
+    api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
+    api("javax.inject:javax.inject")
 }
