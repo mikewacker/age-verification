@@ -1,7 +1,6 @@
 plugins {
     id("org.example.age.java-conventions")
     `java-library`
-    `java-test-fixtures`
 }
 
 dependencies {
@@ -10,6 +9,7 @@ dependencies {
 
     api(project(":api"))
     api(project(":data"))
+    api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")

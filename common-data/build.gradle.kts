@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
-    api(project(":common-api"))
+    api(project(":data"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
@@ -25,6 +25,5 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
-    testImplementation(testFixtures(project(":testing-api")))
     testImplementation("com.squareup.okhttp3:okhttp")
 }

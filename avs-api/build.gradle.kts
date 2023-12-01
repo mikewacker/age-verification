@@ -11,17 +11,25 @@ dependencies {
     api(project(":api"))
     api(project(":common-api"))
     api(project(":data"))
-    api(project(":infra-api"))
-    api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
 
+    api(project(":infra-api"))
+    implementation("com.fasterxml.jackson.core:jackson-core")
+
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":common-data"))
-    testFixturesApi(testFixtures(project(":common-data")))
+    testFixturesApi("com.google.dagger:dagger")
+    testFixturesApi("io.undertow:undertow-core")
+    testFixturesApi("javax.inject:javax.inject")
+
+    testFixturesApi(project(":api"))
+    testFixturesApi(project(":common-api"))
+    testFixturesApi(project(":common-extractor-builtin"))
+    testFixturesApi(testFixtures(project(":common-extractor-builtin")))
+    testFixturesApi(project(":data"))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
