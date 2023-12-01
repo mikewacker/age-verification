@@ -1,4 +1,4 @@
-package org.example.age.test.site.service;
+package org.example.age.site.service.endpoint.test;
 
 import java.time.Duration;
 import javax.inject.Inject;
@@ -10,7 +10,7 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.site.api.SiteApi;
+import org.example.age.site.api.endpoint.SiteApi;
 
 /** Stub service for {@link SiteApi}. */
 @Singleton

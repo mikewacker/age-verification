@@ -1,4 +1,4 @@
-package org.example.age.avs.api;
+package org.example.age.avs.api.endpoint;
 
 import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;

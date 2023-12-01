@@ -1,4 +1,4 @@
-package org.example.age.site.api;
+package org.example.age.site.api.endpoint;
 
 import dagger.Binds;
 import dagger.Module;
