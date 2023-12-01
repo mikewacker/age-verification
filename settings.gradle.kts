@@ -11,7 +11,6 @@ include(
         "infra-service",
         "infra-server",
         "infra-client",
-        "testing-api",
         "testing-server",
 
         /* product modules */
@@ -19,10 +18,13 @@ include(
         // data types
         "data",
 
-        // api
+        // api (core)
         "common-api",
         "avs-api",
         "site-api",
+
+        // api (modules)
+        "common-extractor-builtin",
 
         // service
         "common-data",

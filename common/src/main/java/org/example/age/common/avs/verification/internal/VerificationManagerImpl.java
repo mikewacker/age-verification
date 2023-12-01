@@ -11,7 +11,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.api.extractor.AuthMatchDataExtractor;
 import org.example.age.common.avs.config.RegisteredSiteConfig;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;

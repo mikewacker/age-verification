@@ -4,9 +4,9 @@ import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
-import org.example.age.common.api.data.AccountIdExtractor;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
 import org.example.age.common.api.data.internal.ApiObjectMapperModule;
+import org.example.age.common.api.extractor.AccountIdExtractor;
+import org.example.age.common.api.extractor.AuthMatchDataExtractor;
 import org.example.age.infra.api.ApiJsonSerializerModule;
 
 /**

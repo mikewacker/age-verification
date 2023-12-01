@@ -30,6 +30,8 @@ dependencies {
     testFixturesApi(project(":avs-api"))
     testFixturesApi(testFixtures(project(":common-crypto")))
     testFixturesApi(testFixtures(project(":common-data")))
+    testFixturesApi(project(":common-extractor-builtin"))
+    testFixturesApi(testFixtures(project(":common-extractor-builtin")))
     testFixturesApi(testFixtures(project(":testing-server")))
 
     // test

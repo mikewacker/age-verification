@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
 import java.time.Duration;
-import org.example.age.common.api.data.AuthMatchDataExtractor;
+import org.example.age.common.api.extractor.AuthMatchDataExtractor;
 import org.example.age.common.avs.store.RegisteredSiteConfigStore;
 import org.example.age.common.avs.store.VerifiedUserStore;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
