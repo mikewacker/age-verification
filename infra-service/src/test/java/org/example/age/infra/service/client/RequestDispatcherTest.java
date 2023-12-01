@@ -1,6 +1,7 @@
 package org.example.age.infra.service.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +15,6 @@ import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
 import org.example.age.api.Dispatcher;
@@ -44,52 +44,64 @@ public final class RequestDispatcherTest {
     @Test
     public void backendRequest_StatusCodeResponse_Ok() throws IOException {
         backendServer.enqueue(new MockResponse());
-        Response response = TestClient.get(frontendServer.url("/status-code"));
-        assertThat(response.code()).isEqualTo(200);
+        int statusCode = executeRequestWithStatusCodeResponse();
+        assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
     public void backendRequest_StatusCodeResponse_ErrorCode() throws IOException {
         backendServer.enqueue(new MockResponse().setResponseCode(403));
-        Response response = TestClient.get(frontendServer.url("/status-code"));
-        assertThat(response.code()).isEqualTo(403);
+        int statusCode = executeRequestWithStatusCodeResponse();
+        assertThat(statusCode).isEqualTo(403);
     }
 
     @Test
     public void backendRequest_StatusCodeResponse_RequestFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        Response response = TestClient.get(frontendServer.url("/status-code"));
-        assertThat(response.code()).isEqualTo(502);
+        int statusCode = executeRequestWithStatusCodeResponse();
+        assertThat(statusCode).isEqualTo(502);
     }
 
     @Test
     public void backendRequest_JsonResponse_Ok() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"test\""));
-        Response response = TestClient.get(frontendServer.url("/json"));
-        assertThat(response.code()).isEqualTo(200);
-        String responseBody = TestClient.readBody(response, new TypeReference<>() {});
-        assertThat(responseBody).isEqualTo("test");
+        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        assertThat(maybeText).hasValue("test");
     }
 
     @Test
     public void backendRequest_JsonResponse_ErrorCode() throws IOException {
         backendServer.enqueue(new MockResponse().setResponseCode(403));
-        Response response = TestClient.get(frontendServer.url("/json"));
-        assertThat(response.code()).isEqualTo(403);
+        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        assertThat(maybeText).isEmptyWithErrorCode(403);
     }
 
     @Test
     public void backendRequest_JsonResponse_RequestFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        Response response = TestClient.get(frontendServer.url("/json"));
-        assertThat(response.code()).isEqualTo(502);
+        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        assertThat(maybeText).isEmptyWithErrorCode(502);
     }
 
     @Test
     public void backendRequest_JsonResponse_ReadResponseBodyFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
-        Response response = TestClient.get(frontendServer.url("/json"));
-        assertThat(response.code()).isEqualTo(502);
+        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        assertThat(maybeText).isEmptyWithErrorCode(502);
+    }
+
+    private int executeRequestWithStatusCodeResponse() throws IOException {
+        return TestClient.apiRequestBuilder()
+                .url(frontendServer.url("/status-code"))
+                .get()
+                .executeWithStatusCodeResponse();
+    }
+
+    private HttpOptional<String> executeRequestWithJsonResponse() throws IOException {
+        return TestClient.apiRequestBuilder()
+                .url(frontendServer.url("/json"))
+                .get()
+                .executeWithJsonResponse(new TypeReference<>() {});
     }
 
     /**
@@ -159,7 +171,7 @@ public final class RequestDispatcherTest {
     interface TestModule {
 
         @Binds
-        HttpHandler bindHttpHandler(TestHandler impl);
+        HttpHandler bindHandler(TestHandler impl);
 
         @Provides
         @Singleton

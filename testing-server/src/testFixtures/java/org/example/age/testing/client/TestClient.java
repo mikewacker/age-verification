@@ -1,6 +1,5 @@
 package org.example.age.testing.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -9,90 +8,134 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSerializer;
+import org.example.age.infra.client.JsonApiRequest;
 
 /** Shared HTTP client for testing. */
 public final class TestClient {
 
-    private static final Map<String, String> EMPTY_HEADERS = Map.of();
     private static final MediaType JSON_CONTENT_TYPE = MediaType.get("application/json");
-    private static final RequestBody EMPTY_REQUEST_BODY = RequestBody.create(new byte[0]);
+    private static final MediaType HTML_CONTENT_TYPE = MediaType.get("text/html");
 
-    private static final ObjectMapper mapper = createObjectMapper();
+    private static final OkHttpClient client = createClient();
+    private static final JsonSerializer serializer = createJsonSerializer();
 
-    /** Issues a simple, synchronous HTTP GET request, returning the response. */
-    public static Response get(String url) throws IOException {
+    /** Issues an HTTP GET request for HTML. */
+    public static HttpOptional<String> getHtml(String url) throws IOException {
         Request request = new Request.Builder().url(url).build();
-        return execute(request);
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            return HttpOptional.empty(response.code());
+        }
+
+        checkContentType(response, HTML_CONTENT_TYPE);
+        String html = response.body().string();
+        return HttpOptional.of(html);
     }
 
-    /** Issues a simple, synchronous HTTP POST request, returning the response. */
-    public static Response post(String url) throws IOException {
-        return post(url, EMPTY_HEADERS, EMPTY_REQUEST_BODY);
+    /** Creates a builder for an HTTP request for a JSON API. */
+    public static ApiRequestBuilder apiRequestBuilder() {
+        return new ApiRequestBuilder();
     }
 
-    /** Issues a synchronous HTTP POST request with headers, returning the response. */
-    public static Response post(String url, Map<String, String> headers) throws IOException {
-        return post(url, headers, EMPTY_REQUEST_BODY);
+    /** Creates the shared {@link OkHttpClient}. */
+    private static OkHttpClient createClient() {
+        return new OkHttpClient.Builder().followRedirects(false).build();
     }
 
-    /** Issues a synchronous HTTP POST request with a JSON body, returning the response. */
-    public static <B> Response post(String url, B body) throws IOException {
-        RequestBody requestBody = createRequestBody(body);
-        return post(url, EMPTY_HEADERS, requestBody);
-    }
-
-    /** Issues a synchronous HTTP POST request with headers and a JSON body, returning the response. */
-    public static <B> Response post(String url, Map<String, String> headers, B body) throws IOException {
-        RequestBody requestBody = createRequestBody(body);
-        return post(url, headers, requestBody);
-    }
-
-    /** Issues a synchronous HTTP request, returning the response. */
-    public static Response execute(Request request) throws IOException {
-        return Holder.INSTANCE.newCall(request).execute();
-    }
-
-    /** Reads the response body. */
-    public static <B> B readBody(Response response, TypeReference<B> bodyTypeRef) throws IOException {
-        byte[] rawBody = response.body().bytes();
-        return mapper.readValue(rawBody, bodyTypeRef);
-    }
-
-    /** Gets the shared client. */
-    public static OkHttpClient getInstance() {
-        return Holder.INSTANCE;
-    }
-
-    /** Creates a request body. */
-    private static <B> RequestBody createRequestBody(B body) throws JsonProcessingException {
-        byte[] rawBody = mapper.writeValueAsBytes(body);
-        return RequestBody.create(rawBody, JSON_CONTENT_TYPE);
-    }
-
-    /** Issues a synchronous HTTP POST request, returning the response. */
-    private static Response post(String url, Map<String, String> headers, RequestBody requestBody) throws IOException {
-        Request.Builder requestBuilder = new Request.Builder().url(url);
-        headers.forEach((name, value) -> requestBuilder.header(name, value));
-        Request request = requestBuilder.post(requestBody).build();
-        return execute(request);
-    }
-
-    /** Creates the {@link ObjectMapper}. */
-    private static ObjectMapper createObjectMapper() {
+    /** Creates the {@link JsonSerializer}. */
+    private static JsonSerializer createJsonSerializer() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new GuavaModule());
-        return mapper;
+        return JsonSerializer.create(mapper);
     }
 
-    /** Holder for the shared client. */
-    private static final class Holder {
+    /** Checks that the response has the expected content type. */
+    private static void checkContentType(Response response, MediaType expectedContentType) {
+        String rawContentType = response.header("Content-Type");
+        if (rawContentType == null) {
+            throw new RuntimeException("response Content-Type is missing");
+        }
 
-        public static OkHttpClient INSTANCE =
-                new OkHttpClient.Builder().followRedirects(false).build();
+        MediaType contentType = MediaType.parse(rawContentType);
+        if (contentType == null) {
+            String message = String.format("failed to parse response Content-Type: %s", rawContentType);
+            throw new RuntimeException(message);
+        }
+
+        if (!contentType.type().equals(expectedContentType.type())
+                || !contentType.subtype().equals(expectedContentType.subtype())) {
+            String message =
+                    String.format("expected response Content-Type: %s (was: %s)", expectedContentType, contentType);
+            throw new RuntimeException(message);
+        }
     }
 
     // static class
     private TestClient() {}
+
+    /** Builder for an HTTP request for a JSON API. */
+    public static final class ApiRequestBuilder {
+
+        private final JsonApiRequest.Builder requestBuilder = JsonApiRequest.builder(client);
+
+        /** Sets the URL. */
+        public ApiRequestBuilder url(String url) {
+            requestBuilder.url(url);
+            return this;
+        }
+
+        /** Adds headers. */
+        public ApiRequestBuilder headers(Map<String, String> headers) {
+            requestBuilder.headers(headers);
+            return this;
+        }
+
+        /** Uses a GET request. */
+        public ApiRequestBuilder get() {
+            requestBuilder.get();
+            return this;
+        }
+
+        /** Uses a POST request without a request body. */
+        public ApiRequestBuilder post() {
+            requestBuilder.post();
+            return this;
+        }
+
+        /** Uses a POST request with a request body. */
+        public ApiRequestBuilder post(Object requestValue) {
+            byte[] rawRequestValue = serializer.serialize(requestValue);
+            requestBuilder.post(rawRequestValue);
+            return this;
+        }
+
+        /** Executes the request, expecting a response with only a status code. */
+        public int executeWithStatusCodeResponse() throws IOException {
+            Response response = requestBuilder.execute();
+            return response.code();
+        }
+
+        /** Executes the request, expecting a response with a JSON body. */
+        public <V> HttpOptional<V> executeWithJsonResponse(TypeReference<V> responseValueTypeRef) throws IOException {
+            Response response = requestBuilder.execute();
+            if (!response.isSuccessful()) {
+                return HttpOptional.empty(response.code());
+            }
+
+            checkContentType(response, JSON_CONTENT_TYPE);
+            byte[] rawResponseValue = response.body().bytes();
+            HttpOptional<V> maybeResponseValue = serializer.tryDeserialize(rawResponseValue, responseValueTypeRef, 500);
+            if (maybeResponseValue.isEmpty()) {
+                throw new RuntimeException("deserialization of response body failed");
+            }
+            V responseValue = maybeResponseValue.get();
+
+            return HttpOptional.of(responseValue);
+        }
+
+        private ApiRequestBuilder() {}
+    }
 }

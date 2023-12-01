@@ -1,14 +1,17 @@
 package org.example.age.infra.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import okhttp3.Response;
 import org.example.age.api.Dispatcher;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSender;
+import org.example.age.api.JsonSerializer;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -21,36 +24,45 @@ public final class ExchangeDispatcherTest {
 
     @Test
     public void dispatch() throws IOException {
-        dispatch("/dispatch", 200);
+        HttpOptional<String> maybeValue = executeRequest("/dispatch");
+        assertThat(maybeValue).hasValue("test");
     }
 
     @Test
     public void dispatched_IoThread() throws IOException {
-        dispatch("/dispatched-io-thread", 200);
+        HttpOptional<String> maybeValue = executeRequest("/dispatched-io-thread");
+        assertThat(maybeValue).hasValue("test");
     }
 
     @Test
     public void dispatched_Worker() throws IOException {
-        dispatch("/dispatched-worker", 200);
+        HttpOptional<String> maybeValue = executeRequest("/dispatched-worker");
+        assertThat(maybeValue).hasValue("test");
     }
 
     @Test
     public void error_dispatch() throws IOException {
-        dispatch("/error-dispatch", 500);
+        HttpOptional<String> maybeValue = executeRequest("/error-dispatch");
+        assertThat(maybeValue).isEmptyWithErrorCode(500);
     }
 
     @Test
     public void error_dispatched() throws IOException {
-        dispatch("/error-dispatched", 500);
+        HttpOptional<String> maybeValue = executeRequest("/error-dispatched");
+        assertThat(maybeValue).isEmptyWithErrorCode(500);
     }
 
-    private void dispatch(String path, int expectedStatusCode) throws IOException {
-        Response response = TestClient.get(server.url(path));
-        assertThat(response.code()).isEqualTo(expectedStatusCode);
+    private HttpOptional<String> executeRequest(String path) throws IOException {
+        return TestClient.apiRequestBuilder()
+                .url(server.url(path))
+                .get()
+                .executeWithJsonResponse(new TypeReference<>() {});
     }
 
     /** Test {@link HttpHandler} that uses an {@link ExchangeDispatcher}. */
     private static final class TestHandler implements HttpHandler {
+
+        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
 
         public static HttpHandler create() {
             return new TestHandler();
@@ -59,56 +71,57 @@ public final class ExchangeDispatcherTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
             if (!dispatcher.isInIoThread()) {
-                sender.send(418);
+                sender.sendErrorCode(418);
                 return;
             }
 
             switch (exchange.getRequestPath()) {
-                case "/dispatch" -> dispatcher.dispatch(sender, TestHandler::handler);
-                case "/dispatched-io-thread" -> dispatchedIoThread(sender, dispatcher);
-                case "/dispatched-worker" -> dispatchedWorker(sender, dispatcher);
-                case "/error-dispatch" -> dispatcher.dispatch(sender, TestHandler::badHandler);
-                case "/error-dispatched" -> dispatchedBadHandler(sender, dispatcher);
-                default -> sender.send(StatusCodes.NOT_FOUND);
+                case "/dispatch":
+                    dispatcher.dispatch(sender, TestHandler::workerHandler);
+                    return;
+                case "/dispatched-io-thread":
+                    dispatcher
+                            .getIoThread()
+                            .execute(() -> dispatcher.executeHandler(sender, TestHandler::ioThreadHandler));
+                    dispatcher.dispatched();
+                    return;
+                case "/dispatched-worker":
+                    dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::workerHandler));
+                    dispatcher.dispatched();
+                    return;
+                case "/error-dispatch":
+                    dispatcher.dispatch(sender, TestHandler::badHandler);
+                    return;
+                case "/error-dispatched":
+                    dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::badHandler));
+                    dispatcher.dispatched();
+                    return;
+                default:
+                    sender.sendErrorCode(StatusCodes.NOT_FOUND);
             }
         }
 
-        private static void dispatchedIoThread(StatusCodeSender sender, Dispatcher dispatcher) {
-            dispatcher.getIoThread().execute(() -> dispatcher.executeHandler(sender, TestHandler::ioThreadHandler));
-            dispatcher.dispatched();
-        }
-
-        private static void dispatchedWorker(StatusCodeSender sender, Dispatcher dispatcher) {
-            dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::handler));
-            dispatcher.dispatched();
-        }
-
-        private static void dispatchedBadHandler(StatusCodeSender sender, Dispatcher dispatcher) {
-            dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::badHandler));
-            dispatcher.dispatched();
-        }
-
-        private static void handler(StatusCodeSender sender, Dispatcher dispatcher) {
+        private static void workerHandler(JsonSender<String> sender, Dispatcher dispatcher) {
             if (dispatcher.isInIoThread()) {
-                sender.send(418);
+                sender.sendErrorCode(418);
                 return;
             }
 
-            sender.sendOk();
+            sender.sendBody("test");
         }
 
-        private static void ioThreadHandler(StatusCodeSender sender, Dispatcher dispatcher) {
+        private static void ioThreadHandler(JsonSender<String> sender, Dispatcher dispatcher) {
             if (!dispatcher.isInIoThread()) {
-                sender.send(418);
+                sender.sendErrorCode(418);
                 return;
             }
 
-            sender.sendOk();
+            sender.sendBody("test");
         }
 
-        private static void badHandler(StatusCodeSender sender, Dispatcher dispatcher) {
+        private static void badHandler(JsonSender<String> sender, Dispatcher dispatcher) {
             throw new RuntimeException();
         }
 

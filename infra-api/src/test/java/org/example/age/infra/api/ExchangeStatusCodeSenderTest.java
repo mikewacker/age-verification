@@ -6,7 +6,6 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import okhttp3.Response;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
@@ -20,22 +19,24 @@ public final class ExchangeStatusCodeSenderTest {
 
     @Test
     public void send_Ok() throws IOException {
-        send("/ok", 200);
+        int statusCode = executeRequest("/ok");
+        assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
     public void send_ErrorCode() throws IOException {
-        send("/forbidden", 403);
+        int statusCode = executeRequest("/forbidden");
+        assertThat(statusCode).isEqualTo(403);
     }
 
     @Test
     public void send_SendTwice() throws IOException {
-        send("/send-twice", 200);
+        int statusCode = executeRequest("/send-twice");
+        assertThat(statusCode).isEqualTo(200);
     }
 
-    private void send(String path, int expectedStatusCode) throws IOException {
-        Response response = TestClient.get(server.url(path));
-        assertThat(response.code()).isEqualTo(expectedStatusCode);
+    private int executeRequest(String path) throws IOException {
+        return TestClient.apiRequestBuilder().url(server.url(path)).get().executeWithStatusCodeResponse();
     }
 
     /** Test {@link HttpHandler} that uses an {@link ExchangeStatusCodeSender}. */

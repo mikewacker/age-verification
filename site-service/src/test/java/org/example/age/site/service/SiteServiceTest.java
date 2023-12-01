@@ -1,6 +1,7 @@
 package org.example.age.site.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
@@ -13,7 +14,7 @@ import java.time.Duration;
 import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import okhttp3.Response;
+import org.example.age.api.HttpOptional;
 import org.example.age.common.service.data.AvsLocation;
 import org.example.age.common.service.data.DisabledAuthMatchDataExtractorModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
@@ -53,21 +54,28 @@ public final class SiteServiceTest {
     }
 
     private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
-        String sessionUrl = siteServer.url("/api/verification-session");
-        Map<String, String> siteHeaders = Map.of("Account-Id", siteAccountId);
-        Response sessionResponse = TestClient.post(sessionUrl, siteHeaders);
-        assertThat(sessionResponse.code()).isEqualTo(200);
-        VerificationSession session = TestClient.readBody(sessionResponse, new TypeReference<>() {});
+        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+                .url(siteServer.url("/api/verification-session"))
+                .headers(Map.of("Account-Id", siteAccountId))
+                .post()
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeSession).isPresent();
+        VerificationSession session = maybeSession.get();
+
         SecureId requestId = session.verificationRequest().id();
+        int linkStatusCode = TestClient.apiRequestBuilder()
+                .url(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .headers(Map.of("Account-Id", avsAccountId))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(linkStatusCode).isEqualTo(200);
 
-        String linkUrl = fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId);
-        Map<String, String> avsHeaders = Map.of("Account-Id", avsAccountId);
-        Response linkResponse = TestClient.post(linkUrl, avsHeaders);
-        assertThat(linkResponse.code()).isEqualTo(200);
-
-        String certificateUrl = fakeAvsServer.url("/api/age-certificate");
-        Response certificateResponse = TestClient.post(certificateUrl, avsHeaders);
-        assertThat(certificateResponse.code()).isEqualTo(expectedStatusCode);
+        int certificateStatusCode = TestClient.apiRequestBuilder()
+                .url(fakeAvsServer.url("/api/age-certificate"))
+                .headers(Map.of("Account-Id", avsAccountId))
+                .post()
+                .executeWithStatusCodeResponse();
+        assertThat(certificateStatusCode).isEqualTo(expectedStatusCode);
     }
 
     private static SiteConfig createSiteConfig(AvsLocation location, PublicKey publicSigningKey) {

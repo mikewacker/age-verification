@@ -16,6 +16,6 @@ dependencies {
     api("org.jboss.xnio:xnio-api")
 
     // test
+    testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":testing-server")))
-    testImplementation("com.squareup.okhttp3:okhttp")
 }
