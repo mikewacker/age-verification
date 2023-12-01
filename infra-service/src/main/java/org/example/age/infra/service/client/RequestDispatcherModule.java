@@ -3,7 +3,7 @@ package org.example.age.infra.service.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.infra.api.data.JsonSerializerModule;
+import org.example.age.infra.service.ServiceJsonSerializerModule;
 import org.example.age.infra.service.client.internal.ExchangeClientModule;
 
 /**
@@ -11,7 +11,7 @@ import org.example.age.infra.service.client.internal.ExchangeClientModule;
  *
  * <p>Depends on an unbound {@link ObjectMapper}.</p>
  */
-@Module(includes = {ExchangeClientModule.class, JsonSerializerModule.class})
+@Module(includes = {ExchangeClientModule.class, ServiceJsonSerializerModule.class})
 public interface RequestDispatcherModule {
 
     @Binds

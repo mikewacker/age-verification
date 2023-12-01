@@ -5,6 +5,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
@@ -19,7 +20,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
-import org.example.age.infra.api.request.RequestParser;
+import org.example.age.infra.api.RequestParser;
 
 @Singleton
 final class SiteEndpointHandler implements HttpHandler {
@@ -34,7 +35,7 @@ final class SiteEndpointHandler implements HttpHandler {
             SiteApi siteApi,
             AccountIdExtractor accountIdExtractor,
             AuthMatchDataExtractor authDataExtractor,
-            JsonSerializer serializer) {
+            @Named("api") JsonSerializer serializer) {
         this.siteApi = siteApi;
         this.accountIdExtractor = accountIdExtractor;
         this.authDataExtractor = authDataExtractor;

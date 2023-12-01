@@ -14,7 +14,6 @@ dependencies {
     api(project(":common-data"))
     api(project(":common-store"))
     api(project(":data"))
-    api(project(":infra-api"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("com.google.guava:guava")

@@ -16,7 +16,6 @@ dependencies {
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
-    api("org.immutables:value-annotations")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")

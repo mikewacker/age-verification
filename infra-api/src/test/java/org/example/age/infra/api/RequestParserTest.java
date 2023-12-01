@@ -1,4 +1,4 @@
-package org.example.age.infra.api.request;
+package org.example.age.infra.api;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
@@ -10,7 +10,6 @@ import java.io.IOException;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
-import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;

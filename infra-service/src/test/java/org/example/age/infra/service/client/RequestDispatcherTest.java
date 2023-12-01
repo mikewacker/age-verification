@@ -25,7 +25,6 @@ import org.example.age.api.StatusCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
-import org.example.age.infra.api.data.JsonSerializerModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.MockServer;
 import org.example.age.testing.server.TestUndertowServer;
@@ -112,13 +111,13 @@ public final class RequestDispatcherTest {
     @Singleton
     static final class TestHandler implements HttpHandler {
 
+        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
+
         private final RequestDispatcher requestDispatcher;
-        private final JsonSerializer serializer;
 
         @Inject
-        public TestHandler(RequestDispatcher requestDispatcher, JsonSerializer serializer) {
+        public TestHandler(RequestDispatcher requestDispatcher) {
             this.requestDispatcher = requestDispatcher;
-            this.serializer = serializer;
         }
 
         @Override
@@ -167,7 +166,7 @@ public final class RequestDispatcherTest {
      *
      * <p>Also binds dependencies for {@link RequestDispatcher}.</p>
      */
-    @Module(includes = {RequestDispatcherModule.class, JsonSerializerModule.class})
+    @Module(includes = RequestDispatcherModule.class)
     interface TestModule {
 
         @Binds
