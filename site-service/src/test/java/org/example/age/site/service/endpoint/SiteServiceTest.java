@@ -1,9 +1,10 @@
-package org.example.age.site.service;
+package org.example.age.site.service.endpoint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
+import org.example.age.avs.service.endpoint.test.FakeAvsServiceModule;
 import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtractorModule;
 import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
 import org.example.age.common.service.data.AvsLocation;
@@ -23,7 +25,6 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
-import org.example.age.test.avs.service.FakeAvsServiceModule;
 import org.example.age.test.common.service.crypto.TestSigningKeyModule;
 import org.example.age.test.common.service.data.TestAvsLocationModule;
 import org.example.age.testing.client.TestClient;
@@ -108,6 +109,7 @@ public final class SiteServiceTest {
         }
 
         @Provides
+        @Named("avs")
         static TestServer<?> provideAvsServer() {
             return fakeAvsServer;
         }
@@ -127,27 +129,24 @@ public final class SiteServiceTest {
         HttpHandler handler();
     }
 
-    /** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
-    @Module(includes = FakeAvsServiceModule.class)
-    interface FakeAvsModule {
-
-        @Provides
-        static TestServer<?> provideSiteServer() {
-            return siteServer;
-        }
-    }
-
     /** Dagger components that provides an {@link HttpHandler}. */
-    @Component(modules = FakeAvsModule.class)
+    @Component(modules = FakeAvsServiceModule.class)
     @Singleton
     interface FakeAvsComponent {
 
         static HttpHandler createHandler() {
-            FakeAvsComponent component = DaggerSiteServiceTest_FakeAvsComponent.create();
+            FakeAvsComponent component =
+                    DaggerSiteServiceTest_FakeAvsComponent.factory().create(siteServer);
             return component.handler();
         }
 
         @Named("api")
         HttpHandler handler();
+
+        @Component.Factory
+        interface Factory {
+
+            FakeAvsComponent create(@BindsInstance @Named("site") TestServer<?> siteServer);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package org.example.age.site.service;
+package org.example.age.site.service.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import javax.inject.Inject;

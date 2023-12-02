@@ -1,4 +1,4 @@
-package org.example.age.test.avs.service.verification.internal;
+package org.example.age.avs.service.verification.internal;
 
 import java.time.Duration;
 import java.util.List;

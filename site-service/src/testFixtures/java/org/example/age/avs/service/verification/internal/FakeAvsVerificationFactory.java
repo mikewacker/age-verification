@@ -1,4 +1,4 @@
-package org.example.age.test.avs.service.verification.internal;
+package org.example.age.avs.service.verification.internal;
 
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
