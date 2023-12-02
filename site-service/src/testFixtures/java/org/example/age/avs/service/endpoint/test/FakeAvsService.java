@@ -1,4 +1,4 @@
-package org.example.age.test.avs.service;
+package org.example.age.avs.service.endpoint.test;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -8,13 +8,13 @@ import org.example.age.api.JsonSender;
 import org.example.age.api.Sender;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.avs.api.endpoint.AvsApi;
+import org.example.age.avs.service.verification.internal.FakeAvsVerificationFactory;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.service.data.SiteLocation;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.infra.service.client.RequestDispatcher;
-import org.example.age.test.avs.service.verification.internal.FakeAvsVerificationFactory;
 
 /** Fake service for {@link AvsApi}. */
 @Singleton
