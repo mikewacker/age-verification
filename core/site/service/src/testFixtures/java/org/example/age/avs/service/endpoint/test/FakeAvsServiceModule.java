@@ -7,8 +7,8 @@ import org.example.age.avs.api.endpoint.AvsApiModule;
 import org.example.age.avs.service.verification.internal.FakeAvsVerificationFactoryModule;
 import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtractorModule;
 import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
+import org.example.age.common.service.config.test.TestSiteLocationModule;
 import org.example.age.infra.service.client.RequestDispatcherModule;
-import org.example.age.test.common.service.data.TestSiteLocationModule;
 import org.example.age.testing.server.TestServer;
 
 /**

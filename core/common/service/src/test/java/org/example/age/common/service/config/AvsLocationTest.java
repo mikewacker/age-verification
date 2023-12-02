@@ -1,11 +1,11 @@
-package org.example.age.common.service.data;
+package org.example.age.common.service.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.utils.DataMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +29,9 @@ public final class AvsLocationTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        byte[] rawLocation = DataMapper.get().writeValueAsBytes(location);
-        AvsLocation rtLocation = DataMapper.get().readValue(rawLocation, new TypeReference<>() {});
+        ObjectMapper mapper = new ObjectMapper();
+        byte[] rawLocation = mapper.writeValueAsBytes(location);
+        AvsLocation rtLocation = mapper.readValue(rawLocation, new TypeReference<>() {});
         assertThat(rtLocation).isEqualTo(location);
     }
 }

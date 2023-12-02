@@ -1,4 +1,4 @@
-package org.example.age.common.service.data;
+package org.example.age.common.service.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
