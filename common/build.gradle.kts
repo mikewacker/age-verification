@@ -10,9 +10,7 @@ dependencies {
 
     api(project(":api"))
     api(project(":common-api"))
-    api(project(":common-crypto"))
-    api(project(":common-data"))
-    api(project(":common-store"))
+    api(project(":common-service"))
     api(project(":data"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
