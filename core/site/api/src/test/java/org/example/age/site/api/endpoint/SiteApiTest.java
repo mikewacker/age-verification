@@ -34,17 +34,16 @@ public final class SiteApiTest {
     @Test
     public void verify() throws IOException {
         HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
-                .url(siteServer.url("/api/verification-session"))
+                .post(siteServer.url("/api/verification-session"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .post()
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isPresent();
         VerificationSession session = maybeSession.get();
 
         SignedAgeCertificate signedCertificate = createSignedAgeCertificate(session);
         int certificateStatusCode = TestClient.apiRequestBuilder()
-                .url(siteServer.url("/api/age-certificate"))
-                .post(signedCertificate)
+                .post(siteServer.url("/api/age-certificate"))
+                .body(signedCertificate)
                 .executeWithStatusCodeResponse();
         assertThat(certificateStatusCode).isEqualTo(200);
     }
@@ -52,9 +51,8 @@ public final class SiteApiTest {
     @Test
     public void error_MissingAccountId() throws IOException {
         HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
-                .url(siteServer.url("/api/verification-session"))
+                .post(siteServer.url("/api/verification-session"))
                 .headers(Map.of("User-Agent", "agent"))
-                .post()
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isEmptyWithErrorCode(401);
     }
@@ -62,8 +60,7 @@ public final class SiteApiTest {
     @Test
     public void error_MissingSignedAgeCertificate() throws IOException {
         int certificateStatusCode = TestClient.apiRequestBuilder()
-                .url(siteServer.url("/api/age-certificate"))
-                .post()
+                .post(siteServer.url("/api/age-certificate"))
                 .executeWithStatusCodeResponse();
         assertThat(certificateStatusCode).isEqualTo(400);
     }
@@ -71,8 +68,7 @@ public final class SiteApiTest {
     @Test
     public void error_BadPath() throws IOException {
         int statusCode = TestClient.apiRequestBuilder()
-                .url(siteServer.url("/api/does-not-exist"))
-                .get()
+                .get(siteServer.url("/api/does-not-exist"))
                 .executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(404);
     }

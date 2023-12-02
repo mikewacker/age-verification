@@ -46,8 +46,7 @@ final class SiteService implements SiteApi {
                 new VerificationSessionCallback(verificationManager, accountId, authData);
         requestDispatcher
                 .requestBuilder(sender, dispatcher)
-                .url(sessionUrl)
-                .post()
+                .post(sessionUrl)
                 .dispatchWithJsonResponse(new TypeReference<>() {}, sessionCallback);
     }
 

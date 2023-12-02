@@ -92,15 +92,13 @@ public final class RequestDispatcherTest {
 
     private int executeRequestWithStatusCodeResponse() throws IOException {
         return TestClient.apiRequestBuilder()
-                .url(frontendServer.url("/status-code"))
-                .get()
+                .get(frontendServer.url("/status-code"))
                 .executeWithStatusCodeResponse();
     }
 
     private HttpOptional<String> executeRequestWithJsonResponse() throws IOException {
         return TestClient.apiRequestBuilder()
-                .url(frontendServer.url("/json"))
-                .get()
+                .get(frontendServer.url("/json"))
                 .executeWithJsonResponse(new TypeReference<>() {});
     }
 
@@ -136,8 +134,7 @@ public final class RequestDispatcherTest {
 
             requestDispatcher
                     .requestBuilder(sender, dispatcher)
-                    .url(backendServer.rootUrl())
-                    .post()
+                    .get(backendServer.rootUrl())
                     .dispatchWithStatusCodeResponse(this::onStatusCodeResponseReceived);
         }
 
@@ -147,8 +144,7 @@ public final class RequestDispatcherTest {
 
             requestDispatcher
                     .requestBuilder(sender, dispatcher)
-                    .url(backendServer.rootUrl())
-                    .post()
+                    .get(backendServer.rootUrl())
                     .dispatchWithJsonResponse(new TypeReference<>() {}, this::onJsonResponseReceived);
         }
 

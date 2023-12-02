@@ -44,8 +44,7 @@ public final class ExchangeClientTest {
     public void exchange() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"world\""));
         HttpOptional<String> maybeGreeting = TestClient.apiRequestBuilder()
-                .url(frontendServer.rootUrl())
-                .get()
+                .get(frontendServer.rootUrl())
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }

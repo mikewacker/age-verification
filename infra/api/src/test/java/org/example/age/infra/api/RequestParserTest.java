@@ -52,8 +52,8 @@ public final class RequestParserTest {
 
     private static HttpOptional<Integer> executeAddRequest(String path, Object bodyOperand) throws IOException {
         return TestClient.apiRequestBuilder()
-                .url(server.url(path))
-                .post(bodyOperand)
+                .post(server.url(path))
+                .body(bodyOperand)
                 .executeWithJsonResponse(new TypeReference<>() {});
     }
 

@@ -29,8 +29,7 @@ public final class RootTest {
     @Test
     public void apiExchange() throws IOException {
         HttpOptional<String> maybeValue = TestClient.apiRequestBuilder()
-                .url(server.url("/api/test"))
-                .get()
+                .get(server.url("/api/test"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeValue).hasValue("test");
     }
