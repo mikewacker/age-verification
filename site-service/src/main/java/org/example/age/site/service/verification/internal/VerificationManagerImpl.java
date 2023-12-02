@@ -1,7 +1,6 @@
 package org.example.age.site.service.verification.internal;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.security.PublicKey;
 import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -11,7 +10,9 @@ import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.service.crypto.internal.AgeCertificateVerifier;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
+import org.example.age.common.service.crypto.internal.VerifiedUserLocalizer;
 import org.example.age.common.service.store.PendingStore;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.data.certificate.AgeCertificate;
@@ -29,30 +30,31 @@ import org.example.age.site.service.store.VerificationStore;
 final class VerificationManagerImpl implements VerificationManager {
 
     private static final String VERIFICATION_STORE_NAME = "verification";
+    private static final String PSEUDONYM_KEY_NAME = "local";
 
     private final VerificationStore verificationStore;
     private final PendingStoreFactory pendingStoreFactory;
+    private final AgeCertificateVerifier certificateVerifier;
+    private final VerifiedUserLocalizer userLocalizer;
     private final AuthMatchDataEncryptor authDataEncryptor;
-    private final Provider<PublicKey> avsPublicSigningKeyProvider;
     private final Provider<String> siteIdProvider;
-    private final Provider<SecureId> pseudonymKeyProvider;
     private final Provider<Duration> expiresInProvider;
 
     @Inject
     public VerificationManagerImpl(
             VerificationStore verificationStore,
             PendingStoreFactory pendingStoreFactory,
+            AgeCertificateVerifier certificateVerifier,
+            VerifiedUserLocalizer userLocalizer,
             AuthMatchDataEncryptor authDataEncryptor,
-            @Named("bridgedSigning") Provider<PublicKey> avsPublicSigningKeyProvider,
             @Named("siteId") Provider<String> siteIdProvider,
-            @Named("pseudonymKey") Provider<SecureId> pseudonymKeyProvider,
             @Named("expiresIn") Provider<Duration> expiresInProvider) {
         this.verificationStore = verificationStore;
         this.pendingStoreFactory = pendingStoreFactory;
+        this.certificateVerifier = certificateVerifier;
+        this.userLocalizer = userLocalizer;
         this.authDataEncryptor = authDataEncryptor;
-        this.avsPublicSigningKeyProvider = avsPublicSigningKeyProvider;
         this.siteIdProvider = siteIdProvider;
-        this.pseudonymKeyProvider = pseudonymKeyProvider;
         this.expiresInProvider = expiresInProvider;
     }
 
@@ -87,7 +89,7 @@ final class VerificationManagerImpl implements VerificationManager {
             return authStatusCode;
         }
 
-        VerifiedUser localUser = localizeUser(certificate.verifiedUser());
+        VerifiedUser localUser = userLocalizer.localize(certificate.verifiedUser(), PSEUDONYM_KEY_NAME);
         return trySaveUser(pendingVerification.accountId(), localUser);
     }
 
@@ -103,7 +105,7 @@ final class VerificationManagerImpl implements VerificationManager {
 
     /** Verifies a {@link SignedAgeCertificate}, returning a status code. */
     private int verifySignedAgeCertificate(SignedAgeCertificate signedCertificate) {
-        if (!signedCertificate.verify(avsPublicSigningKeyProvider.get())) {
+        if (!certificateVerifier.verify(signedCertificate)) {
             return 401;
         }
 
@@ -135,11 +137,6 @@ final class VerificationManagerImpl implements VerificationManager {
         AuthMatchData remoteAuthData = maybeRemoteAuthData.get();
 
         return authData.match(remoteAuthData) ? 200 : 403;
-    }
-
-    /** Localizes a {@link VerifiedUser} for the site. */
-    private VerifiedUser localizeUser(VerifiedUser user) {
-        return user.localize(pseudonymKeyProvider.get());
     }
 
     /** Saves a {@link VerifiedUser} for the account, returning a status code. */

@@ -1,9 +1,7 @@
 package org.example.age.site.service.config;
 
-import java.security.PublicKey;
 import java.time.Duration;
 import org.example.age.common.service.data.AvsLocation;
-import org.example.age.data.crypto.SecureId;
 import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
@@ -20,14 +18,8 @@ public interface SiteConfig {
     /** URL location of the age verification service. */
     AvsLocation avsLocation();
 
-    /** Public key used to verify signed age certificates. */
-    PublicKey avsPublicSigningKey();
-
     /** Site ID that is expected for age certificates. */
     String siteId();
-
-    /** Key used to localize pseudonyms. */
-    SecureId pseudonymKey();
 
     /** Expiration for verified accounts. */
     Duration expiresIn();

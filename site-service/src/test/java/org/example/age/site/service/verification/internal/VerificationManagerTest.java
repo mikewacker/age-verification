@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
+import org.example.age.common.service.crypto.PseudonymKeyProvider;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
@@ -215,7 +216,7 @@ public final class VerificationManagerTest {
     interface TestModule {
 
         @Provides
-        @Named("bridgedSigning")
+        @Named("signing")
         @Singleton
         static PublicKey provideAvsPublicSigningKey() {
             return avsSigningKeyPair.getPublic();
@@ -229,10 +230,9 @@ public final class VerificationManagerTest {
         }
 
         @Provides
-        @Named("pseudonymKey")
         @Singleton
-        static SecureId providePseudonymKey() {
-            return pseudonymKey;
+        static PseudonymKeyProvider providePseudonymKeyProvider() {
+            return name -> pseudonymKey;
         }
 
         @Provides
