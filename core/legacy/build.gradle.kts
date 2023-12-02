@@ -9,9 +9,9 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api"))
-    api(project(":common-api"))
-    api(project(":common-service"))
-    api(project(":data"))
+    api(project(":core:common:api"))
+    api(project(":core:common:service"))
+    api(project(":core:data"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("com.google.guava:guava")
@@ -22,6 +22,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":common-extractor-builtin"))
+    testImplementation(project(":module:extractor:common:builtin"))
     testImplementation("org.mockito:mockito-core")
 }

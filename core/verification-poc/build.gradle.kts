@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":data"))
+    api(project(":core:data"))
     api("com.google.guava:guava")
 }

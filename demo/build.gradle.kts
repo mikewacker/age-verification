@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":verification-poc"))
+    implementation(project(":core:data"))
+    implementation(project(":core:verification-poc"))
     implementation("com.google.guava:guava")
     implementation("org.bouncycastle:bcpkix-jdk18on")
 }

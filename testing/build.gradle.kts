@@ -11,7 +11,7 @@ dependencies {
     testFixturesApi("io.undertow:undertow-core")
     testFixturesApi("org.junit.jupiter:junit-jupiter-api")
 
-    testFixturesImplementation(project(":infra-client"))
+    testFixturesImplementation(project(":infra:client"))
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
     testFixturesImplementation("com.fasterxml.jackson.datatype:jackson-datatype-guava")
     testFixturesImplementation("com.squareup.okhttp3:okhttp")

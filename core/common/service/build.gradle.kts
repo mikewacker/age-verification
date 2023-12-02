@@ -10,30 +10,23 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api"))
-    api(project(":common-api"))
-    api(project(":common-service"))
-    api(project(":data"))
-    api(project(":infra-service"))
-    api(project(":site-api"))
+    api(project(":core:common:api"))
+    api(project(":core:data"))
+    api(project(":infra:service"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
-    api("com.google.guava:guava")
+    api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
-    api("org.jboss.xnio:xnio-api")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":avs-api"))
-    testFixturesApi(testFixtures(project(":common-service")))
-    testFixturesApi(project(":common-extractor-builtin"))
-    testFixturesApi(testFixtures(project(":common-extractor-builtin")))
-    testFixturesApi(testFixtures(project(":testing-server")))
+    testFixturesApi(testFixtures(project(":testing")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testAnnotationProcessor("org.immutables:value")
 
     testImplementation(testFixtures(project(":api")))
-    testImplementation("io.undertow:undertow-core")
 }

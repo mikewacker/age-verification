@@ -9,29 +9,31 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
-    api(project(":common-api"))
-    api(project(":data"))
+    api(project(":api"))
+    api(project(":core:common:api"))
+    api(project(":core:common:service"))
+    api(project(":core:site:api"))
+    api(project(":core:data"))
+    api(project(":infra:service"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
+    api("com.google.guava:guava")
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
-
-    api(project(":api"))
-    api("io.undertow:undertow-core")
+    api("org.jboss.xnio:xnio-api")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":common-api"))
-    api("com.google.dagger:dagger")
-    api("javax.inject:javax.inject")
-
-    api(project(":api"))
-    api("io.undertow:undertow-core")
+    testFixturesApi(project(":core:avs:api"))
+    testFixturesApi(testFixtures(project(":core:common:service")))
+    testFixturesApi(project(":module:extractor:common:builtin"))
+    testFixturesApi(testFixtures(project(":module:extractor:common:builtin")))
+    testFixturesApi(testFixtures(project(":testing")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
-    testImplementation("org.mockito:mockito-core")
+    testImplementation("io.undertow:undertow-core")
 }

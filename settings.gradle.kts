@@ -1,37 +1,27 @@
 rootProject.name = "age-verification"
 
 include(
-        /* generic modules */
-
-        // api types (does not depend on Undertow)
+        // generic modules
         "api",
 
-        // infrastructure (depends on Undertow)
-        "infra-api",
-        "infra-service",
-        "infra-server",
-        "infra-client",
-        "testing-server",
+        "infra:api",
+        "infra:service",
+        "infra:server",
+        "infra:client",
 
-        /* product modules */
+        "testing",
 
-        // data types
-        "data",
+        // product modules
+        "core:data",
+        "core:common:api",
+        "core:common:service",
+        "core:avs:api",
+        "core:site:api",
+        "core:site:service",
+        "core:legacy",
+        "core:verification-poc",
 
-        // api (core)
-        "common-api",
-        "avs-api",
-        "site-api",
+        "module:extractor:common:builtin",
 
-        // api (modules)
-        "common-extractor-builtin",
-
-        // service
-        "common-service",
-        "site-service",
-        "common",
-        "verification-poc",
-
-        // demo
         "demo",
 )
