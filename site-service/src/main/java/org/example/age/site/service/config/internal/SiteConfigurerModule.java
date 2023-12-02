@@ -31,21 +31,9 @@ public interface SiteConfigurerModule {
     }
 
     @Provides
-    @Named("bridgedSigning")
-    static PublicKey provideAvsPublicSigningKey(SiteConfig siteConfig) {
-        return siteConfig.avsPublicSigningKey();
-    }
-
-    @Provides
     @Named("siteId")
     static String provideSiteId(SiteConfig siteConfig) {
         return siteConfig.siteId();
-    }
-
-    @Provides
-    @Named("pseudonymKey")
-    static SecureId providePseudonymKey(SiteConfig siteConfig) {
-        return siteConfig.pseudonymKey();
     }
 
     @Provides

@@ -10,7 +10,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.time.Duration;
 import java.util.Map;
 import javax.inject.Named;
@@ -25,6 +24,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
+import org.example.age.test.common.service.crypto.TestPseudonymKeyModule;
 import org.example.age.test.common.service.crypto.TestSigningKeyModule;
 import org.example.age.test.common.service.data.TestAvsLocationModule;
 import org.example.age.testing.client.TestClient;
@@ -79,12 +79,10 @@ public final class SiteServiceTest {
         assertThat(certificateStatusCode).isEqualTo(expectedStatusCode);
     }
 
-    private static SiteConfig createSiteConfig(AvsLocation location, PublicKey publicSigningKey) {
+    private static SiteConfig createSiteConfig(AvsLocation location) {
         return SiteConfig.builder()
                 .avsLocation(location)
-                .avsPublicSigningKey(publicSigningKey)
                 .siteId("Site")
-                .pseudonymKey(SecureId.generate())
                 .expiresIn(Duration.ofDays(30))
                 .build();
     }
@@ -97,15 +95,16 @@ public final class SiteServiceTest {
                 DisabledAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
-                TestAvsLocationModule.class,
                 TestSigningKeyModule.class,
+                TestPseudonymKeyModule.class,
+                TestAvsLocationModule.class,
             })
     interface TestModule {
 
         @Provides
         @Singleton
-        static SiteConfig provideSiteConfig(AvsLocation location, @Named("signing") PublicKey publicSigningKey) {
-            return createSiteConfig(location, publicSigningKey);
+        static SiteConfig provideSiteConfig(AvsLocation location) {
+            return createSiteConfig(location);
         }
 
         @Provides
