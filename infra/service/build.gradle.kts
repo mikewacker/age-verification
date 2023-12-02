@@ -12,15 +12,15 @@ dependencies {
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
 
-    implementation(project(":infra-client"))
+    implementation(project(":infra:client"))
     implementation("com.squareup.okhttp3:okhttp")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api")))
-    testImplementation(project(":infra-api"))
-    testImplementation(testFixtures(project(":testing-server")))
+    testImplementation(project(":infra:api"))
+    testImplementation(testFixtures(project(":testing")))
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.undertow:undertow-core")
 }
