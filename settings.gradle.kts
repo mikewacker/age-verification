@@ -27,9 +27,7 @@ include(
         "common-extractor-builtin",
 
         // service
-        "common-data",
-        "common-crypto",
-        "common-store",
+        "common-service",
         "site-service",
         "common",
         "verification-poc",
