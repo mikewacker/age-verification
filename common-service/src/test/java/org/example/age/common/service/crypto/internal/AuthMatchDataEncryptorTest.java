@@ -9,7 +9,7 @@ import dagger.Module;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.service.data.internal.DataMapperModule;
+import org.example.age.common.service.data.internal.ServiceObjectMapperModule;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
@@ -77,7 +77,7 @@ public final class AuthMatchDataEncryptorTest {
     }
 
     /** Dagger module that binds dependencies for {@link AuthMatchDataEncryptor}. */
-    @Module(includes = {AuthMatchDataEncryptorModule.class, DataMapperModule.class})
+    @Module(includes = {AuthMatchDataEncryptorModule.class, ServiceObjectMapperModule.class})
     interface TestModule {}
 
     /** Dagger component that provides a {@link AuthMatchDataEncryptor}. */

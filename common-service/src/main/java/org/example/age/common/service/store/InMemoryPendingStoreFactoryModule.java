@@ -8,7 +8,7 @@ import org.example.age.infra.service.ServiceJsonSerializerModule;
 /**
  * Dagger module that publishes a binding for {@link PendingStoreFactory}, which creates in-memory stores.
  *
- * <p>Depends on an unbound {@link ObjectMapper}.</p>
+ * <p>Depends on an unbound <code>@Named("service") {@link ObjectMapper}</code>.</p>
  */
 @Module(includes = ServiceJsonSerializerModule.class)
 public interface InMemoryPendingStoreFactoryModule {

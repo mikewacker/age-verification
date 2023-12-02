@@ -9,7 +9,7 @@ import org.example.age.infra.service.client.internal.ExchangeClientModule;
 /**
  * Dagger module that publishes a binding for {@link RequestDispatcher}.
  *
- * <p>Depends on an unbound {@link ObjectMapper}.</p>
+ * <p>Depends on an unbound <code>@Named("service") {@link ObjectMapper}</code>.</p>
  */
 @Module(includes = {ExchangeClientModule.class, ServiceJsonSerializerModule.class})
 public interface RequestDispatcherModule {

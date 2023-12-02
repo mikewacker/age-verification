@@ -15,7 +15,6 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.common.service.crypto.PseudonymKeyProvider;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
-import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -211,7 +210,6 @@ public final class VerificationManagerTest {
                 VerificationManagerModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
-                DataMapperModule.class,
             })
     interface TestModule {
 

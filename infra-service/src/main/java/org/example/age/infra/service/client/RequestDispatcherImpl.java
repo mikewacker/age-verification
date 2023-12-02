@@ -3,6 +3,7 @@ package org.example.age.infra.service.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,7 +22,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     private final JsonSerializer serializer;
 
     @Inject
-    public RequestDispatcherImpl(ExchangeClient client, JsonSerializer serializer) {
+    public RequestDispatcherImpl(ExchangeClient client, @Named("service") JsonSerializer serializer) {
         this.client = client;
         this.serializer = serializer;
     }

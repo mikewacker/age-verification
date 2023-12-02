@@ -190,6 +190,7 @@ public final class VerificationManagerTest {
         }
 
         @Provides
+        @Named("service")
         @Singleton
         static ObjectMapper provideObjectMapper() {
             return DataMapper.get();
