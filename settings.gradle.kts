@@ -22,6 +22,7 @@ include(
         "core:verification-poc",
 
         "module:extractor:common:builtin",
+        "module:config:common:test",
 
         "demo",
 )

@@ -1,9 +1,9 @@
-package org.example.age.test.common.service.data;
+package org.example.age.common.service.config.test;
 
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
-import org.example.age.common.service.data.SiteLocation;
+import org.example.age.common.service.config.SiteLocation;
 import org.example.age.testing.server.TestServer;
 
 /**

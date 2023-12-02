@@ -10,7 +10,7 @@ import org.example.age.api.StatusCodeSender;
 import org.example.age.avs.api.endpoint.AvsApi;
 import org.example.age.avs.service.verification.internal.FakeAvsVerificationFactory;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.service.data.SiteLocation;
+import org.example.age.common.service.config.SiteLocation;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;

@@ -1,7 +1,7 @@
-package org.example.age.test.common.service.data;
+package org.example.age.common.service.config.test;
 
-import org.example.age.common.service.data.AvsLocation;
-import org.example.age.common.service.data.SiteLocation;
+import org.example.age.common.service.config.AvsLocation;
+import org.example.age.common.service.config.SiteLocation;
 import org.example.age.testing.server.TestServer;
 
 /** Test {@link AvsLocation}'s and {@link SiteLocation}'s. */
