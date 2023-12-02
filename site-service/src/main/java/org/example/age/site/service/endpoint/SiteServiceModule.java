@@ -4,7 +4,6 @@ import dagger.Binds;
 import dagger.Module;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
-import org.example.age.common.service.data.internal.DataMapperModule;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.site.api.endpoint.SiteApi;
@@ -31,7 +30,6 @@ import org.example.age.site.service.verification.internal.VerificationManagerMod
             SiteApiModule.class,
             VerificationManagerModule.class,
             RequestDispatcherModule.class,
-            DataMapperModule.class,
             SiteConfigurerModule.class,
         })
 public interface SiteServiceModule {

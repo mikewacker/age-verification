@@ -3,6 +3,7 @@ package org.example.age.common.service.crypto.internal;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSerializer;
@@ -16,7 +17,7 @@ final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
     private final JsonSerializer serializer;
 
     @Inject
-    public AuthMatchDataEncryptorImpl(JsonSerializer serializer) {
+    public AuthMatchDataEncryptorImpl(@Named("service") JsonSerializer serializer) {
         this.serializer = serializer;
     }
 

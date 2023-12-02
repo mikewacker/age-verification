@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.JsonSerializer;
 
@@ -17,7 +18,7 @@ final class InMemoryPendingStoreFactory implements PendingStoreFactory {
     private final Map<String, InMemoryPendingStore<?>> stores = new ConcurrentHashMap<>();
 
     @Inject
-    public InMemoryPendingStoreFactory(JsonSerializer serializer) {
+    public InMemoryPendingStoreFactory(@Named("service") JsonSerializer serializer) {
         this.serializer = serializer;
     }
 

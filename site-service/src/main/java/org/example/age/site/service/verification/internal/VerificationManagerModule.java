@@ -9,6 +9,7 @@ import org.example.age.common.service.crypto.PseudonymKeyProvider;
 import org.example.age.common.service.crypto.internal.AgeCertificateVerifierModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizerModule;
+import org.example.age.common.service.data.internal.ServiceObjectMapperModule;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.site.service.store.VerificationStore;
 
@@ -23,14 +24,16 @@ import org.example.age.site.service.store.VerificationStore;
  *     <li><code>{@link PseudonymKeyProvider}</code></li>
  *     <li><code>@Named("siteId") String</code></li>
  *     <li><code>@Named("expiresIn") {@link Duration}</code></li>
- *     <li>{@link ObjectMapper}</li>
  * </ul>
+ *
+ * <p>Also publishes a binding for <code>@Named("service") {@link ObjectMapper}</code>.</p>
  */
 @Module(
         includes = {
             AgeCertificateVerifierModule.class,
             VerifiedUserLocalizerModule.class,
-            AuthMatchDataEncryptorModule.class
+            AuthMatchDataEncryptorModule.class,
+            ServiceObjectMapperModule.class,
         })
 public interface VerificationManagerModule {
 

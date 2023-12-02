@@ -14,6 +14,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
@@ -173,6 +174,7 @@ public final class RequestDispatcherTest {
         HttpHandler bindHandler(TestHandler impl);
 
         @Provides
+        @Named("service")
         @Singleton
         static ObjectMapper provideObjectMapper() {
             return new ObjectMapper();
