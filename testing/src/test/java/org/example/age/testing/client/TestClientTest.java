@@ -34,26 +34,22 @@ public final class TestClientTest {
     @Test
     public void executeApiRequest_StatusCodeResponse_Ok() throws IOException {
         int statusCode = TestClient.apiRequestBuilder()
-                .url(server.url("/api/health-check"))
-                .get()
+                .get(server.url("/api/health-check"))
                 .executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
     public void executeApiRequest_StatusCodeResponse_ErrorCode() throws IOException {
-        int statusCode = TestClient.apiRequestBuilder()
-                .url(server.url("/api/not-found"))
-                .get()
-                .executeWithStatusCodeResponse();
+        int statusCode =
+                TestClient.apiRequestBuilder().get(server.url("/api/not-found")).executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(404);
     }
 
     @Test
     public void executeApiRequest_JsonResponse_Ok() throws IOException {
         HttpOptional<String> maybeGreeting = TestClient.apiRequestBuilder()
-                .url(server.url("/api/greeting"))
-                .get()
+                .get(server.url("/api/greeting"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }
@@ -61,8 +57,7 @@ public final class TestClientTest {
     @Test
     public void executeApiRequest_JsonResponse_ErrorCode() throws IOException {
         HttpOptional<String> maybeGreeting = TestClient.apiRequestBuilder()
-                .url(server.url("/api/not-found"))
-                .get()
+                .get(server.url("/api/not-found"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeGreeting).isEmptyWithErrorCode(404);
     }

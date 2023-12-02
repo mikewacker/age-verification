@@ -28,8 +28,7 @@ public final class AvsApiTest {
     @Test
     public void verify() throws IOException {
         HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/verification-session?site-id=Site"))
-                .post()
+                .post(avsServer.url("/api/verification-session?site-id=Site"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isPresent();
         VerificationSession session = maybeSession.get();
@@ -37,16 +36,14 @@ public final class AvsApiTest {
 
         SecureId requestId = session.verificationRequest().id();
         int linkStatusCode = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(linkStatusCode).isEqualTo(200);
 
         int certificateStatusCode = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/age-certificate"))
+                .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(certificateStatusCode).isEqualTo(200);
     }
@@ -55,16 +52,14 @@ public final class AvsApiTest {
     public void error_MissingAccountId() throws IOException {
         SecureId requestId = SecureId.generate();
         int linkStatusCode = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("User-Agent", "agent"))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(linkStatusCode).isEqualTo(401);
 
         int certificateStatusCode = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/age-certificate"))
+                .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("User-Agent", "agent"))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(certificateStatusCode).isEqualTo(401);
     }
@@ -72,8 +67,7 @@ public final class AvsApiTest {
     @Test
     public void error_MissingSiteId() throws IOException {
         HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/verification-session"))
-                .post()
+                .post(avsServer.url("/api/verification-session"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isEmptyWithErrorCode(400);
     }
@@ -81,9 +75,8 @@ public final class AvsApiTest {
     @Test
     public void error_MissingRequestId() throws IOException {
         int linkStatusCode = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/linked-verification-request"))
+                .post(avsServer.url("/api/linked-verification-request"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(linkStatusCode).isEqualTo(400);
     }
@@ -91,8 +84,7 @@ public final class AvsApiTest {
     @Test
     public void error_BadPath() throws IOException {
         int statusCode = TestClient.apiRequestBuilder()
-                .url(avsServer.url("/api/does-not-exist"))
-                .get()
+                .get(avsServer.url("/api/does-not-exist"))
                 .executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(404);
     }

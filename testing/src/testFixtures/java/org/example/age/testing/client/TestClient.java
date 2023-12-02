@@ -81,44 +81,38 @@ public final class TestClient {
 
         private final JsonApiRequest.Builder requestBuilder = JsonApiRequest.builder(client);
 
-        /** Sets the URL. */
-        public ApiRequestBuilder url(String url) {
-            requestBuilder.url(url);
+        /** Uses a GET request at the specified URL. */
+        public ApiRequestBuilder get(String url) {
+            requestBuilder.get(url);
             return this;
         }
 
-        /** Adds headers. */
+        /** Uses a POST request at the specified URL. */
+        public ApiRequestBuilder post(String url) {
+            requestBuilder.post(url);
+            return this;
+        }
+
+        /** Sets the headers. */
         public ApiRequestBuilder headers(Map<String, String> headers) {
             requestBuilder.headers(headers);
             return this;
         }
 
-        /** Uses a GET request. */
-        public ApiRequestBuilder get() {
-            requestBuilder.get();
-            return this;
-        }
-
-        /** Uses a POST request without a request body. */
-        public ApiRequestBuilder post() {
-            requestBuilder.post();
-            return this;
-        }
-
-        /** Uses a POST request with a request body. */
-        public ApiRequestBuilder post(Object requestValue) {
+        /** Sets the body. */
+        public ApiRequestBuilder body(Object requestValue) {
             byte[] rawRequestValue = serializer.serialize(requestValue);
-            requestBuilder.post(rawRequestValue);
+            requestBuilder.body(rawRequestValue);
             return this;
         }
 
-        /** Executes the request, expecting a response with only a status code. */
+        /** Makes the request synchronously, returning a status code. */
         public int executeWithStatusCodeResponse() throws IOException {
             Response response = requestBuilder.execute();
             return response.code();
         }
 
-        /** Executes the request, expecting a response with a JSON body. */
+        /** Makes the request synchronously, returning a value or an error code. */
         public <V> HttpOptional<V> executeWithJsonResponse(TypeReference<V> responseValueTypeRef) throws IOException {
             Response response = requestBuilder.execute();
             if (!response.isSuccessful()) {

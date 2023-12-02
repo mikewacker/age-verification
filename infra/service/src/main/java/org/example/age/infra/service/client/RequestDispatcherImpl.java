@@ -46,27 +46,21 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         }
 
         @Override
-        public RequestBuilder<S> url(String url) {
-            requestBuilder.url(url);
+        public RequestBuilder<S> get(String url) {
+            requestBuilder.get(url);
             return this;
         }
 
         @Override
-        public RequestBuilder<S> get() {
-            requestBuilder.get();
+        public RequestBuilder<S> post(String url) {
+            requestBuilder.post(url);
             return this;
         }
 
         @Override
-        public RequestBuilder<S> post() {
-            requestBuilder.post();
-            return this;
-        }
-
-        @Override
-        public RequestBuilder<S> post(Object requestValue) {
+        public RequestBuilder<S> body(Object requestValue) {
             byte[] rawRequestValue = serializer.serialize(requestValue);
-            requestBuilder.post(rawRequestValue);
+            requestBuilder.body(rawRequestValue);
             return this;
         }
 

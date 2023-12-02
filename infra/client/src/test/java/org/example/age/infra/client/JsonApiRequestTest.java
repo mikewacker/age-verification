@@ -1,6 +1,7 @@
 package org.example.age.infra.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -47,31 +48,34 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_Get() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response =
-                JsonApiRequest.builder(client).url(mockServerUrl).get().execute();
+        Response response = JsonApiRequest.builder(client).get(mockServerUrl).execute();
         assertThat(response.isSuccessful()).isTrue();
+
         RecordedRequest recordedRequest = mockServer.takeRequest();
-        assertThat(recordedRequest.getPath()).isEqualTo("/");
         assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+        assertThat(recordedRequest.getPath()).isEqualTo("/");
     }
 
     @Test
     public void execute_GetWithHeader() throws Exception {
         mockServer.enqueue(new MockResponse());
-        JsonApiRequest.builder(client)
-                .url(mockServerUrl)
+        Response response = JsonApiRequest.builder(client)
+                .get(mockServerUrl)
                 .headers(Map.of("User-Agent", "agent"))
-                .get()
                 .execute();
+        assertThat(response.isSuccessful()).isTrue();
+
         RecordedRequest recordedRequest = mockServer.takeRequest();
-        assertThat(recordedRequest.getHeader("User-Agent")).isEqualTo("agent");
         assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+        assertThat(recordedRequest.getHeader("User-Agent")).isEqualTo("agent");
     }
 
     @Test
-    public void execute_PostWithoutBody() throws Exception {
+    public void execute_Post() throws Exception {
         mockServer.enqueue(new MockResponse());
-        JsonApiRequest.builder(client).url(mockServerUrl).post().execute();
+        Response response = JsonApiRequest.builder(client).post(mockServerUrl).execute();
+        assertThat(response.isSuccessful()).isTrue();
+
         RecordedRequest recordedRequest = mockServer.takeRequest();
         assertThat(recordedRequest.getMethod()).isEqualTo("POST");
     }
@@ -79,13 +83,15 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_PostWithBody() throws Exception {
         mockServer.enqueue(new MockResponse());
-        JsonApiRequest.builder(client)
-                .url(mockServerUrl)
-                .post("\"test\"".getBytes(StandardCharsets.UTF_8))
+        Response response = JsonApiRequest.builder(client)
+                .post(mockServerUrl)
+                .body("\"test\"".getBytes(StandardCharsets.UTF_8))
                 .execute();
+        assertThat(response.isSuccessful()).isTrue();
+
         RecordedRequest recordedRequest = mockServer.takeRequest();
-        assertThat(recordedRequest.getHeader("Content-Type")).isEqualTo("application/json");
         assertThat(recordedRequest.getMethod()).isEqualTo("POST");
+        assertThat(recordedRequest.getHeader("Content-Type")).isEqualTo("application/json");
         assertThat(recordedRequest.getBody().readString(StandardCharsets.UTF_8)).isEqualTo("\"test\"");
     }
 
@@ -108,8 +114,25 @@ public final class JsonApiRequestTest {
         };
 
         mockServer.enqueue(new MockResponse());
-        JsonApiRequest.builder(client).url(mockServerUrl).get().enqueue(callback);
+        JsonApiRequest.builder(client).get(mockServerUrl).enqueue(callback);
         assertThat(requestCompleted.await(10, TimeUnit.MILLISECONDS)).isTrue();
         assertThat(requestSucceeded).isTrue();
+    }
+
+    @Test
+    public void error_MethodAndUrlNotSet() {
+        JsonApiRequest.Builder requestBuilder = JsonApiRequest.builder(client);
+        assertThatThrownBy(requestBuilder::execute)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("method and URL are not set");
+    }
+
+    @Test
+    public void error_BodySetForGetRequest() {
+        JsonApiRequest.Builder requestBuilder =
+                JsonApiRequest.builder(client).get(mockServerUrl).body("\"test\"".getBytes(StandardCharsets.UTF_8));
+        assertThatThrownBy(requestBuilder::execute)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("body is set for GET request");
     }
 }

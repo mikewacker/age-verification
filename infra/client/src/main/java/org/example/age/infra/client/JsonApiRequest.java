@@ -39,49 +39,80 @@ public final class JsonApiRequest {
         private static final RequestBody EMPTY_BODY = RequestBody.create(new byte[0]);
 
         private final OkHttpClient client;
-        private final Request.Builder requestBuilder = new Request.Builder();
 
-        /** Sets the URL. */
-        public Builder url(String url) {
-            requestBuilder.url(url);
+        private String method = null;
+        private String url = null;
+        private Map<String, String> headers = Map.of();
+        private RequestBody body = EMPTY_BODY;
+
+        /** Uses a GET request at the specified URL. */
+        public Builder get(String url) {
+            method = "GET";
+            this.url = url;
             return this;
         }
 
-        /** Adds headers. */
+        /** Uses a POST request at the specified URL. */
+        public Builder post(String url) {
+            method = "POST";
+            this.url = url;
+            return this;
+        }
+
+        /** Sets the headers. */
         public Builder headers(Map<String, String> headers) {
-            headers.forEach((name, value) -> requestBuilder.header(name, value));
+            this.headers = headers;
             return this;
         }
 
-        /** Uses a GET request. */
-        public Builder get() {
-            requestBuilder.get();
+        /** Sets the JSON body. */
+        public Builder body(byte[] json) {
+            body = RequestBody.create(json, JSON_CONTENT_TYPE);
             return this;
         }
 
-        /** Uses a POST request without a body. */
-        public Builder post() {
-            requestBuilder.post(EMPTY_BODY);
-            return this;
-        }
-
-        /** Uses a POST request with a body. */
-        public Builder post(byte[] json) {
-            RequestBody body = RequestBody.create(json, JSON_CONTENT_TYPE);
-            requestBuilder.post(body);
-            return this;
-        }
-
-        /** Issues the request synchronously, returning the response. */
+        /** Makes the request synchronously, returning the response. */
         public Response execute() throws IOException {
-            Request request = requestBuilder.build();
+            Request request = build();
             return client.newCall(request).execute();
         }
 
-        /** Issues the request asynchronously, using a callback. */
+        /** Makes the request asynchronously, using a callback. */
         public void enqueue(Callback callback) {
-            Request request = requestBuilder.build();
+            Request request = build();
             client.newCall(request).enqueue(callback);
+        }
+
+        /** Builds the request. */
+        private Request build() {
+            checkMethodAndUrlSet();
+            checkBodyNotSetForGetRequest();
+            Request.Builder requestBuilder = new Request.Builder().url(url);
+            headers.forEach((name, value) -> requestBuilder.header(name, value));
+            if (method.equals("GET")) {
+                requestBuilder.get();
+            } else {
+                requestBuilder.method(method, body);
+            }
+            return requestBuilder.build();
+        }
+
+        /** Checks that the method and URL have been set. */
+        private void checkMethodAndUrlSet() {
+            if (method == null) {
+                throw new IllegalStateException("method and URL are not set");
+            }
+        }
+
+        /** Checks that a GET request does not have a body. */
+        private void checkBodyNotSetForGetRequest() {
+            if (!method.equals("GET")) {
+                return;
+            }
+
+            if (body != EMPTY_BODY) {
+                throw new IllegalStateException("body is set for GET request");
+            }
         }
 
         private Builder(OkHttpClient client) {

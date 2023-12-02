@@ -17,17 +17,14 @@ public interface RequestDispatcher {
     /** Builder for a request to the backend server. */
     interface RequestBuilder<S extends Sender> {
 
-        /** Sets the URL. */
-        RequestBuilder<S> url(String url);
+        /** Uses a GET request at the specified URL. */
+        RequestBuilder<S> get(String url);
 
-        /** Uses a GET request. */
-        RequestBuilder<S> get();
+        /** Uses a POST request at the specified URL. */
+        RequestBuilder<S> post(String url);
 
-        /** Uses a POST request without a request body. */
-        RequestBuilder<S> post();
-
-        /** Uses a POST request with a request body. */
-        RequestBuilder<S> post(Object requestValue);
+        /** Sets the body. */
+        RequestBuilder<S> body(Object requestValue);
 
         /** Dispatches the request, expecting a response with only a status code. */
         void dispatchWithStatusCodeResponse(ResponseStatusCodeCallback<S> callback);

@@ -46,7 +46,7 @@ public final class ExchangeJsonSenderTest {
     }
 
     private static HttpOptional<String> executeRequest(String path) throws IOException {
-        return TestClient.apiRequestBuilder().url(server.url(path)).executeWithJsonResponse(new TypeReference<>() {});
+        return TestClient.apiRequestBuilder().get(server.url(path)).executeWithJsonResponse(new TypeReference<>() {});
     }
 
     /** Test {@link HttpHandler} that uses an {@link ExchangeJsonSender}. */

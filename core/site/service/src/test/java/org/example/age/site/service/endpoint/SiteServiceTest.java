@@ -56,25 +56,22 @@ public final class SiteServiceTest {
 
     private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
         HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
-                .url(siteServer.url("/api/verification-session"))
+                .post(siteServer.url("/api/verification-session"))
                 .headers(Map.of("Account-Id", siteAccountId))
-                .post()
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isPresent();
         VerificationSession session = maybeSession.get();
 
         SecureId requestId = session.verificationRequest().id();
         int linkStatusCode = TestClient.apiRequestBuilder()
-                .url(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .post(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", avsAccountId))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(linkStatusCode).isEqualTo(200);
 
         int certificateStatusCode = TestClient.apiRequestBuilder()
-                .url(fakeAvsServer.url("/api/age-certificate"))
+                .post(fakeAvsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", avsAccountId))
-                .post()
                 .executeWithStatusCodeResponse();
         assertThat(certificateStatusCode).isEqualTo(expectedStatusCode);
     }

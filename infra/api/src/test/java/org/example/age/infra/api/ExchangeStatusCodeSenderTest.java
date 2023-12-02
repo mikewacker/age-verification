@@ -36,7 +36,7 @@ public final class ExchangeStatusCodeSenderTest {
     }
 
     private static int executeRequest(String path) throws IOException {
-        return TestClient.apiRequestBuilder().url(server.url(path)).get().executeWithStatusCodeResponse();
+        return TestClient.apiRequestBuilder().get(server.url(path)).executeWithStatusCodeResponse();
     }
 
     /** Test {@link HttpHandler} that uses an {@link ExchangeStatusCodeSender}. */
