@@ -1,7 +1,7 @@
 rootProject.name = "age-verification"
 
 include(
-        // generic modules
+        /* generic modules */
         "api-types",
 
         "infra:api",
@@ -11,28 +11,31 @@ include(
 
         "testing",
 
-        // product modules
+        /* product modules */
+
+        // data
         "core:data",
 
+        // api
         "core:common:api-types",
-        "core:common:api",
-        "core:common:service-types",
-        "core:common:service",
-
         "core:avs:api",
-
         "core:site:api",
-        "core:site:service",
-
-        "core:legacy",
-        "core:verification-poc",
 
         "module:extractor:common:builtin",
+
+        // service
+        "core:common:service-types",
+        "core:common:service",
+        "core:site:service",
+        "core:legacy",
 
         "module:key:common:test",
 
         "module:config:common:test",
         "module:config:site:test",
+
+        // other
+        "core:verification-poc",
 
         "demo",
 )

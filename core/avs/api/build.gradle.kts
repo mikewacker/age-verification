@@ -15,8 +15,7 @@ dependencies {
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
 
-    api(project(":core:common:api"))
-    api(project(":infra:api"))
+    implementation(project(":infra:api"))
     implementation("com.fasterxml.jackson.core:jackson-core")
 
     // test fixtures
