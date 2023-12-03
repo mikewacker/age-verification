@@ -7,7 +7,7 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":api"))
+    api(project(":api-types"))
     api("com.fasterxml.jackson.core:jackson-core")
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
@@ -16,6 +16,6 @@ dependencies {
     api("org.jboss.xnio:xnio-api")
 
     // test
-    testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":api-types")))
     testImplementation(testFixtures(project(":testing")))
 }

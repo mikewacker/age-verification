@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
-    api(project(":api"))
+    api(project(":api-types"))
     api(project(":core:common:api-types"))
     api(project(":core:common:service"))
     api(project(":core:site:api"))
@@ -35,6 +35,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":api-types")))
     testImplementation(testFixtures(project(":testing")))
 }

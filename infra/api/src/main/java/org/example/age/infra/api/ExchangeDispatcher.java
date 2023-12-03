@@ -4,8 +4,8 @@ import io.undertow.server.Connectors;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.SameThreadExecutor;
 import java.util.concurrent.ExecutorService;
+import org.example.age.api.ApiHandler;
 import org.example.age.api.Dispatcher;
-import org.example.age.api.LiteHttpHandler;
 import org.example.age.api.Sender;
 import org.xnio.XnioExecutor;
 
@@ -35,7 +35,7 @@ public final class ExchangeDispatcher implements Dispatcher {
     }
 
     @Override
-    public <S extends Sender> void dispatch(S sender, LiteHttpHandler<S> handler) {
+    public <S extends Sender> void dispatch(S sender, ApiHandler<S> handler) {
         exchange.dispatch(ex -> handler.handleRequest(sender, this));
     }
 
@@ -45,7 +45,7 @@ public final class ExchangeDispatcher implements Dispatcher {
     }
 
     @Override
-    public <S extends Sender> void executeHandler(S sender, LiteHttpHandler<S> handler) {
+    public <S extends Sender> void executeHandler(S sender, ApiHandler<S> handler) {
         Connectors.executeRootHandler(ex -> handler.handleRequest(sender, this), exchange);
     }
 

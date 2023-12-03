@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     // test fixtures
-    testFixturesApi(project(":api"))
+    testFixturesApi(project(":api-types"))
     testFixturesApi("com.fasterxml.jackson.core:jackson-core")
     testFixturesApi("com.squareup.okhttp3:mockwebserver")
     testFixturesApi("io.undertow:undertow-core")
@@ -17,5 +17,5 @@ dependencies {
     testFixturesImplementation("com.squareup.okhttp3:okhttp")
 
     // test
-    testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":api-types")))
 }

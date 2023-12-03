@@ -16,7 +16,7 @@ dependencies {
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
 
-    implementation(project(":api"))
+    implementation(project(":api-types"))
     api("io.undertow:undertow-core")
 
     // test fixtures
@@ -26,13 +26,13 @@ dependencies {
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
 
-    implementation(project(":api"))
+    implementation(project(":api-types"))
     api("io.undertow:undertow-core")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":api-types")))
     testImplementation("io.undertow:undertow-core")
     testImplementation("org.mockito:mockito-core")
 }
