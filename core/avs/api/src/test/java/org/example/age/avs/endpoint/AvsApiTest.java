@@ -23,7 +23,7 @@ public final class AvsApiTest {
 
     @RegisterExtension
     private static final TestUndertowServer avsServer =
-            TestUndertowServer.fromHandlerAtPath(TestComponent::createHandler, "/api/");
+            TestUndertowServer.fromHandlerAtPath(TestComponent::createApiHandler, "/api/");
 
     @Test
     public void verify() throws IOException {
@@ -94,12 +94,12 @@ public final class AvsApiTest {
     @Singleton
     interface TestComponent {
 
-        static HttpHandler createHandler() {
+        static HttpHandler createApiHandler() {
             TestComponent component = DaggerAvsApiTest_TestComponent.create();
-            return component.handler();
+            return component.apiHandler();
         }
 
         @Named("api")
-        HttpHandler handler();
+        HttpHandler apiHandler();
     }
 }

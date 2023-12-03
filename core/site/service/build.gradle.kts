@@ -10,7 +10,7 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api"))
-    api(project(":core:common:api"))
+    api(project(":core:common:api-types"))
     api(project(":core:common:service"))
     api(project(":core:site:api"))
     api(project(":core:data"))
