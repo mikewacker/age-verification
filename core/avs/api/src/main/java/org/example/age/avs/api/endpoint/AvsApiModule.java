@@ -4,10 +4,9 @@ import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
-import org.example.age.common.api.data.internal.ApiObjectMapperModule;
+import org.example.age.avs.api.data.internal.AvsApiJsonSerializerModule;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
-import org.example.age.infra.api.ApiJsonSerializerModule;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.
@@ -19,7 +18,7 @@ import org.example.age.infra.api.ApiJsonSerializerModule;
  *     <li>{@link AuthMatchDataExtractor}</li>
  * </ul>
  */
-@Module(includes = {ApiJsonSerializerModule.class, ApiObjectMapperModule.class})
+@Module(includes = AvsApiJsonSerializerModule.class)
 public interface AvsApiModule {
 
     @Binds
