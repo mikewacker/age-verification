@@ -20,13 +20,12 @@ import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtract
 import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
 import org.example.age.common.service.config.AvsLocation;
 import org.example.age.common.service.config.test.TestAvsLocationModule;
+import org.example.age.common.service.key.test.TestKeyModule;
 import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
-import org.example.age.test.common.service.crypto.TestPseudonymKeyModule;
-import org.example.age.test.common.service.crypto.TestSigningKeyModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.TestUndertowServer;
@@ -92,8 +91,7 @@ public final class SiteServiceTest {
                 DisabledAuthMatchDataExtractorModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
-                TestSigningKeyModule.class,
-                TestPseudonymKeyModule.class,
+                TestKeyModule.class,
                 TestAvsLocationModule.class,
             })
     interface TestModule {

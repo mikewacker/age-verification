@@ -1,7 +1,6 @@
 plugins {
     id("org.example.age.java-conventions")
     `java-library`
-    `java-test-fixtures`
 }
 
 dependencies {
@@ -19,14 +18,10 @@ dependencies {
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
 
-    // test fixtures
-    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
-
-    testFixturesApi(testFixtures(project(":testing")))
-
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
     testAnnotationProcessor("org.immutables:value")
 
     testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":module:key:common:test")))
 }

@@ -1,4 +1,4 @@
-package org.example.age.common.service.crypto;
+package org.example.age.common.service.key;
 
 import org.example.age.data.crypto.SecureId;
 
