@@ -9,8 +9,8 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
+    api(project(":api-types"))
     api(project(":core:common:api-types"))
-    api(project(":core:data"))
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")

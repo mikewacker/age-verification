@@ -1,13 +1,12 @@
 package org.example.age.data.certificate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.DigitalSignature;
-import org.example.age.data.utils.DataMapper;
-import org.example.age.data.utils.DataStyle;
+import org.example.age.data.mapper.DataMapper;
 import org.immutables.value.Value;
 
 /**
@@ -16,8 +15,7 @@ import org.immutables.value.Value;
  * <p>Only {@code Ed25519} keys are supported.</p>
  */
 @Value.Immutable
-@DataStyle
-@JsonSerialize(as = ImmutableSignedAgeCertificate.class)
+@ApiStyle
 @JsonDeserialize(as = ImmutableSignedAgeCertificate.class)
 public interface SignedAgeCertificate {
 
@@ -52,7 +50,7 @@ public interface SignedAgeCertificate {
     private static byte[] serialize(AgeCertificate certificate) {
         try {
             return DataMapper.get().writeValueAsBytes(certificate);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             throw new RuntimeException("serialization failed", e);
         }
     }

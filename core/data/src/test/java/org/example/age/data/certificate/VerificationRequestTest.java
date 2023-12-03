@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.data.utils.DataMapper;
+import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {

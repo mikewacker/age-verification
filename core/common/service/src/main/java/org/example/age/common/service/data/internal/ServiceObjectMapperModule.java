@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.data.utils.DataMapper;
+import org.example.age.data.mapper.DataMapper;
 
 /** Dagger module that publishes a binding for <code>@Named("service") {@link ObjectMapper}</code>. */
 @Module
