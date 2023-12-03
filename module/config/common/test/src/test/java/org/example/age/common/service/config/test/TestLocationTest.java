@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public class TestLocationTest {
+public final class TestLocationTest {
 
     @RegisterExtension
     private static final MockServer avsServer = MockServer.create();
