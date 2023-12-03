@@ -48,7 +48,8 @@ public final class TestSiteConfigTest {
     interface TestComponent {
 
         static Provider<SiteConfig> createSiteConfigProvider() {
-            TestComponent component = DaggerTestSiteConfigTest_TestComponent.factory().create(avsServer);
+            TestComponent component =
+                    DaggerTestSiteConfigTest_TestComponent.factory().create(avsServer);
             return component.siteConfigProvider();
         }
 
