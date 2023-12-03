@@ -29,7 +29,7 @@ public final class SiteApiTest {
 
     @RegisterExtension
     private static final TestUndertowServer siteServer =
-            TestUndertowServer.fromHandlerAtPath(TestComponent::createHandler, "/api/");
+            TestUndertowServer.fromHandlerAtPath(TestComponent::createApiHandler, "/api/");
 
     @Test
     public void verify() throws IOException {
@@ -86,12 +86,12 @@ public final class SiteApiTest {
     @Singleton
     interface TestComponent {
 
-        static HttpHandler createHandler() {
+        static HttpHandler createApiHandler() {
             TestComponent component = DaggerSiteApiTest_TestComponent.create();
-            return component.handler();
+            return component.apiHandler();
         }
 
         @Named("api")
-        HttpHandler handler();
+        HttpHandler apiHandler();
     }
 }
