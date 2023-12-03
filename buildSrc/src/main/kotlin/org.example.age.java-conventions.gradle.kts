@@ -32,9 +32,7 @@ spotless {
 }
 
 tasks.withType<JavaCompile> {
-    // For -Xlint:classfile, see https://github.com/gradle/gradle/issues/27132
-    // For -Xlint:cast, see https://github.com/immutables/immutables/issues/1491
-    options.compilerArgs.addAll(listOf("-Xlint:all,-cast,-classfile,-processing,-serial", "-Werror"))
+    options.compilerArgs.addAll(listOf("-Xlint:all,-processing,-serial", "-Werror"))
     options.errorprone.disableWarningsInGeneratedCode.set(true)
 }
 
