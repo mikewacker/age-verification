@@ -2,16 +2,14 @@ package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
+import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** Request to verify an account on a social media site. */
 @Value.Immutable
-@DataStyle
-@JsonSerialize(as = ImmutableVerificationRequest.class)
+@ApiStyle
 @JsonDeserialize(as = ImmutableVerificationRequest.class)
 public interface VerificationRequest {
 

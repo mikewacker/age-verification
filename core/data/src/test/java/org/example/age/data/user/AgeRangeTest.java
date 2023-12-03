@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
 import java.io.IOException;
-import org.example.age.data.utils.DataMapper;
+import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {

@@ -12,8 +12,8 @@ import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
+import org.example.age.data.mapper.DataMapper;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.data.utils.DataMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

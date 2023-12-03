@@ -1,15 +1,13 @@
 package org.example.age.common.api.extractor.builtin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.example.age.api.ApiStyle;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** {@link AuthMatchData} that matches the {@code User-Agent} header. */
 @Value.Immutable
-@DataStyle
-@JsonSerialize(as = ImmutableUserAgentAuthMatchData.class)
+@ApiStyle
 @JsonDeserialize(as = ImmutableUserAgentAuthMatchData.class)
 public interface UserAgentAuthMatchData extends AuthMatchData {
 

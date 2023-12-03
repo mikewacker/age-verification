@@ -1,15 +1,13 @@
 package org.example.age.common.api.extractor.builtin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.example.age.api.ApiStyle;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.data.utils.DataStyle;
 import org.immutables.value.Value;
 
 /** {@link AuthMatchData} that always returns a successful match. */
 @Value.Immutable
-@DataStyle
-@JsonSerialize(as = ImmutableDisabledAuthMatchData.class)
+@ApiStyle
 @JsonDeserialize(as = ImmutableDisabledAuthMatchData.class)
 public interface DisabledAuthMatchData extends AuthMatchData {
 

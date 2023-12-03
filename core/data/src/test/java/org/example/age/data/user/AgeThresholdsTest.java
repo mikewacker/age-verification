@@ -8,7 +8,7 @@ import com.google.common.testing.EqualsTester;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.age.data.utils.DataMapper;
+import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class AgeThresholdsTest {
