@@ -16,6 +16,7 @@ include(
 
         "core:common:api-types",
         "core:common:api",
+        "core:common:service-types",
         "core:common:service",
 
         "core:avs:api",

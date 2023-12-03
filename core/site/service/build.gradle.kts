@@ -12,6 +12,7 @@ dependencies {
     api(project(":api-types"))
     api(project(":core:common:api-types"))
     api(project(":core:common:service"))
+    api(project(":core:common:service-types"))
     api(project(":core:site:api"))
     api(project(":core:data"))
     api(project(":infra:service"))
