@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":api"))
+    api(project(":api-types"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("io.undertow:undertow-core")
 }

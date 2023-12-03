@@ -9,8 +9,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import org.example.age.api.ApiHandler;
 import org.example.age.api.Dispatcher;
-import org.example.age.api.LiteHttpHandler;
 import org.example.age.api.Sender;
 import org.xnio.XnioExecutor;
 
@@ -49,13 +49,13 @@ public final class StubDispatcher implements Dispatcher {
     }
 
     @Override
-    public <S extends Sender> void dispatch(S sender, LiteHttpHandler<S> handler) {}
+    public <S extends Sender> void dispatch(S sender, ApiHandler<S> handler) {}
 
     @Override
     public void dispatched() {}
 
     @Override
-    public <S extends Sender> void executeHandler(S sender, LiteHttpHandler<S> handler) {}
+    public <S extends Sender> void executeHandler(S sender, ApiHandler<S> handler) {}
 
     /** Creates a stub {@link Dispatcher}. */
     private static Dispatcher create() {
