@@ -6,7 +6,7 @@ import dagger.Module;
 import org.example.age.common.service.crypto.internal.AgeCertificateSignerModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.data.internal.ServiceObjectMapperModule;
-import org.example.age.test.common.service.crypto.TestSigningKeyModule;
+import org.example.age.common.service.key.test.TestKeyModule;
 
 /**
  * Dagger module that publishes a binding for {@link FakeAvsVerificationFactory}.
@@ -17,7 +17,7 @@ import org.example.age.test.common.service.crypto.TestSigningKeyModule;
         includes = {
             AgeCertificateSignerModule.class,
             AuthMatchDataEncryptorModule.class,
-            TestSigningKeyModule.class,
+            TestKeyModule.class,
             ServiceObjectMapperModule.class,
         })
 public interface FakeAvsVerificationFactoryModule {

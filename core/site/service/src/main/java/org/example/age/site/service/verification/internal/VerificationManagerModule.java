@@ -5,11 +5,11 @@ import dagger.Binds;
 import dagger.Module;
 import java.security.PublicKey;
 import java.time.Duration;
-import org.example.age.common.service.crypto.PseudonymKeyProvider;
 import org.example.age.common.service.crypto.internal.AgeCertificateVerifierModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizerModule;
 import org.example.age.common.service.data.internal.ServiceObjectMapperModule;
+import org.example.age.common.service.key.PseudonymKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.site.service.store.VerificationStore;
 

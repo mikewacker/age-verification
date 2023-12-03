@@ -10,15 +10,15 @@ import org.example.age.data.certificate.SignedAgeCertificate;
 @Singleton
 final class AgeCertificateVerifierImpl implements AgeCertificateVerifier {
 
-    private final Provider<PublicKey> publicKeyProvider;
+    private final Provider<PublicKey> publicSigningKeyProvider;
 
     @Inject
-    public AgeCertificateVerifierImpl(@Named("signing") Provider<PublicKey> publicKeyProvider) {
-        this.publicKeyProvider = publicKeyProvider;
+    public AgeCertificateVerifierImpl(@Named("signing") Provider<PublicKey> publicSigningKeyProvider) {
+        this.publicSigningKeyProvider = publicSigningKeyProvider;
     }
 
     @Override
     public boolean verify(SignedAgeCertificate signedCertificate) {
-        return signedCertificate.verify(publicKeyProvider.get());
+        return signedCertificate.verify(publicSigningKeyProvider.get());
     }
 }

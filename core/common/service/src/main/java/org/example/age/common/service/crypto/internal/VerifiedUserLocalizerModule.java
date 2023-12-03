@@ -2,7 +2,7 @@ package org.example.age.common.service.crypto.internal;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.service.crypto.PseudonymKeyProvider;
+import org.example.age.common.service.key.PseudonymKeyProvider;
 
 /**
  * Dagger module that publishes a binding for {@link VerifiedUserLocalizer}.

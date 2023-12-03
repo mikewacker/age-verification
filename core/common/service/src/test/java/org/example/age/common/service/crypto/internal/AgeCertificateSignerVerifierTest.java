@@ -6,6 +6,7 @@ import dagger.Component;
 import dagger.Module;
 import java.time.Duration;
 import javax.inject.Singleton;
+import org.example.age.common.service.key.test.TestKeyModule;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -14,7 +15,6 @@ import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.test.common.service.crypto.TestSigningKeyModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +54,7 @@ public final class AgeCertificateSignerVerifierTest {
     }
 
     /** Dagger module that binds dependencies for {@link AgeCertificateSigner}. */
-    @Module(includes = {AgeCertificateSignerModule.class, TestSigningKeyModule.class})
+    @Module(includes = {AgeCertificateSignerModule.class, TestKeyModule.class})
     interface TestSignerModule {}
 
     /** Dagger component that provides an {@link AgeCertificateSigner}. */
@@ -71,7 +71,7 @@ public final class AgeCertificateSignerVerifierTest {
     }
 
     /** Dagger module that binds dependencies for {@link AgeCertificateVerifier}. */
-    @Module(includes = {AgeCertificateVerifierModule.class, TestSigningKeyModule.class})
+    @Module(includes = {AgeCertificateVerifierModule.class, TestKeyModule.class})
     interface TestVerifierModule {}
 
     /** Dagger module that provides an {@link AgeCertificateVerifier}. */

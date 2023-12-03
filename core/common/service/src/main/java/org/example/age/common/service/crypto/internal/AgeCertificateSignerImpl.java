@@ -11,15 +11,15 @@ import org.example.age.data.certificate.SignedAgeCertificate;
 @Singleton
 final class AgeCertificateSignerImpl implements AgeCertificateSigner {
 
-    private final Provider<PrivateKey> privateKeyProvider;
+    private final Provider<PrivateKey> privateSigningKeyProvider;
 
     @Inject
-    public AgeCertificateSignerImpl(@Named("signing") Provider<PrivateKey> privateKeyProvider) {
-        this.privateKeyProvider = privateKeyProvider;
+    public AgeCertificateSignerImpl(@Named("signing") Provider<PrivateKey> privateSigningKeyProvider) {
+        this.privateSigningKeyProvider = privateSigningKeyProvider;
     }
 
     @Override
     public SignedAgeCertificate sign(AgeCertificate certificate) {
-        return SignedAgeCertificate.sign(certificate, privateKeyProvider.get());
+        return SignedAgeCertificate.sign(certificate, privateSigningKeyProvider.get());
     }
 }
