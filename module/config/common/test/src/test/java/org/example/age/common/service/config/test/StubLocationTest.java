@@ -11,7 +11,7 @@ import org.example.age.data.crypto.SecureId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class StubLocationTest {
+public final class StubLocationTest {
 
     private static Provider<AvsLocation> avsLocationProvider;
     private static Provider<SiteLocation> siteLocationProvider;

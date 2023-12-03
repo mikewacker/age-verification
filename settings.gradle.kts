@@ -23,6 +23,7 @@ include(
 
         "module:extractor:common:builtin",
         "module:config:common:test",
+        "module:config:site:test",
 
         "demo",
 )
