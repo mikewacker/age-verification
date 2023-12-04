@@ -16,19 +16,19 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.service.client.RequestDispatcher;
 import org.example.age.infra.service.client.ResponseJsonCallback;
 import org.example.age.site.api.endpoint.SiteApi;
-import org.example.age.site.service.verification.internal.VerificationManager;
+import org.example.age.site.service.verification.internal.SiteVerificationManager;
 
 @Singleton
 final class SiteService implements SiteApi {
 
-    private final VerificationManager verificationManager;
+    private final SiteVerificationManager verificationManager;
     private final RequestDispatcher requestDispatcher;
     private final Provider<AvsLocation> avsLocationProvider;
     private final Provider<String> siteIdProvider;
 
     @Inject
     public SiteService(
-            VerificationManager verificationManager,
+            SiteVerificationManager verificationManager,
             RequestDispatcher requestDispatcher,
             @Named("bridged") Provider<AvsLocation> avsLocationProvider,
             @Named("siteId") Provider<String> siteIdProvider) {
@@ -62,7 +62,7 @@ final class SiteService implements SiteApi {
      * to get a {@link VerificationSession} from the age verification service.
      */
     private record VerificationSessionCallback(
-            VerificationManager verificationManager, String accountId, AuthMatchData authData)
+            SiteVerificationManager verificationManager, String accountId, AuthMatchData authData)
             implements ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> {
 
         @Override

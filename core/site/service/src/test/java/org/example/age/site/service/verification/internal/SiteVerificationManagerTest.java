@@ -35,9 +35,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class VerificationManagerTest {
+public final class SiteVerificationManagerTest {
 
-    private VerificationManager verificationManager;
+    private SiteVerificationManager verificationManager;
 
     private VerificationStore verificationStore;
 
@@ -46,9 +46,9 @@ public final class VerificationManagerTest {
     private static SecureId pseudonymKey;
 
     @BeforeEach
-    public void createVerificationManagerEtAl() {
+    public void createSiteVerificationManagerEtAl() {
         TestComponent component = TestComponent.create();
-        verificationManager = component.verificationManager();
+        verificationManager = component.siteVerificationManager();
         verificationStore = component.verificationStore();
         authDataEncryptor = component.authMatchDataEncryptor();
     }
@@ -204,10 +204,10 @@ public final class VerificationManagerTest {
         return SignedAgeCertificate.sign(certificate, avsSigningKeyPair.getPrivate());
     }
 
-    /** Dagger module that binds dependencies for {@link VerificationManager}. */
+    /** Dagger module that binds dependencies for {@link SiteVerificationManager}. */
     @Module(
             includes = {
-                VerificationManagerModule.class,
+                SiteVerificationManagerModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
             })
@@ -242,7 +242,7 @@ public final class VerificationManagerTest {
     }
 
     /**
-     * Dagger component that provides a {@link VerificationManager},
+     * Dagger component that provides a {@link SiteVerificationManager},
      * and also a {@link VerificationStore} and an {@link AuthMatchDataEncryptor}.
      */
     @Component(modules = TestModule.class)
@@ -250,10 +250,10 @@ public final class VerificationManagerTest {
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerVerificationManagerTest_TestComponent.create();
+            return DaggerSiteVerificationManagerTest_TestComponent.create();
         }
 
-        VerificationManager verificationManager();
+        SiteVerificationManager siteVerificationManager();
 
         VerificationStore verificationStore();
 
