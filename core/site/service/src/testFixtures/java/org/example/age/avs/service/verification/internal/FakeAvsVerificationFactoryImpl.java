@@ -33,15 +33,26 @@ final class FakeAvsVerificationFactoryImpl implements FakeAvsVerificationFactory
 
     @Override
     public VerificationSession createVerificationSession(String siteId) {
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, Duration.ofMinutes(5));
+        return createVerificationSession(siteId, Duration.ofMinutes(5));
+    }
+
+    @Override
+    public VerificationSession createVerificationSession(String siteId, Duration expiresIn) {
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn);
         return VerificationSession.create(request);
     }
 
     @Override
     public SignedAgeCertificate createSignedAgeCertificate(
             String accountId, AuthMatchData authData, VerificationSession session) {
-        VerifiedUser user = loadVerifiedUser(accountId);
         AesGcmEncryptionPackage authToken = authDataEncryptor.encrypt(authData, session.authKey());
+        return createSignedAgeCertificate(accountId, authToken, session);
+    }
+
+    @Override
+    public SignedAgeCertificate createSignedAgeCertificate(
+            String accountId, AesGcmEncryptionPackage authToken, VerificationSession session) {
+        VerifiedUser user = loadVerifiedUser(accountId);
         AgeCertificate certificate = AgeCertificate.of(session.verificationRequest(), user, authToken);
         return certificateSigner.sign(certificate);
     }
