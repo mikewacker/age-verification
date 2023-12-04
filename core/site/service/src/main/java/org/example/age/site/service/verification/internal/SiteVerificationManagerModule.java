@@ -3,13 +3,13 @@ package org.example.age.site.service.verification.internal;
 import dagger.Binds;
 import dagger.Module;
 import java.security.PublicKey;
-import java.time.Duration;
 import org.example.age.api.JsonSerializer;
 import org.example.age.common.service.crypto.internal.AgeCertificateVerifierModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizerModule;
 import org.example.age.common.service.key.PseudonymKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
+import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.VerificationStore;
 
 /**
@@ -19,10 +19,9 @@ import org.example.age.site.service.store.VerificationStore;
  * <ul>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li><code>@Named("signing") {@link PublicKey}</code></li>
+ *     <li><code>@Named("signing") Provider&lt;{@link PublicKey}&gt;</code></li>
  *     <li><code>{@link PseudonymKeyProvider}</code></li>
- *     <li><code>@Named("siteId") String</code></li>
- *     <li><code>@Named("expiresIn") {@link Duration}</code></li>
+ *     <li><code>Provider&lt;{@link SiteConfig}&gt;</code></li>
  *     <li><code>@Named("service") {@link JsonSerializer}</code></li>
  * </ul>
  */
