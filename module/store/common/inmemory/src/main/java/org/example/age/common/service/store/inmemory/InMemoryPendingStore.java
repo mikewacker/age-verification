@@ -1,4 +1,4 @@
-package org.example.age.common.service.store;
+package org.example.age.common.service.store.inmemory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.BiMap;
@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSerializer;
+import org.example.age.common.service.store.PendingStore;
 import org.xnio.XnioExecutor;
 
 /**

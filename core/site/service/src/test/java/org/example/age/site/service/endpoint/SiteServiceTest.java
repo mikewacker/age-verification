@@ -21,7 +21,7 @@ import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
 import org.example.age.common.service.config.AvsLocation;
 import org.example.age.common.service.config.test.TestAvsLocationModule;
 import org.example.age.common.service.key.test.TestKeyModule;
-import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
+import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;

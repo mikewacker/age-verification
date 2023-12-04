@@ -31,6 +31,7 @@ dependencies {
     testFixturesApi(project(":module:extractor:common:builtin"))
     testFixturesApi(testFixtures(project(":module:extractor:common:builtin")))
     testFixturesApi(testFixtures(project(":module:key:common:test")))
+    testFixturesApi(project(":module:store:common:inmemory"))
     testFixturesApi(testFixtures(project(":testing")))
 
     // test

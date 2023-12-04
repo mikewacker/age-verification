@@ -1,4 +1,4 @@
-package org.example.age.common.service.store;
+package org.example.age.common.service.store.inmemory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,6 +12,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.api.JsonSerializer;
+import org.example.age.common.service.store.PendingStore;
+import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.testing.api.FakeXnioExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -97,7 +99,8 @@ public final class InMemoryPendingStoreFactoryTest {
         storeFactory.<String>getOrCreate("name", new TypeReference<>() {});
         assertThatThrownBy(() -> storeFactory.<Integer>getOrCreate("name", new TypeReference<>() {}))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("inconsistent value type:\nclass java.lang.String\nclass java.lang.Integer");
+                .hasMessage(
+                        "inconsistent value type for name\n  create: class java.lang.String\n  get: class java.lang.Integer");
     }
 
     private static long createExpiration() {
