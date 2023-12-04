@@ -10,6 +10,7 @@ import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.api.endpoint.SiteApiModule;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.config.internal.SiteConfigurerModule;
+import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 import org.example.age.site.service.store.VerificationStore;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
 
@@ -31,6 +32,7 @@ import org.example.age.site.service.verification.internal.SiteVerificationManage
             SiteVerificationManagerModule.class,
             RequestDispatcherModule.class,
             SiteConfigurerModule.class,
+            SiteServiceJsonSerializerModule.class,
         })
 public interface SiteServiceModule {
 

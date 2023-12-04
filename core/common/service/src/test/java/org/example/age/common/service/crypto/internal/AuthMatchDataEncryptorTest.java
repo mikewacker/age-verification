@@ -2,14 +2,16 @@ package org.example.age.common.service.crypto.internal;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Module;
+import javax.inject.Named;
 import javax.inject.Singleton;
+import org.example.age.api.ApiStyle;
 import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonSerializer;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.service.data.internal.ServiceObjectMapperModule;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
@@ -60,7 +62,7 @@ public final class AuthMatchDataEncryptorTest {
 
     /** Test {@link AuthMatchData}. */
     @Value.Immutable
-    @JsonSerialize(as = ImmutableTestAuthMatchData.class)
+    @ApiStyle
     @JsonDeserialize(as = ImmutableTestAuthMatchData.class)
     public interface TestAuthMatchData extends AuthMatchData {
 
@@ -76,20 +78,24 @@ public final class AuthMatchDataEncryptorTest {
         }
     }
 
-    /** Dagger module that binds dependencies for {@link AuthMatchDataEncryptor}. */
-    @Module(includes = {AuthMatchDataEncryptorModule.class, ServiceObjectMapperModule.class})
-    interface TestModule {}
-
     /** Dagger component that provides a {@link AuthMatchDataEncryptor}. */
-    @Component(modules = TestModule.class)
+    @Component(modules = AuthMatchDataEncryptorModule.class)
     @Singleton
     interface TestComponent {
 
         static AuthMatchDataEncryptor createAuthMatchDataEncryptor() {
-            TestComponent component = DaggerAuthMatchDataEncryptorTest_TestComponent.create();
+            JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
+            TestComponent component =
+                    DaggerAuthMatchDataEncryptorTest_TestComponent.factory().create(serializer);
             return component.authMatchDataEncryptor();
         }
 
         AuthMatchDataEncryptor authMatchDataEncryptor();
+
+        @Component.Factory
+        interface Factory {
+
+            TestComponent create(@BindsInstance @Named("service") JsonSerializer serializer);
+        }
     }
 }

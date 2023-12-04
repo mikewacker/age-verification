@@ -6,9 +6,9 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
+import dagger.BindsInstance;
 import dagger.Component;
 import dagger.Module;
-import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
@@ -158,23 +158,12 @@ public final class RequestDispatcherTest {
         }
     }
 
-    /**
-     * Dagger module that publishes a binding for {@link HttpHandler}, which uses a {@link RequestDispatcher}.
-     *
-     * <p>Also binds dependencies for {@link RequestDispatcher}.</p>
-     */
+    /** Dagger module that publishes a binding for {@link HttpHandler}, which uses a {@link RequestDispatcher}. */
     @Module(includes = RequestDispatcherModule.class)
     interface TestModule {
 
         @Binds
         HttpHandler bindHandler(TestHandler impl);
-
-        @Provides
-        @Named("service")
-        @Singleton
-        static ObjectMapper provideObjectMapper() {
-            return new ObjectMapper();
-        }
     }
 
     /** Dagger component that provides an {@link HttpHandler}. */
@@ -183,10 +172,18 @@ public final class RequestDispatcherTest {
     public interface TestComponent {
 
         static HttpHandler createHandler() {
-            TestComponent component = DaggerRequestDispatcherTest_TestComponent.create();
+            JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
+            TestComponent component =
+                    DaggerRequestDispatcherTest_TestComponent.factory().create(serializer);
             return component.handler();
         }
 
         HttpHandler handler();
+
+        @Component.Factory
+        interface Factory {
+
+            TestComponent create(@BindsInstance @Named("service") JsonSerializer serializer);
+        }
     }
 }
