@@ -1,4 +1,4 @@
-package org.example.age.avs.service.endpoint.test;
+package org.example.age.avs.service.endpoint;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -21,8 +21,8 @@ import org.example.age.infra.service.client.RequestDispatcher;
 final class FakeAvsService implements AvsApi {
 
     private final FakeAvsVerificationFactory verificationFactory;
-    private final RequestDispatcher requestDispatcher;
     private final Provider<SiteLocation> siteLocationProvider;
+    private final RequestDispatcher requestDispatcher;
 
     private VerificationSession storedSession = null;
     private String storedAccountId = null;
@@ -30,11 +30,11 @@ final class FakeAvsService implements AvsApi {
     @Inject
     public FakeAvsService(
             FakeAvsVerificationFactory verificationFactory,
-            RequestDispatcher requestDispatcher,
-            Provider<SiteLocation> siteLocationProvider) {
+            Provider<SiteLocation> siteLocationProvider,
+            RequestDispatcher requestDispatcher) {
         this.verificationFactory = verificationFactory;
-        this.requestDispatcher = requestDispatcher;
         this.siteLocationProvider = siteLocationProvider;
+        this.requestDispatcher = requestDispatcher;
     }
 
     @Override

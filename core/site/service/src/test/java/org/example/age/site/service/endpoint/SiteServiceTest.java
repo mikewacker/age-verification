@@ -6,22 +6,16 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Module;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
-import org.example.age.avs.service.endpoint.test.FakeAvsServiceModule;
-import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtractorModule;
-import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
-import org.example.age.common.service.key.test.TestKeyModule;
-import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
+import org.example.age.avs.service.endpoint.test.TestAvsServiceModule;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.site.service.config.test.TestSiteConfigModule;
-import org.example.age.site.service.store.InMemoryVerificationStoreModule;
+import org.example.age.site.service.endpoint.test.TestSiteServiceModule;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.TestUndertowServer;
@@ -71,21 +65,8 @@ public final class SiteServiceTest {
         assertThat(certificateStatusCode).isEqualTo(expectedStatusCode);
     }
 
-    /** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
-    @Module(
-            includes = {
-                SiteServiceModule.class,
-                TestAccountIdExtractorModule.class,
-                DisabledAuthMatchDataExtractorModule.class,
-                InMemoryVerificationStoreModule.class,
-                InMemoryPendingStoreFactoryModule.class,
-                TestKeyModule.class,
-                TestSiteConfigModule.class,
-            })
-    interface TestModule {}
-
     /** Dagger components that provides an {@link HttpHandler}. */
-    @Component(modules = TestModule.class)
+    @Component(modules = TestSiteServiceModule.class)
     @Singleton
     interface TestComponent {
 
@@ -106,7 +87,7 @@ public final class SiteServiceTest {
     }
 
     /** Dagger components that provides an {@link HttpHandler}. */
-    @Component(modules = FakeAvsServiceModule.class)
+    @Component(modules = TestAvsServiceModule.class)
     @Singleton
     interface FakeAvsComponent {
 

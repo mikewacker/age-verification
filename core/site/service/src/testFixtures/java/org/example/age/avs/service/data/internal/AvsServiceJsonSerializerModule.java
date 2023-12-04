@@ -1,4 +1,4 @@
-package org.example.age.site.service.data.internal;
+package org.example.age.avs.service.data.internal;
 
 import dagger.Module;
 import dagger.Provides;
@@ -9,7 +9,7 @@ import org.example.age.data.mapper.DataMapper;
 
 /** Dagger module that publishes a binding for <code>@Named("service") {@link JsonSerializer}</code>. */
 @Module
-public interface SiteServiceJsonSerializerModule {
+public interface AvsServiceJsonSerializerModule {
 
     @Provides
     @Named("service")
