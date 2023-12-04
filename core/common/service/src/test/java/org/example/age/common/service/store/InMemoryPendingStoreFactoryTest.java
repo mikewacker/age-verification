@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Module;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
-import org.example.age.common.service.data.internal.ServiceObjectMapperModule;
+import org.example.age.api.JsonSerializer;
 import org.example.age.testing.api.FakeXnioExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -107,20 +109,24 @@ public final class InMemoryPendingStoreFactoryTest {
         return now + expiresIn;
     }
 
-    /** Dagger module that binds dependencies for {@link PendingStoreFactory}. */
-    @Module(includes = {InMemoryPendingStoreFactoryModule.class, ServiceObjectMapperModule.class})
-    interface TestModule {}
-
     /** Dagger component that provides a {@link PendingStoreFactory}. */
-    @Component(modules = TestModule.class)
+    @Component(modules = InMemoryPendingStoreFactoryModule.class)
     @Singleton
     interface TestComponent {
 
         static PendingStoreFactory createPendingStoreFactory() {
-            TestComponent component = DaggerInMemoryPendingStoreFactoryTest_TestComponent.create();
+            JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
+            TestComponent component = DaggerInMemoryPendingStoreFactoryTest_TestComponent.factory()
+                    .create(serializer);
             return component.pendingStoreFactory();
         }
 
         PendingStoreFactory pendingStoreFactory();
+
+        @Component.Factory
+        interface Factory {
+
+            TestComponent create(@BindsInstance @Named("service") JsonSerializer serializer);
+        }
     }
 }

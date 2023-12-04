@@ -11,10 +11,10 @@ dependencies {
     api(project(":core:common:api-types"))
     api(project(":core:common:service-types"))
     api(project(":core:data"))
-    api(project(":infra:service"))
-    api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
+
+    implementation("com.fasterxml.jackson.core:jackson-core")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")

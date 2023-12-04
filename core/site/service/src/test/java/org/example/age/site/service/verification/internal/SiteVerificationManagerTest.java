@@ -26,6 +26,7 @@ import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.site.service.store.VerificationState;
 import org.example.age.site.service.store.VerificationStatus;
@@ -210,6 +211,7 @@ public final class SiteVerificationManagerTest {
                 SiteVerificationManagerModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
+                SiteServiceJsonSerializerModule.class,
             })
     interface TestModule {
 
