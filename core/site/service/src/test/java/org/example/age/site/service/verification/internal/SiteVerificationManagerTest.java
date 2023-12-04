@@ -26,6 +26,7 @@ import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.site.service.config.test.StubSiteConfigModule;
 import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.site.service.store.VerificationState;
@@ -211,6 +212,7 @@ public final class SiteVerificationManagerTest {
                 SiteVerificationManagerModule.class,
                 InMemoryVerificationStoreModule.class,
                 InMemoryPendingStoreFactoryModule.class,
+                StubSiteConfigModule.class,
                 SiteServiceJsonSerializerModule.class,
             })
     interface TestModule {
@@ -223,23 +225,9 @@ public final class SiteVerificationManagerTest {
         }
 
         @Provides
-        @Named("siteId")
-        @Singleton
-        static String provideSiteId() {
-            return "Site";
-        }
-
-        @Provides
         @Singleton
         static PseudonymKeyProvider providePseudonymKeyProvider() {
             return name -> pseudonymKey;
-        }
-
-        @Provides
-        @Named("expiresIn")
-        @Singleton
-        static Duration provideExpiresIn() {
-            return Duration.ofDays(30);
         }
     }
 

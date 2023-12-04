@@ -2,14 +2,15 @@ package org.example.age.site.service.endpoint;
 
 import dagger.Binds;
 import dagger.Module;
+import java.security.PublicKey;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
+import org.example.age.common.service.key.PseudonymKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.api.endpoint.SiteApiModule;
 import org.example.age.site.service.config.SiteConfig;
-import org.example.age.site.service.config.internal.SiteConfigurerModule;
 import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 import org.example.age.site.service.store.VerificationStore;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
@@ -23,7 +24,9 @@ import org.example.age.site.service.verification.internal.SiteVerificationManage
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li>{@link SiteConfig}</li>
+ *     <li><code>@Named("signing") Provider&lt;{@link PublicKey}&gt;</code></li>
+ *     <li><code>{@link PseudonymKeyProvider}</code></li>
+ *     <li><code>Provider&lt;{@link SiteConfig}&gt;</code></li>
  * </ul>
  */
 @Module(
@@ -31,7 +34,6 @@ import org.example.age.site.service.verification.internal.SiteVerificationManage
             SiteApiModule.class,
             SiteVerificationManagerModule.class,
             RequestDispatcherModule.class,
-            SiteConfigurerModule.class,
             SiteServiceJsonSerializerModule.class,
         })
 public interface SiteServiceModule {

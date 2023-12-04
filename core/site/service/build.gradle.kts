@@ -28,6 +28,7 @@ dependencies {
 
     testFixturesApi(project(":core:avs:api"))
     testFixturesApi(testFixtures(project(":module:config:common:test")))
+    testFixturesApi(testFixtures(project(":module:config:site:test")))
     testFixturesApi(project(":module:extractor:common:builtin"))
     testFixturesApi(testFixtures(project(":module:extractor:common:builtin")))
     testFixturesApi(testFixtures(project(":module:key:common:test")))

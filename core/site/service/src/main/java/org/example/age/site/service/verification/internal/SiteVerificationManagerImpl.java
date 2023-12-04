@@ -1,10 +1,8 @@
 package org.example.age.site.service.verification.internal;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
@@ -23,6 +21,7 @@ import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.store.VerificationState;
 import org.example.age.site.service.store.VerificationStore;
 
@@ -37,8 +36,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     private final AgeCertificateVerifier certificateVerifier;
     private final VerifiedUserLocalizer userLocalizer;
     private final AuthMatchDataEncryptor authDataEncryptor;
-    private final Provider<String> siteIdProvider;
-    private final Provider<Duration> expiresInProvider;
+    private final Provider<SiteConfig> siteConfigProvider;
 
     @Inject
     public SiteVerificationManagerImpl(
@@ -47,15 +45,13 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
             AgeCertificateVerifier certificateVerifier,
             VerifiedUserLocalizer userLocalizer,
             AuthMatchDataEncryptor authDataEncryptor,
-            @Named("siteId") Provider<String> siteIdProvider,
-            @Named("expiresIn") Provider<Duration> expiresInProvider) {
+            Provider<SiteConfig> siteConfigProvider) {
         this.verificationStore = verificationStore;
         this.pendingStoreFactory = pendingStoreFactory;
         this.certificateVerifier = certificateVerifier;
         this.userLocalizer = userLocalizer;
         this.authDataEncryptor = authDataEncryptor;
-        this.siteIdProvider = siteIdProvider;
-        this.expiresInProvider = expiresInProvider;
+        this.siteConfigProvider = siteConfigProvider;
     }
 
     @Override
@@ -110,7 +106,8 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
         }
 
         VerificationRequest request = signedCertificate.ageCertificate().verificationRequest();
-        if (!request.isIntendedRecipient(siteIdProvider.get())) {
+        String siteId = siteConfigProvider.get().siteId();
+        if (!request.isIntendedRecipient(siteId)) {
             return 403;
         }
 
@@ -142,7 +139,8 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     /** Saves a {@link VerifiedUser} for the account, returning a status code. */
     private int trySaveUser(String accountId, VerifiedUser user) {
         long now = System.currentTimeMillis() / 1000;
-        long expiration = now + expiresInProvider.get().toSeconds();
+        long expiresIn = siteConfigProvider.get().expiresIn().toSeconds();
+        long expiration = now + expiresIn;
         VerificationState state = VerificationState.verified(user, expiration);
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave(accountId, state);
         return maybeDuplicateAccountId.isEmpty() ? 200 : 409;

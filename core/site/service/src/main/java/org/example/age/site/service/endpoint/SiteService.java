@@ -2,7 +2,6 @@ package org.example.age.site.service.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
@@ -16,38 +15,34 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.service.client.RequestDispatcher;
 import org.example.age.infra.service.client.ResponseJsonCallback;
 import org.example.age.site.api.endpoint.SiteApi;
+import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.verification.internal.SiteVerificationManager;
 
 @Singleton
 final class SiteService implements SiteApi {
 
     private final SiteVerificationManager verificationManager;
+    private final Provider<SiteConfig> siteConfigProvider;
     private final RequestDispatcher requestDispatcher;
-    private final Provider<AvsLocation> avsLocationProvider;
-    private final Provider<String> siteIdProvider;
 
     @Inject
     public SiteService(
             SiteVerificationManager verificationManager,
-            RequestDispatcher requestDispatcher,
-            @Named("bridged") Provider<AvsLocation> avsLocationProvider,
-            @Named("siteId") Provider<String> siteIdProvider) {
+            Provider<SiteConfig> siteConfigProvider,
+            RequestDispatcher requestDispatcher) {
         this.verificationManager = verificationManager;
+        this.siteConfigProvider = siteConfigProvider;
         this.requestDispatcher = requestDispatcher;
-        this.avsLocationProvider = avsLocationProvider;
-        this.siteIdProvider = siteIdProvider;
     }
 
     @Override
     public void createVerificationSession(
             JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        String sessionUrl = avsLocationProvider.get().verificationSessionUrl(siteIdProvider.get());
-        ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> sessionCallback =
-                new VerificationSessionCallback(verificationManager, accountId, authData);
         requestDispatcher
                 .requestBuilder(sender, dispatcher)
-                .post(sessionUrl)
-                .dispatchWithJsonResponse(new TypeReference<>() {}, sessionCallback);
+                .post(getVerificationSessionUrl())
+                .dispatchWithJsonResponse(
+                        new TypeReference<>() {}, createVerificationSessionCallback(accountId, authData));
     }
 
     @Override
@@ -57,10 +52,19 @@ final class SiteService implements SiteApi {
         sender.send(statusCode);
     }
 
-    /**
-     * Called when a response is received for the request
-     * to get a {@link VerificationSession} from the age verification service.
-     */
+    /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
+    private String getVerificationSessionUrl() {
+        AvsLocation avsLocation = siteConfigProvider.get().avsLocation();
+        String siteId = siteConfigProvider.get().siteId();
+        return avsLocation.verificationSessionUrl(siteId);
+    }
+
+    /** Creates a callback for the request to get a {@link VerificationSession} from the age verification service. */
+    private VerificationSessionCallback createVerificationSessionCallback(String accountId, AuthMatchData authData) {
+        return new VerificationSessionCallback(verificationManager, accountId, authData);
+    }
+
+    /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
     private record VerificationSessionCallback(
             SiteVerificationManager verificationManager, String accountId, AuthMatchData authData)
             implements ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> {
