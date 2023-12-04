@@ -27,7 +27,6 @@ include(
         "core:common:service-types",
         "core:common:service",
         "core:site:service",
-        "core:legacy",
 
         "module:key:common:test",
 
