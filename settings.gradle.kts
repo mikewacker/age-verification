@@ -28,6 +28,8 @@ include(
         "core:common:service",
         "core:site:service",
 
+        "module:store:common:inmemory",
+
         "module:key:common:test",
 
         "module:config:common:test",

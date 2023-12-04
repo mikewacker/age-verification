@@ -15,7 +15,7 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.key.PseudonymKeyProvider;
-import org.example.age.common.service.store.InMemoryPendingStoreFactoryModule;
+import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
