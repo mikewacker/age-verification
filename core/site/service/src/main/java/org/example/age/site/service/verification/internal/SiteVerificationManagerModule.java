@@ -14,7 +14,7 @@ import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.site.service.store.VerificationStore;
 
 /**
- * Dagger module that publishes a binding for {@link VerificationManager}.
+ * Dagger module that publishes a binding for {@link SiteVerificationManager}.
  *
  * <p>Depends on an unbound...</p>
  * <ul>
@@ -35,8 +35,8 @@ import org.example.age.site.service.store.VerificationStore;
             AuthMatchDataEncryptorModule.class,
             ServiceObjectMapperModule.class,
         })
-public interface VerificationManagerModule {
+public interface SiteVerificationManagerModule {
 
     @Binds
-    VerificationManager bindVerificationManager(VerificationManagerImpl impl);
+    SiteVerificationManager bindSiteVerificationManager(SiteVerificationManagerImpl impl);
 }

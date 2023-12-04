@@ -27,7 +27,7 @@ import org.example.age.site.service.store.VerificationState;
 import org.example.age.site.service.store.VerificationStore;
 
 @Singleton
-final class VerificationManagerImpl implements VerificationManager {
+final class SiteVerificationManagerImpl implements SiteVerificationManager {
 
     private static final String VERIFICATION_STORE_NAME = "verification";
     private static final String PSEUDONYM_KEY_NAME = "local";
@@ -41,7 +41,7 @@ final class VerificationManagerImpl implements VerificationManager {
     private final Provider<Duration> expiresInProvider;
 
     @Inject
-    public VerificationManagerImpl(
+    public SiteVerificationManagerImpl(
             VerificationStore verificationStore,
             PendingStoreFactory pendingStoreFactory,
             AgeCertificateVerifier certificateVerifier,

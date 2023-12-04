@@ -11,7 +11,7 @@ import org.example.age.site.api.endpoint.SiteApiModule;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.config.internal.SiteConfigurerModule;
 import org.example.age.site.service.store.VerificationStore;
-import org.example.age.site.service.verification.internal.VerificationManagerModule;
+import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
 
 /**
  * Dagger module that binds dependencies for <code>@Named("api") HttpHandler</code>.
@@ -28,7 +28,7 @@ import org.example.age.site.service.verification.internal.VerificationManagerMod
 @Module(
         includes = {
             SiteApiModule.class,
-            VerificationManagerModule.class,
+            SiteVerificationManagerModule.class,
             RequestDispatcherModule.class,
             SiteConfigurerModule.class,
         })
