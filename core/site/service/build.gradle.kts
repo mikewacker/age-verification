@@ -14,6 +14,7 @@ dependencies {
     api(project(":core:common:service"))
     api(project(":core:common:service-types"))
     api(project(":core:site:api"))
+    api(project(":core:site:service-types"))
     api(project(":core:data"))
     api(project(":infra:service"))
     api("com.fasterxml.jackson.core:jackson-databind")

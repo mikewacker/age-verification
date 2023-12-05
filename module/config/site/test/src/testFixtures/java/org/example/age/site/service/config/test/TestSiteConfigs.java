@@ -12,7 +12,7 @@ final class TestSiteConfigs {
         return SiteConfig.builder()
                 .avsLocation(avsLocation)
                 .siteId("Site")
-                .expiresIn(Duration.ofDays(30))
+                .expiresInMinutes(Duration.ofDays(30).toMinutes())
                 .build();
     }
 

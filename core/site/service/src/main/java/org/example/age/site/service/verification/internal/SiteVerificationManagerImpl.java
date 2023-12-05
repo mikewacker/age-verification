@@ -144,7 +144,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     /** Saves a {@link VerifiedUser} for the account, returning a status code. */
     private int trySaveUser(String accountId, VerifiedUser user) {
         long now = System.currentTimeMillis() / 1000;
-        long expiresIn = siteConfigProvider.get().expiresIn().toSeconds();
+        long expiresIn = siteConfigProvider.get().expiresInMinutes() * 60;
         long expiration = now + expiresIn;
         VerificationState state = VerificationState.verified(user, expiration);
         Optional<String> maybeDuplicateAccountId = verificationStore.trySave(accountId, state);
