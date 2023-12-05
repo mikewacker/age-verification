@@ -18,6 +18,7 @@ include(
 
         // api
         "core:common:api-types",
+        "core:common:api-extractors",
         "core:avs:api",
         "core:site:api",
 
