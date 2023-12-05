@@ -5,15 +5,12 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dagger.Binds;
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Module;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
@@ -35,8 +32,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class RequestDispatcherTest {
 
     @RegisterExtension
-    private static final TestUndertowServer frontendServer =
-            TestUndertowServer.fromHandler(TestComponent::createHandler);
+    private static final TestUndertowServer frontendServer = TestUndertowServer.fromHandler(ProxyHandler::create);
 
     @RegisterExtension
     private static final MockServer backendServer = MockServer.create();
@@ -108,15 +104,15 @@ public final class RequestDispatcherTest {
      * It proxies the response it receives from a backend server.
      */
     @Singleton
-    static final class TestHandler implements HttpHandler {
+    static final class ProxyHandler implements HttpHandler {
 
         private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
 
         private final RequestDispatcher requestDispatcher;
 
-        @Inject
-        public TestHandler(RequestDispatcher requestDispatcher) {
-            this.requestDispatcher = requestDispatcher;
+        public static HttpHandler create() {
+            RequestDispatcher requestDispatcher = TestComponent.createRequestDispatcher(serializer);
+            return new ProxyHandler(requestDispatcher);
         }
 
         @Override
@@ -156,29 +152,24 @@ public final class RequestDispatcherTest {
                 JsonSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
             sender.send(maybeText);
         }
+
+        private ProxyHandler(RequestDispatcher requestDispatcher) {
+            this.requestDispatcher = requestDispatcher;
+        }
     }
 
-    /** Dagger module that publishes a binding for {@link HttpHandler}, which uses a {@link RequestDispatcher}. */
-    @Module(includes = RequestDispatcherModule.class)
-    interface TestModule {
-
-        @Binds
-        HttpHandler bindHandler(TestHandler impl);
-    }
-
-    /** Dagger component that provides an {@link HttpHandler}. */
-    @Component(modules = TestModule.class)
+    /** Dagger component that provides an {@link RequestDispatcher}. */
+    @Component(modules = RequestDispatcherModule.class)
     @Singleton
     public interface TestComponent {
 
-        static HttpHandler createHandler() {
-            JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
+        static RequestDispatcher createRequestDispatcher(JsonSerializer serializer) {
             TestComponent component =
                     DaggerRequestDispatcherTest_TestComponent.factory().create(serializer);
-            return component.handler();
+            return component.requestDispatcher();
         }
 
-        HttpHandler handler();
+        RequestDispatcher requestDispatcher();
 
         @Component.Factory
         interface Factory {

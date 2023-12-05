@@ -5,14 +5,11 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dagger.Binds;
 import dagger.Component;
-import dagger.Module;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,8 +31,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class ExchangeClientTest {
 
     @RegisterExtension
-    private static final TestUndertowServer frontendServer =
-            TestUndertowServer.fromHandler(TestComponent::createHandler);
+    private static final TestUndertowServer frontendServer = TestUndertowServer.fromHandler(GreetingHandler::create);
 
     @RegisterExtension
     private static final MockServer backendServer = MockServer.create();
@@ -55,15 +51,15 @@ public final class ExchangeClientTest {
      * <p>It sends a greeting, making a backend call to get the recipient.</p>
      */
     @Singleton
-    static final class TestHandler implements HttpHandler {
+    static final class GreetingHandler implements HttpHandler {
 
         private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
 
         private final ExchangeClient client;
 
-        @Inject
-        public TestHandler(ExchangeClient client) {
-            this.client = client;
+        public static HttpHandler create() {
+            ExchangeClient client = TestComponent.createExchangeClient();
+            return new GreetingHandler(client);
         }
 
         @Override
@@ -83,7 +79,7 @@ public final class ExchangeClientTest {
 
             @Override
             public void onResponse(Call call, Response response) {
-                dispatcher.executeHandler(sender, (s, d) -> onRecipientReceived(response, s));
+                dispatcher.executeHandler(sender, (s, d) -> onRecipientReceived(s, response));
             }
 
             @Override
@@ -91,7 +87,7 @@ public final class ExchangeClientTest {
                 sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
             }
 
-            private void onRecipientReceived(Response response, JsonSender<String> sender) throws IOException {
+            private void onRecipientReceived(JsonSender<String> sender, Response response) throws IOException {
                 HttpOptional<String> maybeRecipient =
                         serializer.tryDeserialize(response.body().bytes(), new TypeReference<>() {}, 400);
                 if (maybeRecipient.isEmpty()) {
@@ -104,26 +100,22 @@ public final class ExchangeClientTest {
                 sender.sendBody(greeting);
             }
         }
+
+        private GreetingHandler(ExchangeClient client) {
+            this.client = client;
+        }
     }
 
-    /** Dagger module that publishes a binding for {@link HttpHandler}, which uses an {@link ExchangeClient}. */
-    @Module(includes = ExchangeClientModule.class)
-    public interface TestModule {
-
-        @Binds
-        HttpHandler bindHandler(TestHandler impl);
-    }
-
-    /** Dagger component that provides an {@link HttpHandler}. */
-    @Component(modules = TestModule.class)
+    /** Dagger component that provides an {@link ExchangeClient}. */
+    @Component(modules = ExchangeClientModule.class)
     @Singleton
     public interface TestComponent {
 
-        static HttpHandler createHandler() {
+        static ExchangeClient createExchangeClient() {
             TestComponent component = DaggerExchangeClientTest_TestComponent.create();
-            return component.handler();
+            return component.exchangeClient();
         }
 
-        HttpHandler handler();
+        ExchangeClient exchangeClient();
     }
 }
