@@ -3,10 +3,10 @@ package org.example.age.data.user;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class VerifiedUserTest {
@@ -39,9 +39,10 @@ public final class VerifiedUserTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        byte[] rawUser = DataMapper.get().writeValueAsBytes(user);
-        VerifiedUser rtUser = DataMapper.get().readValue(rawUser, new TypeReference<>() {});
+        byte[] rawUser = mapper.writeValueAsBytes(user);
+        VerifiedUser rtUser = mapper.readValue(rawUser, new TypeReference<>() {});
         assertThat(rtUser).isEqualTo(user);
     }
 }

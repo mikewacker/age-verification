@@ -2,7 +2,6 @@ package org.example.age.testing.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import java.io.IOException;
 import java.util.Map;
 import okhttp3.MediaType;
@@ -20,7 +19,7 @@ public final class TestClient {
     private static final MediaType HTML_CONTENT_TYPE = MediaType.get("text/html");
 
     private static final OkHttpClient client = createClient();
-    private static final JsonSerializer serializer = createJsonSerializer();
+    private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
 
     /** Issues an HTTP GET request for HTML. */
     public static HttpOptional<String> getHtml(String url) throws IOException {
@@ -43,13 +42,6 @@ public final class TestClient {
     /** Creates the shared {@link OkHttpClient}. */
     private static OkHttpClient createClient() {
         return new OkHttpClient.Builder().followRedirects(false).build();
-    }
-
-    /** Creates the {@link JsonSerializer}. */
-    private static JsonSerializer createJsonSerializer() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new GuavaModule());
-        return JsonSerializer.create(mapper);
     }
 
     /** Checks that the response has the expected content type. */

@@ -13,8 +13,6 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-databind")
     api("org.immutables:value-annotations")
 
-    implementation("com.google.guava:guava")
-
     // test
     testImplementation("com.fasterxml.jackson.core:jackson-core")
 }

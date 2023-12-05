@@ -2,8 +2,8 @@ package org.example.age.data.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.google.common.primitives.Ints;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
@@ -21,7 +21,7 @@ public final class AgeThresholds {
 
     /** Creates the age thresholds. */
     public static AgeThresholds of(int... ageThresholds) {
-        return of(Ints.asList(ageThresholds));
+        return of(Arrays.stream(ageThresholds).boxed().toList());
     }
 
     /** Gets the underlying age thresholds. */

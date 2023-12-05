@@ -17,7 +17,8 @@ import org.immutables.value.Value;
         overshadowImplementation = true,
         defaults = @Value.Immutable(copy = false),
         from = "",
-        allowedClasspathAnnotations = {Generated.class, org.immutables.value.Generated.class})
+        allowedClasspathAnnotations = {Generated.class, org.immutables.value.Generated.class},
+        jdk9Collections = true)
 @JsonSerialize
 @Target(ElementType.TYPE)
 public @interface ApiStyle {}

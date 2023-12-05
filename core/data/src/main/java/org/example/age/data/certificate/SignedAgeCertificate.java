@@ -6,7 +6,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.DigitalSignature;
-import org.example.age.data.mapper.DataMapper;
 import org.immutables.value.Value;
 
 /**
@@ -49,7 +48,7 @@ public interface SignedAgeCertificate {
     /** Serializes an {@link AgeCertificate}. */
     private static byte[] serialize(AgeCertificate certificate) {
         try {
-            return DataMapper.get().writeValueAsBytes(certificate);
+            return InternalMapper.INSTANCE.writeValueAsBytes(certificate);
         } catch (IOException e) {
             throw new RuntimeException("serialization failed", e);
         }
