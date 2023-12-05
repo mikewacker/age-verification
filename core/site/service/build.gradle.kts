@@ -10,6 +10,7 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api-types"))
+    api(project(":core:common:api-extractors"))
     api(project(":core:common:api-types"))
     api(project(":core:common:service"))
     api(project(":core:common:service-types"))
@@ -35,6 +36,7 @@ dependencies {
 
     testFixturesImplementation(project(":api-types"))
     testFixturesApi(project(":core:avs:api"))
+    testFixturesImplementation(project(":core:common:api-extractors"))
     testFixturesImplementation(project(":core:common:service-types"))
     testFixturesApi(project(":core:common:service"))
     testFixturesApi(project(":infra:service"))

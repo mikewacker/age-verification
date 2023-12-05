@@ -9,6 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":api-types"))
+    api(project(":core:common:api-extractors"))
     api(project(":core:common:api-types"))
     api(project(":core:data"))
     api("com.google.dagger:dagger")
