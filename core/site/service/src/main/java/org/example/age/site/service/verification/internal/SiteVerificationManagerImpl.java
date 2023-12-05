@@ -14,6 +14,7 @@ import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizer;
 import org.example.age.common.service.store.PendingStore;
 import org.example.age.common.service.store.PendingStoreFactory;
+import org.example.age.common.service.store.VerificationStore;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -23,7 +24,6 @@ import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.site.service.config.SiteConfig;
-import org.example.age.site.service.store.VerificationStore;
 
 @Singleton
 final class SiteVerificationManagerImpl implements SiteVerificationManager {

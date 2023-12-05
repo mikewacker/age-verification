@@ -6,9 +6,9 @@ import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtract
 import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
 import org.example.age.common.service.key.test.TestKeyModule;
 import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
+import org.example.age.common.service.store.inmemory.InMemoryVerificationStoreModule;
 import org.example.age.site.service.config.test.TestSiteConfigModule;
 import org.example.age.site.service.endpoint.SiteServiceModule;
-import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.testing.server.TestServer;
 
 /**

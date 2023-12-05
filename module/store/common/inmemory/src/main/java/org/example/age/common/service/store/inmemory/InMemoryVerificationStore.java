@@ -1,16 +1,15 @@
-package org.example.age.site.service.store;
+package org.example.age.common.service.store.inmemory;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.common.api.data.VerificationStatus;
+import org.example.age.common.service.store.VerificationStore;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 
@@ -24,9 +23,7 @@ final class InMemoryVerificationStore implements VerificationStore {
     private final Object lock = new Object();
 
     @Inject
-    public InMemoryVerificationStore(@Named("initializer") Optional<Consumer<VerificationStore>> maybeInitializer) {
-        maybeInitializer.ifPresent(initializer -> initializer.accept(this));
-    }
+    public InMemoryVerificationStore() {}
 
     @Override
     public VerificationState load(String accountId) {

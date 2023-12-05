@@ -3,8 +3,8 @@ package org.example.age.site.service.verification.internal.test;
 import dagger.Module;
 import org.example.age.common.service.key.test.TestKeyModule;
 import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
+import org.example.age.common.service.store.inmemory.InMemoryVerificationStoreModule;
 import org.example.age.site.service.config.test.StubSiteConfigModule;
-import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.site.service.verification.internal.SiteVerificationManager;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
 
