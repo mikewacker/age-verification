@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.testing.EqualsTester;
 import java.io.IOException;
-import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {
@@ -114,8 +114,9 @@ public final class AgeRangeTest {
     }
 
     private void serializeThenDeserialize(AgeRange ageRange) throws IOException {
-        byte[] rawAgeRange = DataMapper.get().writeValueAsBytes(ageRange);
-        AgeRange rtAgeRange = DataMapper.get().readValue(rawAgeRange, new TypeReference<>() {});
+        ObjectMapper mapper = new ObjectMapper();
+        byte[] rawAgeRange = mapper.writeValueAsBytes(ageRange);
+        AgeRange rtAgeRange = mapper.readValue(rawAgeRange, new TypeReference<>() {});
         assertThat(rtAgeRange).isEqualTo(ageRange);
     }
 

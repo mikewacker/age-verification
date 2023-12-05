@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.testing.EqualsTester;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class AgeThresholdsTest {
@@ -68,9 +68,10 @@ public final class AgeThresholdsTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
-        byte[] rawAgeThresholds = DataMapper.get().writeValueAsBytes(ageThresholds);
-        AgeThresholds rtAgeThresholds = DataMapper.get().readValue(rawAgeThresholds, new TypeReference<>() {});
+        byte[] rawAgeThresholds = mapper.writeValueAsBytes(ageThresholds);
+        AgeThresholds rtAgeThresholds = mapper.readValue(rawAgeThresholds, new TypeReference<>() {});
         assertThat(rtAgeThresholds).isEqualTo(ageThresholds);
     }
 

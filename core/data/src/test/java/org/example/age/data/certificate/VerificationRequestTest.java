@@ -3,10 +3,10 @@ package org.example.age.data.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.data.mapper.DataMapper;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {
@@ -50,9 +50,10 @@ public final class VerificationRequestTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
-        byte[] rawRequest = DataMapper.get().writeValueAsBytes(request);
-        VerificationRequest rtRequest = DataMapper.get().readValue(rawRequest, new TypeReference<>() {});
+        byte[] rawRequest = mapper.writeValueAsBytes(request);
+        VerificationRequest rtRequest = mapper.readValue(rawRequest, new TypeReference<>() {});
         assertThat(rtRequest).isEqualTo(request);
     }
 }

@@ -8,7 +8,6 @@ dependencies {
     // main
     api("com.fasterxml.jackson.core:jackson-core")
     api("com.fasterxml.jackson.core:jackson-databind")
-    api("com.google.guava:guava") // ensure that Guava is on the compile-time classpath for @Value.Immutable types
     api("org.immutables:value-annotations")
     api("org.jboss.xnio:xnio-api")
 
