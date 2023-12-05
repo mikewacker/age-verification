@@ -16,7 +16,6 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
-import org.example.age.site.service.store.VerificationStore;
 import org.example.age.site.service.verification.internal.test.TestSiteVerificationManagerModule;
 import org.example.age.testing.api.StubDispatcher;
 import org.junit.jupiter.api.BeforeAll;

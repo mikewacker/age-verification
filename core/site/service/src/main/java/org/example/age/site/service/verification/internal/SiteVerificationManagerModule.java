@@ -3,7 +3,6 @@ package org.example.age.site.service.verification.internal;
 import dagger.Binds;
 import dagger.Module;
 import java.security.PublicKey;
-import org.example.age.api.JsonSerializer;
 import org.example.age.common.service.crypto.internal.AgeCertificateVerifierModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizerModule;

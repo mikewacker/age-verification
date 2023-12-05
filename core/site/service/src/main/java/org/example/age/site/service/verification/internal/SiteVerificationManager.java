@@ -9,6 +9,7 @@ import org.example.age.data.certificate.VerificationSession;
 /** Synchronously manages the age verification process for accounts. */
 public interface SiteVerificationManager {
 
+    /** Gets the {@link VerificationState} for an account. */
     VerificationState getVerificationState(String accountId);
 
     /** Called when a {@link VerificationSession} is received for an account, returning a status code. */
