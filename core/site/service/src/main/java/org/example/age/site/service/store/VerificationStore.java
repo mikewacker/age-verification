@@ -1,6 +1,7 @@
 package org.example.age.site.service.store;
 
 import java.util.Optional;
+import org.example.age.common.api.data.VerificationState;
 
 /** Persistent store of {@link VerificationState}'s for accounts. */
 public interface VerificationStore {
