@@ -1,4 +1,4 @@
-package org.example.age.site.service.store;
+package org.example.age.common.service.store.inmemory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.common.api.data.VerificationStatus;
+import org.example.age.common.service.store.VerificationStore;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeEach;

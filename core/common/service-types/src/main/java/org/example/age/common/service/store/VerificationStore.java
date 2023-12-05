@@ -1,4 +1,4 @@
-package org.example.age.site.service.store;
+package org.example.age.common.service.store;
 
 import java.util.Optional;
 import org.example.age.common.api.data.VerificationState;

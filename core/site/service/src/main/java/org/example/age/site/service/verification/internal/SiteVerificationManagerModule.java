@@ -8,9 +8,9 @@ import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModu
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizerModule;
 import org.example.age.common.service.key.PseudonymKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
+import org.example.age.common.service.store.VerificationStore;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
-import org.example.age.site.service.store.VerificationStore;
 
 /**
  * Dagger module that publishes a binding for {@link SiteVerificationManager}.

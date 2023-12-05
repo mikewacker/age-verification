@@ -8,12 +8,12 @@ import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
 import org.example.age.common.service.key.PseudonymKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
+import org.example.age.common.service.store.VerificationStore;
 import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.api.endpoint.SiteApiModule;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
-import org.example.age.site.service.store.VerificationStore;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
 
 /**
