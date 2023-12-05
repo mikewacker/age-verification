@@ -4,7 +4,6 @@ import dagger.Module;
 import org.example.age.common.service.key.test.TestKeyModule;
 import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
 import org.example.age.site.service.config.test.StubSiteConfigModule;
-import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 import org.example.age.site.service.store.InMemoryVerificationStoreModule;
 import org.example.age.site.service.verification.internal.SiteVerificationManager;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
@@ -17,6 +16,5 @@ import org.example.age.site.service.verification.internal.SiteVerificationManage
             InMemoryPendingStoreFactoryModule.class,
             TestKeyModule.class,
             StubSiteConfigModule.class,
-            SiteServiceJsonSerializerModule.class,
         })
 public interface TestSiteVerificationManagerModule {}

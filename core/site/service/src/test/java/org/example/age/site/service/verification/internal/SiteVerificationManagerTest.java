@@ -26,15 +26,12 @@ import org.junit.jupiter.api.Test;
 public final class SiteVerificationManagerTest {
 
     private SiteVerificationManager siteVerificationManager;
-    private VerificationStore siteVerificationStore;
 
     private static FakeAvsVerificationFactory fakeAvsVerificationFactory;
 
     @BeforeEach
     public void createSiteVerificationManagerEtAl() {
-        TestComponent component = TestComponent.create();
-        siteVerificationManager = component.siteVerificationManager();
-        siteVerificationStore = component.verificationStore();
+        siteVerificationManager = TestComponent.createSiteVerificationManager();
     }
 
     @BeforeAll
@@ -54,7 +51,7 @@ public final class SiteVerificationManagerTest {
         int certificateStatusCode = siteVerificationManager.onSignedAgeCertificateReceived(signedCertificate);
         assertThat(certificateStatusCode).isEqualTo(200);
 
-        VerificationState state = siteVerificationStore.load("publius");
+        VerificationState state = siteVerificationManager.getVerificationState("publius");
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.verifiedUser())
                 .isNotEqualTo(signedCertificate.ageCertificate().verifiedUser());
@@ -156,18 +153,17 @@ public final class SiteVerificationManagerTest {
         return SignedAgeCertificate.of(signedCertificate.ageCertificate(), forgedSignature);
     }
 
-    /** Dagger component that provides a {@link SiteVerificationManager}, and also a {@link VerificationStore}. */
+    /** Dagger component that provides a {@link SiteVerificationManager}. */
     @Component(modules = TestSiteVerificationManagerModule.class)
     @Singleton
     interface TestComponent {
 
-        static TestComponent create() {
-            return DaggerSiteVerificationManagerTest_TestComponent.create();
+        static SiteVerificationManager createSiteVerificationManager() {
+            TestComponent component = DaggerSiteVerificationManagerTest_TestComponent.create();
+            return component.siteVerificationManager();
         }
 
         SiteVerificationManager siteVerificationManager();
-
-        VerificationStore verificationStore();
     }
 
     /** Dagger component that provides a {@link FakeAvsVerificationFactory}. */

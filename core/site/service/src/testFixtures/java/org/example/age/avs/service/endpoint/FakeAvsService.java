@@ -40,8 +40,7 @@ final class FakeAvsService implements AvsApi {
 
     @Override
     public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
-        // TODO: Implement me.
-        sender.sendErrorCode(501);
+        sender.sendErrorCode(418);
     }
 
     @Override

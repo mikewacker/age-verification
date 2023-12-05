@@ -38,8 +38,8 @@ final class SiteService implements SiteApi {
 
     @Override
     public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
-        // TODO: Implement me.
-        sender.sendErrorCode(501);
+        VerificationState state = verificationManager.getVerificationState(accountId);
+        sender.sendBody(state);
     }
 
     @Override
@@ -82,7 +82,7 @@ final class SiteService implements SiteApi {
                 HttpOptional<VerificationSession> maybeSession,
                 Dispatcher dispatcher) {
             if (maybeSession.isEmpty()) {
-                int errorCode = (maybeSession.statusCode() / 100 == 5) ? 502 : 500;
+                int errorCode = mapVerificationSessionErrorCode(maybeSession.statusCode());
                 sender.sendErrorCode(errorCode);
                 return;
             }
@@ -96,6 +96,11 @@ final class SiteService implements SiteApi {
             }
 
             sender.sendBody(session);
+        }
+
+        /** Maps the backend error code to a frontend error code. */
+        private static int mapVerificationSessionErrorCode(int backendErrorCode) {
+            return (backendErrorCode / 100 == 5) ? 502 : 500;
         }
     }
 }
