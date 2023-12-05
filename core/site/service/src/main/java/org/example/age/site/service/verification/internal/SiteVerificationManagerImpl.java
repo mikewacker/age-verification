@@ -55,6 +55,11 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     }
 
     @Override
+    public VerificationState getVerificationState(String accountId) {
+        return verificationStore.load(accountId);
+    }
+
+    @Override
     public int onVerificationSessionReceived(
             String accountId, AuthMatchData authData, VerificationSession session, Dispatcher dispatcher) {
         Verification pendingVerification = new Verification(accountId, authData, session);

@@ -13,6 +13,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.avs.service.endpoint.test.TestAvsServiceModule;
+import org.example.age.common.api.data.VerificationState;
+import org.example.age.common.api.data.VerificationStatus;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.endpoint.test.TestSiteServiceModule;
@@ -63,6 +65,17 @@ public final class SiteServiceTest {
                 .headers(Map.of("Account-Id", avsAccountId))
                 .executeWithStatusCodeResponse();
         assertThat(certificateStatusCode).isEqualTo(expectedStatusCode);
+        if (expectedStatusCode != 200) {
+            return;
+        }
+
+        HttpOptional<VerificationState> maybeState = TestClient.apiRequestBuilder()
+                .get(siteServer.url("/api/verification-state"))
+                .headers(Map.of("Account-Id", siteAccountId))
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeState).isPresent();
+        VerificationState state = maybeState.get();
+        assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     /** Dagger components that provides an {@link HttpHandler}. */
