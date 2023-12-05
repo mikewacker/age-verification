@@ -19,11 +19,11 @@ public interface SiteConfig {
     /** URL location of the age verification service. */
     AvsLocation avsLocation();
 
-    /** Site ID that is registered with the age verification service. */
-    String siteId();
+    /** ID that is registered with the age verification service. */
+    String id();
 
     /** Expiration (in minutes) for verified accounts. */
-    long expiresInMinutes();
+    long verifiedAccountExpiresInMinutes();
 
     class Builder extends ImmutableSiteConfig.Builder {}
 }

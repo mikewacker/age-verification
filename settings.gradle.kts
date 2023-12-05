@@ -26,6 +26,7 @@ include(
         // service
         "core:common:service-types",
         "core:common:service",
+        "core:avs:service-types",
         "core:site:service-types",
         "core:site:service",
 

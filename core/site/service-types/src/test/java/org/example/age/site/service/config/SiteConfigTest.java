@@ -18,8 +18,8 @@ public final class SiteConfigTest {
                 AvsLocation.builder("localhost", 80).redirectPath("/verify").build();
         SiteConfig siteConfig = SiteConfig.builder()
                 .avsLocation(avsLocation)
-                .siteId("Site")
-                .expiresInMinutes(Duration.ofDays(30).toMinutes())
+                .id("Site")
+                .verifiedAccountExpiresInMinutes(Duration.ofDays(30).toMinutes())
                 .build();
         byte[] rawSiteConfig = mapper.writeValueAsBytes(siteConfig);
         SiteConfig rtSiteConfig = mapper.readValue(rawSiteConfig, new TypeReference<>() {});
