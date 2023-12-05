@@ -1,10 +1,12 @@
-package org.example.age.site.service.store;
+package org.example.age.common.api.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.assertj.core.api.ThrowableAssert;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
+import java.time.Duration;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.mapper.DataMapper;
 import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,21 +14,25 @@ import org.junit.jupiter.api.Test;
 public final class VerificationStateTest {
 
     private static VerifiedUser user;
+    private static long expiration;
 
     @BeforeAll
-    public static void createVerifiedUser() {
+    public static void createVerifiedUserAndExpiration() {
         user = VerifiedUser.of(SecureId.generate(), 18);
+        long now = System.currentTimeMillis() / 1000;
+        expiration = now + Duration.ofDays(30).toSeconds();
     }
 
     @Test
     public void unverified() {
         VerificationState state = VerificationState.unverified();
         assertThat(state.status()).isEqualTo(VerificationStatus.UNVERIFIED);
+        assertThat(state.verifiedUser()).isNull();
+        assertThat(state.expiration()).isNull();
     }
 
     @Test
     public void verified() {
-        long expiration = createExpiration();
         VerificationState state = VerificationState.verified(user, expiration);
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.verifiedUser()).isEqualTo(user);
@@ -35,9 +41,9 @@ public final class VerificationStateTest {
 
     @Test
     public void expired() {
-        long expiration = createExpiration();
         VerificationState state = VerificationState.expired(expiration);
         assertThat(state.status()).isEqualTo(VerificationStatus.EXPIRED);
+        assertThat(state.verifiedUser()).isNull();
         assertThat(state.expiration()).isEqualTo(expiration);
     }
 
@@ -45,6 +51,8 @@ public final class VerificationStateTest {
     public void invalidated() {
         VerificationState state = VerificationState.invalidated();
         assertThat(state.status()).isEqualTo(VerificationStatus.INVALIDATED);
+        assertThat(state.verifiedUser()).isNull();
+        assertThat(state.expiration()).isNull();
     }
 
     @Test
@@ -56,15 +64,15 @@ public final class VerificationStateTest {
 
     @Test
     public void update_VerifiedAndNotExpired() {
-        long future = createExpiration(10);
-        VerificationState state = VerificationState.verified(user, future);
+        VerificationState state = VerificationState.verified(user, expiration);
         VerificationState updatedState = state.update();
         assertThat(updatedState).isSameAs(state);
     }
 
     @Test
     public void update_VerifiedButExpired() {
-        long past = createExpiration(-10);
+        long now = System.currentTimeMillis() / 1000;
+        long past = now - 10;
         VerificationState state = VerificationState.verified(user, past);
         VerificationState updatedState = state.update();
         assertThat(updatedState.status()).isEqualTo(VerificationStatus.EXPIRED);
@@ -72,39 +80,32 @@ public final class VerificationStateTest {
     }
 
     @Test
-    public void error_AttributeNotSet_Unverified() {
-        String message = "attribute not set when the status is UNVERIFIED";
+    public void serializeThenDeserialize_Unverified() throws IOException {
         VerificationState state = VerificationState.unverified();
-        error_AttributeNotSet(state::verifiedUser, message);
-        error_AttributeNotSet(state::expiration, message);
+        serializeThenDeserialize(state);
     }
 
     @Test
-    public void error_AttributeNotSet_Expired() {
-        String message = "attribute not set when the status is EXPIRED";
-        long expiration = createExpiration();
+    public void serializeThenDeserialize_Verified() throws IOException {
+        VerificationState state = VerificationState.verified(user, expiration);
+        serializeThenDeserialize(state);
+    }
+
+    @Test
+    public void serializeThenDeserialize_Expired() throws IOException {
         VerificationState state = VerificationState.expired(expiration);
-        error_AttributeNotSet(state::verifiedUser, message);
+        serializeThenDeserialize(state);
     }
 
     @Test
-    public void error_AttributeNotSet_Invalidated() {
-        String message = "attribute not set when the status is INVALIDATED";
+    public void serializeThenDeserialize_Invalidated() throws IOException {
         VerificationState state = VerificationState.invalidated();
-        error_AttributeNotSet(state::verifiedUser, message);
-        error_AttributeNotSet(state::expiration, message);
+        serializeThenDeserialize(state);
     }
 
-    private void error_AttributeNotSet(ThrowableAssert.ThrowingCallable callable, String message) {
-        assertThatThrownBy(callable).isInstanceOf(IllegalStateException.class).hasMessage(message);
-    }
-
-    private static long createExpiration() {
-        return createExpiration(10);
-    }
-
-    private static long createExpiration(long expiresIn) {
-        long now = System.currentTimeMillis() / 1000;
-        return now + expiresIn;
+    private void serializeThenDeserialize(VerificationState state) throws IOException {
+        byte[] rawState = DataMapper.get().writeValueAsBytes(state);
+        VerificationState rtState = DataMapper.get().readValue(rawState, new TypeReference<>() {});
+        assertThat(rtState).isEqualTo(state);
     }
 }

@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.example.age.common.api.data.VerificationState;
+import org.example.age.common.api.data.VerificationStatus;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 

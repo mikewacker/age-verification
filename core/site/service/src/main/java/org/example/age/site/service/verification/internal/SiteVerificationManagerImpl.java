@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.data.VerificationState;
 import org.example.age.common.service.crypto.internal.AgeCertificateVerifier;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizer;
@@ -22,7 +23,6 @@ import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.site.service.config.SiteConfig;
-import org.example.age.site.service.store.VerificationState;
 import org.example.age.site.service.store.VerificationStore;
 
 @Singleton
