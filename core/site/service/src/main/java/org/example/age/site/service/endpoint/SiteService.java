@@ -62,7 +62,7 @@ final class SiteService implements SiteApi {
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
     private String getVerificationSessionUrl() {
         AvsLocation avsLocation = siteConfigProvider.get().avsLocation();
-        String siteId = siteConfigProvider.get().siteId();
+        String siteId = siteConfigProvider.get().id();
         return avsLocation.verificationSessionUrl(siteId);
     }
 

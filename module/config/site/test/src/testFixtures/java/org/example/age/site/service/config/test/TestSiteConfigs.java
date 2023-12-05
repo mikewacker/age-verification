@@ -11,8 +11,8 @@ final class TestSiteConfigs {
     public static SiteConfig create(AvsLocation avsLocation) {
         return SiteConfig.builder()
                 .avsLocation(avsLocation)
-                .siteId("Site")
-                .expiresInMinutes(Duration.ofDays(30).toMinutes())
+                .id("Site")
+                .verifiedAccountExpiresInMinutes(Duration.ofDays(30).toMinutes())
                 .build();
     }
 
