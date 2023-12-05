@@ -9,6 +9,7 @@ import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.data.VerificationState;
 import org.example.age.common.service.config.AvsLocation;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
@@ -33,6 +34,12 @@ final class SiteService implements SiteApi {
         this.verificationManager = verificationManager;
         this.siteConfigProvider = siteConfigProvider;
         this.requestDispatcher = requestDispatcher;
+    }
+
+    @Override
+    public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+        // TODO: Implement me.
+        sender.sendErrorCode(501);
     }
 
     @Override

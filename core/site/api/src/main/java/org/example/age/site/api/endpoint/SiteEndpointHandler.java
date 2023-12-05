@@ -13,6 +13,7 @@ import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.data.VerificationState;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -46,10 +47,25 @@ final class SiteEndpointHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange exchange) {
         RequestParser parser = RequestParser.create(exchange, serializer);
         switch (exchange.getRelativePath()) {
+            case "/verification-state" -> handleVerificationState(exchange);
             case "/verification-session" -> handleVerificationSession(exchange);
             case "/age-certificate" -> parser.readBody(new TypeReference<>() {}, this::handleAgeCertificate);
             default -> ExchangeStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
         }
+    }
+
+    private void handleVerificationState(HttpServerExchange exchange) {
+        JsonSender<VerificationState> sender = ExchangeJsonSender.create(exchange, serializer);
+
+        HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
+        if (maybeAccountId.isEmpty()) {
+            sender.sendErrorCode(maybeAccountId.statusCode());
+            return;
+        }
+        String accountId = maybeAccountId.get();
+
+        Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+        siteApi.getVerificationState(sender, accountId, dispatcher);
     }
 
     private void handleVerificationSession(HttpServerExchange exchange) {

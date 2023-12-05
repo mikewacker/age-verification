@@ -4,6 +4,7 @@ import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
@@ -11,6 +12,9 @@ import org.example.age.data.crypto.SecureId;
 
 /** Asynchronous API for the age verification service. */
 public interface AvsApi {
+
+    /** Gets the {@link VerificationState} for an account. */
+    void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher);
 
     /** Creates a {@link VerificationSession} for a site. */
     void createVerificationSession(JsonSender<VerificationSession> sender, String siteId, Dispatcher dispatcher);

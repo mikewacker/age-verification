@@ -1,4 +1,4 @@
-package org.example.age.site.service.endpoint.test;
+package org.example.age.site.service.endpoint;
 
 import java.time.Duration;
 import javax.inject.Inject;
@@ -7,6 +7,7 @@ import org.example.age.api.Dispatcher;
 import org.example.age.api.JsonSender;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
@@ -18,6 +19,12 @@ public final class StubSiteService implements SiteApi {
 
     @Inject
     public StubSiteService() {}
+
+    @Override
+    public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+        VerificationState state = VerificationState.unverified();
+        sender.sendBody(state);
+    }
 
     @Override
     public void createVerificationSession(

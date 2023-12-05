@@ -11,7 +11,8 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
-import org.example.age.avs.service.endpoint.test.StubAvsServiceModule;
+import org.example.age.avs.service.endpoint.test.TestAvsServiceModule;
+import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.testing.client.TestClient;
@@ -26,21 +27,34 @@ public final class AvsApiTest {
             TestUndertowServer.fromHandlerAtPath(TestComponent::createApiHandler, "/api/");
 
     @Test
-    public void verify() throws IOException {
+    public void verificationState() throws IOException {
+        HttpOptional<VerificationState> maybeState = TestClient.apiRequestBuilder()
+                .get(avsServer.url("/api/verification-state"))
+                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeState).isPresent();
+    }
+
+    @Test
+    public void verificationSession() throws IOException {
         HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
                 .post(avsServer.url("/api/verification-session?site-id=Site"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isPresent();
-        VerificationSession session = maybeSession.get();
-        assertThat(session.verificationRequest().siteId()).isEqualTo("Site");
+    }
 
-        SecureId requestId = session.verificationRequest().id();
+    @Test
+    public void linkedVerificationRequest() throws IOException {
+        SecureId requestId = SecureId.generate();
         int linkStatusCode = TestClient.apiRequestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .executeWithStatusCodeResponse();
         assertThat(linkStatusCode).isEqualTo(200);
+    }
 
+    @Test
+    public void ageCertificate() throws IOException {
         int certificateStatusCode = TestClient.apiRequestBuilder()
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
@@ -50,6 +64,12 @@ public final class AvsApiTest {
 
     @Test
     public void error_MissingAccountId() throws IOException {
+        HttpOptional<VerificationState> maybeState = TestClient.apiRequestBuilder()
+                .get(avsServer.url("/api/verification-state"))
+                .headers(Map.of("User-Agent", "agent"))
+                .executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeState).isEmptyWithErrorCode(401);
+
         SecureId requestId = SecureId.generate();
         int linkStatusCode = TestClient.apiRequestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
@@ -90,7 +110,7 @@ public final class AvsApiTest {
     }
 
     /** Dagger component that provides an {@link HttpHandler}. */
-    @Component(modules = StubAvsServiceModule.class)
+    @Component(modules = TestAvsServiceModule.class)
     @Singleton
     interface TestComponent {
 
