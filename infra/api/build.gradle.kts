@@ -11,7 +11,10 @@ dependencies {
     api("org.jboss.xnio:xnio-api")
 
     // test
+    testImplementation(project(":api-types"))
     testImplementation(testFixtures(project(":api-types")))
     testImplementation(testFixtures(project(":testing")))
+    testImplementation("com.fasterxml.jackson.core:jackson-core")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind")
     testImplementation("io.undertow:undertow-core")
 }

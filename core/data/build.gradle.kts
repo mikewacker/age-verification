@@ -16,5 +16,6 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava")
 
     // test
+    testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("com.google.guava:guava-testlib")
 }

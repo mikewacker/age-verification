@@ -7,4 +7,5 @@ dependencies {
     api("com.squareup.okhttp3:okhttp")
 
     testImplementation("com.squareup.okhttp3:mockwebserver")
+    testImplementation("com.squareup.okio:okio-jvm")
 }
