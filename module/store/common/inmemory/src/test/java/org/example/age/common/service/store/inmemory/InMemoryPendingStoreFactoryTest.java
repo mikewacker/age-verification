@@ -5,12 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 import javax.inject.Singleton;
-import org.assertj.core.data.Offset;
 import org.example.age.common.service.store.PendingStore;
 import org.example.age.common.service.store.PendingStoreFactory;
-import org.example.age.testing.api.FakeXnioExecutor;
+import org.example.age.testing.api.FakeScheduledExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,12 +17,12 @@ public final class InMemoryPendingStoreFactoryTest {
 
     private PendingStoreFactory storeFactory;
 
-    private FakeXnioExecutor executor;
+    private FakeScheduledExecutor executor;
 
     @BeforeEach
     public void createPendingStoreFactoryEtAl() {
         storeFactory = TestComponent.createPendingStoreFactory();
-        executor = FakeXnioExecutor.create();
+        executor = FakeScheduledExecutor.create();
     }
 
     @Test
@@ -32,11 +31,11 @@ public final class InMemoryPendingStoreFactoryTest {
         long expiration = createExpiration();
         store.put("key", "value", expiration, executor);
         assertThat(store.tryGet("key")).hasValue("value");
-        FakeXnioExecutor.ScheduledTask expirationTask = executor.getLastScheduledTask();
+        FakeScheduledExecutor.ScheduledTask expirationTask = executor.getLastScheduledTask();
 
         assertThat(store.tryRemove("key")).hasValue("value");
         assertThat(store.tryGet("key")).isEmpty();
-        assertThat(expirationTask.remove()).isFalse();
+        assertThat(expirationTask.cancel()).isFalse();
     }
 
     @Test
@@ -45,9 +44,8 @@ public final class InMemoryPendingStoreFactoryTest {
         long expiration = createExpiration(10);
         store.put("key", "value", expiration, executor);
         assertThat(store.tryGet("key")).hasValue("value");
-        FakeXnioExecutor.ScheduledTask expirationTask = executor.getLastScheduledTask();
-        assertThat(expirationTask.getTime()).isCloseTo(10L, Offset.offset(1L));
-        assertThat(expirationTask.getUnit()).isEqualTo(TimeUnit.SECONDS);
+        FakeScheduledExecutor.ScheduledTask expirationTask = executor.getLastScheduledTask();
+        assertThat(expirationTask.getDelay()).isCloseTo(Duration.ofSeconds(10), Duration.ofSeconds(1));
 
         expirationTask.run();
         assertThat(store.tryGet("key")).isEmpty();
@@ -67,7 +65,7 @@ public final class InMemoryPendingStoreFactoryTest {
         long expiration = createExpiration();
         store.put("key", "value", expiration, executor);
         assertThat(store.tryGet("key")).hasValue("value");
-        FakeXnioExecutor.ScheduledTask oldExpirationTask = executor.getLastScheduledTask();
+        FakeScheduledExecutor.ScheduledTask oldExpirationTask = executor.getLastScheduledTask();
 
         store.put("key", "value", expiration, executor);
         oldExpirationTask.run();

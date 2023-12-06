@@ -23,7 +23,6 @@ dependencies {
     api("com.google.guava:guava")
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
-    api("org.jboss.xnio:xnio-api")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")

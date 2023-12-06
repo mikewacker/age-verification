@@ -1,7 +1,6 @@
 package org.example.age.testing.api;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,8 +10,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.example.age.api.ApiHandler;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.ScheduledExecutor;
 import org.example.age.api.Sender;
-import org.xnio.XnioExecutor;
 
 /**
  * Stub {@link Dispatcher} that no-ops when it dispatches API calls or uses the executors.
@@ -23,10 +22,10 @@ import org.xnio.XnioExecutor;
  */
 public final class StubDispatcher implements Dispatcher {
 
-    private static final Dispatcher instance = create();
+    private static final Dispatcher instance = new StubDispatcher();
 
-    private final XnioExecutor ioThread;
-    private final ExecutorService worker;
+    private final ScheduledExecutor ioThread = createStubIoThread();
+    private final ExecutorService worker = createStubWorker();
 
     /** Gets the stub {@link Dispatcher}. */
     public static Dispatcher get() {
@@ -39,7 +38,7 @@ public final class StubDispatcher implements Dispatcher {
     }
 
     @Override
-    public XnioExecutor getIoThread() {
+    public ScheduledExecutor getIoThread() {
         return ioThread;
     }
 
@@ -57,19 +56,11 @@ public final class StubDispatcher implements Dispatcher {
     @Override
     public <S extends Sender> void executeHandler(S sender, ApiHandler<S> handler) {}
 
-    /** Creates a stub {@link Dispatcher}. */
-    private static Dispatcher create() {
-        XnioExecutor ioThread = createStubIoThread();
-        ExecutorService worker = createStubWorker();
-        return new StubDispatcher(ioThread, worker);
-    }
-
-    /** Creates a stub {@link XnioExecutor} for the IO thread. */
-    private static XnioExecutor createStubIoThread() {
-        XnioExecutor.Key key = () -> false;
-        XnioExecutor ioThread = mock(XnioExecutor.class);
-        when(ioThread.executeAfter(any(), anyLong(), any())).thenReturn(key);
-        when(ioThread.executeAtInterval(any(), anyLong(), any())).thenReturn(key);
+    /** Creates a stub {@link ScheduledExecutor} for the IO thread. */
+    private static ScheduledExecutor createStubIoThread() {
+        ScheduledExecutor.Key key = () -> false;
+        ScheduledExecutor ioThread = mock(ScheduledExecutor.class);
+        when(ioThread.executeAfter(any(), any())).thenReturn(key);
         return ioThread;
     }
 
@@ -84,15 +75,12 @@ public final class StubDispatcher implements Dispatcher {
         return worker;
     }
 
-    private StubDispatcher(XnioExecutor ioThread, ExecutorService worker) {
-        this.ioThread = ioThread;
-        this.worker = worker;
-    }
+    private StubDispatcher() {}
 
     /** Stub future whose value cannot be retrieved. */
     private static final class StubFuture<V> implements Future<V> {
 
-        public static <T> Future<T> create() {
+        public static <V> Future<V> create() {
             return new StubFuture<>();
         }
 

@@ -8,7 +8,8 @@ dependencies {
     api(project(":api-types"))
     api("com.fasterxml.jackson.core:jackson-core")
     api("io.undertow:undertow-core")
-    api("org.jboss.xnio:xnio-api")
+
+    implementation("org.jboss.xnio:xnio-api")
 
     // test
     testImplementation(project(":api-types"))

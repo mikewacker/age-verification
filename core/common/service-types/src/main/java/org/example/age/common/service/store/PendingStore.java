@@ -1,7 +1,7 @@
 package org.example.age.common.service.store;
 
 import java.util.Optional;
-import org.xnio.XnioExecutor;
+import org.example.age.api.ScheduledExecutor;
 
 /**
  * Ephemeral key-value store where a key-value pair is associated with a pending action that expires.
@@ -11,7 +11,7 @@ import org.xnio.XnioExecutor;
 public interface PendingStore<V> {
 
     /** Inserts a key-value pair with an expiration timestamp (in seconds). */
-    void put(String key, V value, long expiration, XnioExecutor executor);
+    void put(String key, V value, long expiration, ScheduledExecutor executor);
 
     /** Gets the value for the key, if present. */
     Optional<V> tryGet(String key);

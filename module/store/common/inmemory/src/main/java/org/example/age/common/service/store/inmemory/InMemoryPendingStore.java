@@ -5,11 +5,11 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.example.age.api.JsonObjects;
+import org.example.age.api.ScheduledExecutor;
 import org.example.age.common.service.store.PendingStore;
-import org.xnio.XnioExecutor;
 
 /**
  * In-memory {@link PendingStore}.
@@ -32,7 +32,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
     }
 
     @Override
-    public void put(String key, V value, long expiration, XnioExecutor executor) {
+    public void put(String key, V value, long expiration, ScheduledExecutor executor) {
         long now = System.currentTimeMillis() / 1000;
         long expiresIn = expiration - now;
         if (expiresIn <= 0) {
@@ -78,10 +78,10 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
      */
     private final class ExpirableRawValue {
 
-        private static final XnioExecutor.Key NO_OP_KEY = () -> false;
+        private static final ScheduledExecutor.Key NO_OP_KEY = () -> false;
 
         private final byte[] rawValue;
-        private XnioExecutor.Key expirationKey = NO_OP_KEY;
+        private volatile ScheduledExecutor.Key expirationKey = NO_OP_KEY;
 
         /** Gets the raw value. */
         byte[] get() {
@@ -94,13 +94,13 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         }
 
         /** Schedules a task to expire the value. */
-        public void scheduleExpiration(long expiresIn, XnioExecutor executor) {
-            expirationKey = executor.executeAfter(this::expire, expiresIn, TimeUnit.SECONDS);
+        public void scheduleExpiration(long expiresIn, ScheduledExecutor executor) {
+            expirationKey = executor.executeAfter(this::expire, Duration.ofSeconds(expiresIn));
         }
 
         /** Cancels the task to expire the value. */
         public void cancelExpiration() {
-            expirationKey.remove();
+            expirationKey.cancel();
         }
 
         /** Expires the value. */
