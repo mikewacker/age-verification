@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 public final class StaticFromStringDeserializerTest {
@@ -14,8 +14,8 @@ public final class StaticFromStringDeserializerTest {
     @Test
     public void serializeThenDeserialize() {
         TestObject o = TestObject.fromString("test");
-        byte[] rawO = JsonSerializer.serialize(o);
-        TestObject rtO = JsonSerializer.deserialize(rawO, new TypeReference<>() {});
+        byte[] rawO = JsonObjects.serialize(o);
+        TestObject rtO = JsonObjects.deserialize(rawO, new TypeReference<>() {});
         assertThat(rtO.toString()).isEqualTo(o.toString());
     }
 

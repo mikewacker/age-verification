@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
@@ -18,7 +18,7 @@ final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
 
     @Override
     public AesGcmEncryptionPackage encrypt(AuthMatchData authData, Aes256Key authKey) {
-        byte[] rawAuthData = JsonSerializer.serialize(authData);
+        byte[] rawAuthData = JsonObjects.serialize(authData);
         return AesGcmEncryptionPackage.encrypt(rawAuthData, authKey);
     }
 
@@ -30,6 +30,6 @@ final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
         }
         byte[] rawAuthData = maybeRawAuthData.get();
 
-        return JsonSerializer.tryDeserialize(rawAuthData, new TypeReference<>() {}, 400);
+        return JsonObjects.tryDeserialize(rawAuthData, new TypeReference<>() {}, 400);
     }
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 public final class AgeThresholdsTest {
@@ -68,8 +68,8 @@ public final class AgeThresholdsTest {
     @Test
     public void serializeThenDeserialize() {
         AgeThresholds ageThresholds = AgeThresholds.of(13, 18);
-        byte[] rawAgeThresholds = JsonSerializer.serialize(ageThresholds);
-        AgeThresholds rtAgeThresholds = JsonSerializer.deserialize(rawAgeThresholds, new TypeReference<>() {});
+        byte[] rawAgeThresholds = JsonObjects.serialize(ageThresholds);
+        AgeThresholds rtAgeThresholds = JsonObjects.deserialize(rawAgeThresholds, new TypeReference<>() {});
         assertThat(rtAgeThresholds).isEqualTo(ageThresholds);
     }
 

@@ -16,8 +16,8 @@ import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonObjects;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
@@ -83,7 +83,7 @@ public final class ExchangeClientTest {
             }
 
             private static void onRecipientReceived(JsonSender<String> sender, Response response) throws IOException {
-                HttpOptional<String> maybeRecipient = JsonSerializer.tryDeserialize(
+                HttpOptional<String> maybeRecipient = JsonObjects.tryDeserialize(
                         response.body().bytes(), new TypeReference<>() {}, StatusCodes.BAD_GATEWAY);
                 if (maybeRecipient.isEmpty()) {
                     sender.sendErrorCode(maybeRecipient.statusCode());

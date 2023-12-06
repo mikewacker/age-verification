@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -40,18 +40,18 @@ public final class AesGcmEncryptionPackageTest {
     @Test
     public void serializeThenDeserialize() {
         AesGcmEncryptionPackage encryptionPackage = AesGcmEncryptionPackage.encrypt(PLAINTEXT, key);
-        byte[] rawEncryptionPackage = JsonSerializer.serialize(encryptionPackage);
+        byte[] rawEncryptionPackage = JsonObjects.serialize(encryptionPackage);
         AesGcmEncryptionPackage rtEncryptionPackage =
-                JsonSerializer.deserialize(rawEncryptionPackage, new TypeReference<>() {});
+                JsonObjects.deserialize(rawEncryptionPackage, new TypeReference<>() {});
         assertThat(rtEncryptionPackage).isEqualTo(encryptionPackage);
     }
 
     @Test
     public void encryptThenSerializeThenDeserializeThenDecrypt() {
         AesGcmEncryptionPackage encryptionPackage = AesGcmEncryptionPackage.encrypt(PLAINTEXT, key);
-        byte[] rawEncryptionPackage = JsonSerializer.serialize(encryptionPackage);
+        byte[] rawEncryptionPackage = JsonObjects.serialize(encryptionPackage);
         AesGcmEncryptionPackage rtEncryptionPackage =
-                JsonSerializer.deserialize(rawEncryptionPackage, new TypeReference<>() {});
+                JsonObjects.deserialize(rawEncryptionPackage, new TypeReference<>() {});
         Optional<byte[]> maybeRtPlaintext = rtEncryptionPackage.tryDecrypt(key);
         assertThat(maybeRtPlaintext).hasValue(PLAINTEXT);
     }

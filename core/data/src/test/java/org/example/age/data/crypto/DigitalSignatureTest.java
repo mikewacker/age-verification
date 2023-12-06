@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -38,16 +38,16 @@ public final class DigitalSignatureTest {
     @Test
     public void serializeThenDeserialize() {
         DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] rawSignature = JsonSerializer.serialize(signature);
-        DigitalSignature rtSignature = JsonSerializer.deserialize(rawSignature, new TypeReference<>() {});
+        byte[] rawSignature = JsonObjects.serialize(signature);
+        DigitalSignature rtSignature = JsonObjects.deserialize(rawSignature, new TypeReference<>() {});
         assertThat(rtSignature).isEqualTo(signature);
     }
 
     @Test
     public void signThenSerializeThenDeserializeThenVerify() {
         DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] rawSignature = JsonSerializer.serialize(signature);
-        DigitalSignature rtSignature = JsonSerializer.deserialize(rawSignature, new TypeReference<>() {});
+        byte[] rawSignature = JsonObjects.serialize(signature);
+        DigitalSignature rtSignature = JsonObjects.deserialize(rawSignature, new TypeReference<>() {});
         boolean wasVerified = rtSignature.verify(MESSAGE, keyPair.getPublic());
         assertThat(wasVerified).isTrue();
     }

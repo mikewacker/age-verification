@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.api.ApiStyle;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.data.crypto.DigitalSignature;
 import org.immutables.value.Value;
 
@@ -28,7 +28,7 @@ public interface SignedAgeCertificate {
 
     /** Signs the age certificate. */
     static SignedAgeCertificate sign(AgeCertificate certificate, PrivateKey privateKey) {
-        byte[] rawCertificate = JsonSerializer.serialize(certificate);
+        byte[] rawCertificate = JsonObjects.serialize(certificate);
         DigitalSignature signature = DigitalSignature.sign(rawCertificate, privateKey);
         return of(certificate, signature);
     }
@@ -41,7 +41,7 @@ public interface SignedAgeCertificate {
 
     /** Verifies the signature against the age certificate, returning whether verification succeeded. */
     default boolean verify(PublicKey publicKey) {
-        byte[] rawCertificate = JsonSerializer.serialize(ageCertificate());
+        byte[] rawCertificate = JsonObjects.serialize(ageCertificate());
         return signature().verify(rawCertificate, publicKey);
     }
 }

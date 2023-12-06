@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.assertj.core.api.ThrowableAssert;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 import org.junit.jupiter.api.Test;
 
@@ -24,8 +24,8 @@ public final class SecureRandomImmutableBytesTest {
     @Test
     public void serializeThenDeserialize() {
         TestObject o = TestObject.generate();
-        byte[] rawO = JsonSerializer.serialize(o);
-        TestObject rtO = JsonSerializer.deserialize(rawO, new TypeReference<>() {});
+        byte[] rawO = JsonObjects.serialize(o);
+        TestObject rtO = JsonObjects.deserialize(rawO, new TypeReference<>() {});
         assertThat(rtO).isEqualTo(o);
     }
 
