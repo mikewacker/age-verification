@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.testing.EqualsTester;
-import java.io.IOException;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {
@@ -90,33 +89,32 @@ public final class AgeRangeTest {
     }
 
     @Test
-    public void serializeThenDeserialize_Of() throws IOException {
+    public void serializeThenDeserialize_Of() {
         AgeRange ageRange = AgeRange.of(13, 18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_At() throws IOException {
+    public void serializeThenDeserialize_At() {
         AgeRange ageRange = AgeRange.at(18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_AtOrAbove() throws IOException {
+    public void serializeThenDeserialize_AtOrAbove() {
         AgeRange ageRange = AgeRange.atOrAbove(18);
         serializeThenDeserialize(ageRange);
     }
 
     @Test
-    public void serializeThenDeserialize_Below() throws IOException {
+    public void serializeThenDeserialize_Below() {
         AgeRange ageRange = AgeRange.below(13);
         serializeThenDeserialize(ageRange);
     }
 
-    private void serializeThenDeserialize(AgeRange ageRange) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        byte[] rawAgeRange = mapper.writeValueAsBytes(ageRange);
-        AgeRange rtAgeRange = mapper.readValue(rawAgeRange, new TypeReference<>() {});
+    private void serializeThenDeserialize(AgeRange ageRange) {
+        byte[] rawAgeRange = JsonSerializer.serialize(ageRange);
+        AgeRange rtAgeRange = JsonSerializer.deserialize(rawAgeRange, new TypeReference<>() {});
         assertThat(rtAgeRange).isEqualTo(ageRange);
     }
 

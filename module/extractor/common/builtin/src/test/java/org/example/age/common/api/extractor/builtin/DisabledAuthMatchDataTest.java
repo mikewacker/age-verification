@@ -3,8 +3,7 @@ package org.example.age.common.api.extractor.builtin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import org.example.age.api.JsonSerializer;
 import org.example.age.common.api.data.AuthMatchData;
 import org.junit.jupiter.api.Test;
 
@@ -19,11 +18,10 @@ public final class DisabledAuthMatchDataTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         AuthMatchData authData = DisabledAuthMatchData.of();
-        byte[] rawAuthData = mapper.writeValueAsBytes(authData);
-        AuthMatchData rtAuthData = mapper.readValue(rawAuthData, new TypeReference<>() {});
+        byte[] rawAuthData = JsonSerializer.serialize(authData);
+        AuthMatchData rtAuthData = JsonSerializer.deserialize(rawAuthData, new TypeReference<>() {});
         assertThat(rtAuthData).isEqualTo(authData);
     }
 }

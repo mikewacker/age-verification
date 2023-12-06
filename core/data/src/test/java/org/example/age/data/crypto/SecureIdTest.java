@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 public final class SecureIdTest {
@@ -26,11 +25,10 @@ public final class SecureIdTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         SecureId id = SecureId.generate();
-        byte[] rawId = mapper.writeValueAsBytes(id);
-        SecureId rtId = mapper.readValue(rawId, new TypeReference<>() {});
+        byte[] rawId = JsonSerializer.serialize(id);
+        SecureId rtId = JsonSerializer.deserialize(rawId, new TypeReference<>() {});
         assertThat(rtId).isEqualTo(id);
     }
 

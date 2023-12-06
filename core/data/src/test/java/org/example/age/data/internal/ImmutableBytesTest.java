@@ -4,13 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.testing.EqualsTester;
-import java.io.IOException;
 import java.util.Arrays;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {
@@ -31,11 +30,10 @@ public final class ImmutableBytesTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         TestObject o = TestObject.ofBytes(RAW_O_BYTES);
-        byte[] rawO = mapper.writeValueAsBytes(o);
-        TestObject rtO = mapper.readValue(rawO, new TypeReference<>() {});
+        byte[] rawO = JsonSerializer.serialize(o);
+        TestObject rtO = JsonSerializer.deserialize(rawO, new TypeReference<>() {});
         assertThat(rtO).isEqualTo(o);
     }
 

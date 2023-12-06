@@ -3,9 +3,8 @@ package org.example.age.common.api.data;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.time.Duration;
+import org.example.age.api.JsonSerializer;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeAll;
@@ -80,33 +79,32 @@ public final class VerificationStateTest {
     }
 
     @Test
-    public void serializeThenDeserialize_Unverified() throws IOException {
+    public void serializeThenDeserialize_Unverified() {
         VerificationState state = VerificationState.unverified();
         serializeThenDeserialize(state);
     }
 
     @Test
-    public void serializeThenDeserialize_Verified() throws IOException {
+    public void serializeThenDeserialize_Verified() {
         VerificationState state = VerificationState.verified(user, expiration);
         serializeThenDeserialize(state);
     }
 
     @Test
-    public void serializeThenDeserialize_Expired() throws IOException {
+    public void serializeThenDeserialize_Expired() {
         VerificationState state = VerificationState.expired(expiration);
         serializeThenDeserialize(state);
     }
 
     @Test
-    public void serializeThenDeserialize_Invalidated() throws IOException {
+    public void serializeThenDeserialize_Invalidated() {
         VerificationState state = VerificationState.invalidated();
         serializeThenDeserialize(state);
     }
 
-    private void serializeThenDeserialize(VerificationState state) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        byte[] rawState = mapper.writeValueAsBytes(state);
-        VerificationState rtState = mapper.readValue(rawState, new TypeReference<>() {});
+    private void serializeThenDeserialize(VerificationState state) {
+        byte[] rawState = JsonSerializer.serialize(state);
+        VerificationState rtState = JsonSerializer.deserialize(rawState, new TypeReference<>() {});
         assertThat(rtState).isEqualTo(state);
     }
 }

@@ -4,12 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import java.io.IOException;
 import org.assertj.core.api.ThrowableAssert;
+import org.example.age.api.JsonSerializer;
 import org.example.age.data.internal.StaticFromStringDeserializer;
 import org.junit.jupiter.api.Test;
 
@@ -23,11 +22,10 @@ public final class SecureRandomImmutableBytesTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         TestObject o = TestObject.generate();
-        byte[] rawO = mapper.writeValueAsBytes(o);
-        TestObject rtO = mapper.readValue(rawO, new TypeReference<>() {});
+        byte[] rawO = JsonSerializer.serialize(o);
+        TestObject rtO = JsonSerializer.deserialize(rawO, new TypeReference<>() {});
         assertThat(rtO).isEqualTo(o);
     }
 

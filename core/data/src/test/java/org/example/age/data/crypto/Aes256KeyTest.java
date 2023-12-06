@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 public final class Aes256KeyTest {
@@ -18,11 +17,10 @@ public final class Aes256KeyTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         Aes256Key key = Aes256Key.generate();
-        byte[] rawKey = mapper.writeValueAsBytes(key);
-        Aes256Key rtKey = mapper.readValue(rawKey, new TypeReference<>() {});
+        byte[] rawKey = JsonSerializer.serialize(key);
+        Aes256Key rtKey = JsonSerializer.deserialize(rawKey, new TypeReference<>() {});
         assertThat(rtKey).isEqualTo(key);
     }
 

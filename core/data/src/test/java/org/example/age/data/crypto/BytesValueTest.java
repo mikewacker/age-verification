@@ -3,11 +3,13 @@ package org.example.age.data.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 public class BytesValueTest {
+
+    private static final byte[] BYTES = "Hello, world!".getBytes(StandardCharsets.UTF_8);
 
     @Test
     public void empty() {
@@ -16,11 +18,10 @@ public class BytesValueTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        BytesValue value = BytesValue.ofBytes(new byte[] {116, 101, 115, 116});
-        byte[] rawValue = mapper.writeValueAsBytes(value);
-        BytesValue rtValue = mapper.readValue(rawValue, new TypeReference<>() {});
+    public void serializeThenDeserialize() {
+        BytesValue value = BytesValue.ofBytes(BYTES);
+        byte[] rawValue = JsonSerializer.serialize(value);
+        BytesValue rtValue = JsonSerializer.deserialize(rawValue, new TypeReference<>() {});
         assertThat(rtValue).isEqualTo(value);
     }
 }

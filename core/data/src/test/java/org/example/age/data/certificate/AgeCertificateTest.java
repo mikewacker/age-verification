@@ -3,11 +3,10 @@ package org.example.age.data.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Optional;
+import org.example.age.api.JsonSerializer;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
@@ -34,11 +33,10 @@ public final class AgeCertificateTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         AgeCertificate certificate = createAgeCertificate();
-        byte[] rawCertificate = mapper.writeValueAsBytes(certificate);
-        AgeCertificate rtCertificate = mapper.readValue(rawCertificate, new TypeReference<>() {});
+        byte[] rawCertificate = JsonSerializer.serialize(certificate);
+        AgeCertificate rtCertificate = JsonSerializer.deserialize(rawCertificate, new TypeReference<>() {});
         assertThat(rtCertificate).isEqualTo(certificate);
     }
 

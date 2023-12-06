@@ -17,5 +17,6 @@ dependencies {
     api("org.jboss.xnio:xnio-api")
 
     // test
+    testImplementation(project(":api-types"))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
 }
