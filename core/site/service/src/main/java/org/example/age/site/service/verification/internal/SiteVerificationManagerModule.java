@@ -10,7 +10,6 @@ import org.example.age.common.service.key.PseudonymKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.common.service.store.VerificationStore;
 import org.example.age.site.service.config.SiteConfig;
-import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 
 /**
  * Dagger module that publishes a binding for {@link SiteVerificationManager}.
@@ -29,7 +28,6 @@ import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModul
             AgeCertificateVerifierModule.class,
             VerifiedUserLocalizerModule.class,
             AuthMatchDataEncryptorModule.class,
-            SiteServiceJsonSerializerModule.class,
         })
 public interface SiteVerificationManagerModule {
 

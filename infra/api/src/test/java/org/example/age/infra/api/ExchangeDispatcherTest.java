@@ -3,7 +3,6 @@ package org.example.age.infra.api;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -59,8 +57,6 @@ public final class ExchangeDispatcherTest {
     /** Test {@link HttpHandler} that uses an {@link ExchangeDispatcher}. */
     private static final class TestHandler implements HttpHandler {
 
-        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-
         public static HttpHandler create() {
             return new TestHandler();
         }
@@ -68,7 +64,7 @@ public final class ExchangeDispatcherTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
             if (!dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -106,7 +102,7 @@ public final class ExchangeDispatcherTest {
                 return;
             }
 
-            sender.sendBody("test");
+            sender.sendValue("test");
         }
 
         private static void ioThreadHandler(JsonSender<String> sender, Dispatcher dispatcher) {
@@ -115,7 +111,7 @@ public final class ExchangeDispatcherTest {
                 return;
             }
 
-            sender.sendBody("test");
+            sender.sendValue("test");
         }
 
         private static void badHandler(JsonSender<String> sender, Dispatcher dispatcher) {

@@ -3,14 +3,12 @@ package org.example.age.infra.api;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -52,17 +50,15 @@ public final class ExchangeJsonSenderTest {
     /** Test {@link HttpHandler} that uses an {@link ExchangeJsonSender}. */
     private static final class TestHandler implements HttpHandler {
 
-        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-
         public static HttpHandler create() {
             return new TestHandler();
         }
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
             switch (exchange.getRequestPath()) {
-                case "/value" -> sender.sendBody("test");
+                case "/value" -> sender.sendValue("test");
                 case "/forbidden" -> sender.sendErrorCode(StatusCodes.FORBIDDEN);
                 case "/send-twice" -> sendTwice(sender);
                 case "/serialization-failed" -> serializationFailed(exchange);
@@ -71,13 +67,13 @@ public final class ExchangeJsonSenderTest {
         }
 
         private static void sendTwice(JsonSender<String> sender) {
-            sender.sendBody("first");
-            sender.sendBody("second");
+            sender.sendValue("first");
+            sender.sendValue("second");
         }
 
         private static void serializationFailed(HttpServerExchange exchange) {
-            JsonSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange, serializer);
-            sender.sendBody(exchange);
+            JsonSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange);
+            sender.sendValue(exchange);
         }
 
         private TestHandler() {}

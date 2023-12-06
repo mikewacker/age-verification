@@ -23,7 +23,6 @@ dependencies {
     testImplementation(project(":infra:api"))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
-    testImplementation("com.fasterxml.jackson.core:jackson-databind")
     testImplementation("com.google.dagger:dagger")
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.undertow:undertow-core")

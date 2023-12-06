@@ -2,10 +2,10 @@ package org.example.age.api;
 
 /** Response sender that sends a JSON body, or an error status code. */
 @FunctionalInterface
-public interface JsonSender<B> extends Sender {
+public interface JsonSender<V> extends Sender {
 
-    default void sendBody(B body) {
-        send(HttpOptional.of(body));
+    default void sendValue(V value) {
+        send(HttpOptional.of(value));
     }
 
     @Override
@@ -13,5 +13,5 @@ public interface JsonSender<B> extends Sender {
         send(HttpOptional.empty(errorCode));
     }
 
-    void send(HttpOptional<B> maybeBody);
+    void send(HttpOptional<V> maybeValue);
 }

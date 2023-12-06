@@ -4,8 +4,12 @@ plugins {
 }
 
 dependencies {
+    // main
     api("com.squareup.okhttp3:okhttp")
 
+    implementation(project(":api-types"))
+
+    // test
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("com.squareup.okio:okio-jvm")
 }

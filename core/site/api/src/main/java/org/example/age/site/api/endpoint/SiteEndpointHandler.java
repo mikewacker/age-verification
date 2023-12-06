@@ -5,12 +5,10 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.VerificationState;
@@ -29,23 +27,18 @@ final class SiteEndpointHandler implements HttpHandler {
     private final SiteApi siteApi;
     private final AccountIdExtractor accountIdExtractor;
     private final AuthMatchDataExtractor authDataExtractor;
-    private final JsonSerializer serializer;
 
     @Inject
     public SiteEndpointHandler(
-            SiteApi siteApi,
-            AccountIdExtractor accountIdExtractor,
-            AuthMatchDataExtractor authDataExtractor,
-            @Named("api") JsonSerializer serializer) {
+            SiteApi siteApi, AccountIdExtractor accountIdExtractor, AuthMatchDataExtractor authDataExtractor) {
         this.siteApi = siteApi;
         this.accountIdExtractor = accountIdExtractor;
         this.authDataExtractor = authDataExtractor;
-        this.serializer = serializer;
     }
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        RequestParser parser = RequestParser.create(exchange, serializer);
+        RequestParser parser = RequestParser.create(exchange);
         switch (exchange.getRelativePath()) {
             case "/verification-state" -> handleVerificationState(exchange);
             case "/verification-session" -> handleVerificationSession(exchange);
@@ -55,7 +48,7 @@ final class SiteEndpointHandler implements HttpHandler {
     }
 
     private void handleVerificationState(HttpServerExchange exchange) {
-        JsonSender<VerificationState> sender = ExchangeJsonSender.create(exchange, serializer);
+        JsonSender<VerificationState> sender = ExchangeJsonSender.create(exchange);
 
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
@@ -69,7 +62,7 @@ final class SiteEndpointHandler implements HttpHandler {
     }
 
     private void handleVerificationSession(HttpServerExchange exchange) {
-        JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange, serializer);
+        JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange);
 
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {

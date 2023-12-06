@@ -6,7 +6,6 @@ import io.undertow.server.HttpHandler;
 import javax.inject.Named;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
-import org.example.age.site.api.data.internal.SiteApiJsonSerializerModule;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.
@@ -18,7 +17,7 @@ import org.example.age.site.api.data.internal.SiteApiJsonSerializerModule;
  *     <li>{@link AuthMatchDataExtractor}</li>
  * </ul>
  */
-@Module(includes = SiteApiJsonSerializerModule.class)
+@Module
 public interface SiteApiModule {
 
     @Binds

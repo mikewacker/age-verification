@@ -23,7 +23,7 @@ public final class StubSiteService implements SiteApi {
     @Override
     public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         VerificationState state = VerificationState.unverified();
-        sender.sendBody(state);
+        sender.sendValue(state);
     }
 
     @Override
@@ -31,7 +31,7 @@ public final class StubSiteService implements SiteApi {
             JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         VerificationSession session = VerificationSession.create(request);
-        sender.sendBody(session);
+        sender.sendValue(session);
     }
 
     @Override

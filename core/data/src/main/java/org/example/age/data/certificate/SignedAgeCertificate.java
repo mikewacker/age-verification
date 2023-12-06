@@ -1,10 +1,10 @@
 package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.api.ApiStyle;
+import org.example.age.api.JsonSerializer;
 import org.example.age.data.crypto.DigitalSignature;
 import org.immutables.value.Value;
 
@@ -28,7 +28,7 @@ public interface SignedAgeCertificate {
 
     /** Signs the age certificate. */
     static SignedAgeCertificate sign(AgeCertificate certificate, PrivateKey privateKey) {
-        byte[] rawCertificate = serialize(certificate);
+        byte[] rawCertificate = JsonSerializer.serialize(certificate);
         DigitalSignature signature = DigitalSignature.sign(rawCertificate, privateKey);
         return of(certificate, signature);
     }
@@ -41,16 +41,7 @@ public interface SignedAgeCertificate {
 
     /** Verifies the signature against the age certificate, returning whether verification succeeded. */
     default boolean verify(PublicKey publicKey) {
-        byte[] rawCertificate = serialize(ageCertificate());
+        byte[] rawCertificate = JsonSerializer.serialize(ageCertificate());
         return signature().verify(rawCertificate, publicKey);
-    }
-
-    /** Serializes an {@link AgeCertificate}. */
-    private static byte[] serialize(AgeCertificate certificate) {
-        try {
-            return InternalMapper.INSTANCE.writeValueAsBytes(certificate);
-        } catch (IOException e) {
-            throw new RuntimeException("serialization failed", e);
-        }
     }
 }

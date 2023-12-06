@@ -3,13 +3,11 @@ package org.example.age.infra.api;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -64,20 +62,18 @@ public final class RequestParserTest {
      */
     private static final class TestHandler implements HttpHandler {
 
-        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-
         public static HttpHandler create() {
             return new TestHandler();
         }
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            RequestParser parser = RequestParser.create(exchange, serializer);
+            RequestParser parser = RequestParser.create(exchange);
             parser.readBody(new TypeReference<>() {}, TestHandler::handleAddRequest);
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
-            JsonSender<Integer> sender = ExchangeJsonSender.create(exchange, serializer);
+            JsonSender<Integer> sender = ExchangeJsonSender.create(exchange);
 
             HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", new TypeReference<>() {});
             if (maybeOperand1.isEmpty()) {
@@ -86,12 +82,16 @@ public final class RequestParserTest {
             }
             int operand1 = maybeOperand1.get();
 
+            executeAddRequest(sender, operand1, operand2);
+        }
+
+        private static void executeAddRequest(JsonSender<Integer> sender, int operand1, int operand2) {
             int sum = operand1 + operand2;
             if (sum == 500) {
                 throw new RuntimeException();
             }
 
-            sender.sendBody(sum);
+            sender.sendValue(sum);
         }
 
         private TestHandler() {}

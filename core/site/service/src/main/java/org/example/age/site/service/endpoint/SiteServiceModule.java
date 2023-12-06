@@ -13,7 +13,6 @@ import org.example.age.infra.service.client.RequestDispatcherModule;
 import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.api.endpoint.SiteApiModule;
 import org.example.age.site.service.config.SiteConfig;
-import org.example.age.site.service.data.internal.SiteServiceJsonSerializerModule;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
 
 /**
@@ -30,13 +29,7 @@ import org.example.age.site.service.verification.internal.SiteVerificationManage
  *     <li><code>Provider&lt;{@link SiteConfig}&gt;</code></li>
  * </ul>
  */
-@Module(
-        includes = {
-            SiteApiModule.class,
-            SiteVerificationManagerModule.class,
-            RequestDispatcherModule.class,
-            SiteServiceJsonSerializerModule.class,
-        })
+@Module(includes = {SiteApiModule.class, SiteVerificationManagerModule.class, RequestDispatcherModule.class})
 public interface SiteServiceModule {
 
     @Binds

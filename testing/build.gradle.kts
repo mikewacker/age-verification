@@ -13,7 +13,6 @@ dependencies {
     testFixturesApi("org.junit.jupiter:junit-jupiter-api")
 
     testFixturesImplementation(project(":infra:client"))
-    testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
     testFixturesImplementation("com.squareup.okhttp3:okhttp")
 
     // test

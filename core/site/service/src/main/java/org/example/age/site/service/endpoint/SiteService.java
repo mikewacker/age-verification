@@ -39,7 +39,7 @@ final class SiteService implements SiteApi {
     @Override
     public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         VerificationState state = verificationManager.getVerificationState(accountId);
-        sender.sendBody(state);
+        sender.sendValue(state);
     }
 
     @Override
@@ -95,7 +95,7 @@ final class SiteService implements SiteApi {
                 return;
             }
 
-            sender.sendBody(session);
+            sender.sendValue(session);
         }
 
         /** Maps the backend error code to a frontend error code. */
