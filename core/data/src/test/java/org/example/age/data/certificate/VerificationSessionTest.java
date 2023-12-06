@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Duration;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationSessionTest {
@@ -13,8 +13,8 @@ public final class VerificationSessionTest {
     public void serializeThenDeserialize() {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         VerificationSession session = VerificationSession.create(request);
-        byte[] rawSession = JsonSerializer.serialize(session);
-        VerificationSession rtSession = JsonSerializer.deserialize(rawSession, new TypeReference<>() {});
+        byte[] rawSession = JsonObjects.serialize(session);
+        VerificationSession rtSession = JsonObjects.deserialize(rawSession, new TypeReference<>() {});
         assertThat(rtSession).isEqualTo(session);
     }
 }

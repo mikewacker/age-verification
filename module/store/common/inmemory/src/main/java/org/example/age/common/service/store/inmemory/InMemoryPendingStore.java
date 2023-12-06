@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.common.service.store.PendingStore;
 import org.xnio.XnioExecutor;
 
@@ -39,7 +39,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
             return;
         }
 
-        byte[] rawValue = JsonSerializer.serialize(value);
+        byte[] rawValue = JsonObjects.serialize(value);
         ExpirableRawValue expirableRawValue = new ExpirableRawValue(rawValue);
         Optional<ExpirableRawValue> maybeOldExpirableRawValue = Optional.ofNullable(store.put(key, expirableRawValue));
         expirableRawValue.scheduleExpiration(expiresIn, executor);
@@ -54,7 +54,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         }
         ExpirableRawValue expirableRawValue = maybeExpirableRawValue.get();
 
-        V value = JsonSerializer.deserialize(expirableRawValue.get(), valueTypeRef);
+        V value = JsonObjects.deserialize(expirableRawValue.get(), valueTypeRef);
         return Optional.of(value);
     }
 
@@ -67,7 +67,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         ExpirableRawValue expirableRawValue = maybeExpirableRawValue.get();
 
         expirableRawValue.cancelExpiration();
-        V value = JsonSerializer.deserialize(expirableRawValue.get(), valueTypeRef);
+        V value = JsonObjects.deserialize(expirableRawValue.get(), valueTypeRef);
         return Optional.of(value);
     }
 

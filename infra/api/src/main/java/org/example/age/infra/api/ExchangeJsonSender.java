@@ -5,8 +5,8 @@ import io.undertow.util.Headers;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.example.age.api.HttpOptional;
+import org.example.age.api.JsonObjects;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 
 /** {@link JsonSender} that is backed by an {@link HttpServerExchange}. */
 public final class ExchangeJsonSender<V> implements JsonSender<V> {
@@ -36,7 +36,7 @@ public final class ExchangeJsonSender<V> implements JsonSender<V> {
 
     /** Sends a JSON body. */
     private void sendValueInternal(Object value) {
-        byte[] rawValue = JsonSerializer.serialize(value);
+        byte[] rawValue = JsonObjects.serialize(value);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(rawValue));
     }

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 public class BytesValueTest {
@@ -20,8 +20,8 @@ public class BytesValueTest {
     @Test
     public void serializeThenDeserialize() {
         BytesValue value = BytesValue.ofBytes(BYTES);
-        byte[] rawValue = JsonSerializer.serialize(value);
-        BytesValue rtValue = JsonSerializer.deserialize(rawValue, new TypeReference<>() {});
+        byte[] rawValue = JsonObjects.serialize(value);
+        BytesValue rtValue = JsonObjects.deserialize(rawValue, new TypeReference<>() {});
         assertThat(rtValue).isEqualTo(value);
     }
 }

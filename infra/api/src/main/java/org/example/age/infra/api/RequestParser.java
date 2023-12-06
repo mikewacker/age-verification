@@ -7,7 +7,7 @@ import io.undertow.util.StatusCodes;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.xnio.IoUtils;
 
 /** Parses API arguments from an HTTP request. */
@@ -45,8 +45,8 @@ public final class RequestParser {
         }
 
         String rawValue = maybeRawValue.get();
-        byte[] json = JsonSerializer.serialize(rawValue);
-        return JsonSerializer.tryDeserialize(json, valueTypeRef, StatusCodes.BAD_REQUEST);
+        byte[] json = JsonObjects.serialize(rawValue);
+        return JsonObjects.tryDeserialize(json, valueTypeRef, StatusCodes.BAD_REQUEST);
     }
 
     /**
@@ -80,7 +80,7 @@ public final class RequestParser {
 
         @Override
         public void handle(HttpServerExchange exchange, byte[] rawValue) {
-            HttpOptional<V> maybeValue = JsonSerializer.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
+            HttpOptional<V> maybeValue = JsonObjects.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
             if (maybeValue.isEmpty()) {
                 sendErrorCode(maybeValue.statusCode());
                 return;

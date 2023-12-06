@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 public final class Aes256KeyTest {
@@ -19,8 +19,8 @@ public final class Aes256KeyTest {
     @Test
     public void serializeThenDeserialize() {
         Aes256Key key = Aes256Key.generate();
-        byte[] rawKey = JsonSerializer.serialize(key);
-        Aes256Key rtKey = JsonSerializer.deserialize(rawKey, new TypeReference<>() {});
+        byte[] rawKey = JsonObjects.serialize(key);
+        Aes256Key rtKey = JsonObjects.deserialize(rawKey, new TypeReference<>() {});
         assertThat(rtKey).isEqualTo(key);
     }
 

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.testing.EqualsTester;
 import java.util.Arrays;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {
@@ -32,8 +32,8 @@ public final class ImmutableBytesTest {
     @Test
     public void serializeThenDeserialize() {
         TestObject o = TestObject.ofBytes(RAW_O_BYTES);
-        byte[] rawO = JsonSerializer.serialize(o);
-        TestObject rtO = JsonSerializer.deserialize(rawO, new TypeReference<>() {});
+        byte[] rawO = JsonObjects.serialize(o);
+        TestObject rtO = JsonObjects.deserialize(rawO, new TypeReference<>() {});
         assertThat(rtO).isEqualTo(o);
     }
 

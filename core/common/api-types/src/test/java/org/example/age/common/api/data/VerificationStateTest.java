@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Duration;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeAll;
@@ -103,8 +103,8 @@ public final class VerificationStateTest {
     }
 
     private void serializeThenDeserialize(VerificationState state) {
-        byte[] rawState = JsonSerializer.serialize(state);
-        VerificationState rtState = JsonSerializer.deserialize(rawState, new TypeReference<>() {});
+        byte[] rawState = JsonObjects.serialize(state);
+        VerificationState rtState = JsonObjects.deserialize(rawState, new TypeReference<>() {});
         assertThat(rtState).isEqualTo(state);
     }
 }

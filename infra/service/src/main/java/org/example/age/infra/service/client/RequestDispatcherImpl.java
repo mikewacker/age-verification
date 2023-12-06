@@ -9,7 +9,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.api.Sender;
 import org.example.age.infra.client.JsonApiRequest;
 import org.example.age.infra.service.client.internal.ExchangeClient;
@@ -154,7 +154,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
             byte[] rawResponseValue = maybeRawResponseValue.get();
 
             HttpOptional<V> maybeResponseValue =
-                    JsonSerializer.tryDeserialize(rawResponseValue, responseValueTypeRef, 502);
+                    JsonObjects.tryDeserialize(rawResponseValue, responseValueTypeRef, 502);
             if (maybeResponseValue.isEmpty()) {
                 sender.sendErrorCode(maybeResponseValue.statusCode());
                 return;

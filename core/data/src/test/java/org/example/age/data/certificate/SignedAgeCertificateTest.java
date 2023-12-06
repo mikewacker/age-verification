@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.time.Duration;
-import org.example.age.api.JsonSerializer;
+import org.example.age.api.JsonObjects;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
@@ -46,9 +46,9 @@ public final class SignedAgeCertificateTest {
     public void serializeThenDeserialize() {
         AgeCertificate certificate = createAgeCertificate();
         SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
-        byte[] rawSignedCertificate = JsonSerializer.serialize(signedCertificate);
+        byte[] rawSignedCertificate = JsonObjects.serialize(signedCertificate);
         SignedAgeCertificate rtSignedCertificate =
-                JsonSerializer.deserialize(rawSignedCertificate, new TypeReference<>() {});
+                JsonObjects.deserialize(rawSignedCertificate, new TypeReference<>() {});
         assertThat(rtSignedCertificate).isEqualTo(signedCertificate);
     }
 
@@ -56,9 +56,9 @@ public final class SignedAgeCertificateTest {
     public void signThenSerializeThenDeserializeThenVerify() {
         AgeCertificate certificate = createAgeCertificate();
         SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
-        byte[] rawSignedCertificate = JsonSerializer.serialize(signedCertificate);
+        byte[] rawSignedCertificate = JsonObjects.serialize(signedCertificate);
         SignedAgeCertificate rtSignedCertificate =
-                JsonSerializer.deserialize(rawSignedCertificate, new TypeReference<>() {});
+                JsonObjects.deserialize(rawSignedCertificate, new TypeReference<>() {});
         boolean wasVerified = rtSignedCertificate.verify(keyPair.getPublic());
         assertThat(wasVerified).isTrue();
     }

@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * <p>Types should be serializable using the default object mapper, which has no registered modules.</p>
  */
-public final class JsonSerializer {
+public final class JsonObjects {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -51,5 +51,5 @@ public final class JsonSerializer {
     }
 
     // static class
-    private JsonSerializer() {}
+    private JsonObjects() {}
 }
