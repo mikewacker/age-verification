@@ -1,7 +1,6 @@
 package org.example.age.api;
 
 import java.util.concurrent.ExecutorService;
-import org.xnio.XnioExecutor;
 
 /**
  * Dispatches requests to the worker thread pool, and also schedules tasks.
@@ -16,8 +15,8 @@ public interface Dispatcher {
     /** Determines if the current thread is the IO thread. */
     boolean isInIoThread();
 
-    /** Gets the IO thread, which has the capability to run timed, cancellable tasks. */
-    XnioExecutor getIoThread();
+    /** Gets the IO thread, which can also schedule tasks. */
+    ScheduledExecutor getIoThread();
 
     /** Gets the worker thread pool. */
     ExecutorService getWorker();

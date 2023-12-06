@@ -14,7 +14,6 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-core")
     api("com.fasterxml.jackson.core:jackson-databind")
     api("org.immutables:value-annotations")
-    api("org.jboss.xnio:xnio-api")
 
     // test
     testImplementation(project(":api-types"))

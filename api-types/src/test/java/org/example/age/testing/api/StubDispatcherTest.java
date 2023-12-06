@@ -3,12 +3,13 @@ package org.example.age.testing.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.example.age.api.Dispatcher;
+import org.example.age.api.ScheduledExecutor;
 import org.junit.jupiter.api.Test;
-import org.xnio.XnioExecutor;
 
 public final class StubDispatcherTest {
 
@@ -21,14 +22,12 @@ public final class StubDispatcherTest {
     @Test
     public void getIoThread() {
         Dispatcher dispatcher = StubDispatcher.get();
-        XnioExecutor ioThread = dispatcher.getIoThread();
+        ScheduledExecutor ioThread = dispatcher.getIoThread();
         ioThread.execute(() -> {});
-        XnioExecutor.Key afterKey = ioThread.executeAfter(() -> {}, 1, TimeUnit.SECONDS);
-        assertThat(afterKey).isNotNull();
-        XnioExecutor.Key intervalKey = ioThread.executeAtInterval(() -> {}, 1, TimeUnit.SECONDS);
-        assertThat(intervalKey).isNotNull();
+        ScheduledExecutor.Key key = ioThread.executeAfter(() -> {}, Duration.ofMinutes(1));
+        assertThat(key).isNotNull();
 
-        assertThat(intervalKey.remove()).isFalse();
+        assertThat(key.cancel()).isFalse();
     }
 
     @Test
