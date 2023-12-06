@@ -3,8 +3,7 @@ package org.example.age.common.service.config;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,10 +23,9 @@ public final class SiteLocationTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        byte[] rawLocation = mapper.writeValueAsBytes(location);
-        SiteLocation rtLocation = mapper.readValue(rawLocation, new TypeReference<>() {});
+    public void serializeThenDeserialize() {
+        byte[] rawLocation = JsonSerializer.serialize(location);
+        SiteLocation rtLocation = JsonSerializer.deserialize(rawLocation, new TypeReference<>() {});
         assertThat(rtLocation).isEqualTo(location);
     }
 }

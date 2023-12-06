@@ -3,10 +3,9 @@ package org.example.age.data.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {
@@ -49,11 +48,10 @@ public final class VerificationRequestTest {
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
-        byte[] rawRequest = mapper.writeValueAsBytes(request);
-        VerificationRequest rtRequest = mapper.readValue(rawRequest, new TypeReference<>() {});
+        byte[] rawRequest = JsonSerializer.serialize(request);
+        VerificationRequest rtRequest = JsonSerializer.deserialize(rawRequest, new TypeReference<>() {});
         assertThat(rtRequest).isEqualTo(request);
     }
 }

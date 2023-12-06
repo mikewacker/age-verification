@@ -11,28 +11,29 @@ dependencies {
 
     api(project(":api-types"))
     api(project(":core:common:api-extractors"))
+    api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
+    api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
     api("org.immutables:value-annotations")
-
-    implementation(project(":api-types"))
-    api("io.undertow:undertow-core")
 
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":core:common:api-types"))
-    api("com.google.dagger:dagger")
-    api("javax.inject:javax.inject")
+    testFixturesApi(project(":core:common:api-types"))
+    testFixturesApi("com.google.dagger:dagger")
+    testFixturesApi("javax.inject:javax.inject")
 
-    implementation(project(":api-types"))
-    api("io.undertow:undertow-core")
+    testFixturesImplementation(project(":api-types"))
+    testFixturesImplementation("io.undertow:undertow-core")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
+    testImplementation(project(":api-types"))
     testImplementation(testFixtures(project(":api-types")))
+    testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("io.undertow:undertow-core")
     testImplementation("org.mockito:mockito-core")
 }

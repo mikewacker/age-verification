@@ -3,10 +3,9 @@ package org.example.age.data.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
+import org.example.age.api.JsonSerializer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -31,26 +30,24 @@ public final class DigitalSignatureTest {
     @Test
     public void verifyFailed() {
         DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] otherMessage = "otherMessage".getBytes(StandardCharsets.UTF_8);
+        byte[] otherMessage = "Goodbye, world!".getBytes(StandardCharsets.UTF_8);
         boolean wasVerified = signature.verify(otherMessage, keyPair.getPublic());
         assertThat(wasVerified).isFalse();
     }
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void serializeThenDeserialize() {
         DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] rawSignature = mapper.writeValueAsBytes(signature);
-        DigitalSignature rtSignature = mapper.readValue(rawSignature, new TypeReference<>() {});
+        byte[] rawSignature = JsonSerializer.serialize(signature);
+        DigitalSignature rtSignature = JsonSerializer.deserialize(rawSignature, new TypeReference<>() {});
         assertThat(rtSignature).isEqualTo(signature);
     }
 
     @Test
-    public void signThenSerializeThenDeserializeThenVerify() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+    public void signThenSerializeThenDeserializeThenVerify() {
         DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] rawSignature = mapper.writeValueAsBytes(signature);
-        DigitalSignature rtSignature = mapper.readValue(rawSignature, new TypeReference<>() {});
+        byte[] rawSignature = JsonSerializer.serialize(signature);
+        DigitalSignature rtSignature = JsonSerializer.deserialize(rawSignature, new TypeReference<>() {});
         boolean wasVerified = rtSignature.verify(MESSAGE, keyPair.getPublic());
         assertThat(wasVerified).isTrue();
     }
