@@ -3,7 +3,6 @@ package org.example.age.infra.service.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -19,12 +18,10 @@ import org.example.age.infra.service.client.internal.ExchangeClient;
 final class RequestDispatcherImpl implements RequestDispatcher {
 
     private final ExchangeClient client;
-    private final JsonSerializer serializer;
 
     @Inject
-    public RequestDispatcherImpl(ExchangeClient client, @Named("service") JsonSerializer serializer) {
+    public RequestDispatcherImpl(ExchangeClient client) {
         this.client = client;
-        this.serializer = serializer;
     }
 
     @Override
@@ -59,8 +56,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
         @Override
         public RequestBuilder<S> body(Object requestValue) {
-            byte[] rawRequestValue = serializer.serialize(requestValue);
-            requestBuilder.body(rawRequestValue);
+            requestBuilder.body(requestValue);
             return this;
         }
 
@@ -128,7 +124,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     /** Adapts a {@link ResponseJsonCallback} to a {@link Callback}. */
-    private final class AdaptedResponseJsonCallback<S extends Sender, V> extends AdaptedCallback<S> {
+    private static final class AdaptedResponseJsonCallback<S extends Sender, V> extends AdaptedCallback<S> {
 
         private final TypeReference<V> responseValueTypeRef;
         private final ResponseJsonCallback<S, V> callback;
@@ -157,7 +153,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
             }
             byte[] rawResponseValue = maybeRawResponseValue.get();
 
-            HttpOptional<V> maybeResponseValue = serializer.tryDeserialize(rawResponseValue, responseValueTypeRef, 502);
+            HttpOptional<V> maybeResponseValue =
+                    JsonSerializer.tryDeserialize(rawResponseValue, responseValueTypeRef, 502);
             if (maybeResponseValue.isEmpty()) {
                 sender.sendErrorCode(maybeResponseValue.statusCode());
                 return;

@@ -1,33 +1,51 @@
 package org.example.age.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public final class JsonSerializerTest {
 
-    private static JsonSerializer serializer;
-
-    @BeforeAll
-    public static void createJsonSerializer() {
-        serializer = JsonSerializer.create(new ObjectMapper());
-    }
-
     @Test
     public void serializeThenDeserialize() {
         String value = "test";
-        byte[] rawValue = serializer.serialize(value);
-        HttpOptional<String> maybeRtValue = serializer.tryDeserialize(rawValue, new TypeReference<>() {}, 400);
+        byte[] rawValue = JsonSerializer.serialize(value);
+        String rtValue = JsonSerializer.deserialize(rawValue, new TypeReference<>() {});
+        assertThat(rtValue).isEqualTo(value);
+    }
+
+    @Test
+    public void serializeThenTryDeserialize() {
+        String value = "test";
+        byte[] rawValue = JsonSerializer.serialize(value);
+        HttpOptional<String> maybeRtValue = JsonSerializer.tryDeserialize(rawValue, new TypeReference<>() {}, 400);
         assertThat(maybeRtValue).hasValue(value);
     }
 
     @Test
+    public void serializeFailed() {
+        Object unserializableValue = new JsonSerializerTest();
+        assertThatThrownBy(() -> JsonSerializer.serialize(unserializableValue))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("serialization failed");
+    }
+
+    @Test
     public void deserializeFailed() {
-        byte[] rawValue = new byte[4];
-        HttpOptional<String> maybeValue = serializer.tryDeserialize(rawValue, new TypeReference<>() {}, 400);
+        byte[] malformedRawValue = new byte[4];
+        assertThatThrownBy(() -> JsonSerializer.deserialize(malformedRawValue, new TypeReference<>() {}))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("deserialization failed");
+    }
+
+    @Test
+    public void tryDeserializeFailed() {
+        byte[] malformedRawValue = new byte[4];
+        HttpOptional<String> maybeValue =
+                JsonSerializer.tryDeserialize(malformedRawValue, new TypeReference<>() {}, 400);
         assertThat(maybeValue).isEmptyWithErrorCode(400);
     }
 }

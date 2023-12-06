@@ -1,10 +1,8 @@
 package org.example.age.infra.service.client.internal;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -53,8 +51,6 @@ public final class ExchangeClientTest {
     @Singleton
     static final class GreetingHandler implements HttpHandler {
 
-        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-
         private final ExchangeClient client;
 
         public static HttpHandler create() {
@@ -64,18 +60,17 @@ public final class ExchangeClientTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             Call call = client.getInstance(dispatcher).newCall(request);
-            Callback callback = new RecipientCallback(serializer, sender, dispatcher);
+            Callback callback = new RecipientCallback(sender, dispatcher);
             call.enqueue(callback);
             dispatcher.dispatched();
         }
 
-        private record RecipientCallback(JsonSerializer serializer, JsonSender<String> sender, Dispatcher dispatcher)
-                implements Callback {
+        private record RecipientCallback(JsonSender<String> sender, Dispatcher dispatcher) implements Callback {
 
             @Override
             public void onResponse(Call call, Response response) {
@@ -87,9 +82,9 @@ public final class ExchangeClientTest {
                 sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
             }
 
-            private void onRecipientReceived(JsonSender<String> sender, Response response) throws IOException {
-                HttpOptional<String> maybeRecipient =
-                        serializer.tryDeserialize(response.body().bytes(), new TypeReference<>() {}, 400);
+            private static void onRecipientReceived(JsonSender<String> sender, Response response) throws IOException {
+                HttpOptional<String> maybeRecipient = JsonSerializer.tryDeserialize(
+                        response.body().bytes(), new TypeReference<>() {}, StatusCodes.BAD_GATEWAY);
                 if (maybeRecipient.isEmpty()) {
                     sender.sendErrorCode(maybeRecipient.statusCode());
                     return;
@@ -97,7 +92,7 @@ public final class ExchangeClientTest {
                 String recipient = maybeRecipient.get();
 
                 String greeting = String.format("Hello, %s!", recipient);
-                sender.sendBody(greeting);
+                sender.sendValue(greeting);
             }
         }
 

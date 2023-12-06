@@ -4,21 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dagger.BindsInstance;
 import dagger.Component;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
 import org.example.age.api.Dispatcher;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
-import org.example.age.api.JsonSerializer;
 import org.example.age.api.StatusCodeSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
@@ -106,12 +102,10 @@ public final class RequestDispatcherTest {
     @Singleton
     static final class ProxyHandler implements HttpHandler {
 
-        private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-
         private final RequestDispatcher requestDispatcher;
 
         public static HttpHandler create() {
-            RequestDispatcher requestDispatcher = TestComponent.createRequestDispatcher(serializer);
+            RequestDispatcher requestDispatcher = TestComponent.createRequestDispatcher();
             return new ProxyHandler(requestDispatcher);
         }
 
@@ -131,24 +125,25 @@ public final class RequestDispatcherTest {
             requestDispatcher
                     .requestBuilder(sender, dispatcher)
                     .get(backendServer.rootUrl())
-                    .dispatchWithStatusCodeResponse(this::onStatusCodeResponseReceived);
+                    .dispatchWithStatusCodeResponse(ProxyHandler::onStatusCodeResponseReceived);
         }
 
         private void handleJsonRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange, serializer);
+            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             requestDispatcher
                     .requestBuilder(sender, dispatcher)
                     .get(backendServer.rootUrl())
-                    .dispatchWithJsonResponse(new TypeReference<>() {}, this::onJsonResponseReceived);
+                    .dispatchWithJsonResponse(new TypeReference<>() {}, ProxyHandler::onJsonResponseReceived);
         }
 
-        private void onStatusCodeResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+        private static void onStatusCodeResponseReceived(
+                StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
             sender.send(statusCode);
         }
 
-        private void onJsonResponseReceived(
+        private static void onJsonResponseReceived(
                 JsonSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
             sender.send(maybeText);
         }
@@ -163,18 +158,11 @@ public final class RequestDispatcherTest {
     @Singleton
     public interface TestComponent {
 
-        static RequestDispatcher createRequestDispatcher(JsonSerializer serializer) {
-            TestComponent component =
-                    DaggerRequestDispatcherTest_TestComponent.factory().create(serializer);
+        static RequestDispatcher createRequestDispatcher() {
+            TestComponent component = DaggerRequestDispatcherTest_TestComponent.create();
             return component.requestDispatcher();
         }
 
         RequestDispatcher requestDispatcher();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("service") JsonSerializer serializer);
-        }
     }
 }

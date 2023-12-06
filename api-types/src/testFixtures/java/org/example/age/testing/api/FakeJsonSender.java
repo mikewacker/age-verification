@@ -5,27 +5,27 @@ import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 
 /** Fake {@link JsonSender} that stores the body (or error status code) that was sent. */
-public final class FakeJsonSender<B> implements JsonSender<B> {
+public final class FakeJsonSender<V> implements JsonSender<V> {
 
-    private Optional<HttpOptional<B>> maybeResponse = Optional.empty();
+    private Optional<HttpOptional<V>> maybeResponse = Optional.empty();
 
     /** Creates a {@link FakeJsonSender}. */
-    public static <B> FakeJsonSender<B> create() {
+    public static <V> FakeJsonSender<V> create() {
         return new FakeJsonSender<>();
     }
 
     /** Gets the body (or error status code) that was sent, if a response was sent. */
-    public Optional<HttpOptional<B>> tryGet() {
+    public Optional<HttpOptional<V>> tryGet() {
         return maybeResponse;
     }
 
     @Override
-    public void send(HttpOptional<B> maybeBody) {
+    public void send(HttpOptional<V> maybeValue) {
         if (maybeResponse.isPresent()) {
             throw new IllegalStateException("response was already sent");
         }
 
-        maybeResponse = Optional.of(maybeBody);
+        maybeResponse = Optional.of(maybeValue);
     }
 
     private FakeJsonSender() {}

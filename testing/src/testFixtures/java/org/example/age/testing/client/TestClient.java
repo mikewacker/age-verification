@@ -1,7 +1,6 @@
 package org.example.age.testing.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
 import okhttp3.MediaType;
@@ -19,7 +18,6 @@ public final class TestClient {
     private static final MediaType HTML_CONTENT_TYPE = MediaType.get("text/html");
 
     private static final OkHttpClient client = createClient();
-    private static final JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
 
     /** Issues an HTTP GET request for HTML. */
     public static HttpOptional<String> getHtml(String url) throws IOException {
@@ -93,8 +91,7 @@ public final class TestClient {
 
         /** Sets the body. */
         public ApiRequestBuilder body(Object requestValue) {
-            byte[] rawRequestValue = serializer.serialize(requestValue);
-            requestBuilder.body(rawRequestValue);
+            requestBuilder.body(requestValue);
             return this;
         }
 
@@ -104,7 +101,7 @@ public final class TestClient {
             return response.code();
         }
 
-        /** Makes the request synchronously, returning a value or an error code. */
+        /** Makes the request synchronously, returning a response value or an error status code. */
         public <V> HttpOptional<V> executeWithJsonResponse(TypeReference<V> responseValueTypeRef) throws IOException {
             Response response = requestBuilder.execute();
             if (!response.isSuccessful()) {
@@ -113,12 +110,7 @@ public final class TestClient {
 
             checkContentType(response, JSON_CONTENT_TYPE);
             byte[] rawResponseValue = response.body().bytes();
-            HttpOptional<V> maybeResponseValue = serializer.tryDeserialize(rawResponseValue, responseValueTypeRef, 500);
-            if (maybeResponseValue.isEmpty()) {
-                throw new RuntimeException("deserialization of response body failed");
-            }
-            V responseValue = maybeResponseValue.get();
-
+            V responseValue = JsonSerializer.deserialize(rawResponseValue, responseValueTypeRef);
             return HttpOptional.of(responseValue);
         }
 

@@ -83,10 +83,8 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_PostWithBody() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response = JsonApiRequest.builder(client)
-                .post(mockServerUrl)
-                .body("\"test\"".getBytes(StandardCharsets.UTF_8))
-                .execute();
+        Response response =
+                JsonApiRequest.builder(client).post(mockServerUrl).body("test").execute();
         assertThat(response.isSuccessful()).isTrue();
 
         RecordedRequest recordedRequest = mockServer.takeRequest();

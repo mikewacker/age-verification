@@ -16,11 +16,10 @@ public final class RequestParser {
     private static final Deque<String> EMPTY_VALUES = new ArrayDeque<>();
 
     private final HttpServerExchange exchange;
-    private final JsonSerializer serializer;
 
     /** Creates a {@link RequestParser} for the {@link HttpServerExchange}. */
-    public static RequestParser create(HttpServerExchange exchange, JsonSerializer serializer) {
-        return new RequestParser(exchange, serializer);
+    public static RequestParser create(HttpServerExchange exchange) {
+        return new RequestParser(exchange);
     }
 
     /**
@@ -46,8 +45,8 @@ public final class RequestParser {
         }
 
         String rawValue = maybeRawValue.get();
-        byte[] json = serializer.serialize(rawValue);
-        return serializer.tryDeserialize(json, valueTypeRef, StatusCodes.BAD_REQUEST);
+        byte[] json = JsonSerializer.serialize(rawValue);
+        return JsonSerializer.tryDeserialize(json, valueTypeRef, StatusCodes.BAD_REQUEST);
     }
 
     /**
@@ -64,9 +63,8 @@ public final class RequestParser {
         return HttpOptional.of(values.getFirst());
     }
 
-    private RequestParser(HttpServerExchange exchange, JsonSerializer serializer) {
+    private RequestParser(HttpServerExchange exchange) {
         this.exchange = exchange;
-        this.serializer = serializer;
     }
 
     /** Adapts a {@link RequestJsonCallback} to a {@link Receiver.FullBytesCallback}. */
@@ -82,7 +80,7 @@ public final class RequestParser {
 
         @Override
         public void handle(HttpServerExchange exchange, byte[] rawValue) {
-            HttpOptional<V> maybeValue = serializer.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
+            HttpOptional<V> maybeValue = JsonSerializer.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
             if (maybeValue.isEmpty()) {
                 sendErrorCode(maybeValue.statusCode());
                 return;

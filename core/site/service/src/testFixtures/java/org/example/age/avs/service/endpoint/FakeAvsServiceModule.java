@@ -6,7 +6,6 @@ import io.undertow.server.HttpHandler;
 import java.security.PrivateKey;
 import org.example.age.avs.api.endpoint.AvsApi;
 import org.example.age.avs.api.endpoint.AvsApiModule;
-import org.example.age.avs.service.data.internal.AvsServiceJsonSerializerModule;
 import org.example.age.avs.service.verification.internal.FakeAvsVerificationFactoryModule;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
@@ -24,13 +23,7 @@ import org.example.age.infra.service.client.RequestDispatcherModule;
  *     <li><code>Provider&lt;{@link SiteLocation}&gt;</code></li>
  * </ul>
  */
-@Module(
-        includes = {
-            AvsApiModule.class,
-            FakeAvsVerificationFactoryModule.class,
-            RequestDispatcherModule.class,
-            AvsServiceJsonSerializerModule.class,
-        })
+@Module(includes = {AvsApiModule.class, FakeAvsVerificationFactoryModule.class, RequestDispatcherModule.class})
 public interface FakeAvsServiceModule {
 
     @Binds

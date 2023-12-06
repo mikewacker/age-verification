@@ -4,7 +4,6 @@ import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
-import org.example.age.avs.api.data.internal.AvsApiJsonSerializerModule;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
 
@@ -18,7 +17,7 @@ import org.example.age.common.api.extractor.AuthMatchDataExtractor;
  *     <li>{@link AuthMatchDataExtractor}</li>
  * </ul>
  */
-@Module(includes = AvsApiJsonSerializerModule.class)
+@Module
 public interface AvsApiModule {
 
     @Binds

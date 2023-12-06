@@ -4,14 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dagger.BindsInstance;
 import dagger.Component;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
-import org.example.age.api.JsonSerializer;
 import org.example.age.common.service.store.PendingStore;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.testing.api.FakeXnioExecutor;
@@ -118,18 +114,10 @@ public final class InMemoryPendingStoreFactoryTest {
     interface TestComponent {
 
         static PendingStoreFactory createPendingStoreFactory() {
-            JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-            TestComponent component = DaggerInMemoryPendingStoreFactoryTest_TestComponent.factory()
-                    .create(serializer);
+            TestComponent component = DaggerInMemoryPendingStoreFactoryTest_TestComponent.create();
             return component.pendingStoreFactory();
         }
 
         PendingStoreFactory pendingStoreFactory();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("service") JsonSerializer serializer);
-        }
     }
 }

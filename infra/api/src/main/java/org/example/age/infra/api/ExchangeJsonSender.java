@@ -9,37 +9,36 @@ import org.example.age.api.JsonSender;
 import org.example.age.api.JsonSerializer;
 
 /** {@link JsonSender} that is backed by an {@link HttpServerExchange}. */
-public final class ExchangeJsonSender<B> implements JsonSender<B> {
+public final class ExchangeJsonSender<V> implements JsonSender<V> {
 
     private final HttpServerExchange exchange;
-    private final JsonSerializer serializer;
     private final AtomicBoolean wasSent = new AtomicBoolean(false);
 
     /** Creates the {@link JsonSender} from the {@link HttpServerExchange}. */
-    public static <B> JsonSender<B> create(HttpServerExchange exchange, JsonSerializer serializer) {
-        return new ExchangeJsonSender<>(exchange, serializer);
+    public static <V> JsonSender<V> create(HttpServerExchange exchange) {
+        return new ExchangeJsonSender<>(exchange);
     }
 
     @Override
-    public void send(HttpOptional<B> maybeBody) {
+    public void send(HttpOptional<V> maybeValue) {
         if (wasSent.getAndSet(true)) {
             return;
         }
 
-        if (maybeBody.isEmpty()) {
-            sendErrorCodeInternal(maybeBody.statusCode());
+        if (maybeValue.isEmpty()) {
+            sendErrorCodeInternal(maybeValue.statusCode());
             return;
         }
 
-        B body = maybeBody.get();
-        byte[] rawBody = serializer.serialize(body);
-        sendRawBody(rawBody);
+        V value = maybeValue.get();
+        sendValueInternal(value);
     }
 
-    /** Sends the raw body. */
-    private void sendRawBody(byte[] rawBody) {
+    /** Sends a JSON body. */
+    private void sendValueInternal(Object value) {
+        byte[] rawValue = JsonSerializer.serialize(value);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send(ByteBuffer.wrap(rawBody));
+        exchange.getResponseSender().send(ByteBuffer.wrap(rawValue));
     }
 
     /** Sends an error status code. */
@@ -48,8 +47,7 @@ public final class ExchangeJsonSender<B> implements JsonSender<B> {
         exchange.endExchange();
     }
 
-    private ExchangeJsonSender(HttpServerExchange exchange, JsonSerializer serializer) {
+    private ExchangeJsonSender(HttpServerExchange exchange) {
         this.exchange = exchange;
-        this.serializer = serializer;
     }
 }

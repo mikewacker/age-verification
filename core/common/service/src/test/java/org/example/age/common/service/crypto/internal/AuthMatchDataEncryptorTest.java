@@ -2,20 +2,13 @@ package org.example.age.common.service.crypto.internal;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import dagger.BindsInstance;
 import dagger.Component;
-import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.api.ApiStyle;
 import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSerializer;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
-import org.immutables.value.Value;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +30,7 @@ public final class AuthMatchDataEncryptorTest {
 
     @Test
     public void encryptThenDecrypt() {
-        AuthMatchData authData = TestAuthMatchData.of("test");
+        AuthMatchData authData = new TestAuthMatchData("test");
         AesGcmEncryptionPackage authToken = authDataEncryptor.encrypt(authData, authKey);
         HttpOptional<AuthMatchData> maybeRtAuthData = authDataEncryptor.tryDecrypt(authToken, authKey);
         assertThat(maybeRtAuthData).hasValue(authData);
@@ -61,19 +54,10 @@ public final class AuthMatchDataEncryptorTest {
     }
 
     /** Test {@link AuthMatchData}. */
-    @Value.Immutable
-    @ApiStyle
-    @JsonDeserialize(as = ImmutableTestAuthMatchData.class)
-    public interface TestAuthMatchData extends AuthMatchData {
-
-        static AuthMatchData of(String data) {
-            return ImmutableTestAuthMatchData.builder().data(data).build();
-        }
-
-        String data();
+    public record TestAuthMatchData(String data) implements AuthMatchData {
 
         @Override
-        default boolean match(AuthMatchData other) {
+        public boolean match(AuthMatchData other) {
             return equals(other);
         }
     }
@@ -84,18 +68,10 @@ public final class AuthMatchDataEncryptorTest {
     interface TestComponent {
 
         static AuthMatchDataEncryptor createAuthMatchDataEncryptor() {
-            JsonSerializer serializer = JsonSerializer.create(new ObjectMapper());
-            TestComponent component =
-                    DaggerAuthMatchDataEncryptorTest_TestComponent.factory().create(serializer);
+            TestComponent component = DaggerAuthMatchDataEncryptorTest_TestComponent.create();
             return component.authMatchDataEncryptor();
         }
 
         AuthMatchDataEncryptor authMatchDataEncryptor();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("service") JsonSerializer serializer);
-        }
     }
 }

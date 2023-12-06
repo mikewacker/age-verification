@@ -19,14 +19,14 @@ public final class FakeJsonSenderTest {
     @Test
     public void sendAndGet() {
         assertThat(sender.tryGet()).isEmpty();
-        sender.sendBody("test");
+        sender.sendValue("test");
         assertThat(sender.tryGet()).hasValue(HttpOptional.of("test"));
     }
 
     @Test
     public void error_SendTwice() {
-        sender.sendBody("test");
-        assertThatThrownBy(() -> sender.sendBody("test"))
+        sender.sendValue("test");
+        assertThatThrownBy(() -> sender.sendValue("test"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("response was already sent");
     }

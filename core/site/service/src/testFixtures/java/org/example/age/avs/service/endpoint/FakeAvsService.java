@@ -48,7 +48,7 @@ final class FakeAvsService implements AvsApi {
             JsonSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
         reset();
         storedSession = verificationFactory.createVerificationSession(siteId);
-        sender.sendBody(storedSession);
+        sender.sendValue(storedSession);
     }
 
     @Override

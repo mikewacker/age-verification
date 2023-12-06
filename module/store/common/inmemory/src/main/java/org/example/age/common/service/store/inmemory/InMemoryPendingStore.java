@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSerializer;
 import org.example.age.common.service.store.PendingStore;
 import org.xnio.XnioExecutor;
@@ -19,13 +18,11 @@ import org.xnio.XnioExecutor;
  */
 final class InMemoryPendingStore<V> implements PendingStore<V> {
 
-    private final JsonSerializer serializer;
     private final TypeReference<V> valueTypeRef;
 
     private final BiMap<String, ExpirableRawValue> store = Maps.synchronizedBiMap(HashBiMap.create());
 
-    public InMemoryPendingStore(JsonSerializer serializer, TypeReference<V> valueTypeRef) {
-        this.serializer = serializer;
+    public InMemoryPendingStore(TypeReference<V> valueTypeRef) {
         this.valueTypeRef = valueTypeRef;
     }
 
@@ -42,7 +39,7 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
             return;
         }
 
-        byte[] rawValue = serializer.serialize(value);
+        byte[] rawValue = JsonSerializer.serialize(value);
         ExpirableRawValue expirableRawValue = new ExpirableRawValue(rawValue);
         Optional<ExpirableRawValue> maybeOldExpirableRawValue = Optional.ofNullable(store.put(key, expirableRawValue));
         expirableRawValue.scheduleExpiration(expiresIn, executor);
@@ -57,7 +54,8 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         }
         ExpirableRawValue expirableRawValue = maybeExpirableRawValue.get();
 
-        return tryDeserialize(expirableRawValue.get());
+        V value = JsonSerializer.deserialize(expirableRawValue.get(), valueTypeRef);
+        return Optional.of(value);
     }
 
     @Override
@@ -69,13 +67,8 @@ final class InMemoryPendingStore<V> implements PendingStore<V> {
         ExpirableRawValue expirableRawValue = maybeExpirableRawValue.get();
 
         expirableRawValue.cancelExpiration();
-        return tryDeserialize(expirableRawValue.get());
-    }
-
-    /** Deserializes the raw value, or returns empty. */
-    private Optional<V> tryDeserialize(byte[] rawValue) {
-        HttpOptional<V> maybeValue = serializer.tryDeserialize(rawValue, valueTypeRef, 500);
-        return maybeValue.toOptional();
+        V value = JsonSerializer.deserialize(expirableRawValue.get(), valueTypeRef);
+        return Optional.of(value);
     }
 
     /**
