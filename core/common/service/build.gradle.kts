@@ -22,5 +22,6 @@ dependencies {
 
     testImplementation(project(":api-types"))
     testImplementation(testFixtures(project(":api-types")))
+    testImplementation(project(":module:extractor:common:builtin"))
     testImplementation(testFixtures(project(":module:key:common:test")))
 }

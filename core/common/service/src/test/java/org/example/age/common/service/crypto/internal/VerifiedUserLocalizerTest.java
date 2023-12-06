@@ -3,7 +3,6 @@ package org.example.age.common.service.crypto.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
-import dagger.Module;
 import javax.inject.Singleton;
 import org.example.age.common.service.key.test.TestKeyModule;
 import org.example.age.data.crypto.SecureId;
@@ -31,12 +30,8 @@ public final class VerifiedUserLocalizerTest {
         return VerifiedUser.of(SecureId.generate(), 18);
     }
 
-    /** Dagger module that binds dependencies for {@link VerifiedUserLocalizer}. */
-    @Module(includes = {VerifiedUserLocalizerModule.class, TestKeyModule.class})
-    interface TestModule {}
-
     /** Dagger component that provides a {@link VerifiedUserLocalizer}. */
-    @Component(modules = TestModule.class)
+    @Component(modules = {VerifiedUserLocalizerModule.class, TestKeyModule.class})
     @Singleton
     interface TestComponent {
 

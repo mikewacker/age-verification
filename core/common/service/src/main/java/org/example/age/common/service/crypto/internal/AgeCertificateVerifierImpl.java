@@ -1,24 +1,22 @@
 package org.example.age.common.service.crypto.internal;
 
-import java.security.PublicKey;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
+import org.example.age.common.service.key.RefreshableKeyProvider;
 import org.example.age.data.certificate.SignedAgeCertificate;
 
 @Singleton
 final class AgeCertificateVerifierImpl implements AgeCertificateVerifier {
 
-    private final Provider<PublicKey> publicSigningKeyProvider;
+    private final RefreshableKeyProvider keyProvider;
 
     @Inject
-    public AgeCertificateVerifierImpl(@Named("signing") Provider<PublicKey> publicSigningKeyProvider) {
-        this.publicSigningKeyProvider = publicSigningKeyProvider;
+    public AgeCertificateVerifierImpl(RefreshableKeyProvider keyProvider) {
+        this.keyProvider = keyProvider;
     }
 
     @Override
     public boolean verify(SignedAgeCertificate signedCertificate) {
-        return signedCertificate.verify(publicSigningKeyProvider.get());
+        return signedCertificate.verify(keyProvider.getPublicSigningKey());
     }
 }
