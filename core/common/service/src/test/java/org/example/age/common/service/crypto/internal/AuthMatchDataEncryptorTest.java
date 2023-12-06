@@ -6,6 +6,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.BytesValue;
@@ -30,7 +31,7 @@ public final class AuthMatchDataEncryptorTest {
 
     @Test
     public void encryptThenDecrypt() {
-        AuthMatchData authData = new TestAuthMatchData("test");
+        AuthMatchData authData = UserAgentAuthMatchData.of("agent");
         AesGcmEncryptionPackage authToken = authDataEncryptor.encrypt(authData, authKey);
         HttpOptional<AuthMatchData> maybeRtAuthData = authDataEncryptor.tryDecrypt(authToken, authKey);
         assertThat(maybeRtAuthData).hasValue(authData);
@@ -38,28 +39,17 @@ public final class AuthMatchDataEncryptorTest {
 
     @Test
     public void decryptFailed_DecryptionFailed() {
-        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
-        decryptFailed(authToken, 401);
+        AesGcmEncryptionPackage invalidAuthToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+        HttpOptional<AuthMatchData> maybeAuthData = authDataEncryptor.tryDecrypt(invalidAuthToken, authKey);
+        assertThat(maybeAuthData).isEmptyWithErrorCode(401);
     }
 
     @Test
     public void decryptFailed_DeserializationFailed() {
-        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.encrypt(new byte[4], authKey);
-        decryptFailed(authToken, 400);
-    }
-
-    private void decryptFailed(AesGcmEncryptionPackage authToken, int expectedErrorCode) {
+        byte[] malformedRawAuthData = new byte[4];
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.encrypt(malformedRawAuthData, authKey);
         HttpOptional<AuthMatchData> maybeAuthData = authDataEncryptor.tryDecrypt(authToken, authKey);
-        assertThat(maybeAuthData).isEmptyWithErrorCode(expectedErrorCode);
-    }
-
-    /** Test {@link AuthMatchData}. */
-    public record TestAuthMatchData(String data) implements AuthMatchData {
-
-        @Override
-        public boolean match(AuthMatchData other) {
-            return equals(other);
-        }
+        assertThat(maybeAuthData).isEmptyWithErrorCode(400);
     }
 
     /** Dagger component that provides a {@link AuthMatchDataEncryptor}. */

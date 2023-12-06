@@ -2,12 +2,12 @@ package org.example.age.common.service.crypto.internal;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.service.key.PseudonymKeyProvider;
+import org.example.age.common.service.key.RefreshableKeyProvider;
 
 /**
  * Dagger module that publishes a binding for {@link VerifiedUserLocalizer}.
  *
- * <p>Depends on an unbound {@link PseudonymKeyProvider}.</p>
+ * <p>Depends on an unbound {@link RefreshableKeyProvider}.</p>
  */
 @Module
 public interface VerifiedUserLocalizerModule {

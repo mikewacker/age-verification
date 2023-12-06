@@ -3,7 +3,6 @@ package org.example.age.common.service.crypto.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
-import dagger.Module;
 import java.time.Duration;
 import javax.inject.Singleton;
 import org.example.age.common.service.key.test.TestKeyModule;
@@ -25,8 +24,9 @@ public final class AgeCertificateSignerVerifierTest {
 
     @BeforeAll
     public static void createAgeCertificateSignerAndVerifier() {
-        certificateSigner = TestSignerComponent.createAgeCertificateSigner();
-        certificateVerifier = TestVerifierComponent.createAgeCertificateVerifier();
+        TestComponent component = TestComponent.create();
+        certificateSigner = component.ageCertificateSigner();
+        certificateVerifier = component.ageCertificateVerifier();
     }
 
     @Test
@@ -38,11 +38,11 @@ public final class AgeCertificateSignerVerifierTest {
     }
 
     @Test
-    public void failToVerify() {
+    public void verifyFailed() {
         AgeCertificate certificate = createAgeCertificate();
-        SignedAgeCertificate signedCertificate =
-                SignedAgeCertificate.of(certificate, DigitalSignature.ofBytes(new byte[1024]));
-        boolean wasVerified = certificateVerifier.verify(signedCertificate);
+        DigitalSignature forgedSignature = DigitalSignature.ofBytes(new byte[32]);
+        SignedAgeCertificate forgedCertificate = SignedAgeCertificate.of(certificate, forgedSignature);
+        boolean wasVerified = certificateVerifier.verify(forgedCertificate);
         assertThat(wasVerified).isFalse();
     }
 
@@ -53,36 +53,16 @@ public final class AgeCertificateSignerVerifierTest {
         return AgeCertificate.of(request, user, authToken);
     }
 
-    /** Dagger module that binds dependencies for {@link AgeCertificateSigner}. */
-    @Module(includes = {AgeCertificateSignerModule.class, TestKeyModule.class})
-    interface TestSignerModule {}
-
-    /** Dagger component that provides an {@link AgeCertificateSigner}. */
-    @Component(modules = TestSignerModule.class)
+    /** Dagger component that provides an {@link AgeCertificateSigner} and an {@link AgeCertificateVerifier}. */
+    @Component(modules = {AgeCertificateSignerModule.class, AgeCertificateVerifierModule.class, TestKeyModule.class})
     @Singleton
-    interface TestSignerComponent {
+    interface TestComponent {
 
-        static AgeCertificateSigner createAgeCertificateSigner() {
-            TestSignerComponent component = DaggerAgeCertificateSignerVerifierTest_TestSignerComponent.create();
-            return component.ageCertificateSigner();
+        static TestComponent create() {
+            return DaggerAgeCertificateSignerVerifierTest_TestComponent.create();
         }
 
         AgeCertificateSigner ageCertificateSigner();
-    }
-
-    /** Dagger module that binds dependencies for {@link AgeCertificateVerifier}. */
-    @Module(includes = {AgeCertificateVerifierModule.class, TestKeyModule.class})
-    interface TestVerifierModule {}
-
-    /** Dagger module that provides an {@link AgeCertificateVerifier}. */
-    @Component(modules = TestVerifierModule.class)
-    @Singleton
-    interface TestVerifierComponent {
-
-        static AgeCertificateVerifier createAgeCertificateVerifier() {
-            TestVerifierComponent component = DaggerAgeCertificateSignerVerifierTest_TestVerifierComponent.create();
-            return component.ageCertificateVerifier();
-        }
 
         AgeCertificateVerifier ageCertificateVerifier();
     }

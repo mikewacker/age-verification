@@ -3,10 +3,9 @@ package org.example.age.site.service.endpoint;
 import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
-import java.security.PublicKey;
 import org.example.age.common.api.extractor.AccountIdExtractor;
 import org.example.age.common.api.extractor.AuthMatchDataExtractor;
-import org.example.age.common.service.key.PseudonymKeyProvider;
+import org.example.age.common.service.key.RefreshableKeyProvider;
 import org.example.age.common.service.store.PendingStoreFactory;
 import org.example.age.common.service.store.VerificationStore;
 import org.example.age.infra.service.client.RequestDispatcherModule;
@@ -24,8 +23,7 @@ import org.example.age.site.service.verification.internal.SiteVerificationManage
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li><code>@Named("signing") Provider&lt;{@link PublicKey}&gt;</code></li>
- *     <li><code>{@link PseudonymKeyProvider}</code></li>
+ *     <li>{@link RefreshableKeyProvider}</li>
  *     <li><code>Provider&lt;{@link SiteConfig}&gt;</code></li>
  * </ul>
  */
