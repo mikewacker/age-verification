@@ -2,7 +2,8 @@ rootProject.name = "age-verification"
 
 include(
         /* generic modules */
-        "api-types",
+        "api:base",
+        "api:crypto-data",
 
         "infra:api",
         "infra:service",

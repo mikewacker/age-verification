@@ -3,7 +3,7 @@ package org.example.age.data.crypto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /** Bytes as a value. */
-public class BytesValue extends ImmutableBytes {
+public final class BytesValue extends ImmutableBytes {
 
     /** Creates a value from a copy of the bytes. */
     public static BytesValue ofBytes(byte[] value) {

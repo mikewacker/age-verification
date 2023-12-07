@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     // main
-    api(project(":api-types"))
+    api(project(":api:base"))
     api(project(":core:common:api-types"))
     api("io.undertow:undertow-core")
 }

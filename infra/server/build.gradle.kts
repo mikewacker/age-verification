@@ -14,6 +14,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":api-types")))
+    testImplementation(testFixtures(project(":api:base")))
     testImplementation(testFixtures(project(":testing")))
 }

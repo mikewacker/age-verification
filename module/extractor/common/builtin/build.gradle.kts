@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
-    api(project(":api-types"))
+    api(project(":api:base"))
     api(project(":core:common:api-extractors"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-databind")
@@ -25,14 +25,14 @@ dependencies {
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
-    testFixturesImplementation(project(":api-types"))
+    testFixturesImplementation(project(":api:base"))
     testFixturesImplementation("io.undertow:undertow-core")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":api-types"))
-    testImplementation(testFixtures(project(":api-types")))
+    testImplementation(project(":api:base"))
+    testImplementation(testFixtures(project(":api:base")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("io.undertow:undertow-core")
     testImplementation("org.mockito:mockito-core")
