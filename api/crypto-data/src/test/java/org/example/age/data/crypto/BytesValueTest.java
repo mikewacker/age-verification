@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.example.age.api.JsonObjects;
 import org.junit.jupiter.api.Test;
 
-public class BytesValueTest {
+public final class BytesValueTest {
 
     @Test
     public void empty() {
