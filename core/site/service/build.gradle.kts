@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
-    api(project(":api-types"))
+    api(project(":api:base"))
     api(project(":core:common:api-extractors"))
     api(project(":core:common:api-types"))
     api(project(":core:common:service"))
@@ -33,7 +33,7 @@ dependencies {
     testFixturesApi("javax.inject:javax.inject")
     testFixturesApi("io.undertow:undertow-core")
 
-    testFixturesImplementation(project(":api-types"))
+    testFixturesImplementation(project(":api:base"))
     testFixturesApi(project(":core:avs:api"))
     testFixturesImplementation(project(":core:common:api-extractors"))
     testFixturesImplementation(project(":core:common:service-types"))
@@ -50,7 +50,7 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":api-types")))
+    testImplementation(testFixtures(project(":api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("io.undertow:undertow-core")
 }

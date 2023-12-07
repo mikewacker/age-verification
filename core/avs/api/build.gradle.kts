@@ -8,7 +8,8 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":api-types"))
+    api(project(":api:base"))
+    api(project(":api:crypto-data"))
     api(project(":core:common:api-extractors"))
     api(project(":core:common:api-types"))
     api(project(":core:data"))
@@ -26,7 +27,8 @@ dependencies {
     testFixturesApi("io.undertow:undertow-core")
     testFixturesApi("javax.inject:javax.inject")
 
-    testFixturesImplementation(project(":api-types"))
+    testFixturesImplementation(project(":api:base"))
+    testFixturesImplementation(project(":api:crypto-data"))
     testFixturesImplementation(project(":core:common:api-types"))
     testFixturesImplementation(project(":core:data"))
     testFixturesApi(project(":module:extractor:common:builtin"))
@@ -35,7 +37,7 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":api-types")))
+    testImplementation(testFixtures(project(":api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("io.undertow:undertow-core")
 }

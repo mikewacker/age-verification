@@ -7,7 +7,7 @@ dependencies {
     // main
     api("com.squareup.okhttp3:okhttp")
 
-    implementation(project(":api-types"))
+    implementation(project(":api:base"))
 
     // test
     testImplementation("com.squareup.okhttp3:mockwebserver")

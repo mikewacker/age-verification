@@ -7,7 +7,7 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":api-types"))
+    api(project(":api:base"))
     api("com.fasterxml.jackson.core:jackson-core")
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
@@ -18,8 +18,8 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":api-types"))
-    testImplementation(testFixtures(project(":api-types")))
+    testImplementation(project(":api:base"))
+    testImplementation(testFixtures(project(":api:base")))
     testImplementation(project(":infra:api"))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")

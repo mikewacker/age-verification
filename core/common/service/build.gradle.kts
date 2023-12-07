@@ -7,7 +7,7 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":api-types"))
+    api(project(":api:base"))
     api(project(":core:common:api-types"))
     api(project(":core:common:service-types"))
     api(project(":core:data"))
@@ -20,8 +20,8 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
     testAnnotationProcessor("org.immutables:value")
 
-    testImplementation(project(":api-types"))
-    testImplementation(testFixtures(project(":api-types")))
+    testImplementation(project(":api:base"))
+    testImplementation(testFixtures(project(":api:base")))
     testImplementation(project(":module:extractor:common:builtin"))
     testImplementation(testFixtures(project(":module:key:common:test")))
 }
