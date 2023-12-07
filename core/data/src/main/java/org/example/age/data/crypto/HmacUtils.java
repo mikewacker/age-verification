@@ -1,4 +1,4 @@
-package org.example.age.data.crypto.internal;
+package org.example.age.data.crypto;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -7,7 +7,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 /** Utilities for HMACs. */
-public final class HmacUtils {
+final class HmacUtils {
 
     /** Creates an HMAC from the message and the key. */
     public static byte[] createHmac(byte[] message, byte[] key) {

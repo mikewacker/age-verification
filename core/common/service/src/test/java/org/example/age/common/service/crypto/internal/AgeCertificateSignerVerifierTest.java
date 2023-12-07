@@ -10,7 +10,6 @@ import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
@@ -49,7 +48,7 @@ public final class AgeCertificateSignerVerifierTest {
     private static AgeCertificate createAgeCertificate() {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
         return AgeCertificate.of(request, user, authToken);
     }
 

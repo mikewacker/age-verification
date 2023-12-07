@@ -21,9 +21,9 @@ public final class AvsLocationTest {
     public void urls() {
         assertThat(location.verificationSessionUrl("Site"))
                 .isEqualTo("http://localhost:80/api/verification-session?site-id=Site");
-        SecureId requestId = SecureId.fromString("4WLcuu0aZ2SMxC9FYVQegKv70i416C_k9fWkYjYhQlA");
-        assertThat(location.redirectUrl(requestId))
-                .isEqualTo("http://localhost:80/verify?request-id=4WLcuu0aZ2SMxC9FYVQegKv70i416C_k9fWkYjYhQlA");
+        SecureId requestId = SecureId.generate();
+        String expectedRedirectUrl = String.format("http://localhost:80/verify?request-id=%s", requestId);
+        assertThat(location.redirectUrl(requestId)).isEqualTo(expectedRedirectUrl);
     }
 
     @Test

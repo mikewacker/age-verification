@@ -14,7 +14,6 @@ import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeRange;
 import org.example.age.data.user.VerifiedUser;
@@ -192,7 +191,7 @@ public final class SiteVerificationComponentTest {
         public void processVerificationRequest(String realName, SecureId requestId) {
             VerificationRequest request = retrievePendingVerificationRequest(requestId);
             VerifiedUser user = retrieveVerifiedUser(realName);
-            AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+            AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
             AgeCertificate certificate = AgeCertificate.of(request, user, authToken);
             SignedAgeCertificate signedCertificate =
                     SignedAgeCertificate.sign(certificate, signingKeyPair.getPrivate());

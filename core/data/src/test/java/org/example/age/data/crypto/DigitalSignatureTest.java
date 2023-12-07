@@ -29,9 +29,8 @@ public final class DigitalSignatureTest {
 
     @Test
     public void verifyFailed() {
-        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] otherMessage = "Goodbye, world!".getBytes(StandardCharsets.UTF_8);
-        boolean wasVerified = signature.verify(otherMessage, keyPair.getPublic());
+        DigitalSignature forgedSignature = DigitalSignature.ofBytes(new byte[32]);
+        boolean wasVerified = forgedSignature.verify(MESSAGE, keyPair.getPublic());
         assertThat(wasVerified).isFalse();
     }
 

@@ -1,4 +1,4 @@
-package org.example.age.data.crypto.internal;
+package org.example.age.data.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
-import org.example.age.data.crypto.SigningKeys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

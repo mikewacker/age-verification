@@ -3,7 +3,6 @@ package org.example.age.data.crypto;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import org.example.age.api.ApiStyle;
-import org.example.age.data.crypto.internal.EncryptionUtils;
 import org.immutables.value.Value;
 
 /** Encryption package for plaintext encrypted using AES-256/GCM. */
@@ -20,11 +19,16 @@ public interface AesGcmEncryptionPackage {
                 .build();
     }
 
+    /** Creates an empty encryption package, which would fail to decrypt. */
+    static AesGcmEncryptionPackage empty() {
+        return of(BytesValue.empty(), BytesValue.empty());
+    }
+
     /** Encrypts the plaintext using the key (and a generated IV). */
     static AesGcmEncryptionPackage encrypt(byte[] rawPlaintext, Aes256Key key) {
-        byte[] rawIv = EncryptionUtils.createIv();
-        byte[] rawCiphertext = EncryptionUtils.encrypt(rawPlaintext, key.uncopiedBytes(), rawIv);
-        return of(BytesValue.ofUncopiedBytes(rawCiphertext), BytesValue.ofUncopiedBytes(rawIv));
+        byte[] iv = EncryptionUtils.createIv();
+        byte[] ciphertext = EncryptionUtils.encrypt(rawPlaintext, key.uncopiedBytes(), iv);
+        return of(BytesValue.ofUncopiedBytes(ciphertext), BytesValue.ofUncopiedBytes(iv));
     }
 
     /** Encrypted ciphertext. */

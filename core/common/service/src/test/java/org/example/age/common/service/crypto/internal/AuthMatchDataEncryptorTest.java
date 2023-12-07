@@ -9,7 +9,6 @@ import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +38,7 @@ public final class AuthMatchDataEncryptorTest {
 
     @Test
     public void decryptFailed_DecryptionFailed() {
-        AesGcmEncryptionPackage invalidAuthToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+        AesGcmEncryptionPackage invalidAuthToken = AesGcmEncryptionPackage.empty();
         HttpOptional<AuthMatchData> maybeAuthData = authDataEncryptor.tryDecrypt(invalidAuthToken, authKey);
         assertThat(maybeAuthData).isEmptyWithErrorCode(401);
     }

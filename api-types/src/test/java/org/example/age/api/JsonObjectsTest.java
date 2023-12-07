@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 public final class JsonObjectsTest {
@@ -23,6 +24,13 @@ public final class JsonObjectsTest {
         byte[] rawValue = JsonObjects.serialize(value);
         HttpOptional<String> maybeRtValue = JsonObjects.tryDeserialize(rawValue, new TypeReference<>() {}, 400);
         assertThat(maybeRtValue).hasValue(value);
+    }
+
+    @Test
+    public void serializeBytesUsingUrlFriendlyBase64Encoding() {
+        byte[] value = new byte[] {-5, -16, 0, 0};
+        byte[] rawValue = JsonObjects.serialize(value);
+        assertThat(new String(rawValue, StandardCharsets.UTF_8)).isEqualTo("\"-_AAAA\"");
     }
 
     @Test
