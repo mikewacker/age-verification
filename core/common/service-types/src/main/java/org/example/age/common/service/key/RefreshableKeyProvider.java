@@ -11,7 +11,7 @@ import org.example.age.data.crypto.SecureId;
  *
  * <p>A site will not have a private signing key, but it will have the other types of keys.</p>
  *
- * <p>Signing keys must be <code>Ed25519</code> keys.</p>
+ * <p>Signing keys must be {@code Ed25519} keys.</p>
  */
 public interface RefreshableKeyProvider {
 

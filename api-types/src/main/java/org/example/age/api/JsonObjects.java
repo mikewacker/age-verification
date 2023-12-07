@@ -1,18 +1,19 @@
 package org.example.age.api;
 
+import com.fasterxml.jackson.core.Base64Variants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
- * Serializes and deserializes objects to and from JSON.
+ * Serializes and deserializes objects to and from JSON, using a URL-friendly base64 encoding for {@code byte[]} values.
  *
  * <p>Types should be serializable using the default object mapper, which has no registered modules.</p>
  */
 public final class JsonObjects {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().setBase64Variant(Base64Variants.MODIFIED_FOR_URL);
 
     /** Serializes an object to JSON. */
     public static byte[] serialize(Object value) {

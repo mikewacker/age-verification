@@ -10,7 +10,6 @@ import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.data.user.VerifiedUser;
@@ -117,7 +116,7 @@ public final class AvsVerificationComponent implements AvsUi, AvsApi, VerifiedUs
     /** Creates an age certificate to verify an account on the site. */
     private AgeCertificate createAgeCertificateForSite(VerifiedUser user, VerificationRequest request, Site site) {
         VerifiedUser localUser = user.anonymizeAge(site.ageThresholds()).localize(site.remotePseudonymKey());
-        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
         return AgeCertificate.of(request, localUser, authToken);
     }
 

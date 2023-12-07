@@ -14,7 +14,6 @@ import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.BytesValue;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.site.service.verification.internal.test.TestSiteVerificationManagerModule;
 import org.example.age.testing.api.StubDispatcher;
@@ -140,7 +139,7 @@ public final class SiteVerificationManagerTest {
                 "publius", UserAgentAuthMatchData.of("agent"), session, StubDispatcher.get());
         assertThat(sessionStatusCode).isEqualTo(200);
 
-        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.of(BytesValue.empty(), BytesValue.empty());
+        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
         SignedAgeCertificate signedCertificate =
                 fakeAvsVerificationFactory.createSignedAgeCertificate("John Smith", authToken, session);
         int certificateStatusCode = siteVerificationManager.onSignedAgeCertificateReceived(signedCertificate);

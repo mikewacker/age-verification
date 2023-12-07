@@ -29,11 +29,8 @@ public final class AesGcmEncryptionPackageTest {
 
     @Test
     public void decryptFailed() {
-        AesGcmEncryptionPackage encryptionPackage = AesGcmEncryptionPackage.encrypt(PLAINTEXT, key);
-        BytesValue otherIv = BytesValue.ofBytes(new byte[12]);
-        AesGcmEncryptionPackage otherEncryptionPackage =
-                AesGcmEncryptionPackage.of(encryptionPackage.ciphertext(), otherIv);
-        Optional<byte[]> maybeRtPlaintext = otherEncryptionPackage.tryDecrypt(key);
+        AesGcmEncryptionPackage invalidEncryptionPackage = AesGcmEncryptionPackage.empty();
+        Optional<byte[]> maybeRtPlaintext = invalidEncryptionPackage.tryDecrypt(key);
         assertThat(maybeRtPlaintext).isEmpty();
     }
 

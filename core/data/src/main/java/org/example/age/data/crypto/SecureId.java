@@ -1,27 +1,15 @@
 package org.example.age.data.crypto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import org.example.age.data.crypto.internal.HmacUtils;
-import org.example.age.data.crypto.internal.SecureRandomImmutableBytes;
-import org.example.age.data.internal.StaticFromStringDeserializer;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /** 256 random bits, generated using a cryptographically strong random number generator. Can also be used as a key. */
-@JsonSerialize(using = ToStringSerializer.class)
-@JsonDeserialize(using = SecureId.Deserializer.class)
 public final class SecureId extends SecureRandomImmutableBytes {
 
     private static final int EXPECTED_LENGTH = 32;
 
-    /** Creates an ID from a copy of the raw bytes. */
+    /** Creates an ID from a copy of the bytes. */
     public static SecureId ofBytes(byte[] rawId) {
-        return new SecureId(rawId);
-    }
-
-    /** Deserializes an ID from URL-friendly base64 text. */
-    public static SecureId fromString(String rawId) {
-        return new SecureId(rawId);
+        return new SecureId(rawId, true);
     }
 
     /** Generates a new ID. */
@@ -36,36 +24,21 @@ public final class SecureId extends SecureRandomImmutableBytes {
      * and it is impossible to figure out the new ID from the original ID (without knowledge of the key).</p>
      */
     public SecureId localize(SecureId key) {
-        byte[] localRawId = HmacUtils.createHmac(bytes, key.bytes);
-        return ofUncopiedBytes(localRawId);
+        byte[] localId = HmacUtils.createHmac(uncopiedBytes(), key.uncopiedBytes());
+        return ofUncopiedBytes(localId);
     }
 
-    /** Creates an ID from the raw bytes. */
-    private static SecureId ofUncopiedBytes(byte[] rawId) {
-        return new SecureId(rawId, false);
+    /** Creates an ID from the bytes. */
+    @JsonCreator
+    static SecureId ofUncopiedBytes(byte[] id) {
+        return new SecureId(id, false);
     }
 
-    private SecureId(byte[] rawId) {
-        super(rawId, EXPECTED_LENGTH);
-    }
-
-    private SecureId(String rawId) {
-        super(rawId, EXPECTED_LENGTH);
+    private SecureId(byte[] id, boolean copy) {
+        super(id, copy, EXPECTED_LENGTH);
     }
 
     private SecureId() {
         super(EXPECTED_LENGTH);
-    }
-
-    private SecureId(byte[] rawId, boolean copy) {
-        super(rawId, copy, EXPECTED_LENGTH);
-    }
-
-    /** JSON {@code fromString()} deserializer. */
-    static final class Deserializer extends StaticFromStringDeserializer<SecureId> {
-
-        public Deserializer() {
-            super(SecureId.class, SecureId::fromString);
-        }
     }
 }

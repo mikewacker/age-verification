@@ -1,57 +1,39 @@
 package org.example.age.data.crypto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import org.example.age.data.crypto.internal.SignatureUtils;
-import org.example.age.data.internal.ImmutableBytes;
-import org.example.age.data.internal.StaticFromStringDeserializer;
 
 /**
  * Signature used to verify the sender's identity.
  *
  * <p>Only {@code Ed25519} keys are supported.</p>
  */
-@JsonSerialize(using = ToStringSerializer.class)
-@JsonDeserialize(using = DigitalSignature.Deserializer.class)
 public final class DigitalSignature extends ImmutableBytes {
 
-    /** Creates a signature from a copy of the raw bytes. */
-    public static DigitalSignature ofBytes(byte[] rawSignature) {
-        return new DigitalSignature(rawSignature);
-    }
-
-    /** Deserializes a signature from URL-friendly base64 text. */
-    public static DigitalSignature fromString(String rawSignature) {
-        return new DigitalSignature(rawSignature);
+    /** Creates a signature from a copy of the bytes. */
+    public static DigitalSignature ofBytes(byte[] signature) {
+        return new DigitalSignature(signature, true);
     }
 
     /** Signs the message. */
-    public static DigitalSignature sign(byte[] rawMessage, PrivateKey privateKey) {
-        byte[] rawSignature = SignatureUtils.sign(rawMessage, privateKey);
-        return ofBytes(rawSignature);
+    public static DigitalSignature sign(byte[] message, PrivateKey privateKey) {
+        byte[] signature = SignatureUtils.sign(message, privateKey);
+        return ofUncopiedBytes(signature);
     }
 
     /** Verifies the signature against the message, returning whether verification succeeded. */
-    public boolean verify(byte[] rawMessage, PublicKey publicKey) {
-        return SignatureUtils.verify(rawMessage, bytes, publicKey);
+    public boolean verify(byte[] message, PublicKey publicKey) {
+        return SignatureUtils.verify(message, uncopiedBytes(), publicKey);
     }
 
-    private DigitalSignature(byte[] rawSignature) {
-        super(rawSignature);
+    /** Creates a signature from the bytes. */
+    @JsonCreator
+    static DigitalSignature ofUncopiedBytes(byte[] signature) {
+        return new DigitalSignature(signature, false);
     }
 
-    private DigitalSignature(String rawSignature) {
-        super(rawSignature);
-    }
-
-    /** JSON {@code fromString()} deserializer. */
-    static final class Deserializer extends StaticFromStringDeserializer<DigitalSignature> {
-
-        public Deserializer() {
-            super(DigitalSignature.class, DigitalSignature::fromString);
-        }
+    private DigitalSignature(byte[] signature, boolean copy) {
+        super(signature, copy);
     }
 }
