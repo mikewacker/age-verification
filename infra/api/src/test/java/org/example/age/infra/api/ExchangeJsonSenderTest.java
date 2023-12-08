@@ -10,14 +10,15 @@ import java.io.IOException;
 import org.example.age.api.HttpOptional;
 import org.example.age.api.JsonSender;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.server.TestUndertowServer;
+import org.example.age.testing.server.TestServer;
+import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class ExchangeJsonSenderTest {
 
     @RegisterExtension
-    private static final TestUndertowServer server = TestUndertowServer.fromHandler(TestHandler::create);
+    private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
 
     @Test
     public void send_Body() throws IOException {

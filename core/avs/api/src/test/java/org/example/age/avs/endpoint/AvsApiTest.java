@@ -16,15 +16,16 @@ import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.server.TestUndertowServer;
+import org.example.age.testing.server.TestServer;
+import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class AvsApiTest {
 
     @RegisterExtension
-    private static final TestUndertowServer avsServer =
-            TestUndertowServer.fromHandlerAtPath(TestComponent::createApiHandler, "/api/");
+    private static final TestServer<?> avsServer =
+            TestUndertowServer.register("avs", TestComponent::createApiHandler, "/api/");
 
     @Test
     public void verificationState() throws IOException {

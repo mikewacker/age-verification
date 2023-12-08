@@ -20,18 +20,19 @@ import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.server.MockServer;
-import org.example.age.testing.server.TestUndertowServer;
+import org.example.age.testing.server.TestServer;
+import org.example.age.testing.server.mock.MockServer;
+import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class RequestDispatcherTest {
 
     @RegisterExtension
-    private static final TestUndertowServer frontendServer = TestUndertowServer.fromHandler(ProxyHandler::create);
+    private static final TestServer<?> frontendServer = TestUndertowServer.register("frontend", ProxyHandler::create);
 
     @RegisterExtension
-    private static final MockServer backendServer = MockServer.create();
+    private static final MockServer backendServer = MockServer.register("backend");
 
     @Test
     public void backendRequest_StatusCodeResponse_Ok() throws IOException {
