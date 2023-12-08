@@ -9,7 +9,7 @@ dependencies {
 
     api(project(":api:base"))
     api(project(":api:crypto-data"))
-    api(project(":core:common:api-types"))
+    api(project(":core:common:api:types"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-core")
     api("com.fasterxml.jackson.core:jackson-databind")
