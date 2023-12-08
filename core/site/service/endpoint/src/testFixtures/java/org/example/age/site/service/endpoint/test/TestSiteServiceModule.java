@@ -2,12 +2,12 @@ package org.example.age.site.service.endpoint.test;
 
 import dagger.Module;
 import io.undertow.server.HttpHandler;
-import org.example.age.common.api.extractor.builtin.DisabledAuthMatchDataExtractorModule;
-import org.example.age.common.api.extractor.test.TestAccountIdExtractorModule;
-import org.example.age.common.service.key.test.TestKeyModule;
-import org.example.age.common.service.store.inmemory.InMemoryPendingStoreFactoryModule;
-import org.example.age.common.service.store.inmemory.InMemoryVerificationStoreModule;
-import org.example.age.site.service.config.test.TestSiteConfigModule;
+import org.example.age.module.config.site.test.TestSiteConfigModule;
+import org.example.age.module.extractor.common.builtin.DisabledAuthMatchDataExtractorModule;
+import org.example.age.module.extractor.common.test.TestAccountIdExtractorModule;
+import org.example.age.module.key.common.test.TestKeyModule;
+import org.example.age.module.store.common.inmemory.InMemoryPendingStoreFactoryModule;
+import org.example.age.module.store.common.inmemory.InMemoryVerificationStoreModule;
 import org.example.age.site.service.endpoint.SiteServiceModule;
 import org.example.age.testing.server.TestServer;
 

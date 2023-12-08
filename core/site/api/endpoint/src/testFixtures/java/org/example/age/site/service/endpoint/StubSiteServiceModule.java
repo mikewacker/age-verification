@@ -3,8 +3,8 @@ package org.example.age.site.service.endpoint;
 import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
-import org.example.age.common.api.extractor.AccountIdExtractor;
-import org.example.age.common.api.extractor.AuthMatchDataExtractor;
+import org.example.age.module.extractor.common.AccountIdExtractor;
+import org.example.age.module.extractor.common.AuthMatchDataExtractor;
 import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.api.endpoint.SiteApiModule;
 

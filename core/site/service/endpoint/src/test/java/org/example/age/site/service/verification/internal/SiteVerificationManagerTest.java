@@ -10,11 +10,11 @@ import org.example.age.avs.service.verification.internal.FakeAvsVerificationFact
 import org.example.age.avs.service.verification.internal.test.TestAvsVerificationFactoryModule;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.common.api.data.VerificationStatus;
-import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
+import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
 import org.example.age.site.service.verification.internal.test.TestSiteVerificationManagerModule;
 import org.example.age.testing.api.StubDispatcher;
 import org.junit.jupiter.api.BeforeAll;

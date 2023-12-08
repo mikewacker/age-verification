@@ -6,11 +6,11 @@ import io.undertow.server.HttpHandler;
 import org.example.age.avs.api.endpoint.AvsApi;
 import org.example.age.avs.api.endpoint.AvsApiModule;
 import org.example.age.avs.service.verification.internal.FakeAvsVerificationFactoryModule;
-import org.example.age.common.api.extractor.AccountIdExtractor;
-import org.example.age.common.api.extractor.AuthMatchDataExtractor;
-import org.example.age.common.service.config.SiteLocation;
-import org.example.age.common.service.key.RefreshableKeyProvider;
 import org.example.age.infra.service.client.RequestDispatcherModule;
+import org.example.age.module.config.common.SiteLocation;
+import org.example.age.module.extractor.common.AccountIdExtractor;
+import org.example.age.module.extractor.common.AuthMatchDataExtractor;
+import org.example.age.module.key.common.RefreshableKeyProvider;
 
 /**
  * Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>.

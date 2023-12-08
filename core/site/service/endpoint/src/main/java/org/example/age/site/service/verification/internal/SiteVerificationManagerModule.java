@@ -5,10 +5,10 @@ import dagger.Module;
 import org.example.age.common.service.crypto.internal.AgeCertificateVerifierModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
 import org.example.age.common.service.crypto.internal.VerifiedUserLocalizerModule;
-import org.example.age.common.service.key.RefreshableKeyProvider;
-import org.example.age.common.service.store.PendingStoreFactory;
-import org.example.age.common.service.store.VerificationStore;
-import org.example.age.site.service.config.SiteConfig;
+import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.key.common.RefreshableKeyProvider;
+import org.example.age.module.store.common.PendingStoreFactory;
+import org.example.age.module.store.common.VerificationStore;
 
 /**
  * Dagger module that publishes a binding for {@link SiteVerificationManager}.

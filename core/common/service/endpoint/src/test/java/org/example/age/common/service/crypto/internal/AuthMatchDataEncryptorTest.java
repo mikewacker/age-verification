@@ -6,9 +6,9 @@ import dagger.Component;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.api.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
+import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
