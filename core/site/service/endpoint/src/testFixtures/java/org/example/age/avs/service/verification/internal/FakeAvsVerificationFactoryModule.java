@@ -4,7 +4,7 @@ import dagger.Binds;
 import dagger.Module;
 import org.example.age.common.service.crypto.internal.AgeCertificateSignerModule;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptorModule;
-import org.example.age.common.service.key.RefreshableKeyProvider;
+import org.example.age.module.key.common.RefreshableKeyProvider;
 
 /**
  * Dagger module that publishes a binding for {@link FakeAvsVerificationFactory}.

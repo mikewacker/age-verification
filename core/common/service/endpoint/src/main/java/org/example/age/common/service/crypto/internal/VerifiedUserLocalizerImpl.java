@@ -2,9 +2,9 @@ package org.example.age.common.service.crypto.internal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.common.service.key.RefreshableKeyProvider;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.module.key.common.RefreshableKeyProvider;
 
 @Singleton
 final class VerifiedUserLocalizerImpl implements VerifiedUserLocalizer {

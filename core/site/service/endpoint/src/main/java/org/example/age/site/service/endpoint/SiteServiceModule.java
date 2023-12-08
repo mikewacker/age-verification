@@ -3,15 +3,15 @@ package org.example.age.site.service.endpoint;
 import dagger.Binds;
 import dagger.Module;
 import io.undertow.server.HttpHandler;
-import org.example.age.common.api.extractor.AccountIdExtractor;
-import org.example.age.common.api.extractor.AuthMatchDataExtractor;
-import org.example.age.common.service.key.RefreshableKeyProvider;
-import org.example.age.common.service.store.PendingStoreFactory;
-import org.example.age.common.service.store.VerificationStore;
 import org.example.age.infra.service.client.RequestDispatcherModule;
+import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.extractor.common.AccountIdExtractor;
+import org.example.age.module.extractor.common.AuthMatchDataExtractor;
+import org.example.age.module.key.common.RefreshableKeyProvider;
+import org.example.age.module.store.common.PendingStoreFactory;
+import org.example.age.module.store.common.VerificationStore;
 import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.api.endpoint.SiteApiModule;
-import org.example.age.site.service.config.SiteConfig;
 import org.example.age.site.service.verification.internal.SiteVerificationManagerModule;
 
 /**
