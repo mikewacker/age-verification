@@ -12,8 +12,8 @@ import okhttp3.mockwebserver.MockResponse;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.site.service.config.SiteConfig;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.server.MockServer;
 import org.example.age.testing.server.TestServer;
+import org.example.age.testing.server.mock.MockServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class TestSiteConfigTest {
 
     @RegisterExtension
-    private static final MockServer avsServer = MockServer.create();
+    private static final MockServer avsServer = MockServer.register("avs");
 
     private static Provider<SiteConfig> siteConfigProvider;
 

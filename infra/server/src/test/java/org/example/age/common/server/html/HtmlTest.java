@@ -11,14 +11,15 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.HttpOptional;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.server.TestUndertowServer;
+import org.example.age.testing.server.TestServer;
+import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class HtmlTest {
 
     @RegisterExtension
-    private static final TestUndertowServer server = TestUndertowServer.fromHandler(TestComponent::createHandler);
+    private static final TestServer<?> server = TestUndertowServer.register("test", TestComponent::createHandler);
 
     @Test
     public void getHtmlFile() throws IOException {
