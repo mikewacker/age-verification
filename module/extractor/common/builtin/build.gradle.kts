@@ -10,7 +10,7 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api:base"))
-    api(project(":core:common:api-extractors"))
+    api(project(":core:common:api:module"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-databind")
     api("com.google.dagger:dagger")
@@ -21,7 +21,7 @@ dependencies {
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":core:common:api-types"))
+    testFixturesApi(project(":core:common:api:types"))
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 

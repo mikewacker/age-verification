@@ -18,19 +18,19 @@ include(
         "core:data",
 
         // api
-        "core:common:api-types",
-        "core:common:api-extractors",
-        "core:avs:api",
-        "core:site:api",
+        "core:common:api:types",
+        "core:common:api:module",
+        "core:avs:api:endpoint",
+        "core:site:api:endpoint",
 
         "module:extractor:common:builtin",
 
         // service
-        "core:common:service-types",
-        "core:common:service",
-        "core:avs:service-types",
-        "core:site:service-types",
-        "core:site:service",
+        "core:common:service:module",
+        "core:common:service:endpoint",
+        "core:avs:service:module",
+        "core:site:service:module",
+        "core:site:service:endpoint",
 
         "module:store:common:inmemory",
 
