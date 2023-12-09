@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
@@ -15,7 +15,7 @@ import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class ExchangeJsonSenderTest {
+public final class UndertowJsonValueSenderTest {
 
     @RegisterExtension
     private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
@@ -38,17 +38,11 @@ public final class ExchangeJsonSenderTest {
         assertThat(maybeValue).hasValue("first");
     }
 
-    @Test
-    public void error_SerializationFailed() throws IOException {
-        HttpOptional<String> maybeValue = executeRequest("/serialization-failed");
-        assertThat(maybeValue).isEmptyWithErrorCode(500);
-    }
-
     private static HttpOptional<String> executeRequest(String path) throws IOException {
         return TestClient.apiRequestBuilder().get(server.url(path)).executeWithJsonResponse(new TypeReference<>() {});
     }
 
-    /** Test {@link HttpHandler} that uses an {@link ExchangeJsonSender}. */
+    /** Test {@link HttpHandler} that uses an {@link UndertowJsonValueSender}. */
     private static final class TestHandler implements HttpHandler {
 
         public static HttpHandler create() {
@@ -57,12 +51,11 @@ public final class ExchangeJsonSenderTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
             switch (exchange.getRequestPath()) {
                 case "/value" -> sender.sendValue("test");
                 case "/forbidden" -> sender.sendErrorCode(StatusCodes.FORBIDDEN);
                 case "/send-twice" -> sendTwice(sender);
-                case "/serialization-failed" -> serializationFailed(exchange);
                 default -> sender.sendErrorCode(StatusCodes.NOT_FOUND);
             }
         }
@@ -70,11 +63,6 @@ public final class ExchangeJsonSenderTest {
         private static void sendTwice(ValueSender<String> sender) {
             sender.sendValue("first");
             sender.sendValue("second");
-        }
-
-        private static void serializationFailed(HttpServerExchange exchange) {
-            ValueSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange);
-            sender.sendValue(exchange);
         }
 
         private TestHandler() {}

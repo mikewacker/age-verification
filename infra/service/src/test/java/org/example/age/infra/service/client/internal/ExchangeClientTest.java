@@ -18,9 +18,9 @@ import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.ValueSender;
+import org.example.age.api.infra.UndertowDispatcher;
+import org.example.age.api.infra.UndertowJsonValueSender;
 import org.example.age.data.json.JsonValues;
-import org.example.age.infra.api.ExchangeDispatcher;
-import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.mock.MockServer;
@@ -63,8 +63,8 @@ public final class ExchangeClientTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
-            Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
+            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
 
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             Call call = client.getInstance(dispatcher).newCall(request);

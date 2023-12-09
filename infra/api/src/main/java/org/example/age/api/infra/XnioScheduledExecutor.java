@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
