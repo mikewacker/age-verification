@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.api.JsonObjects;
+import org.example.age.data.json.JsonValues;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {
@@ -50,8 +50,8 @@ public final class VerificationRequestTest {
     @Test
     public void serializeThenDeserialize() {
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN);
-        byte[] rawRequest = JsonObjects.serialize(request);
-        VerificationRequest rtRequest = JsonObjects.deserialize(rawRequest, new TypeReference<>() {});
+        byte[] rawRequest = JsonValues.serialize(request);
+        VerificationRequest rtRequest = JsonValues.deserialize(rawRequest, new TypeReference<>() {});
         assertThat(rtRequest).isEqualTo(request);
     }
 }

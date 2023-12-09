@@ -12,10 +12,10 @@ import java.io.IOException;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSender;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.StatusCodeSender;
+import org.example.age.api.base.ValueSender;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.infra.api.ExchangeStatusCodeSender;
@@ -130,7 +130,7 @@ public final class RequestDispatcherTest {
         }
 
         private void handleJsonRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             requestDispatcher
@@ -145,7 +145,7 @@ public final class RequestDispatcherTest {
         }
 
         private static void onJsonResponseReceived(
-                JsonSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
+                ValueSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
             sender.send(maybeText);
         }
 

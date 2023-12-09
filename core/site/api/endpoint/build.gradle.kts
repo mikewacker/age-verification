@@ -36,7 +36,7 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(testFixtures(project(":api:base")))
-    testImplementation(project(":api:crypto-data"))
+    testImplementation(project(":api:data:crypto"))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("io.undertow:undertow-core")
 }

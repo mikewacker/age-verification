@@ -8,16 +8,17 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
+import java.util.Optional;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonObjects;
-import org.example.age.api.JsonSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ValueSender;
+import org.example.age.data.json.JsonValues;
 import org.example.age.infra.api.ExchangeDispatcher;
 import org.example.age.infra.api.ExchangeJsonSender;
 import org.example.age.testing.client.TestClient;
@@ -62,7 +63,7 @@ public final class ExchangeClientTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
 
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
@@ -72,7 +73,7 @@ public final class ExchangeClientTest {
             dispatcher.dispatched();
         }
 
-        private record RecipientCallback(JsonSender<String> sender, Dispatcher dispatcher) implements Callback {
+        private record RecipientCallback(ValueSender<String> sender, Dispatcher dispatcher) implements Callback {
 
             @Override
             public void onResponse(Call call, Response response) {
@@ -84,11 +85,11 @@ public final class ExchangeClientTest {
                 sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
             }
 
-            private static void onRecipientReceived(JsonSender<String> sender, Response response) throws IOException {
-                HttpOptional<String> maybeRecipient = JsonObjects.tryDeserialize(
-                        response.body().bytes(), new TypeReference<>() {}, StatusCodes.BAD_GATEWAY);
+            private static void onRecipientReceived(ValueSender<String> sender, Response response) throws IOException {
+                Optional<String> maybeRecipient =
+                        JsonValues.tryDeserialize(response.body().bytes(), new TypeReference<>() {});
                 if (maybeRecipient.isEmpty()) {
-                    sender.sendErrorCode(maybeRecipient.statusCode());
+                    sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
                     return;
                 }
                 String recipient = maybeRecipient.get();

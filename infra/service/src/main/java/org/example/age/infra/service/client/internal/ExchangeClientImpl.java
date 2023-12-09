@@ -3,7 +3,7 @@ package org.example.age.infra.service.client.internal;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
-import org.example.age.api.Dispatcher;
+import org.example.age.api.base.Dispatcher;
 
 @Singleton
 final class ExchangeClientImpl implements ExchangeClient {

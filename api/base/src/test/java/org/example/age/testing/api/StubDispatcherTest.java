@@ -7,8 +7,8 @@ import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.ScheduledExecutor;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.ScheduledExecutor;
 import org.junit.jupiter.api.Test;
 
 public final class StubDispatcherTest {

@@ -17,9 +17,13 @@ public final class FakeStatusCodeSenderTest {
 
     @Test
     public void sendAndGet() {
-        assertThat(sender.tryGet()).isEmpty();
         sender.sendErrorCode(403);
         assertThat(sender.tryGet()).hasValue(403);
+    }
+
+    @Test
+    public void tryGet() {
+        assertThat(sender.tryGet()).isEmpty();
     }
 
     @Test

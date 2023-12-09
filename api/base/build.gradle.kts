@@ -5,11 +5,6 @@ plugins {
 }
 
 dependencies {
-    // main
-    api("com.fasterxml.jackson.core:jackson-core")
-    api("com.fasterxml.jackson.core:jackson-databind")
-    api("org.immutables:value-annotations")
-
     // test fixtures
     testFixturesImplementation("org.assertj:assertj-core")
     testFixturesImplementation("org.mockito:mockito-core")

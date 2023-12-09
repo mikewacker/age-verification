@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.api.JsonObjects;
+import org.example.age.data.json.JsonValues;
 
 /**
  * HTTP request for a JSON API.
@@ -68,7 +68,7 @@ public final class JsonApiRequest {
 
         /** Sets the JSON body. */
         public Builder body(Object requestValue) {
-            byte[] rawRequestValue = JsonObjects.serialize(requestValue);
+            byte[] rawRequestValue = JsonValues.serialize(requestValue);
             body = RequestBody.create(rawRequestValue, JSON_CONTENT_TYPE);
             return this;
         }

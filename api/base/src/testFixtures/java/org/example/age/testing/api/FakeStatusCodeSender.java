@@ -1,12 +1,13 @@
 package org.example.age.testing.api;
 
 import java.util.OptionalInt;
-import org.example.age.api.StatusCodeSender;
+import java.util.concurrent.atomic.AtomicReference;
+import org.example.age.api.base.StatusCodeSender;
 
 /** Fake {@link StatusCodeSender} that stores the status code that was sent. */
 public final class FakeStatusCodeSender implements StatusCodeSender {
 
-    private OptionalInt maybeStatusCode = OptionalInt.empty();
+    private final AtomicReference<Integer> statusCode = new AtomicReference<>(null);
 
     /** Creates a {@link FakeStatusCodeSender}. */
     public static FakeStatusCodeSender create() {
@@ -15,16 +16,15 @@ public final class FakeStatusCodeSender implements StatusCodeSender {
 
     /** Gets the status code that was sent, if a response was sent. */
     public OptionalInt tryGet() {
-        return maybeStatusCode;
+        Integer statusCode = this.statusCode.get();
+        return (statusCode != null) ? OptionalInt.of(statusCode) : OptionalInt.empty();
     }
 
     @Override
     public void send(int statusCode) {
-        if (maybeStatusCode.isPresent()) {
+        if (!this.statusCode.compareAndSet(null, statusCode)) {
             throw new IllegalStateException("response was already sent");
         }
-
-        maybeStatusCode = OptionalInt.of(statusCode);
     }
 
     private FakeStatusCodeSender() {}

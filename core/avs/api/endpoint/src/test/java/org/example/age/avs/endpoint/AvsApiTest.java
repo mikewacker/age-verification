@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.avs.service.endpoint.test.TestAvsServiceModule;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.VerificationSession;

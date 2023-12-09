@@ -6,12 +6,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.time.Duration;
-import org.example.age.api.JsonObjects;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
+import org.example.age.data.json.JsonValues;
 import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -46,9 +46,9 @@ public final class SignedAgeCertificateTest {
     public void serializeThenDeserialize() {
         AgeCertificate certificate = createAgeCertificate();
         SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
-        byte[] rawSignedCertificate = JsonObjects.serialize(signedCertificate);
+        byte[] rawSignedCertificate = JsonValues.serialize(signedCertificate);
         SignedAgeCertificate rtSignedCertificate =
-                JsonObjects.deserialize(rawSignedCertificate, new TypeReference<>() {});
+                JsonValues.deserialize(rawSignedCertificate, new TypeReference<>() {});
         assertThat(rtSignedCertificate).isEqualTo(signedCertificate);
     }
 
@@ -56,9 +56,9 @@ public final class SignedAgeCertificateTest {
     public void signThenSerializeThenDeserializeThenVerify() {
         AgeCertificate certificate = createAgeCertificate();
         SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
-        byte[] rawSignedCertificate = JsonObjects.serialize(signedCertificate);
+        byte[] rawSignedCertificate = JsonValues.serialize(signedCertificate);
         SignedAgeCertificate rtSignedCertificate =
-                JsonObjects.deserialize(rawSignedCertificate, new TypeReference<>() {});
+                JsonValues.deserialize(rawSignedCertificate, new TypeReference<>() {});
         boolean wasVerified = rtSignedCertificate.verify(keyPair.getPublic());
         assertThat(wasVerified).isTrue();
     }

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Duration;
-import org.example.age.api.JsonObjects;
+import org.example.age.data.json.JsonValues;
 import org.example.age.module.config.common.AvsLocation;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +19,8 @@ public final class SiteConfigTest {
                 .id("Site")
                 .verifiedAccountExpiresInMinutes(Duration.ofDays(30).toMinutes())
                 .build();
-        byte[] rawSiteConfig = JsonObjects.serialize(siteConfig);
-        SiteConfig rtSiteConfig = JsonObjects.deserialize(rawSiteConfig, new TypeReference<>() {});
+        byte[] rawSiteConfig = JsonValues.serialize(siteConfig);
+        SiteConfig rtSiteConfig = JsonValues.deserialize(rawSiteConfig, new TypeReference<>() {});
         assertThat(rtSiteConfig).isEqualTo(siteConfig);
     }
 }

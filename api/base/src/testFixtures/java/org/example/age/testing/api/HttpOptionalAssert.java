@@ -2,7 +2,7 @@ package org.example.age.testing.api;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.CheckReturnValue;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 
 /** Assertions for {@link HttpOptional}. */
 @CheckReturnValue

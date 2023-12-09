@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":api:base"))
-    api(project(":api:crypto-data"))
+    api(project(":api:data:crypto"))
     api(project(":core:common:api:module"))
     api(project(":core:common:api:types"))
     api(project(":core:data"))
@@ -28,7 +28,7 @@ dependencies {
     testFixturesApi("javax.inject:javax.inject")
 
     testFixturesImplementation(project(":api:base"))
-    testFixturesImplementation(project(":api:crypto-data"))
+    testFixturesImplementation(project(":api:data:crypto"))
     testFixturesImplementation(project(":core:common:api:types"))
     testFixturesImplementation(project(":core:data"))
     testFixturesApi(project(":module:extractor:common:builtin"))

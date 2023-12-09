@@ -3,9 +3,9 @@ package org.example.age.avs.service.endpoint;
 import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.JsonSender;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.StatusCodeSender;
+import org.example.age.api.base.ValueSender;
 import org.example.age.avs.api.endpoint.AvsApi;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.VerificationState;
@@ -21,14 +21,14 @@ public final class StubAvsService implements AvsApi {
     public StubAvsService() {}
 
     @Override
-    public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+    public void getVerificationState(ValueSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         VerificationState state = VerificationState.unverified();
         sender.sendValue(state);
     }
 
     @Override
     public void createVerificationSession(
-            JsonSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
+            ValueSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
         VerificationRequest request = VerificationRequest.generateForSite(siteId, Duration.ofMinutes(5));
         VerificationSession session = VerificationSession.create(request);
         sender.sendValue(session);

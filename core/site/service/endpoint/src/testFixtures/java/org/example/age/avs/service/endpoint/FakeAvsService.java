@@ -3,10 +3,10 @@ package org.example.age.avs.service.endpoint;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.JsonSender;
-import org.example.age.api.Sender;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.Sender;
+import org.example.age.api.base.StatusCodeSender;
+import org.example.age.api.base.ValueSender;
 import org.example.age.avs.api.endpoint.AvsApi;
 import org.example.age.avs.service.verification.internal.FakeAvsVerificationFactory;
 import org.example.age.common.api.data.AuthMatchData;
@@ -39,13 +39,13 @@ final class FakeAvsService implements AvsApi {
     }
 
     @Override
-    public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+    public void getVerificationState(ValueSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         sender.sendErrorCode(418);
     }
 
     @Override
     public void createVerificationSession(
-            JsonSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
+            ValueSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
         reset();
         storedSession = verificationFactory.createVerificationSession(siteId);
         sender.sendValue(storedSession);

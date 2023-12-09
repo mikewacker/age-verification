@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import org.example.age.api.ScheduledExecutor;
+import org.example.age.api.base.ScheduledExecutor;
 
 /** Fake same-thread {@link ScheduledExecutor} where scheduled tasks must be run manually. */
 public final class FakeScheduledExecutor implements ScheduledExecutor {

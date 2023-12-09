@@ -1,6 +1,6 @@
 package org.example.age.site.service.verification.internal;
 
-import org.example.age.api.Dispatcher;
+import org.example.age.api.base.Dispatcher;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;

@@ -6,10 +6,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Optional;
-import org.example.age.api.JsonObjects;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.json.JsonValues;
 import org.example.age.data.user.VerifiedUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,8 +35,8 @@ public final class AgeCertificateTest {
     @Test
     public void serializeThenDeserialize() {
         AgeCertificate certificate = createAgeCertificate();
-        byte[] rawCertificate = JsonObjects.serialize(certificate);
-        AgeCertificate rtCertificate = JsonObjects.deserialize(rawCertificate, new TypeReference<>() {});
+        byte[] rawCertificate = JsonValues.serialize(certificate);
+        AgeCertificate rtCertificate = JsonValues.deserialize(rawCertificate, new TypeReference<>() {});
         assertThat(rtCertificate).isEqualTo(certificate);
     }
 

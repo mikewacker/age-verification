@@ -4,18 +4,18 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonObjects;
-import org.example.age.api.JsonSender;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ValueSender;
+import org.example.age.data.json.JsonValues;
 
-/** {@link JsonSender} that is backed by an {@link HttpServerExchange}. */
-public final class ExchangeJsonSender<V> implements JsonSender<V> {
+/** {@link ValueSender} that is backed by an {@link HttpServerExchange}. */
+public final class ExchangeJsonSender<V> implements ValueSender<V> {
 
     private final HttpServerExchange exchange;
     private final AtomicBoolean wasSent = new AtomicBoolean(false);
 
-    /** Creates the {@link JsonSender} from the {@link HttpServerExchange}. */
-    public static <V> JsonSender<V> create(HttpServerExchange exchange) {
+    /** Creates the {@link ValueSender} from the {@link HttpServerExchange}. */
+    public static <V> ValueSender<V> create(HttpServerExchange exchange) {
         return new ExchangeJsonSender<>(exchange);
     }
 
@@ -36,7 +36,7 @@ public final class ExchangeJsonSender<V> implements JsonSender<V> {
 
     /** Sends a JSON body. */
     private void sendValueInternal(Object value) {
-        byte[] rawValue = JsonObjects.serialize(value);
+        byte[] rawValue = JsonValues.serialize(value);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(rawValue));
     }

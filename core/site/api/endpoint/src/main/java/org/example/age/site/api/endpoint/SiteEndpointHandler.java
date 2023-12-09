@@ -6,10 +6,10 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSender;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.StatusCodeSender;
+import org.example.age.api.base.ValueSender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -48,7 +48,7 @@ final class SiteEndpointHandler implements HttpHandler {
     }
 
     private void handleVerificationState(HttpServerExchange exchange) {
-        JsonSender<VerificationState> sender = ExchangeJsonSender.create(exchange);
+        ValueSender<VerificationState> sender = ExchangeJsonSender.create(exchange);
 
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {
@@ -62,7 +62,7 @@ final class SiteEndpointHandler implements HttpHandler {
     }
 
     private void handleVerificationSession(HttpServerExchange exchange) {
-        JsonSender<VerificationSession> sender = ExchangeJsonSender.create(exchange);
+        ValueSender<VerificationSession> sender = ExchangeJsonSender.create(exchange);
 
         HttpOptional<String> maybeAccountId = accountIdExtractor.tryExtract(exchange);
         if (maybeAccountId.isEmpty()) {

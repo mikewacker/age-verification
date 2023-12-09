@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":api:crypto-data"))
+    api(project(":api:data:crypto"))
     api(project(":core:data"))
     api("com.google.guava:guava")
 }

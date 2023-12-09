@@ -1,8 +1,8 @@
 package org.example.age.infra.service.client;
 
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.Sender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.Sender;
 
 /** Callback for a backend request made as part of a frontend exchange, where the response has a JSON body. */
 @FunctionalInterface

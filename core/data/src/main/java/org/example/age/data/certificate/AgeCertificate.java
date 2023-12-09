@@ -1,14 +1,14 @@
 package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
+import org.example.age.data.json.JsonStyle;
 import org.example.age.data.user.VerifiedUser;
 import org.immutables.value.Value;
 
 /** Certificate that pseudonymously verifies the age (and guardians, if applicable) of a person. */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableAgeCertificate.class)
 public interface AgeCertificate {
 

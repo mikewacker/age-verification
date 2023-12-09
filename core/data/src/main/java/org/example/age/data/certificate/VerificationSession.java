@@ -1,13 +1,13 @@
 package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.Aes256Key;
+import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** Session to pseudonymously verify a person's age (and guardians, if applicable). */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableVerificationSession.class)
 public interface VerificationSession {
 
