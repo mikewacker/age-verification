@@ -1,7 +1,7 @@
 package org.example.age.module.store.common;
 
 import java.util.Optional;
-import org.example.age.api.ScheduledExecutor;
+import org.example.age.api.base.ScheduledExecutor;
 
 /**
  * Ephemeral key-value store where a key-value pair is associated with a pending action that expires.

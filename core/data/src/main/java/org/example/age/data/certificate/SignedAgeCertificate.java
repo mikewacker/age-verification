@@ -3,9 +3,9 @@ package org.example.age.data.certificate;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import org.example.age.api.ApiStyle;
-import org.example.age.api.JsonObjects;
 import org.example.age.data.crypto.DigitalSignature;
+import org.example.age.data.json.JsonStyle;
+import org.example.age.data.json.JsonValues;
 import org.immutables.value.Value;
 
 /**
@@ -14,7 +14,7 @@ import org.immutables.value.Value;
  * <p>Only {@code Ed25519} keys are supported.</p>
  */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableSignedAgeCertificate.class)
 public interface SignedAgeCertificate {
 
@@ -28,7 +28,7 @@ public interface SignedAgeCertificate {
 
     /** Signs the age certificate. */
     static SignedAgeCertificate sign(AgeCertificate certificate, PrivateKey privateKey) {
-        byte[] rawCertificate = JsonObjects.serialize(certificate);
+        byte[] rawCertificate = JsonValues.serialize(certificate);
         DigitalSignature signature = DigitalSignature.sign(rawCertificate, privateKey);
         return of(certificate, signature);
     }
@@ -41,7 +41,7 @@ public interface SignedAgeCertificate {
 
     /** Verifies the signature against the age certificate, returning whether verification succeeded. */
     default boolean verify(PublicKey publicKey) {
-        byte[] rawCertificate = JsonObjects.serialize(ageCertificate());
+        byte[] rawCertificate = JsonValues.serialize(ageCertificate());
         return signature().verify(rawCertificate, publicKey);
     }
 }

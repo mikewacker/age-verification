@@ -12,6 +12,7 @@ dependencies {
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
 
+    implementation(project(":api:data:json"))
     implementation(project(":infra:client"))
     implementation("com.squareup.okhttp3:okhttp")
 

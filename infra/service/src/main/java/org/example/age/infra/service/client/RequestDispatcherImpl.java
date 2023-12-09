@@ -2,15 +2,16 @@ package org.example.age.infra.service.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonObjects;
-import org.example.age.api.Sender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.Sender;
+import org.example.age.data.json.JsonValues;
 import org.example.age.infra.client.JsonApiRequest;
 import org.example.age.infra.service.client.internal.ExchangeClient;
 
@@ -153,10 +154,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
             }
             byte[] rawResponseValue = maybeRawResponseValue.get();
 
-            HttpOptional<V> maybeResponseValue =
-                    JsonObjects.tryDeserialize(rawResponseValue, responseValueTypeRef, 502);
+            Optional<V> maybeResponseValue = JsonValues.tryDeserialize(rawResponseValue, responseValueTypeRef);
             if (maybeResponseValue.isEmpty()) {
-                sender.sendErrorCode(maybeResponseValue.statusCode());
+                sender.sendErrorCode(502);
                 return;
             }
             V responseValue = maybeResponseValue.get();

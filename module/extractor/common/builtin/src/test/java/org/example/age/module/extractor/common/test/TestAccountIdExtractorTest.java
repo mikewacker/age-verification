@@ -10,7 +10,7 @@ import io.undertow.util.HeaderMap;
 import io.undertow.util.HttpString;
 import java.util.Optional;
 import javax.inject.Singleton;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.module.extractor.common.AccountIdExtractor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

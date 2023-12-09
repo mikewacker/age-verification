@@ -7,8 +7,8 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonObjects;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.data.json.JsonValues;
 import org.example.age.infra.client.JsonApiRequest;
 
 /** Shared HTTP client for testing. */
@@ -110,7 +110,7 @@ public final class TestClient {
 
             checkContentType(response, JSON_CONTENT_TYPE);
             byte[] rawResponseValue = response.body().bytes();
-            V responseValue = JsonObjects.deserialize(rawResponseValue, responseValueTypeRef);
+            V responseValue = JsonValues.deserialize(rawResponseValue, responseValueTypeRef);
             return HttpOptional.of(responseValue);
         }
 

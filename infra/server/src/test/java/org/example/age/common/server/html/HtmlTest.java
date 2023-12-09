@@ -9,7 +9,7 @@ import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;

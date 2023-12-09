@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 import org.junit.jupiter.api.Test;
 
 public final class HttpOptionalAssertTest {

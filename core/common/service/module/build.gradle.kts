@@ -8,7 +8,8 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api:base"))
-    api(project(":api:crypto-data"))
+    api(project(":api:data:json"))
+    api(project(":api:data:crypto"))
     api(project(":core:common:api:types"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-core")
@@ -16,6 +17,6 @@ dependencies {
     api("org.immutables:value-annotations")
 
     // test
-    testImplementation(project(":api:base"))
+    testImplementation(project(":api:data:json"))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
 }

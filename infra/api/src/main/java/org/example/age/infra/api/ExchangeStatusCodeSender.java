@@ -2,7 +2,7 @@ package org.example.age.infra.api;
 
 import io.undertow.server.HttpServerExchange;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.base.StatusCodeSender;
 
 /** {@link StatusCodeSender} that is backed by an {@link HttpServerExchange}. */
 public final class ExchangeStatusCodeSender implements StatusCodeSender {

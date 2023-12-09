@@ -2,7 +2,7 @@ package org.example.age.infra.api;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import org.example.age.api.ScheduledExecutor;
+import org.example.age.api.base.ScheduledExecutor;
 import org.xnio.XnioExecutor;
 
 /** {@link ScheduledExecutor} that is backed by a {@link XnioExecutor}. */

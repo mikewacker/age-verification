@@ -2,13 +2,13 @@ package org.example.age.common.api.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Objects;
-import org.example.age.api.ApiStyle;
+import org.example.age.data.json.JsonStyle;
 import org.example.age.data.user.VerifiedUser;
 import org.immutables.value.Value;
 
 /** Current state for age verification. Some fields may be conditionally present based on the status. */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableVerificationState.class)
 public interface VerificationState {
 

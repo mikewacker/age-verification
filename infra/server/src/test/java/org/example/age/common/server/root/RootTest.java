@@ -13,7 +13,7 @@ import io.undertow.util.Headers;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.common.server.html.HtmlModule;
 import org.example.age.testing.api.HttpOptionalAssert;
 import org.example.age.testing.client.TestClient;

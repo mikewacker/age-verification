@@ -7,7 +7,7 @@ dependencies {
     // main
     annotationProcessor("org.immutables:value")
 
-    api(project(":api:base"))
+    api(project(":api:data:json"))
     api(project(":core:common:service:module"))
     api(project(":core:data"))
     api("com.fasterxml.jackson.core:jackson-annotations")
@@ -15,6 +15,6 @@ dependencies {
     api("org.immutables:value-annotations")
 
     // test
-    testImplementation(project(":api:base"))
+    testImplementation(project(":api:data:json"))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
 }

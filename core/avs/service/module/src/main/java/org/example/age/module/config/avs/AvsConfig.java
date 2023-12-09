@@ -1,12 +1,12 @@
 package org.example.age.module.config.avs;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.ApiStyle;
+import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the age verification service. */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableAvsConfig.class)
 public interface AvsConfig {
 

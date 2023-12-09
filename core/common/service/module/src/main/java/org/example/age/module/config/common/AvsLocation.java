@@ -1,8 +1,8 @@
 package org.example.age.module.config.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /**
@@ -11,7 +11,7 @@ import org.immutables.value.Value;
  * <p>A real implementation would use HTTPS.</p>
  */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableAvsLocation.class)
 public interface AvsLocation {
 

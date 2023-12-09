@@ -1,8 +1,8 @@
 package org.example.age.infra.service.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.Sender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.Sender;
 
 /**
  * Dispatches an HTTP request to a backend server as part of a frontend exchange.

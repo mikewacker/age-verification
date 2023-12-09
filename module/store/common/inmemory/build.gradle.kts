@@ -11,6 +11,7 @@ dependencies {
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
 
+    implementation(project(":api:data:json"))
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.google.guava:guava")
 

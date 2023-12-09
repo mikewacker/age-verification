@@ -7,9 +7,9 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ValueSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -65,7 +65,7 @@ public final class ExchangeDispatcherTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
             if (!dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -97,7 +97,7 @@ public final class ExchangeDispatcherTest {
             }
         }
 
-        private static void workerHandler(JsonSender<String> sender, Dispatcher dispatcher) {
+        private static void workerHandler(ValueSender<String> sender, Dispatcher dispatcher) {
             if (dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -106,7 +106,7 @@ public final class ExchangeDispatcherTest {
             sender.sendValue("test");
         }
 
-        private static void ioThreadHandler(JsonSender<String> sender, Dispatcher dispatcher) {
+        private static void ioThreadHandler(ValueSender<String> sender, Dispatcher dispatcher) {
             if (!dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -115,7 +115,7 @@ public final class ExchangeDispatcherTest {
             sender.sendValue("test");
         }
 
-        private static void badHandler(JsonSender<String> sender, Dispatcher dispatcher) {
+        private static void badHandler(ValueSender<String> sender, Dispatcher dispatcher) {
             throw new RuntimeException();
         }
 

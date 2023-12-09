@@ -2,13 +2,13 @@ package org.example.age.module.config.site;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.ApiStyle;
+import org.example.age.data.json.JsonStyle;
 import org.example.age.module.config.common.AvsLocation;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableSiteConfig.class)
 public interface SiteConfig {
 

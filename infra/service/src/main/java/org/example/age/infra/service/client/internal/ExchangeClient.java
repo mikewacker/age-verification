@@ -1,7 +1,7 @@
 package org.example.age.infra.service.client.internal;
 
 import okhttp3.OkHttpClient;
-import org.example.age.api.Dispatcher;
+import org.example.age.api.base.Dispatcher;
 
 /**
  * Shared HTTP client for exchanges on the server. The client uses the server's worker for async calls.

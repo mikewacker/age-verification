@@ -1,14 +1,14 @@
 package org.example.age.module.config.avs;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.ApiStyle;
+import org.example.age.data.json.JsonStyle;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.module.config.common.SiteLocation;
 import org.immutables.value.Value;
 
 /** Configuration for a site that is registered with the age verification service. */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableRegisteredSiteConfig.class)
 public interface RegisteredSiteConfig {
 

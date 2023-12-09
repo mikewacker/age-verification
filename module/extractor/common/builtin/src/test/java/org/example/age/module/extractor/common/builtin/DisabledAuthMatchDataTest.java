@@ -3,8 +3,8 @@ package org.example.age.module.extractor.common.builtin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.api.JsonObjects;
 import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.data.json.JsonValues;
 import org.junit.jupiter.api.Test;
 
 public final class DisabledAuthMatchDataTest {
@@ -20,8 +20,8 @@ public final class DisabledAuthMatchDataTest {
     @Test
     public void serializeThenDeserialize() {
         AuthMatchData authData = DisabledAuthMatchData.of();
-        byte[] rawAuthData = JsonObjects.serialize(authData);
-        AuthMatchData rtAuthData = JsonObjects.deserialize(rawAuthData, new TypeReference<>() {});
+        byte[] rawAuthData = JsonValues.serialize(authData);
+        AuthMatchData rtAuthData = JsonValues.deserialize(rawAuthData, new TypeReference<>() {});
         assertThat(rtAuthData).isEqualTo(authData);
     }
 }

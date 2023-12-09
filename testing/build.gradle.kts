@@ -12,6 +12,7 @@ dependencies {
     testFixturesApi("io.undertow:undertow-core")
     testFixturesApi("org.junit.jupiter:junit-jupiter-api")
 
+    testFixturesImplementation(project(":api:data:json"))
     testFixturesImplementation(project(":infra:client"))
     testFixturesImplementation("com.squareup.okhttp3:okhttp")
 

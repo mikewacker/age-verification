@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSender;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ValueSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -74,7 +74,7 @@ public final class RequestParserTest {
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
-            JsonSender<Integer> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<Integer> sender = ExchangeJsonSender.create(exchange);
 
             HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", new TypeReference<>() {});
             if (maybeOperand1.isEmpty()) {
@@ -86,7 +86,7 @@ public final class RequestParserTest {
             executeAddRequest(sender, operand1, operand2);
         }
 
-        private static void executeAddRequest(JsonSender<Integer> sender, int operand1, int operand2) {
+        private static void executeAddRequest(ValueSender<Integer> sender, int operand1, int operand2) {
             int sum = operand1 + operand2;
             if (sum == 500) {
                 throw new RuntimeException();

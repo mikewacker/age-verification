@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
-import org.example.age.api.JsonObjects;
+import org.example.age.data.json.JsonValues;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {
@@ -113,8 +113,8 @@ public final class AgeRangeTest {
     }
 
     private void serializeThenDeserialize(AgeRange ageRange) {
-        byte[] rawAgeRange = JsonObjects.serialize(ageRange);
-        AgeRange rtAgeRange = JsonObjects.deserialize(rawAgeRange, new TypeReference<>() {});
+        byte[] rawAgeRange = JsonValues.serialize(ageRange);
+        AgeRange rtAgeRange = JsonValues.deserialize(rawAgeRange, new TypeReference<>() {});
         assertThat(rtAgeRange).isEqualTo(ageRange);
     }
 

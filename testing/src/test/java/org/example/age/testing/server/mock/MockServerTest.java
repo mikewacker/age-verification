@@ -4,7 +4,7 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import java.io.IOException;
 import okhttp3.mockwebserver.MockResponse;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;

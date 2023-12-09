@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonObjects;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
+import org.example.age.data.json.JsonValues;
 
 @Singleton
 final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
@@ -18,7 +18,7 @@ final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
 
     @Override
     public AesGcmEncryptionPackage encrypt(AuthMatchData authData, Aes256Key authKey) {
-        byte[] rawAuthData = JsonObjects.serialize(authData);
+        byte[] rawAuthData = JsonValues.serialize(authData);
         return AesGcmEncryptionPackage.encrypt(rawAuthData, authKey);
     }
 
@@ -30,6 +30,7 @@ final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
         }
         byte[] rawAuthData = maybeRawAuthData.get();
 
-        return JsonObjects.tryDeserialize(rawAuthData, new TypeReference<>() {}, 400);
+        Optional<AuthMatchData> maybeAuthData = JsonValues.tryDeserialize(rawAuthData, new TypeReference<>() {});
+        return HttpOptional.fromOptional(maybeAuthData, 400);
     }
 }

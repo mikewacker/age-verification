@@ -3,7 +3,7 @@ package org.example.age.testing.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import org.example.age.api.ScheduledExecutor;
+import org.example.age.api.base.ScheduledExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

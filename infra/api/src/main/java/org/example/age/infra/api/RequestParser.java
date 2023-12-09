@@ -6,8 +6,9 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonObjects;
+import java.util.Optional;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.data.json.JsonValues;
 import org.xnio.IoUtils;
 
 /** Parses API arguments from an HTTP request. */
@@ -39,14 +40,15 @@ public final class RequestParser {
      * <p>Returns a 400 error if the parameter is missing or cannot be deserialized.</p>
      */
     public <V> HttpOptional<V> tryGetQueryParameter(String name, TypeReference<V> valueTypeRef) {
-        HttpOptional<String> maybeRawValue = tryGetQueryParameter(name);
-        if (maybeRawValue.isEmpty()) {
-            return HttpOptional.empty(maybeRawValue.statusCode());
+        HttpOptional<String> maybeTextValue = tryGetQueryParameter(name);
+        if (maybeTextValue.isEmpty()) {
+            return HttpOptional.empty(maybeTextValue.statusCode());
         }
 
-        String rawValue = maybeRawValue.get();
-        byte[] json = JsonObjects.serialize(rawValue);
-        return JsonObjects.tryDeserialize(json, valueTypeRef, StatusCodes.BAD_REQUEST);
+        String textValue = maybeTextValue.get();
+        byte[] rawValue = JsonValues.serialize(textValue);
+        Optional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef);
+        return HttpOptional.fromOptional(maybeValue, StatusCodes.BAD_REQUEST);
     }
 
     /**
@@ -80,9 +82,9 @@ public final class RequestParser {
 
         @Override
         public void handle(HttpServerExchange exchange, byte[] rawValue) {
-            HttpOptional<V> maybeValue = JsonObjects.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
+            Optional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef);
             if (maybeValue.isEmpty()) {
-                sendErrorCode(maybeValue.statusCode());
+                sendErrorCode(StatusCodes.BAD_REQUEST);
                 return;
             }
             V value = maybeValue.get();

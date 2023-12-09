@@ -1,7 +1,7 @@
 package org.example.age.module.extractor.common;
 
 import io.undertow.server.HttpServerExchange;
-import org.example.age.api.HttpOptional;
+import org.example.age.api.base.HttpOptional;
 
 /**
  * Extracts an account ID from an {@link HttpServerExchange}, or returns an error status code.

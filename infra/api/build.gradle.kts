@@ -9,6 +9,7 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-core")
     api("io.undertow:undertow-core")
 
+    implementation(project(":api:data:json"))
     implementation("org.jboss.xnio:xnio-api")
 
     // test

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import org.example.age.api.Dispatcher;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSender;
-import org.example.age.api.StatusCodeSender;
+import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.StatusCodeSender;
+import org.example.age.api.base.ValueSender;
 import org.example.age.common.api.data.AuthMatchData;
 import org.example.age.common.api.data.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -37,14 +37,14 @@ final class SiteService implements SiteApi {
     }
 
     @Override
-    public void getVerificationState(JsonSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+    public void getVerificationState(ValueSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         VerificationState state = verificationManager.getVerificationState(accountId);
         sender.sendValue(state);
     }
 
     @Override
     public void createVerificationSession(
-            JsonSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+            ValueSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         requestDispatcher
                 .requestBuilder(sender, dispatcher)
                 .post(getVerificationSessionUrl())
@@ -74,11 +74,11 @@ final class SiteService implements SiteApi {
     /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
     private record VerificationSessionCallback(
             SiteVerificationManager verificationManager, String accountId, AuthMatchData authData)
-            implements ResponseJsonCallback<JsonSender<VerificationSession>, VerificationSession> {
+            implements ResponseJsonCallback<ValueSender<VerificationSession>, VerificationSession> {
 
         @Override
         public void onResponse(
-                JsonSender<VerificationSession> sender,
+                ValueSender<VerificationSession> sender,
                 HttpOptional<VerificationSession> maybeSession,
                 Dispatcher dispatcher) {
             if (maybeSession.isEmpty()) {

@@ -2,8 +2,8 @@ package org.example.age.data.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
-import org.example.age.api.ApiStyle;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /**
@@ -12,7 +12,7 @@ import org.immutables.value.Value;
  * <p>The only PII a {@link VerifiedUser} contains is an age, which can be anonymized into an age range.</p>
  */
 @Value.Immutable
-@ApiStyle
+@JsonStyle
 @JsonDeserialize(as = ImmutableVerifiedUser.class)
 public interface VerifiedUser {
 

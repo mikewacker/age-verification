@@ -7,8 +7,8 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.io.IOException;
-import org.example.age.api.HttpOptional;
-import org.example.age.api.JsonSender;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ValueSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -57,7 +57,7 @@ public final class ExchangeJsonSenderTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            JsonSender<String> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
             switch (exchange.getRequestPath()) {
                 case "/value" -> sender.sendValue("test");
                 case "/forbidden" -> sender.sendErrorCode(StatusCodes.FORBIDDEN);
@@ -67,13 +67,13 @@ public final class ExchangeJsonSenderTest {
             }
         }
 
-        private static void sendTwice(JsonSender<String> sender) {
+        private static void sendTwice(ValueSender<String> sender) {
             sender.sendValue("first");
             sender.sendValue("second");
         }
 
         private static void serializationFailed(HttpServerExchange exchange) {
-            JsonSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<HttpServerExchange> sender = ExchangeJsonSender.create(exchange);
             sender.sendValue(exchange);
         }
 
