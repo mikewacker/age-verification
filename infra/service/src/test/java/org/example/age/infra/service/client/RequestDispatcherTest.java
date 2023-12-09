@@ -16,9 +16,9 @@ import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.StatusCodeSender;
 import org.example.age.api.base.ValueSender;
-import org.example.age.infra.api.ExchangeDispatcher;
-import org.example.age.infra.api.ExchangeJsonSender;
-import org.example.age.infra.api.ExchangeStatusCodeSender;
+import org.example.age.api.infra.UndertowDispatcher;
+import org.example.age.api.infra.UndertowJsonValueSender;
+import org.example.age.api.infra.UndertowStatusCodeSender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.mock.MockServer;
@@ -115,13 +115,13 @@ public final class RequestDispatcherTest {
             switch (exchange.getRequestPath()) {
                 case "/status-code" -> handleStatusCodeRequest(exchange);
                 case "/json" -> handleJsonRequest(exchange);
-                default -> ExchangeStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
+                default -> UndertowStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
             }
         }
 
         private void handleStatusCodeRequest(HttpServerExchange exchange) {
-            StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
-            Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+            StatusCodeSender sender = UndertowStatusCodeSender.create(exchange);
+            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
 
             requestDispatcher
                     .requestBuilder(sender, dispatcher)
@@ -130,8 +130,8 @@ public final class RequestDispatcherTest {
         }
 
         private void handleJsonRequest(HttpServerExchange exchange) {
-            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
-            Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
+            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
+            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
 
             requestDispatcher
                     .requestBuilder(sender, dispatcher)

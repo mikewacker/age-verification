@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
@@ -16,7 +16,7 @@ import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class ExchangeDispatcherTest {
+public final class UndertowDispatcherTest {
 
     @RegisterExtension
     private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
@@ -55,7 +55,7 @@ public final class ExchangeDispatcherTest {
         return TestClient.apiRequestBuilder().get(server.url(path)).executeWithJsonResponse(new TypeReference<>() {});
     }
 
-    /** Test {@link HttpHandler} that uses an {@link ExchangeDispatcher}. */
+    /** Test {@link HttpHandler} that uses an {@link UndertowDispatcher}. */
     private static final class TestHandler implements HttpHandler {
 
         public static HttpHandler create() {
@@ -64,8 +64,8 @@ public final class ExchangeDispatcherTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            Dispatcher dispatcher = ExchangeDispatcher.create(exchange);
-            ValueSender<String> sender = ExchangeJsonSender.create(exchange);
+            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
+            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
             if (!dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;

@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,7 @@ import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class ExchangeStatusCodeSenderTest {
+public final class UndertowStatusCodeSenderTest {
 
     @RegisterExtension
     private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
@@ -40,7 +40,7 @@ public final class ExchangeStatusCodeSenderTest {
         return TestClient.apiRequestBuilder().get(server.url(path)).executeWithStatusCodeResponse();
     }
 
-    /** Test {@link HttpHandler} that uses an {@link ExchangeStatusCodeSender}. */
+    /** Test {@link HttpHandler} that uses an {@link UndertowStatusCodeSender}. */
     private static final class TestHandler implements HttpHandler {
 
         public static HttpHandler create() {
@@ -49,7 +49,7 @@ public final class ExchangeStatusCodeSenderTest {
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
-            StatusCodeSender sender = ExchangeStatusCodeSender.create(exchange);
+            StatusCodeSender sender = UndertowStatusCodeSender.create(exchange);
             switch (exchange.getRequestPath()) {
                 case "/ok" -> sender.sendOk();
                 case "/forbidden" -> sender.send(StatusCodes.FORBIDDEN);

@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
@@ -74,7 +74,7 @@ public final class RequestParserTest {
         }
 
         private static void handleAddRequest(HttpServerExchange exchange, RequestParser parser, int operand2) {
-            ValueSender<Integer> sender = ExchangeJsonSender.create(exchange);
+            ValueSender<Integer> sender = UndertowJsonValueSender.create(exchange);
 
             HttpOptional<Integer> maybeOperand1 = parser.tryGetQueryParameter("operand", new TypeReference<>() {});
             if (maybeOperand1.isEmpty()) {

@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.undertow.io.Receiver;
@@ -9,7 +9,6 @@ import java.util.Deque;
 import java.util.Optional;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.data.json.JsonValues;
-import org.xnio.IoUtils;
 
 /** Parses API arguments from an HTTP request. */
 public final class RequestParser {
@@ -84,7 +83,7 @@ public final class RequestParser {
         public void handle(HttpServerExchange exchange, byte[] rawValue) {
             Optional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef);
             if (maybeValue.isEmpty()) {
-                sendErrorCode(StatusCodes.BAD_REQUEST);
+                UndertowResponse.sendStatusCode(exchange, StatusCodes.BAD_REQUEST);
                 return;
             }
             V value = maybeValue.get();
@@ -93,19 +92,8 @@ public final class RequestParser {
             try {
                 callback.handleRequest(exchange, RequestParser.this, value);
             } catch (Exception e) {
-                sendErrorCode(StatusCodes.INTERNAL_SERVER_ERROR);
+                UndertowResponse.sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
             }
-        }
-
-        /** Sends an error status code. */
-        private void sendErrorCode(int errorCode) {
-            if (exchange.isResponseStarted()) {
-                IoUtils.safeClose(exchange.getConnection());
-                return;
-            }
-
-            exchange.setStatusCode(errorCode);
-            exchange.endExchange();
         }
     }
 }

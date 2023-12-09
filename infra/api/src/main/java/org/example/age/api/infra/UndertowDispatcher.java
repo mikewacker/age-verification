@@ -1,4 +1,4 @@
-package org.example.age.infra.api;
+package org.example.age.api.infra;
 
 import io.undertow.server.Connectors;
 import io.undertow.server.HttpServerExchange;
@@ -9,16 +9,16 @@ import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.base.Sender;
 
-/** {@link Dispatcher} that is backed by an {@link HttpServerExchange}. */
-public final class ExchangeDispatcher implements Dispatcher {
+/** {@link Dispatcher} that is backed by an Undertow {@link HttpServerExchange}. */
+public final class UndertowDispatcher implements Dispatcher {
 
     private final HttpServerExchange exchange;
     private final ScheduledExecutor ioThread;
     private final ExecutorService worker;
 
-    /** Creates the {@link Dispatcher} from the {@link HttpServerExchange}. */
+    /** Creates a {@link Dispatcher} from an {@link HttpServerExchange}. */
     public static Dispatcher create(HttpServerExchange exchange) {
-        return new ExchangeDispatcher(exchange);
+        return new UndertowDispatcher(exchange);
     }
 
     @Override
@@ -51,7 +51,7 @@ public final class ExchangeDispatcher implements Dispatcher {
         Connectors.executeRootHandler(ex -> handler.handleRequest(sender, this), exchange);
     }
 
-    private ExchangeDispatcher(HttpServerExchange exchange) {
+    private UndertowDispatcher(HttpServerExchange exchange) {
         this.exchange = exchange;
         ioThread = XnioScheduledExecutor.create(exchange.getIoThread());
         worker = exchange.getConnection().getWorker();
