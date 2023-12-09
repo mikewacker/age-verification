@@ -1,4 +1,4 @@
-package org.example.age.api.json;
+package org.example.age.data.json;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import org.example.age.data.json.JsonValues;
 import org.junit.jupiter.api.Test;
 
 public final class JsonValuesTest {
