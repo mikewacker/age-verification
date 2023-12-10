@@ -90,7 +90,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
         @Override
         public final void onResponse(Call call, Response response) {
-            dispatcher.executeHandler(sender, (s, d) -> handleResponse(s, response, d));
+            dispatcher.executeHandler(() -> handleResponse(sender, response, dispatcher));
         }
 
         @Override

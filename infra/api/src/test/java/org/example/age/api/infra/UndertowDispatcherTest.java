@@ -78,18 +78,22 @@ public final class UndertowDispatcherTest {
                 case "/dispatched-io-thread":
                     dispatcher
                             .getIoThread()
-                            .execute(() -> dispatcher.executeHandler(sender, TestHandler::ioThreadHandler));
+                            .execute(() -> dispatcher.executeHandler(() -> ioThreadHandler(sender, dispatcher)));
                     dispatcher.dispatched();
                     return;
                 case "/dispatched-worker":
-                    dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::workerHandler));
+                    dispatcher
+                            .getWorker()
+                            .execute(() -> dispatcher.executeHandler(() -> workerHandler(sender, dispatcher)));
                     dispatcher.dispatched();
                     return;
                 case "/error-dispatch":
                     dispatcher.dispatch(sender, TestHandler::badHandler);
                     return;
                 case "/error-dispatched":
-                    dispatcher.getWorker().execute(() -> dispatcher.executeHandler(sender, TestHandler::badHandler));
+                    dispatcher
+                            .getWorker()
+                            .execute(() -> dispatcher.executeHandler(() -> badHandler(sender, dispatcher)));
                     dispatcher.dispatched();
                     return;
                 default:
