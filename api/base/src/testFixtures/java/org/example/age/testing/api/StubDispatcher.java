@@ -8,10 +8,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import org.example.age.api.base.ApiHandler;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.ScheduledExecutor;
-import org.example.age.api.base.Sender;
 
 /**
  * Stub {@link Dispatcher} that no-ops when it dispatches API calls or uses the executors.
@@ -20,41 +18,25 @@ import org.example.age.api.base.Sender;
  *
  * <p>It assumes that the executors only call methods with {@code execute} or {@code submit} in the name.</p>
  */
-public final class StubDispatcher implements Dispatcher {
+public final class StubDispatcher {
 
-    private static final Dispatcher instance = new StubDispatcher();
-
-    private final ScheduledExecutor ioThread = createStubIoThread();
-    private final ExecutorService worker = createStubWorker();
+    private static final Dispatcher instance = create();
 
     /** Gets the stub {@link Dispatcher}. */
     public static Dispatcher get() {
         return instance;
     }
 
-    @Override
-    public boolean isInIoThread() {
-        return true;
+    /** Creates the stub {@link Dispatcher}. */
+    private static Dispatcher create() {
+        Dispatcher dispatcher = mock(Dispatcher.class);
+        when(dispatcher.isInIoThread()).thenReturn(true);
+        ScheduledExecutor ioThread = createStubIoThread();
+        when(dispatcher.getIoThread()).thenReturn(ioThread);
+        ExecutorService worker = createStubWorker();
+        when(dispatcher.getWorker()).thenReturn(worker);
+        return dispatcher;
     }
-
-    @Override
-    public ScheduledExecutor getIoThread() {
-        return ioThread;
-    }
-
-    @Override
-    public ExecutorService getWorker() {
-        return worker;
-    }
-
-    @Override
-    public <S extends Sender> void dispatch(S sender, ApiHandler<S> handler) {}
-
-    @Override
-    public void dispatched() {}
-
-    @Override
-    public <S extends Sender> void executeHandler(S sender, ApiHandler<S> handler) {}
 
     /** Creates a stub {@link ScheduledExecutor} for the IO thread. */
     private static ScheduledExecutor createStubIoThread() {
@@ -75,6 +57,7 @@ public final class StubDispatcher implements Dispatcher {
         return worker;
     }
 
+    // static class
     private StubDispatcher() {}
 
     /** Stub future whose value cannot be retrieved. */

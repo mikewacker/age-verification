@@ -3,12 +3,12 @@ package org.example.age.api.base;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Dispatches requests to the worker thread pool, and also schedules tasks.
+ * Dispatches a request to the worker thread pool, and also schedules tasks.
  *
  * <p>Requests run on an IO thread, so requests that block should be dispatched to a worker thread.</p>
  *
- * <p>By default, the underlying HTTP exchange completes when the request handler returns.
- * Calling {@link #dispatch(Sender, ApiHandler)} (or {@link #dispatched()}) will prevent that from happening.</p>
+ * <p>The behavior is undefined if a response is not sent and the request is not dispatched.
+ * If a response is not sent, the request should be dispatched via {@link #dispatch} (or {@link #dispatched()}).</p>
  */
 public interface Dispatcher {
 
@@ -22,11 +22,25 @@ public interface Dispatcher {
     ExecutorService getWorker();
 
     /** Dispatches this request to the worker thread pool. */
-    <S extends Sender> void dispatch(S sender, ApiHandler<S> handler);
+    <S extends Sender> void dispatch(S sender, ApiHandler.ZeroArg<S> handler);
 
-    /** Called when this request is dispatched without calling {@link #dispatch(Sender, ApiHandler)}. */
+    /** Dispatches this request to the worker thread pool. */
+    <S extends Sender, A> void dispatch(S sender, A arg, ApiHandler.OneArg<S, A> handler);
+
+    /** Dispatches this request to the worker thread pool. */
+    <S extends Sender, A1, A2> void dispatch(S sender, A1 arg, A2 arg2, ApiHandler.TwoArg<S, A1, A2> handler);
+
+    /** Dispatches this request to the worker thread pool. */
+    <S extends Sender, A1, A2, A3> void dispatch(
+            S sender, A1 arg, A2 arg2, A3 arg3, ApiHandler.ThreeArg<S, A1, A2, A3> handler);
+
+    /** Dispatches this request to the worker thread pool. */
+    <S extends Sender, A1, A2, A3, A4> void dispatch(
+            S sender, A1 arg, A2 arg2, A3 arg3, A4 arg4, ApiHandler.FourArg<S, A1, A2, A3, A4> handler);
+
+    /** Called when this request is dispatched without calling {@link #dispatch}. */
     void dispatched();
 
-    /** Executes the handler on the dispatched thread when {@link #dispatch(Sender, ApiHandler)} was not called. */
-    <S extends Sender> void executeHandler(S sender, ApiHandler<S> handler);
+    /** Called on the worker thread to execute the handler. Used when {@link #dispatched()} was called. */
+    <S extends Sender> void executeHandler(DispatchedHandler handler);
 }

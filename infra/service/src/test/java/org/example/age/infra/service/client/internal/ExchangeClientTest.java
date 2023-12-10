@@ -77,7 +77,7 @@ public final class ExchangeClientTest {
 
             @Override
             public void onResponse(Call call, Response response) {
-                dispatcher.executeHandler(sender, (s, d) -> onRecipientReceived(s, response));
+                dispatcher.executeHandler(() -> onRecipientReceived(sender, response));
             }
 
             @Override
