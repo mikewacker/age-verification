@@ -13,15 +13,15 @@ import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
 import org.example.age.data.json.JsonValues;
 import org.example.age.infra.client.JsonApiRequest;
-import org.example.age.infra.service.client.internal.ExchangeClient;
+import org.example.age.infra.service.client.internal.DispatcherOkHttpClient;
 
 @Singleton
 final class RequestDispatcherImpl implements RequestDispatcher {
 
-    private final ExchangeClient client;
+    private final DispatcherOkHttpClient client;
 
     @Inject
-    public RequestDispatcherImpl(ExchangeClient client) {
+    public RequestDispatcherImpl(DispatcherOkHttpClient client) {
         this.client = client;
     }
 
@@ -38,7 +38,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         private final Dispatcher dispatcher;
 
         private RequestBuilderImpl(S sender, Dispatcher dispatcher) {
-            requestBuilder = JsonApiRequest.builder(client.getInstance(dispatcher));
+            requestBuilder = JsonApiRequest.builder(client.get(dispatcher));
             this.sender = sender;
             this.dispatcher = dispatcher;
         }
