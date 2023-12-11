@@ -23,8 +23,8 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(project(":api:base"))
-    testImplementation(project(":api:data:json"))
     testImplementation(testFixtures(project(":api:base")))
+    testImplementation(project(":api:data:json"))
     testImplementation(project(":core:common:api:module"))
     testImplementation(project(":core:common:api:types"))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
