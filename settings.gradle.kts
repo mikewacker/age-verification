@@ -28,6 +28,7 @@ include(
         "core:site:api:endpoint",
 
         "module:extractor:common:builtin",
+        "module:extractor:common:test",
 
         // service
         "core:common:service:module",

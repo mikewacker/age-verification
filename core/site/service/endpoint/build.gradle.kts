@@ -42,7 +42,7 @@ dependencies {
     testFixturesApi(testFixtures(project(":module:config:common:test")))
     testFixturesApi(testFixtures(project(":module:config:site:test")))
     testFixturesApi(project(":module:extractor:common:builtin"))
-    testFixturesApi(testFixtures(project(":module:extractor:common:builtin")))
+    testFixturesApi(testFixtures(project(":module:extractor:common:test")))
     testFixturesApi(testFixtures(project(":module:key:common:test")))
     testFixturesApi(project(":module:store:common:inmemory"))
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")

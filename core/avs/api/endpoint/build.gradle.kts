@@ -34,7 +34,7 @@ dependencies {
     testFixturesImplementation(project(":core:common:api:types"))
     testFixturesImplementation(project(":core:data"))
     testFixturesApi(project(":module:extractor:common:builtin"))
-    testFixturesApi(testFixtures(project(":module:extractor:common:builtin")))
+    testFixturesApi(testFixtures(project(":module:extractor:common:test")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
