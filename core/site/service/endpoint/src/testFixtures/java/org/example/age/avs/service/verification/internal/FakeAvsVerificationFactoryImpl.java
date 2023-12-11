@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.common.AuthMatchData;
-import org.example.age.common.service.crypto.internal.AgeCertificateSigner;
-import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -15,6 +13,8 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.service.common.crypto.internal.AgeCertificateSigner;
+import org.example.age.service.common.crypto.internal.AuthMatchDataEncryptor;
 
 @Singleton
 final class FakeAvsVerificationFactoryImpl implements FakeAvsVerificationFactory {
