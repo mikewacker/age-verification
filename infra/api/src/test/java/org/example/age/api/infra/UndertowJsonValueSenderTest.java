@@ -21,7 +21,7 @@ public final class UndertowJsonValueSenderTest {
     private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
 
     @Test
-    public void send_Body() throws IOException {
+    public void send_JsonValue() throws IOException {
         HttpOptional<String> maybeValue = executeRequest("/value");
         assertThat(maybeValue).hasValue("test");
     }

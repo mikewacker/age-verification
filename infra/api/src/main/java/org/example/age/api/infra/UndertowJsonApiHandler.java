@@ -24,7 +24,7 @@ public final class UndertowJsonApiHandler implements HttpHandler {
     }
 
     /** Creates a builder for an {@link HttpHandler} that sends a JSON value (or an error status code). */
-    public static <R> ZeroArgBuilder<ValueSender<R>> builder(TypeReference<R> valueTypeRef) {
+    public static <R> ZeroArgBuilder<ValueSender<R>> builder(TypeReference<R> responseValueTypeRef) {
         AdaptedApiHandler.ZeroArgBuilder<HttpServerExchange, ValueSender<R>> builder0 =
                 AdaptedApiHandler.builder(UndertowJsonValueSender::create, UndertowDispatcher::create);
         return new ZeroArgBuilder<>(builder0);

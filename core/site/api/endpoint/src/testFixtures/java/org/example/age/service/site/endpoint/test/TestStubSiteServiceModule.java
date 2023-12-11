@@ -13,4 +13,4 @@ import org.example.age.service.site.endpoint.StubSiteServiceModule;
             TestAccountIdExtractorModule.class,
             UserAgentAuthMatchDataExtractorModule.class,
         })
-public interface TestStubSiteServiceModule {}
+interface TestStubSiteServiceModule {}

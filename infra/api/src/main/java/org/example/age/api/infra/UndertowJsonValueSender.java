@@ -5,7 +5,7 @@ import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.ValueSender;
 
 /** JSON {@link ValueSender} that is backed by an Undertow {@link HttpServerExchange}. */
-public final class UndertowJsonValueSender<V> implements ValueSender<V> {
+final class UndertowJsonValueSender<V> implements ValueSender<V> {
 
     private final HttpServerExchange exchange;
 

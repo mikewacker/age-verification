@@ -4,7 +4,7 @@ import io.undertow.server.HttpServerExchange;
 import org.example.age.api.base.StatusCodeSender;
 
 /** {@link StatusCodeSender} that is backed by an Undertow {@link HttpServerExchange}. */
-public final class UndertowStatusCodeSender implements StatusCodeSender {
+final class UndertowStatusCodeSender implements StatusCodeSender {
 
     private final HttpServerExchange exchange;
 

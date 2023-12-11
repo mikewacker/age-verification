@@ -11,7 +11,7 @@ import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.base.Sender;
 
 /** {@link Dispatcher} that is backed by an Undertow {@link HttpServerExchange}. */
-public final class UndertowDispatcher implements Dispatcher {
+final class UndertowDispatcher implements Dispatcher {
 
     private final HttpServerExchange exchange;
     private final ScheduledExecutor ioThread;
