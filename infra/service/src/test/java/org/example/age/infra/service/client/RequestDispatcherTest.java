@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
@@ -16,9 +15,7 @@ import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.StatusCodeSender;
 import org.example.age.api.base.ValueSender;
-import org.example.age.api.infra.UndertowDispatcher;
-import org.example.age.api.infra.UndertowJsonValueSender;
-import org.example.age.api.infra.UndertowStatusCodeSender;
+import org.example.age.api.infra.UndertowJsonApiHandler;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.mock.MockServer;
@@ -56,30 +53,30 @@ public final class RequestDispatcherTest {
     }
 
     @Test
-    public void backendRequest_JsonResponse_Ok() throws IOException {
+    public void backendRequest_JsonValueResponse_Ok() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"test\""));
-        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
         assertThat(maybeText).hasValue("test");
     }
 
     @Test
-    public void backendRequest_JsonResponse_ErrorCode() throws IOException {
+    public void backendRequest_JsonValueResponse_ErrorCode() throws IOException {
         backendServer.enqueue(new MockResponse().setResponseCode(403));
-        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
         assertThat(maybeText).isEmptyWithErrorCode(403);
     }
 
     @Test
-    public void backendRequest_JsonResponse_RequestFails() throws IOException {
+    public void backendRequest_JsonValueResponse_RequestFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
         assertThat(maybeText).isEmptyWithErrorCode(502);
     }
 
     @Test
-    public void backendRequest_JsonResponse_ReadResponseBodyFails() throws IOException {
+    public void backendRequest_JsonValueResponse_ReadResponseBodyFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
-        HttpOptional<String> maybeText = executeRequestWithJsonResponse();
+        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
         assertThat(maybeText).isEmptyWithErrorCode(502);
     }
 
@@ -89,9 +86,9 @@ public final class RequestDispatcherTest {
                 .executeWithStatusCodeResponse();
     }
 
-    private HttpOptional<String> executeRequestWithJsonResponse() throws IOException {
+    private HttpOptional<String> executeRequestWithJsonValueResponse() throws IOException {
         return TestClient.apiRequestBuilder()
-                .get(frontendServer.url("/json"))
+                .get(frontendServer.url("/text"))
                 .executeWithJsonResponse(new TypeReference<>() {});
     }
 
@@ -103,40 +100,39 @@ public final class RequestDispatcherTest {
     @Singleton
     static final class ProxyHandler implements HttpHandler {
 
+        private final HttpHandler statusCodeHandler;
+        private final HttpHandler textHandler;
+        private final HttpHandler notFoundHandler;
+
         private final RequestDispatcher requestDispatcher;
 
         public static HttpHandler create() {
-            RequestDispatcher requestDispatcher = TestComponent.createRequestDispatcher();
-            return new ProxyHandler(requestDispatcher);
+            return new ProxyHandler();
         }
 
         @Override
-        public void handleRequest(HttpServerExchange exchange) {
+        public void handleRequest(HttpServerExchange exchange) throws Exception {
             switch (exchange.getRequestPath()) {
-                case "/status-code" -> handleStatusCodeRequest(exchange);
-                case "/json" -> handleJsonRequest(exchange);
-                default -> UndertowStatusCodeSender.create(exchange).sendErrorCode(StatusCodes.NOT_FOUND);
+                case "/status-code" -> statusCodeHandler.handleRequest(exchange);
+                case "/text" -> textHandler.handleRequest(exchange);
+                default -> notFoundHandler.handleRequest(exchange);
             }
         }
 
-        private void handleStatusCodeRequest(HttpServerExchange exchange) {
-            StatusCodeSender sender = UndertowStatusCodeSender.create(exchange);
-            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
+        private ProxyHandler() {
+            statusCodeHandler = UndertowJsonApiHandler.builder().build(this::proxyRequestWithStatusCodeResponse);
+            textHandler = UndertowJsonApiHandler.builder(new TypeReference<String>() {})
+                    .build(this::proxyRequestWithTextResponse);
+            notFoundHandler = UndertowJsonApiHandler.notFound();
 
+            requestDispatcher = TestComponent.createRequestDispatcher();
+        }
+
+        private void proxyRequestWithStatusCodeResponse(StatusCodeSender sender, Dispatcher dispatcher) {
             requestDispatcher
                     .requestBuilder(sender, dispatcher)
                     .get(backendServer.rootUrl())
                     .dispatchWithStatusCodeResponse(ProxyHandler::onStatusCodeResponseReceived);
-        }
-
-        private void handleJsonRequest(HttpServerExchange exchange) {
-            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
-            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
-
-            requestDispatcher
-                    .requestBuilder(sender, dispatcher)
-                    .get(backendServer.rootUrl())
-                    .dispatchWithJsonResponse(new TypeReference<>() {}, ProxyHandler::onJsonResponseReceived);
         }
 
         private static void onStatusCodeResponseReceived(
@@ -144,13 +140,16 @@ public final class RequestDispatcherTest {
             sender.send(statusCode);
         }
 
-        private static void onJsonResponseReceived(
-                ValueSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
-            sender.send(maybeText);
+        private void proxyRequestWithTextResponse(ValueSender<String> sender, Dispatcher dispatcher) {
+            requestDispatcher
+                    .requestBuilder(sender, dispatcher)
+                    .get(backendServer.rootUrl())
+                    .dispatchWithJsonResponse(new TypeReference<>() {}, ProxyHandler::onTextResponseReceived);
         }
 
-        private ProxyHandler(RequestDispatcher requestDispatcher) {
-            this.requestDispatcher = requestDispatcher;
+        private static void onTextResponseReceived(
+                ValueSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
+            sender.send(maybeText);
         }
     }
 
