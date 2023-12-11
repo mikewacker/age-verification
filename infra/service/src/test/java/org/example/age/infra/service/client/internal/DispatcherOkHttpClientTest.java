@@ -1,5 +1,6 @@
 package org.example.age.infra.service.client.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
@@ -20,6 +22,7 @@ import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.ValueSender;
 import org.example.age.api.infra.UndertowJsonApiHandler;
 import org.example.age.data.json.JsonValues;
+import org.example.age.testing.api.StubDispatcher;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.mock.MockServer;
@@ -27,7 +30,7 @@ import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class ExchangeClientTest {
+public final class DispatcherOkHttpClientTest {
 
     @RegisterExtension
     private static final TestServer<?> frontendServer =
@@ -45,8 +48,16 @@ public final class ExchangeClientTest {
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }
 
+    @Test
+    public void getSharedClient() throws IOException {
+        DispatcherOkHttpClient sharedClient = TestComponent.createDispatcherOkHttpClient();
+        OkHttpClient client1 = sharedClient.get(StubDispatcher.get());
+        OkHttpClient client2 = sharedClient.get(StubDispatcher.get());
+        assertThat(client1).isSameAs(client2);
+    }
+
     /**
-     * Test {@link HttpHandler} that uses an {@link ExchangeClient}.
+     * Test {@link HttpHandler} that uses an {@link DispatcherOkHttpClient}.
      *
      * <p>It sends a greeting, making a backend call to get the recipient.</p>
      */
@@ -54,7 +65,7 @@ public final class ExchangeClientTest {
 
         private final HttpHandler greetingHandler;
 
-        private final ExchangeClient client;
+        private final DispatcherOkHttpClient client;
 
         public static HttpHandler create() {
             return new GreetingHandler();
@@ -69,12 +80,12 @@ public final class ExchangeClientTest {
             greetingHandler = UndertowJsonApiHandler.builder(new TypeReference<String>() {})
                     .build(this::sendGreeting);
 
-            client = TestComponent.createExchangeClient();
+            client = TestComponent.createDispatcherOkHttpClient();
         }
 
         private void sendGreeting(ValueSender<String> sender, Dispatcher dispatcher) {
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
-            Call call = client.getInstance(dispatcher).newCall(request);
+            Call call = client.get(dispatcher).newCall(request);
             Callback callback = new RecipientCallback(sender, dispatcher);
             call.enqueue(callback);
             dispatcher.dispatched();
@@ -114,16 +125,16 @@ public final class ExchangeClientTest {
         }
     }
 
-    /** Dagger component that provides an {@link ExchangeClient}. */
-    @Component(modules = ExchangeClientModule.class)
+    /** Dagger component that provides an {@link DispatcherOkHttpClient}. */
+    @Component(modules = DispatcherOkHttpClientModule.class)
     @Singleton
     public interface TestComponent {
 
-        static ExchangeClient createExchangeClient() {
-            TestComponent component = DaggerExchangeClientTest_TestComponent.create();
+        static DispatcherOkHttpClient createDispatcherOkHttpClient() {
+            TestComponent component = DaggerDispatcherOkHttpClientTest_TestComponent.create();
             return component.exchangeClient();
         }
 
-        ExchangeClient exchangeClient();
+        DispatcherOkHttpClient exchangeClient();
     }
 }
