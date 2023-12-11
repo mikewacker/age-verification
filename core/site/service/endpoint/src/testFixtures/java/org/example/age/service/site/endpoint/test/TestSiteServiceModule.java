@@ -8,7 +8,7 @@ import org.example.age.module.extractor.common.test.TestAccountIdExtractorModule
 import org.example.age.module.key.common.test.TestKeyModule;
 import org.example.age.module.store.common.inmemory.InMemoryPendingStoreFactoryModule;
 import org.example.age.module.store.common.inmemory.InMemoryVerificationStoreModule;
-import org.example.age.site.service.endpoint.SiteServiceModule;
+import org.example.age.service.site.endpoint.SiteServiceModule;
 import org.example.age.testing.server.TestServer;
 
 /**
