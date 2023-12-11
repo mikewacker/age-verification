@@ -12,6 +12,7 @@ dependencies {
     api(project(":core:common:api:module"))
     api(project(":core:common:api:types"))
     api(project(":core:data"))
+    api(project(":core:site:api:types"))
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
@@ -29,6 +30,7 @@ dependencies {
     testFixturesImplementation(project(":api:base"))
     testFixturesImplementation(project(":core:common:api:types"))
     testFixturesImplementation(project(":core:data"))
+    testFixturesImplementation(project(":core:site:api:types"))
     testFixturesApi(project(":module:extractor:common:builtin"))
     testFixturesApi(testFixtures(project(":module:extractor:common:builtin")))
 

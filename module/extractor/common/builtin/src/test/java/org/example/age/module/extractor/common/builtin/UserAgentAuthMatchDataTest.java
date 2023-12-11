@@ -3,7 +3,7 @@ package org.example.age.module.extractor.common.builtin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.api.common.AuthMatchData;
 import org.example.age.data.json.JsonValues;
 import org.junit.jupiter.api.Test;
 

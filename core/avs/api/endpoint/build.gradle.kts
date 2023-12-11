@@ -10,6 +10,7 @@ dependencies {
 
     api(project(":api:base"))
     api(project(":api:data:crypto"))
+    api(project(":core:avs:api:types"))
     api(project(":core:common:api:module"))
     api(project(":core:common:api:types"))
     api(project(":core:data"))
@@ -29,6 +30,7 @@ dependencies {
 
     testFixturesImplementation(project(":api:base"))
     testFixturesImplementation(project(":api:data:crypto"))
+    testFixturesImplementation(project(":core:avs:api:types"))
     testFixturesImplementation(project(":core:common:api:types"))
     testFixturesImplementation(project(":core:data"))
     testFixturesApi(project(":module:extractor:common:builtin"))

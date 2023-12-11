@@ -8,15 +8,15 @@ import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.StatusCodeSender;
 import org.example.age.api.base.ValueSender;
-import org.example.age.common.api.data.AuthMatchData;
-import org.example.age.common.api.data.VerificationState;
+import org.example.age.api.common.AuthMatchData;
+import org.example.age.api.common.VerificationState;
+import org.example.age.api.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.infra.service.client.RequestDispatcher;
 import org.example.age.infra.service.client.ResponseJsonCallback;
 import org.example.age.module.config.common.AvsLocation;
 import org.example.age.module.config.site.SiteConfig;
-import org.example.age.site.api.endpoint.SiteApi;
 import org.example.age.site.service.verification.internal.SiteVerificationManager;
 
 @Singleton
