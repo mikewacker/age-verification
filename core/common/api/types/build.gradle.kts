@@ -14,6 +14,8 @@ dependencies {
     api("org.immutables:value-annotations")
 
     // test
+    testImplementation(project(":api:data:crypto"))
     testImplementation(project(":api:data:json"))
+    testImplementation(project(":core:data"))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
 }

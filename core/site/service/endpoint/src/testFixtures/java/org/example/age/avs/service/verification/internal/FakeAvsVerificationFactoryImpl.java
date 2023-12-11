@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.api.common.AuthMatchData;
 import org.example.age.common.service.crypto.internal.AgeCertificateSigner;
 import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
 import org.example.age.data.certificate.AgeCertificate;

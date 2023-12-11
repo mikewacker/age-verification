@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.common.api.data.AuthMatchData;
+import org.example.age.api.common.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.json.JsonValues;

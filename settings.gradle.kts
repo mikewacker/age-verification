@@ -22,7 +22,9 @@ include(
         // api
         "core:common:api:types",
         "core:common:api:module",
+        "core:avs:api:types",
         "core:avs:api:endpoint",
+        "core:site:api:types",
         "core:site:api:endpoint",
 
         "module:extractor:common:builtin",
