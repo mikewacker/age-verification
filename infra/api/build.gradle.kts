@@ -6,6 +6,7 @@ plugins {
 dependencies {
     // main
     api(project(":api:base"))
+    api(project(":api:adapter"))
     api("com.fasterxml.jackson.core:jackson-core")
     api("io.undertow:undertow-core")
 
