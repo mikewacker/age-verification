@@ -18,8 +18,7 @@ import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.ValueSender;
-import org.example.age.api.infra.UndertowDispatcher;
-import org.example.age.api.infra.UndertowJsonValueSender;
+import org.example.age.api.infra.UndertowJsonApiHandler;
 import org.example.age.data.json.JsonValues;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
@@ -51,21 +50,29 @@ public final class ExchangeClientTest {
      *
      * <p>It sends a greeting, making a backend call to get the recipient.</p>
      */
-    @Singleton
-    static final class GreetingHandler implements HttpHandler {
+    private static final class GreetingHandler implements HttpHandler {
+
+        private final HttpHandler greetingHandler;
 
         private final ExchangeClient client;
 
         public static HttpHandler create() {
-            ExchangeClient client = TestComponent.createExchangeClient();
-            return new GreetingHandler(client);
+            return new GreetingHandler();
         }
 
         @Override
-        public void handleRequest(HttpServerExchange exchange) {
-            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
-            Dispatcher dispatcher = UndertowDispatcher.create(exchange);
+        public void handleRequest(HttpServerExchange exchange) throws Exception {
+            greetingHandler.handleRequest(exchange);
+        }
 
+        private GreetingHandler() {
+            greetingHandler = UndertowJsonApiHandler.builder(new TypeReference<String>() {})
+                    .build(this::sendGreeting);
+
+            client = TestComponent.createExchangeClient();
+        }
+
+        private void sendGreeting(ValueSender<String> sender, Dispatcher dispatcher) {
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             Call call = client.getInstance(dispatcher).newCall(request);
             Callback callback = new RecipientCallback(sender, dispatcher);
@@ -85,9 +92,8 @@ public final class ExchangeClientTest {
                 sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
             }
 
-            private static void onRecipientReceived(ValueSender<String> sender, Response response) throws IOException {
-                Optional<String> maybeRecipient =
-                        JsonValues.tryDeserialize(response.body().bytes(), new TypeReference<>() {});
+            private static void onRecipientReceived(ValueSender<String> sender, Response response) {
+                Optional<String> maybeRecipient = tryGetRecipient(response);
                 if (maybeRecipient.isEmpty()) {
                     sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
                     return;
@@ -97,10 +103,14 @@ public final class ExchangeClientTest {
                 String greeting = String.format("Hello, %s!", recipient);
                 sender.sendValue(greeting);
             }
-        }
 
-        private GreetingHandler(ExchangeClient client) {
-            this.client = client;
+            private static Optional<String> tryGetRecipient(Response response) {
+                try {
+                    return JsonValues.tryDeserialize(response.body().bytes(), new TypeReference<>() {});
+                } catch (IOException e) {
+                    return Optional.empty();
+                }
+            }
         }
     }
 
