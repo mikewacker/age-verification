@@ -9,9 +9,6 @@ import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.common.AuthMatchData;
 import org.example.age.api.common.VerificationState;
-import org.example.age.common.service.crypto.internal.AgeCertificateVerifier;
-import org.example.age.common.service.crypto.internal.AuthMatchDataEncryptor;
-import org.example.age.common.service.crypto.internal.VerifiedUserLocalizer;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -24,6 +21,9 @@ import org.example.age.module.config.site.SiteConfig;
 import org.example.age.module.store.common.PendingStore;
 import org.example.age.module.store.common.PendingStoreFactory;
 import org.example.age.module.store.common.VerificationStore;
+import org.example.age.service.common.crypto.internal.AgeCertificateVerifier;
+import org.example.age.service.common.crypto.internal.AuthMatchDataEncryptor;
+import org.example.age.service.common.crypto.internal.VerifiedUserLocalizer;
 
 @Singleton
 final class SiteVerificationManagerImpl implements SiteVerificationManager {

@@ -8,8 +8,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.api.base.HttpOptional;
+import org.example.age.client.infra.JsonApiRequest;
 import org.example.age.data.json.JsonValues;
-import org.example.age.infra.client.JsonApiRequest;
 
 /** Shared HTTP client for testing. */
 public final class TestClient {
