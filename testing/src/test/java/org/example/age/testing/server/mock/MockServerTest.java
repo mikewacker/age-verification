@@ -2,6 +2,7 @@ package org.example.age.testing.server.mock;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.base.HttpOptional;
@@ -16,8 +17,10 @@ public final class MockServerTest {
 
     @Test
     public void exchange() throws IOException {
-        server.enqueue(new MockResponse().setHeader("Content-Type", "text/html").setBody("<p>test</p>"));
-        HttpOptional<String> maybeHtml = TestClient.getHtml(server.rootUrl());
-        assertThat(maybeHtml).hasValue("<p>test</p>");
+        server.enqueue(
+                new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
+        HttpOptional<String> maybeValue =
+                TestClient.requestBuilder().get(server.rootUrl()).executeWithJsonResponse(new TypeReference<>() {});
+        assertThat(maybeValue).hasValue("test");
     }
 }

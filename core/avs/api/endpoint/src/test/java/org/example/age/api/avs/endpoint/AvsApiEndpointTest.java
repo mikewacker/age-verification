@@ -25,7 +25,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void verificationState() throws IOException {
-        HttpOptional<VerificationState> maybeState = TestClient.apiRequestBuilder()
+        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder()
                 .get(avsServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .executeWithJsonResponse(new TypeReference<>() {});
@@ -34,7 +34,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void verificationSession() throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder()
                 .post(avsServer.url("/api/verification-session?site-id=Site"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeSession).isPresent();
@@ -43,7 +43,7 @@ public final class AvsApiEndpointTest {
     @Test
     public void linkedVerificationRequest() throws IOException {
         SecureId requestId = SecureId.generate();
-        int linkStatusCode = TestClient.apiRequestBuilder()
+        int linkStatusCode = TestClient.requestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .executeWithStatusCodeResponse();
@@ -52,7 +52,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void ageCertificate() throws IOException {
-        int certificateStatusCode = TestClient.apiRequestBuilder()
+        int certificateStatusCode = TestClient.requestBuilder()
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .executeWithStatusCodeResponse();
@@ -61,7 +61,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void error_BadPath() throws IOException {
-        int statusCode = TestClient.apiRequestBuilder()
+        int statusCode = TestClient.requestBuilder()
                 .get(avsServer.url("/api/does-not-exist"))
                 .executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(404);

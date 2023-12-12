@@ -37,7 +37,7 @@ public final class UndertowStatusCodeSenderTest {
     }
 
     private static int executeRequest(String path) throws IOException {
-        return TestClient.apiRequestBuilder().get(server.url(path)).executeWithStatusCodeResponse();
+        return TestClient.requestBuilder().get(server.url(path)).executeWithStatusCodeResponse();
     }
 
     /** Test {@link HttpHandler} that uses an {@link UndertowStatusCodeSender}. */

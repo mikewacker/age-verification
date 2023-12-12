@@ -40,12 +40,12 @@ public final class TestLocationTest {
     public void exchange() throws IOException {
         avsServer.enqueue(new MockResponse());
         String avsUrl = avsLocationProvider.get().redirectUrl(SecureId.generate());
-        int avsStatusCode = TestClient.apiRequestBuilder().get(avsUrl).executeWithStatusCodeResponse();
+        int avsStatusCode = TestClient.requestBuilder().get(avsUrl).executeWithStatusCodeResponse();
         assertThat(avsStatusCode).isEqualTo(200);
 
         siteServer.enqueue(new MockResponse());
         String siteUrl = siteLocationProvider.get().redirectUrl();
-        int siteStatusCode = TestClient.apiRequestBuilder().get(siteUrl).executeWithStatusCodeResponse();
+        int siteStatusCode = TestClient.requestBuilder().get(siteUrl).executeWithStatusCodeResponse();
         assertThat(siteStatusCode).isEqualTo(200);
     }
 

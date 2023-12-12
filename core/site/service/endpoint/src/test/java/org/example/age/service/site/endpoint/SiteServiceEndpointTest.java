@@ -41,7 +41,7 @@ public final class SiteServiceEndpointTest {
     }
 
     private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.apiRequestBuilder()
+        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder()
                 .post(siteServer.url("/api/verification-session"))
                 .headers(Map.of("Account-Id", siteAccountId))
                 .executeWithJsonResponse(new TypeReference<>() {});
@@ -49,13 +49,13 @@ public final class SiteServiceEndpointTest {
         VerificationSession session = maybeSession.get();
 
         SecureId requestId = session.verificationRequest().id();
-        int linkStatusCode = TestClient.apiRequestBuilder()
+        int linkStatusCode = TestClient.requestBuilder()
                 .post(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", avsAccountId))
                 .executeWithStatusCodeResponse();
         assertThat(linkStatusCode).isEqualTo(200);
 
-        int certificateStatusCode = TestClient.apiRequestBuilder()
+        int certificateStatusCode = TestClient.requestBuilder()
                 .post(fakeAvsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", avsAccountId))
                 .executeWithStatusCodeResponse();
@@ -64,7 +64,7 @@ public final class SiteServiceEndpointTest {
             return;
         }
 
-        HttpOptional<VerificationState> maybeState = TestClient.apiRequestBuilder()
+        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder()
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", siteAccountId))
                 .executeWithJsonResponse(new TypeReference<>() {});
