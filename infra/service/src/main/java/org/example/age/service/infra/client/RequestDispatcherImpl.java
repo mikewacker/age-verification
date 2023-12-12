@@ -8,10 +8,12 @@ import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import org.example.age.api.base.ApiHandler;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
 import org.example.age.client.infra.JsonApiClient;
+import org.example.age.client.infra.ResponseConverter;
 import org.example.age.data.json.JsonValues;
 import org.example.age.service.infra.client.internal.DispatcherOkHttpClient;
 
@@ -26,152 +28,113 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     @Override
-    public <S extends Sender> RequestBuilder<S> requestBuilder(S sender, Dispatcher dispatcher) {
-        return new RequestBuilderImpl<>(sender, dispatcher);
+    public RequestBuilder<Integer> requestBuilder(Dispatcher dispatcher) {
+        return new RequestBuilderImpl<>(dispatcher, Response::code);
     }
 
-    /** internal {@link RequestBuilder} implementation. */
-    private final class RequestBuilderImpl<S extends Sender> implements RequestBuilder<S> {
+    @Override
+    public <V> RequestBuilder<HttpOptional<V>> requestBuilder(
+            Dispatcher dispatcher, TypeReference<V> responseValueTypeRef) {
+        ResponseConverter<HttpOptional<V>> responseConverter = new JsonValueResponseConverter<>(responseValueTypeRef);
+        return new RequestBuilderImpl<>(dispatcher, responseConverter);
+    }
+
+    /** Internal {@link RequestBuilder} implementation. */
+    private final class RequestBuilderImpl<V> implements RequestBuilder<V> {
 
         private final JsonApiClient.RequestBuilder requestBuilder;
-        private final S sender;
-        private final Dispatcher dispatcher;
 
-        private RequestBuilderImpl(S sender, Dispatcher dispatcher) {
-            requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
-            this.sender = sender;
-            this.dispatcher = dispatcher;
-        }
+        private final Dispatcher dispatcher;
+        private final ResponseConverter<V> responseConverter;
 
         @Override
-        public RequestBuilder<S> get(String url) {
+        public RequestBuilder<V> get(String url) {
             requestBuilder.get(url);
             return this;
         }
 
         @Override
-        public RequestBuilder<S> post(String url) {
+        public RequestBuilder<V> post(String url) {
             requestBuilder.post(url);
             return this;
         }
 
         @Override
-        public RequestBuilder<S> body(Object requestValue) {
+        public RequestBuilder<V> body(Object requestValue) {
             requestBuilder.body(requestValue);
             return this;
         }
 
         @Override
-        public void dispatchWithStatusCodeResponse(ResponseStatusCodeCallback<S> callback) {
-            Callback adaptedCallback = new AdaptedResponseStatusCodeCallback<>(sender, dispatcher, callback);
-            dispatch(adaptedCallback);
-        }
-
-        @Override
-        public <V> void dispatchWithJsonResponse(
-                TypeReference<V> responseValueTypeRef, ResponseJsonCallback<S, V> callback) {
-            Callback adaptedCallback =
-                    new AdaptedResponseJsonCallback<>(sender, dispatcher, responseValueTypeRef, callback);
-            dispatch(adaptedCallback);
-        }
-
-        /** Dispatches the request using a callback. */
-        private void dispatch(Callback callback) {
-            requestBuilder.enqueue(callback);
+        public <S extends Sender> void dispatch(S sender, ApiHandler.OneArg<S, V> callback) {
+            Callback adaptedCallback = new AdaptedCallback<>(sender, responseConverter, dispatcher, callback);
+            requestBuilder.enqueue(adaptedCallback);
             dispatcher.dispatched();
         }
-    }
 
-    /** Adapts a different type of callback to a {@link Callback}. */
-    private abstract static class AdaptedCallback<S extends Sender> implements Callback {
-
-        private final S sender;
-        private final Dispatcher dispatcher;
-
-        @Override
-        public final void onResponse(Call call, Response response) {
-            dispatcher.executeHandler(() -> handleResponse(sender, response, dispatcher));
-        }
-
-        @Override
-        public final void onFailure(Call call, IOException e) {
-            sender.sendErrorCode(502);
-        }
-
-        protected AdaptedCallback(S sender, Dispatcher dispatcher) {
-            this.sender = sender;
+        private RequestBuilderImpl(Dispatcher dispatcher, ResponseConverter<V> responseConverter) {
+            requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
             this.dispatcher = dispatcher;
-        }
-
-        /** Handles a {@link Response} that was received. */
-        protected abstract void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception;
-    }
-
-    /** Adapts a {@link ResponseStatusCodeCallback} to a {@link Callback}. */
-    private static final class AdaptedResponseStatusCodeCallback<S extends Sender> extends AdaptedCallback<S> {
-
-        private final ResponseStatusCodeCallback<S> callback;
-
-        public AdaptedResponseStatusCodeCallback(
-                S sender, Dispatcher dispatcher, ResponseStatusCodeCallback<S> callback) {
-            super(sender, dispatcher);
-            this.callback = callback;
-        }
-
-        @Override
-        protected void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception {
-            callback.onResponse(sender, response.code(), dispatcher);
+            this.responseConverter = responseConverter;
         }
     }
 
-    /** Adapts a {@link ResponseJsonCallback} to a {@link Callback}. */
-    private static final class AdaptedResponseJsonCallback<S extends Sender, V> extends AdaptedCallback<S> {
-
-        private final TypeReference<V> responseValueTypeRef;
-        private final ResponseJsonCallback<S, V> callback;
-
-        public AdaptedResponseJsonCallback(
-                S sender,
-                Dispatcher dispatcher,
-                TypeReference<V> responseBodyTypeRef,
-                ResponseJsonCallback<S, V> callback) {
-            super(sender, dispatcher);
-            this.responseValueTypeRef = responseBodyTypeRef;
-            this.callback = callback;
-        }
+    /** Reads the response body and deserializes it from JSON, or returns an error status code. */
+    private record JsonValueResponseConverter<V>(TypeReference<V> valueTypeRef)
+            implements ResponseConverter<HttpOptional<V>> {
 
         @Override
-        protected void handleResponse(S sender, Response response, Dispatcher dispatcher) throws Exception {
+        public HttpOptional<V> convert(Response response) throws IOException {
             if (!response.isSuccessful()) {
-                callback.onResponse(sender, HttpOptional.empty(response.code()), dispatcher);
-                return;
+                return HttpOptional.empty(response.code());
             }
 
-            HttpOptional<byte[]> maybeRawResponseValue = tryReadResponseBody(response);
-            if (maybeRawResponseValue.isEmpty()) {
-                sender.sendErrorCode(maybeRawResponseValue.statusCode());
-                return;
+            byte[] rawValue = response.body().bytes();
+            Optional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef);
+            if (maybeValue.isEmpty()) {
+                throw new IOException("deserialization failed");
             }
-            byte[] rawResponseValue = maybeRawResponseValue.get();
+            V value = maybeValue.get();
 
-            Optional<V> maybeResponseValue = JsonValues.tryDeserialize(rawResponseValue, responseValueTypeRef);
-            if (maybeResponseValue.isEmpty()) {
-                sender.sendErrorCode(502);
-                return;
-            }
-            V responseValue = maybeResponseValue.get();
+            return HttpOptional.of(value);
+        }
+    }
 
-            callback.onResponse(sender, HttpOptional.of(responseValue), dispatcher);
+    /**
+     * Adapts an {@link ApiHandler.OneArg} to a {@link Callback}.
+     *
+     * <p>A lambda function can adapt {@link ApiHandler}'s with more arguments to a {@link ApiHandler.OneArg}.</p>
+     */
+    private record AdaptedCallback<S extends Sender, V>(
+            S sender, ResponseConverter<V> responseConverter, Dispatcher dispatcher, ApiHandler.OneArg<S, V> callback)
+            implements Callback {
+
+        @Override
+        public void onResponse(Call call, Response response) {
+            dispatcher.executeHandler(() -> onResponse(response));
         }
 
-        /** Reads the raw response body, or returns a 502 error. */
-        private static HttpOptional<byte[]> tryReadResponseBody(Response response) {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            dispatcher.executeHandler(this::onFailure);
+        }
+
+        /** Callback for a response. */
+        private void onResponse(Response response) throws Exception {
+            V responseValue;
             try {
-                byte[] rawResponseBody = response.body().bytes();
-                return HttpOptional.of(rawResponseBody);
+                responseValue = responseConverter.convert(response);
             } catch (IOException e) {
-                return HttpOptional.empty(502);
+                onFailure();
+                return;
             }
+
+            callback.handleRequest(sender, responseValue, dispatcher);
+        }
+
+        /** Callback for a failure. */
+        private void onFailure() {
+            sender.sendErrorCode(502);
         }
     }
 }

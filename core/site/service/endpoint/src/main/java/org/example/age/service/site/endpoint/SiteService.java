@@ -16,7 +16,6 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.module.config.common.AvsLocation;
 import org.example.age.module.config.site.SiteConfig;
 import org.example.age.service.infra.client.RequestDispatcher;
-import org.example.age.service.infra.client.ResponseJsonCallback;
 import org.example.age.service.site.verification.internal.SiteVerificationManager;
 
 @Singleton
@@ -46,10 +45,9 @@ final class SiteService implements SiteApi {
     public void createVerificationSession(
             ValueSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         requestDispatcher
-                .requestBuilder(sender, dispatcher)
+                .requestBuilder(dispatcher, new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
-                .dispatchWithJsonResponse(
-                        new TypeReference<>() {}, createVerificationSessionCallback(accountId, authData));
+                .dispatch(sender, accountId, authData, this::handleVerificationSessionResponse);
     }
 
     @Override
@@ -66,41 +64,31 @@ final class SiteService implements SiteApi {
         return avsLocation.verificationSessionUrl(siteId);
     }
 
-    /** Creates a callback for the request to get a {@link VerificationSession} from the age verification service. */
-    private VerificationSessionCallback createVerificationSessionCallback(String accountId, AuthMatchData authData) {
-        return new VerificationSessionCallback(verificationManager, accountId, authData);
+    /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
+    private void handleVerificationSessionResponse(
+            ValueSender<VerificationSession> sender,
+            String accountId,
+            AuthMatchData authData,
+            HttpOptional<VerificationSession> maybeSession,
+            Dispatcher dispatcher) {
+        if (maybeSession.isEmpty()) {
+            int errorCode = mapVerificationSessionErrorCode(maybeSession.statusCode());
+            sender.sendErrorCode(errorCode);
+            return;
+        }
+        VerificationSession session = maybeSession.get();
+
+        int statusCode = verificationManager.onVerificationSessionReceived(accountId, authData, session, dispatcher);
+        if (statusCode != 200) {
+            sender.sendErrorCode(statusCode);
+            return;
+        }
+
+        sender.sendValue(session);
     }
 
-    /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
-    private record VerificationSessionCallback(
-            SiteVerificationManager verificationManager, String accountId, AuthMatchData authData)
-            implements ResponseJsonCallback<ValueSender<VerificationSession>, VerificationSession> {
-
-        @Override
-        public void onResponse(
-                ValueSender<VerificationSession> sender,
-                HttpOptional<VerificationSession> maybeSession,
-                Dispatcher dispatcher) {
-            if (maybeSession.isEmpty()) {
-                int errorCode = mapVerificationSessionErrorCode(maybeSession.statusCode());
-                sender.sendErrorCode(errorCode);
-                return;
-            }
-            VerificationSession session = maybeSession.get();
-
-            int statusCode =
-                    verificationManager.onVerificationSessionReceived(accountId, authData, session, dispatcher);
-            if (statusCode != 200) {
-                sender.sendErrorCode(statusCode);
-                return;
-            }
-
-            sender.sendValue(session);
-        }
-
-        /** Maps the backend error code to a frontend error code. */
-        private static int mapVerificationSessionErrorCode(int backendErrorCode) {
-            return (backendErrorCode / 100 == 5) ? 502 : 500;
-        }
+    /** Maps the backend error code to a frontend error code. */
+    private static int mapVerificationSessionErrorCode(int backendErrorCode) {
+        return (backendErrorCode / 100 == 5) ? 502 : 500;
     }
 }

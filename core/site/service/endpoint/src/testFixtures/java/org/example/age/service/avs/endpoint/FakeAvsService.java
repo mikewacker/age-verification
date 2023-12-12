@@ -77,10 +77,10 @@ final class FakeAvsService implements AvsApi {
         reset();
 
         requestDispatcher
-                .requestBuilder(sender, dispatcher)
+                .requestBuilder(dispatcher)
                 .post(getAgeCertificateUrl())
                 .body(signedCertificate)
-                .dispatchWithStatusCodeResponse(this::onAgeCertificateResponseReceived);
+                .dispatch(sender, this::handleAgeCertificateResponse);
     }
 
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
@@ -89,7 +89,7 @@ final class FakeAvsService implements AvsApi {
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void onAgeCertificateResponseReceived(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+    private void handleAgeCertificateResponse(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
         sender.send(statusCode);
     }
 
