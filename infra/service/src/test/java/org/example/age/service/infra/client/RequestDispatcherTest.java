@@ -81,13 +81,13 @@ public final class RequestDispatcherTest {
     }
 
     private int executeRequestWithStatusCodeResponse() throws IOException {
-        return TestClient.apiRequestBuilder()
+        return TestClient.requestBuilder()
                 .get(frontendServer.url("/status-code"))
                 .executeWithStatusCodeResponse();
     }
 
     private HttpOptional<String> executeRequestWithJsonValueResponse() throws IOException {
-        return TestClient.apiRequestBuilder()
+        return TestClient.requestBuilder()
                 .get(frontendServer.url("/text"))
                 .executeWithJsonResponse(new TypeReference<>() {});
     }

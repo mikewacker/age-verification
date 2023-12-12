@@ -10,7 +10,7 @@ import java.io.IOException;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.testing.client.TestClient;
+import org.example.age.testing.client.TestHtmlClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public final class HtmlTest {
 
     @Test
     public void getHtmlFile() throws IOException {
-        HttpOptional<String> maybeHtml = TestClient.getHtml(server.rootUrl());
+        HttpOptional<String> maybeHtml = TestHtmlClient.get(server.rootUrl());
         assertThat(maybeHtml).hasValue("<p>test</p>");
     }
 

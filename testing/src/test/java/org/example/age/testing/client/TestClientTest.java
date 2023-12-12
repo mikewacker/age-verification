@@ -21,67 +21,50 @@ public final class TestClientTest {
     private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
 
     @Test
-    public void getHtml_Ok() throws IOException {
-        HttpOptional<String> maybeHtml = TestClient.getHtml(server.url("/greeting.html"));
-        assertThat(maybeHtml).hasValue("<p>Hello, world!</p>");
-    }
-
-    @Test
-    public void getHtml_ErrorCode() throws IOException {
-        HttpOptional<String> maybeHtml = TestClient.getHtml(server.url("/not-found.html"));
-        assertThat(maybeHtml).isEmptyWithErrorCode(404);
-    }
-
-    @Test
-    public void executeApiRequest_StatusCodeResponse_Ok() throws IOException {
-        int statusCode = TestClient.apiRequestBuilder()
-                .get(server.url("/api/health-check"))
-                .executeWithStatusCodeResponse();
+    public void exchange_StatusCodeResponse_Ok() throws IOException {
+        int statusCode =
+                TestClient.requestBuilder().get(server.url("/health-check")).executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
-    public void executeApiRequest_StatusCodeResponse_ErrorCode() throws IOException {
+    public void exchange_StatusCodeResponse_ErrorCode() throws IOException {
         int statusCode =
-                TestClient.apiRequestBuilder().get(server.url("/api/not-found")).executeWithStatusCodeResponse();
+                TestClient.requestBuilder().get(server.url("/not-found")).executeWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(404);
     }
 
     @Test
-    public void executeApiRequest_JsonResponse_Ok() throws IOException {
-        HttpOptional<String> maybeGreeting = TestClient.apiRequestBuilder()
-                .get(server.url("/api/greeting"))
+    public void exchange_ValueResponse_Ok() throws IOException {
+        HttpOptional<String> maybeGreeting = TestClient.requestBuilder()
+                .get(server.url("/greeting"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }
 
     @Test
-    public void executeApiRequest_JsonResponse_ErrorCode() throws IOException {
-        HttpOptional<String> maybeGreeting = TestClient.apiRequestBuilder()
-                .get(server.url("/api/not-found"))
+    public void exchange_ValueResponse_ErrorCode() throws IOException {
+        HttpOptional<String> maybeGreeting = TestClient.requestBuilder()
+                .get(server.url("/not-found"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeGreeting).isEmptyWithErrorCode(404);
     }
 
-    /** Test {@link HttpHandler} that echoes back request details. */
+    /** Test {@link HttpHandler} for a JSON API. */
     private static final class TestHandler implements HttpHandler {
 
-        private static HttpHandler create() {
+        public static HttpHandler create() {
             return new TestHandler();
         }
 
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             switch (exchange.getRequestPath()) {
-                case "/greeting.html":
-                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/html");
-                    exchange.getResponseSender().send("<p>Hello, world!</p>");
-                    return;
-                case "/api/greeting":
+                case "/greeting":
                     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
                     exchange.getResponseSender().send("\"Hello, world!\"");
                     return;
-                case "/api/health-check":
+                case "/health-check":
                     return;
                 default:
                     exchange.setStatusCode(StatusCodes.NOT_FOUND);

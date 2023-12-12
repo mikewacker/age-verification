@@ -17,6 +17,7 @@ import org.example.age.api.base.HttpOptional;
 import org.example.age.server.infra.html.HtmlModule;
 import org.example.age.testing.api.HttpOptionalAssert;
 import org.example.age.testing.client.TestClient;
+import org.example.age.testing.client.TestHtmlClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -28,16 +29,16 @@ public final class RootTest {
     public static TestServer<?> server = TestUndertowServer.register("test", TestComponent::createHandler);
 
     @Test
-    public void apiExchange() throws IOException {
-        HttpOptional<String> maybeValue = TestClient.apiRequestBuilder()
+    public void exchange_Api() throws IOException {
+        HttpOptional<String> maybeValue = TestClient.requestBuilder()
                 .get(server.url("/api/test"))
                 .executeWithJsonResponse(new TypeReference<>() {});
         assertThat(maybeValue).hasValue("test");
     }
 
     @Test
-    public void htmlExchange() throws IOException {
-        HttpOptional<String> maybeHtml = TestClient.getHtml(server.rootUrl());
+    public void exchange_Html() throws IOException {
+        HttpOptional<String> maybeHtml = TestHtmlClient.get(server.rootUrl());
         HttpOptionalAssert.assertThat(maybeHtml).hasValue("<p>test</p>");
     }
 
