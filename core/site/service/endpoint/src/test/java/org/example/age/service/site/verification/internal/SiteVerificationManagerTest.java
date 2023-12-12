@@ -2,9 +2,7 @@ package org.example.age.service.site.verification.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dagger.Component;
 import java.time.Duration;
-import javax.inject.Singleton;
 import org.assertj.core.data.Offset;
 import org.example.age.api.common.VerificationState;
 import org.example.age.api.common.VerificationStatus;
@@ -14,8 +12,8 @@ import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
 import org.example.age.service.avs.verification.internal.FakeAvsVerificationFactory;
-import org.example.age.service.avs.verification.internal.test.TestFakeAvsVerificationFactoryModule;
-import org.example.age.service.site.verification.internal.test.TestSiteVerificationManagerModule;
+import org.example.age.service.avs.verification.internal.test.FakeAvsVerificationComponent;
+import org.example.age.service.site.verification.internal.test.TestSiteVerificationComponent;
 import org.example.age.testing.api.StubDispatcher;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,12 +27,12 @@ public final class SiteVerificationManagerTest {
 
     @BeforeEach
     public void createSiteVerificationManagerEtAl() {
-        siteVerificationManager = TestComponent.createSiteVerificationManager();
+        siteVerificationManager = TestSiteVerificationComponent.createSiteVerificationManager();
     }
 
     @BeforeAll
     public static void createFakeAvsVerificationFactory() {
-        fakeAvsVerificationFactory = FakeAvsComponent.createFakeAvsVerificationFactory();
+        fakeAvsVerificationFactory = FakeAvsVerificationComponent.createFakeAvsVerificationFactory();
     }
 
     @Test
@@ -149,31 +147,5 @@ public final class SiteVerificationManagerTest {
     private static SignedAgeCertificate forgeSignedAgeCertificate(SignedAgeCertificate signedCertificate) {
         DigitalSignature forgedSignature = DigitalSignature.ofBytes(new byte[32]);
         return SignedAgeCertificate.of(signedCertificate.ageCertificate(), forgedSignature);
-    }
-
-    /** Dagger component that provides a {@link SiteVerificationManager}. */
-    @Component(modules = TestSiteVerificationManagerModule.class)
-    @Singleton
-    interface TestComponent {
-
-        static SiteVerificationManager createSiteVerificationManager() {
-            TestComponent component = DaggerSiteVerificationManagerTest_TestComponent.create();
-            return component.siteVerificationManager();
-        }
-
-        SiteVerificationManager siteVerificationManager();
-    }
-
-    /** Dagger component that provides a {@link FakeAvsVerificationFactory}. */
-    @Component(modules = TestFakeAvsVerificationFactoryModule.class)
-    @Singleton
-    interface FakeAvsComponent {
-
-        static FakeAvsVerificationFactory createFakeAvsVerificationFactory() {
-            FakeAvsComponent component = DaggerSiteVerificationManagerTest_FakeAvsComponent.create();
-            return component.fakeAvsVerificationFactory();
-        }
-
-        FakeAvsVerificationFactory fakeAvsVerificationFactory();
     }
 }

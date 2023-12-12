@@ -48,8 +48,6 @@ dependencies {
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-databind")
 
     // test
-    testAnnotationProcessor("com.google.dagger:dagger-compiler")
-
     testImplementation(testFixtures(project(":api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("io.undertow:undertow-core")

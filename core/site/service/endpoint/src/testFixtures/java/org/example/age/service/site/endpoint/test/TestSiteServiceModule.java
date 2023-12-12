@@ -26,4 +26,4 @@ import org.example.age.testing.server.TestServer;
             TestKeyModule.class,
             TestSiteConfigModule.class,
         })
-public class TestSiteServiceModule {}
+interface TestSiteServiceModule {}

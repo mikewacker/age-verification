@@ -7,4 +7,4 @@ import org.example.age.service.avs.verification.internal.FakeAvsVerificationFact
 
 /** Dagger module that binds dependencies for {@link FakeAvsVerificationFactory}. */
 @Module(includes = {FakeAvsVerificationFactoryModule.class, TestKeyModule.class})
-public interface TestFakeAvsVerificationFactoryModule {}
+interface TestFakeAvsVerificationFactoryModule {}
