@@ -11,30 +11,31 @@ import okhttp3.Response;
 import org.example.age.data.json.JsonValues;
 
 /**
- * HTTP request for a JSON API.
+ * HTTP client for a JSON API.
  *
  * <p>Different consumers may have different requirements for...</p>
  * <ul>
  *     <li>how to create the {@link OkHttpClient}.</li>
  *     <li>how to process the {@link Response}.</li>
- *     <li>how to serialize and deserialize objects to and from JSON, including error handling.</li>
  *     <li>whether to support synchronous calls, asynchronous calls, or both.</li>
  * </ul>
  *
- * <p>In practice, consumers will create a specialized builder that is backed by a {@link JsonApiRequest.Builder}.</p>
+ * <p>In practice, consumers will create a specialized builder that is backed by a {@link RequestBuilder}.
+ * This specialized builder will typically use the {@code OkHttp} library in the implementation,
+ * but not expose it as part of the public API.</p>
  */
-public final class JsonApiRequest {
+public final class JsonApiClient {
 
-    /** Creates a builder for an API request, using the specified client. */
-    public static Builder builder(OkHttpClient client) {
-        return new Builder(client);
+    /** Creates a builder for a JSON API request, using the specified client. */
+    public static RequestBuilder requestBuilder(OkHttpClient client) {
+        return new RequestBuilder(client);
     }
 
     // static class
-    private JsonApiRequest() {}
+    private JsonApiClient() {}
 
-    /** Builder for an API request. */
-    public static final class Builder {
+    /** Builder for a JSON API request. */
+    public static final class RequestBuilder {
 
         private static final MediaType JSON_CONTENT_TYPE = MediaType.get("application/json");
         private static final RequestBody EMPTY_BODY = RequestBody.create(new byte[0]);
@@ -47,27 +48,27 @@ public final class JsonApiRequest {
         private RequestBody body = EMPTY_BODY;
 
         /** Uses a GET request at the specified URL. */
-        public Builder get(String url) {
+        public RequestBuilder get(String url) {
             method = "GET";
             this.url = url;
             return this;
         }
 
         /** Uses a POST request at the specified URL. */
-        public Builder post(String url) {
+        public RequestBuilder post(String url) {
             method = "POST";
             this.url = url;
             return this;
         }
 
         /** Sets the headers. */
-        public Builder headers(Map<String, String> headers) {
-            this.headers = headers;
+        public RequestBuilder headers(Map<String, String> headers) {
+            this.headers = Map.copyOf(headers);
             return this;
         }
 
-        /** Sets the JSON body. */
-        public Builder body(Object requestValue) {
+        /** Sets the body. */
+        public RequestBuilder body(Object requestValue) {
             byte[] rawRequestValue = JsonValues.serialize(requestValue);
             body = RequestBody.create(rawRequestValue, JSON_CONTENT_TYPE);
             return this;
@@ -117,7 +118,7 @@ public final class JsonApiRequest {
             }
         }
 
-        private Builder(OkHttpClient client) {
+        private RequestBuilder(OkHttpClient client) {
             this.client = client;
         }
     }
