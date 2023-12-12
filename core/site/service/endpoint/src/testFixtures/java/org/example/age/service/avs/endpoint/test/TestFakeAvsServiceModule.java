@@ -22,4 +22,4 @@ import org.example.age.testing.server.TestServer;
             TestKeyModule.class,
             TestSiteLocationModule.class,
         })
-public interface TestFakeAvsServiceModule {}
+interface TestFakeAvsServiceModule {}

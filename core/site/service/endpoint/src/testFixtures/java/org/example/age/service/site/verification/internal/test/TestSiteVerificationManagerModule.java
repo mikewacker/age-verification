@@ -17,4 +17,4 @@ import org.example.age.service.site.verification.internal.SiteVerificationManage
             TestKeyModule.class,
             StubSiteConfigModule.class,
         })
-public interface TestSiteVerificationManagerModule {}
+interface TestSiteVerificationManagerModule {}

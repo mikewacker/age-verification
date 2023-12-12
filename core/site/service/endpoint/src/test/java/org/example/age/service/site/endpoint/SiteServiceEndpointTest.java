@@ -4,20 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.BindsInstance;
-import dagger.Component;
-import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Map;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.common.VerificationState;
 import org.example.age.api.common.VerificationStatus;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.service.avs.endpoint.test.TestFakeAvsServiceModule;
-import org.example.age.service.site.endpoint.test.TestSiteServiceModule;
+import org.example.age.service.avs.endpoint.test.FakeAvsComponent;
+import org.example.age.service.site.endpoint.test.TestSiteComponent;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -28,7 +23,7 @@ public final class SiteServiceEndpointTest {
 
     @RegisterExtension
     private static final TestServer<?> siteServer =
-            TestUndertowServer.register("site", TestComponent::createApiHandler, "/api/");
+            TestUndertowServer.register("site", TestSiteComponent::createApiHandler, "/api/");
 
     @RegisterExtension
     private static final TestServer<?> fakeAvsServer =
@@ -76,47 +71,5 @@ public final class SiteServiceEndpointTest {
         assertThat(maybeState).isPresent();
         VerificationState state = maybeState.get();
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
-    }
-
-    /** Dagger components that provides an {@link HttpHandler}. */
-    @Component(modules = TestSiteServiceModule.class)
-    @Singleton
-    interface TestComponent {
-
-        static HttpHandler createApiHandler() {
-            TestComponent component =
-                    DaggerSiteServiceEndpointTest_TestComponent.factory().create(fakeAvsServer);
-            return component.apiHandler();
-        }
-
-        @Named("api")
-        HttpHandler apiHandler();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("avs") TestServer<?> avsServer);
-        }
-    }
-
-    /** Dagger components that provides an {@link HttpHandler}. */
-    @Component(modules = TestFakeAvsServiceModule.class)
-    @Singleton
-    interface FakeAvsComponent {
-
-        static HttpHandler createApiHandler() {
-            FakeAvsComponent component =
-                    DaggerSiteServiceEndpointTest_FakeAvsComponent.factory().create(siteServer);
-            return component.apiHandler();
-        }
-
-        @Named("api")
-        HttpHandler apiHandler();
-
-        @Component.Factory
-        interface Factory {
-
-            FakeAvsComponent create(@BindsInstance @Named("site") TestServer<?> siteServer);
-        }
     }
 }
