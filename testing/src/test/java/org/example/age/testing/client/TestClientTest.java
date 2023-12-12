@@ -23,30 +23,30 @@ public final class TestClientTest {
     @Test
     public void exchange_StatusCodeResponse_Ok() throws IOException {
         int statusCode =
-                TestClient.requestBuilder().get(server.url("/health-check")).executeWithStatusCodeResponse();
+                TestClient.requestBuilder().get(server.url("/health-check")).execute();
         assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
     public void exchange_StatusCodeResponse_ErrorCode() throws IOException {
         int statusCode =
-                TestClient.requestBuilder().get(server.url("/not-found")).executeWithStatusCodeResponse();
+                TestClient.requestBuilder().get(server.url("/not-found")).execute();
         assertThat(statusCode).isEqualTo(404);
     }
 
     @Test
     public void exchange_ValueResponse_Ok() throws IOException {
-        HttpOptional<String> maybeGreeting = TestClient.requestBuilder()
+        HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url("/greeting"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }
 
     @Test
     public void exchange_ValueResponse_ErrorCode() throws IOException {
-        HttpOptional<String> maybeGreeting = TestClient.requestBuilder()
+        HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url("/not-found"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeGreeting).isEmptyWithErrorCode(404);
     }
 

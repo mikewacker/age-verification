@@ -41,10 +41,11 @@ public final class SiteServiceEndpointTest {
     }
 
     private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder()
+        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
+                        new TypeReference<VerificationSession>() {})
                 .post(siteServer.url("/api/verification-session"))
                 .headers(Map.of("Account-Id", siteAccountId))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeSession).isPresent();
         VerificationSession session = maybeSession.get();
 
@@ -52,22 +53,23 @@ public final class SiteServiceEndpointTest {
         int linkStatusCode = TestClient.requestBuilder()
                 .post(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", avsAccountId))
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(linkStatusCode).isEqualTo(200);
 
         int certificateStatusCode = TestClient.requestBuilder()
                 .post(fakeAvsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", avsAccountId))
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(certificateStatusCode).isEqualTo(expectedStatusCode);
         if (expectedStatusCode != 200) {
             return;
         }
 
-        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder()
+        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder(
+                        new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", siteAccountId))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeState).isPresent();
         VerificationState state = maybeState.get();
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);

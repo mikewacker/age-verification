@@ -34,7 +34,7 @@ public final class TestSiteConfigTest {
     public void exchange() throws IOException {
         avsServer.enqueue(new MockResponse());
         String avsUrl = siteConfigProvider.get().avsLocation().redirectUrl(SecureId.generate());
-        int statusCode = TestClient.requestBuilder().get(avsUrl).executeWithStatusCodeResponse();
+        int statusCode = TestClient.requestBuilder().get(avsUrl).execute();
         assertThat(statusCode).isEqualTo(200);
     }
 

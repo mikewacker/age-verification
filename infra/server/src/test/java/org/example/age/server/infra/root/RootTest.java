@@ -30,9 +30,9 @@ public final class RootTest {
 
     @Test
     public void exchange_Api() throws IOException {
-        HttpOptional<String> maybeValue = TestClient.requestBuilder()
+        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url("/api/test"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeValue).hasValue("test");
     }
 

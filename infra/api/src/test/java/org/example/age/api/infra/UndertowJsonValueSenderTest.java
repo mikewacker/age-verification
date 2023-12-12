@@ -39,7 +39,9 @@ public final class UndertowJsonValueSenderTest {
     }
 
     private static HttpOptional<String> executeRequest(String path) throws IOException {
-        return TestClient.requestBuilder().get(server.url(path)).executeWithJsonResponse(new TypeReference<>() {});
+        return TestClient.requestBuilder(new TypeReference<String>() {})
+                .get(server.url(path))
+                .execute();
     }
 
     /** Test {@link HttpHandler} that uses an {@link UndertowJsonValueSender}. */

@@ -14,6 +14,9 @@ public final class StubSiteComponent {
         return component.apiHandler();
     }
 
+    // static class
+    private StubSiteComponent() {}
+
     /** Dagger component that provides an {@link HttpHandler}. */
     @Component(modules = TestStubSiteServiceModule.class)
     @Singleton

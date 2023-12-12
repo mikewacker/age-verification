@@ -19,8 +19,9 @@ public final class MockServerTest {
     public void exchange() throws IOException {
         server.enqueue(
                 new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
-        HttpOptional<String> maybeValue =
-                TestClient.requestBuilder().get(server.rootUrl()).executeWithJsonResponse(new TypeReference<>() {});
+        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
+                .get(server.rootUrl())
+                .execute();
         assertThat(maybeValue).hasValue("test");
     }
 }

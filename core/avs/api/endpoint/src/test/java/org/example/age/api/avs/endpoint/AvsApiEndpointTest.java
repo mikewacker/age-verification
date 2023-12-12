@@ -25,18 +25,20 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void verificationState() throws IOException {
-        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder()
+        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder(
+                        new TypeReference<VerificationState>() {})
                 .get(avsServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeState).isPresent();
     }
 
     @Test
     public void verificationSession() throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder()
+        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
+                        new TypeReference<VerificationSession>() {})
                 .post(avsServer.url("/api/verification-session?site-id=Site"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeSession).isPresent();
     }
 
@@ -46,7 +48,7 @@ public final class AvsApiEndpointTest {
         int linkStatusCode = TestClient.requestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(linkStatusCode).isEqualTo(200);
     }
 
@@ -55,7 +57,7 @@ public final class AvsApiEndpointTest {
         int certificateStatusCode = TestClient.requestBuilder()
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(certificateStatusCode).isEqualTo(200);
     }
 
@@ -63,7 +65,7 @@ public final class AvsApiEndpointTest {
     public void error_BadPath() throws IOException {
         int statusCode = TestClient.requestBuilder()
                 .get(avsServer.url("/api/does-not-exist"))
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(statusCode).isEqualTo(404);
     }
 }

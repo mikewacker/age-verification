@@ -63,14 +63,14 @@ public final class UndertowJsonApiHandlerTest {
     }
 
     private static int executeOkRequest() throws IOException {
-        return TestClient.requestBuilder().get(okServer.rootUrl()).executeWithStatusCodeResponse();
+        return TestClient.requestBuilder().get(okServer.rootUrl()).execute();
     }
 
     private static HttpOptional<Integer> executeAddRequest(String path, Object bodyOperand) throws IOException {
-        return TestClient.requestBuilder()
+        return TestClient.requestBuilder(new TypeReference<Integer>() {})
                 .post(addServer.url(path))
                 .body(bodyOperand)
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
     }
 
     /** Creates an {@link HttpHandler} that sends a 200 status code. */
