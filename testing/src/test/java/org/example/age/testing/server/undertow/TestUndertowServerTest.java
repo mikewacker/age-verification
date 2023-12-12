@@ -22,16 +22,17 @@ public final class TestUndertowServerTest {
 
     @Test
     public void exchange_HandledPath() throws IOException {
-        HttpOptional<String> maybeValue = TestClient.requestBuilder()
+        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url("/api/test"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeValue).hasValue("test");
     }
 
     @Test
     public void exchange_UnhandledPath() throws IOException {
-        HttpOptional<String> maybeValue =
-                TestClient.requestBuilder().get(server.rootUrl()).executeWithJsonResponse(new TypeReference<>() {});
+        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
+                .get(server.rootUrl())
+                .execute();
         assertThat(maybeValue).isEmptyWithErrorCode(404);
     }
 

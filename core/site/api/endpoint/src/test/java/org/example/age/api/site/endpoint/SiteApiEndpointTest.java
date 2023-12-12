@@ -32,19 +32,21 @@ public final class SiteApiEndpointTest {
 
     @Test
     public void verificationState() throws IOException {
-        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder()
+        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder(
+                        new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeState).isPresent();
     }
 
     @Test
     public void verificationSession() throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder()
+        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
+                        new TypeReference<VerificationSession>() {})
                 .post(siteServer.url("/api/verification-session"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeSession).isPresent();
     }
 
@@ -54,7 +56,7 @@ public final class SiteApiEndpointTest {
         int certificateStatusCode = TestClient.requestBuilder()
                 .post(siteServer.url("/api/age-certificate"))
                 .body(signedCertificate)
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(certificateStatusCode).isEqualTo(200);
     }
 
@@ -62,7 +64,7 @@ public final class SiteApiEndpointTest {
     public void error_BadPath() throws IOException {
         int statusCode = TestClient.requestBuilder()
                 .get(siteServer.url("/api/does-not-exist"))
-                .executeWithStatusCodeResponse();
+                .execute();
         assertThat(statusCode).isEqualTo(404);
     }
 

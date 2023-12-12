@@ -42,9 +42,9 @@ public final class DispatcherOkHttpClientTest {
     @Test
     public void exchange() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"world\""));
-        HttpOptional<String> maybeGreeting = TestClient.requestBuilder()
+        HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(frontendServer.rootUrl())
-                .executeWithJsonResponse(new TypeReference<>() {});
+                .execute();
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }
 
