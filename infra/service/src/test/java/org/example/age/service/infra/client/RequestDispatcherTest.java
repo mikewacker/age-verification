@@ -130,24 +130,23 @@ public final class RequestDispatcherTest {
 
         private void proxyRequestWithStatusCodeResponse(StatusCodeSender sender, Dispatcher dispatcher) {
             requestDispatcher
-                    .requestBuilder(sender, dispatcher)
+                    .requestBuilder(dispatcher)
                     .get(backendServer.rootUrl())
-                    .dispatchWithStatusCodeResponse(ProxyHandler::onStatusCodeResponseReceived);
+                    .dispatch(sender, ProxyHandler::handleStatusCodeResponse);
         }
 
-        private static void onStatusCodeResponseReceived(
-                StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+        private static void handleStatusCodeResponse(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
             sender.send(statusCode);
         }
 
         private void proxyRequestWithTextResponse(ValueSender<String> sender, Dispatcher dispatcher) {
             requestDispatcher
-                    .requestBuilder(sender, dispatcher)
+                    .requestBuilder(dispatcher, new TypeReference<String>() {})
                     .get(backendServer.rootUrl())
-                    .dispatchWithJsonResponse(new TypeReference<>() {}, ProxyHandler::onTextResponseReceived);
+                    .dispatch(sender, ProxyHandler::handleTextResponse);
         }
 
-        private static void onTextResponseReceived(
+        private static void handleTextResponse(
                 ValueSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
             sender.send(maybeText);
         }
