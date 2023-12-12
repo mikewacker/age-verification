@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class JsonApiRequestTest {
+public final class JsonApiClientTest {
 
     private static OkHttpClient client;
 
@@ -48,7 +48,8 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_Get() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response = JsonApiRequest.builder(client).get(mockServerUrl).execute();
+        Response response =
+                JsonApiClient.requestBuilder(client).get(mockServerUrl).execute();
         assertThat(response.isSuccessful()).isTrue();
 
         RecordedRequest recordedRequest = mockServer.takeRequest();
@@ -59,7 +60,7 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_GetWithHeader() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response = JsonApiRequest.builder(client)
+        Response response = JsonApiClient.requestBuilder(client)
                 .get(mockServerUrl)
                 .headers(Map.of("User-Agent", "agent"))
                 .execute();
@@ -73,7 +74,8 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_Post() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response = JsonApiRequest.builder(client).post(mockServerUrl).execute();
+        Response response =
+                JsonApiClient.requestBuilder(client).post(mockServerUrl).execute();
         assertThat(response.isSuccessful()).isTrue();
 
         RecordedRequest recordedRequest = mockServer.takeRequest();
@@ -83,8 +85,10 @@ public final class JsonApiRequestTest {
     @Test
     public void execute_PostWithBody() throws Exception {
         mockServer.enqueue(new MockResponse());
-        Response response =
-                JsonApiRequest.builder(client).post(mockServerUrl).body("test").execute();
+        Response response = JsonApiClient.requestBuilder(client)
+                .post(mockServerUrl)
+                .body("test")
+                .execute();
         assertThat(response.isSuccessful()).isTrue();
 
         RecordedRequest recordedRequest = mockServer.takeRequest();
@@ -112,14 +116,14 @@ public final class JsonApiRequestTest {
         };
 
         mockServer.enqueue(new MockResponse());
-        JsonApiRequest.builder(client).get(mockServerUrl).enqueue(callback);
+        JsonApiClient.requestBuilder(client).get(mockServerUrl).enqueue(callback);
         assertThat(requestCompleted.await(10, TimeUnit.MILLISECONDS)).isTrue();
         assertThat(requestSucceeded).isTrue();
     }
 
     @Test
     public void error_MethodAndUrlNotSet() {
-        JsonApiRequest.Builder requestBuilder = JsonApiRequest.builder(client);
+        JsonApiClient.RequestBuilder requestBuilder = JsonApiClient.requestBuilder(client);
         assertThatThrownBy(requestBuilder::execute)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("method and URL are not set");
@@ -127,8 +131,9 @@ public final class JsonApiRequestTest {
 
     @Test
     public void error_BodySetForGetRequest() {
-        JsonApiRequest.Builder requestBuilder =
-                JsonApiRequest.builder(client).get(mockServerUrl).body("\"test\"".getBytes(StandardCharsets.UTF_8));
+        JsonApiClient.RequestBuilder requestBuilder = JsonApiClient.requestBuilder(client)
+                .get(mockServerUrl)
+                .body("\"test\"".getBytes(StandardCharsets.UTF_8));
         assertThatThrownBy(requestBuilder::execute)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("body is set for GET request");

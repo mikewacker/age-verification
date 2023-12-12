@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.client.infra.JsonApiRequest;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.json.JsonValues;
 
 /** Shared HTTP client for testing. */
@@ -69,7 +69,7 @@ public final class TestClient {
     /** Builder for an HTTP request for a JSON API. */
     public static final class ApiRequestBuilder {
 
-        private final JsonApiRequest.Builder requestBuilder = JsonApiRequest.builder(client);
+        private final JsonApiClient.RequestBuilder requestBuilder = JsonApiClient.requestBuilder(client);
 
         /** Uses a GET request at the specified URL. */
         public ApiRequestBuilder get(String url) {

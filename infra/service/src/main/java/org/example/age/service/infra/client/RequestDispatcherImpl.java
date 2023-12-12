@@ -11,7 +11,7 @@ import okhttp3.Response;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
-import org.example.age.client.infra.JsonApiRequest;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.json.JsonValues;
 import org.example.age.service.infra.client.internal.DispatcherOkHttpClient;
 
@@ -33,12 +33,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     /** internal {@link RequestBuilder} implementation. */
     private final class RequestBuilderImpl<S extends Sender> implements RequestBuilder<S> {
 
-        private final JsonApiRequest.Builder requestBuilder;
+        private final JsonApiClient.RequestBuilder requestBuilder;
         private final S sender;
         private final Dispatcher dispatcher;
 
         private RequestBuilderImpl(S sender, Dispatcher dispatcher) {
-            requestBuilder = JsonApiRequest.builder(client.get(dispatcher));
+            requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
             this.sender = sender;
             this.dispatcher = dispatcher;
         }
