@@ -23,7 +23,7 @@ final class XnioScheduledExecutor implements ScheduledExecutor {
     @Override
     public Key executeAfter(Runnable command, Duration delay) {
         XnioExecutor.Key key = executor.executeAfter(command, delay.toMillis(), TimeUnit.MILLISECONDS);
-        return XnioKey.create(key);
+        return new XnioKey(key);
     }
 
     private XnioScheduledExecutor(XnioExecutor executor) {
@@ -31,22 +31,11 @@ final class XnioScheduledExecutor implements ScheduledExecutor {
     }
 
     /** {@link ScheduledExecutor.Key} that is backed by a {@link XnioExecutor.Key}. */
-    private static final class XnioKey implements Key {
-
-        private final XnioExecutor.Key key;
-
-        /** Creates a {@link ScheduledExecutor.Key} from a {@link XnioExecutor.Key}. */
-        public static ScheduledExecutor.Key create(XnioExecutor.Key key) {
-            return new XnioKey(key);
-        }
+    private record XnioKey(XnioExecutor.Key key) implements Key {
 
         @Override
         public boolean cancel() {
             return key.remove();
-        }
-
-        private XnioKey(XnioExecutor.Key key) {
-            this.key = key;
         }
     }
 }

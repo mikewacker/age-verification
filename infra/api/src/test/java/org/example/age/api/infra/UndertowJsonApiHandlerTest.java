@@ -8,8 +8,7 @@ import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.StatusCodeSender;
-import org.example.age.api.base.ValueSender;
+import org.example.age.api.base.Sender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -78,7 +77,7 @@ public final class UndertowJsonApiHandlerTest {
         return UndertowJsonApiHandler.builder().build(UndertowJsonApiHandlerTest::ok);
     }
 
-    private static void ok(StatusCodeSender sender, Dispatcher dispatcher) {
+    private static void ok(Sender.StatusCode sender, Dispatcher dispatcher) {
         sender.sendOk();
     }
 
@@ -94,7 +93,7 @@ public final class UndertowJsonApiHandlerTest {
                 .build(UndertowJsonApiHandlerTest::add);
     }
 
-    private static void add(ValueSender<Integer> sender, int operand1, int operand2, Dispatcher dispatcher) {
+    private static void add(Sender.Value<Integer> sender, int operand1, int operand2, Dispatcher dispatcher) {
         int sum = operand1 + operand2;
         if (sum == 500) {
             throw new RuntimeException();

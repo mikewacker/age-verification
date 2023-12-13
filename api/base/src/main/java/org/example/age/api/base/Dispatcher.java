@@ -38,9 +38,20 @@ public interface Dispatcher {
     <S extends Sender, A1, A2, A3, A4> void dispatch(
             S sender, A1 arg, A2 arg2, A3 arg3, A4 arg4, ApiHandler.FourArg<S, A1, A2, A3, A4> handler);
 
-    /** Called when this request is dispatched without calling {@link #dispatch}. */
+    /**
+     * Called when this request is manually dispatched without calling {@link #dispatch}.
+     *
+     * <p>The worker thread should immediately call {@link #executeHandler(DispatchedHandler)}.</p>
+     */
     void dispatched();
 
-    /** Called on the worker thread to execute the handler. Used when {@link #dispatched()} was called. */
+    /** Called on the worker thread when a request is manually dispatched (i.e., {@link #dispatched()} is called). */
     <S extends Sender> void executeHandler(DispatchedHandler handler);
+
+    /** Handler for the worker thread when a request is manually dispatched (i.e., {@link #dispatched()} is called). */
+    @FunctionalInterface
+    interface DispatchedHandler {
+
+        void handleRequest() throws Exception;
+    }
 }

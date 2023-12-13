@@ -9,4 +9,36 @@ package org.example.age.api.base;
 public interface Sender {
 
     void sendErrorCode(int errorCode);
+
+    /** Response sender that only sends a status code. */
+    @FunctionalInterface
+    interface StatusCode extends Sender {
+
+        default void sendOk() {
+            send(200);
+        }
+
+        @Override
+        default void sendErrorCode(int errorCode) {
+            send(errorCode);
+        }
+
+        void send(int statusCode);
+    }
+
+    /** Response sender that sends a value (or an error status code). */
+    @FunctionalInterface
+    interface Value<V> extends Sender {
+
+        default void sendValue(V value) {
+            send(HttpOptional.of(value));
+        }
+
+        @Override
+        default void sendErrorCode(int errorCode) {
+            send(HttpOptional.empty(errorCode));
+        }
+
+        void send(HttpOptional<V> maybeValue);
+    }
 }

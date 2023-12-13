@@ -13,8 +13,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.SocketPolicy;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.StatusCodeSender;
-import org.example.age.api.base.ValueSender;
+import org.example.age.api.base.Sender;
 import org.example.age.api.infra.UndertowJsonApiHandler;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
@@ -128,18 +127,18 @@ public final class RequestDispatcherTest {
             requestDispatcher = TestComponent.createRequestDispatcher();
         }
 
-        private void proxyRequestWithStatusCodeResponse(StatusCodeSender sender, Dispatcher dispatcher) {
+        private void proxyRequestWithStatusCodeResponse(Sender.StatusCode sender, Dispatcher dispatcher) {
             requestDispatcher
                     .requestBuilder(dispatcher)
                     .get(backendServer.rootUrl())
                     .dispatch(sender, ProxyHandler::handleStatusCodeResponse);
         }
 
-        private static void handleStatusCodeResponse(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+        private static void handleStatusCodeResponse(Sender.StatusCode sender, int statusCode, Dispatcher dispatcher) {
             sender.send(statusCode);
         }
 
-        private void proxyRequestWithTextResponse(ValueSender<String> sender, Dispatcher dispatcher) {
+        private void proxyRequestWithTextResponse(Sender.Value<String> sender, Dispatcher dispatcher) {
             requestDispatcher
                     .requestBuilder(dispatcher, new TypeReference<String>() {})
                     .get(backendServer.rootUrl())
@@ -147,7 +146,7 @@ public final class RequestDispatcherTest {
         }
 
         private static void handleTextResponse(
-                ValueSender<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
+                Sender.Value<String> sender, HttpOptional<String> maybeText, Dispatcher dispatcher) {
             sender.send(maybeText);
         }
     }

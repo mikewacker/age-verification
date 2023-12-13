@@ -8,8 +8,6 @@ import org.example.age.api.adapter.AdaptedApiHandler;
 import org.example.age.api.adapter.Extractor;
 import org.example.age.api.base.ApiHandler;
 import org.example.age.api.base.Sender;
-import org.example.age.api.base.StatusCodeSender;
-import org.example.age.api.base.ValueSender;
 
 /** {@link HttpHandler} that invokes an {@link ApiHandler}. */
 public final class UndertowJsonApiHandler implements HttpHandler {
@@ -17,16 +15,16 @@ public final class UndertowJsonApiHandler implements HttpHandler {
     private final AdaptedApiHandler<HttpServerExchange> handler;
 
     /** Creates a builder for an {@link HttpHandler} that only sends a status code. */
-    public static ZeroArgBuilder<StatusCodeSender> builder() {
-        AdaptedApiHandler.ZeroArgBuilder<HttpServerExchange, StatusCodeSender> builder0 =
-                AdaptedApiHandler.builder(UndertowStatusCodeSender::create, UndertowDispatcher::create);
+    public static ZeroArgBuilder<Sender.StatusCode> builder() {
+        AdaptedApiHandler.ZeroArgBuilder<HttpServerExchange, Sender.StatusCode> builder0 =
+                AdaptedApiHandler.builder(UndertowSender.StatusCode::create, UndertowDispatcher::create);
         return new ZeroArgBuilder<>(builder0);
     }
 
     /** Creates a builder for an {@link HttpHandler} that sends a JSON value (or an error status code). */
-    public static <R> ZeroArgBuilder<ValueSender<R>> builder(TypeReference<R> responseValueTypeRef) {
-        AdaptedApiHandler.ZeroArgBuilder<HttpServerExchange, ValueSender<R>> builder0 =
-                AdaptedApiHandler.builder(UndertowJsonValueSender::create, UndertowDispatcher::create);
+    public static <V> ZeroArgBuilder<Sender.Value<V>> builder(TypeReference<V> responseValueTypeRef) {
+        AdaptedApiHandler.ZeroArgBuilder<HttpServerExchange, Sender.Value<V>> builder0 =
+                AdaptedApiHandler.builder(UndertowSender.JsonValue::create, UndertowDispatcher::create);
         return new ZeroArgBuilder<>(builder0);
     }
 

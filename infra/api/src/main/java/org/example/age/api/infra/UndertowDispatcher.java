@@ -5,12 +5,11 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.SameThreadExecutor;
 import java.util.concurrent.ExecutorService;
 import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.DispatchedHandler;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.base.Sender;
 
-/** {@link Dispatcher} that is backed by an Undertow {@link HttpServerExchange}. */
+/** {@link Dispatcher} that is backed by an {@link HttpServerExchange}. */
 final class UndertowDispatcher implements Dispatcher {
 
     private final HttpServerExchange exchange;
