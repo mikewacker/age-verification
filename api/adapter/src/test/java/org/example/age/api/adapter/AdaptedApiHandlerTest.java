@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.ValueSender;
-import org.example.age.testing.api.FakeValueSender;
+import org.example.age.api.base.Sender;
+import org.example.age.testing.api.FakeSender;
 import org.example.age.testing.api.StubDispatcher;
 import org.junit.jupiter.api.Test;
 
@@ -78,27 +78,27 @@ public final class AdaptedApiHandlerTest {
         assertThat(exchange.sender().tryGet()).hasValue(HttpOptional.empty(400));
     }
 
-    private static void add0(ValueSender<Integer> sender, Dispatcher dispatcher) {
+    private static void add0(Sender.Value<Integer> sender, Dispatcher dispatcher) {
         sender.sendValue(0);
     }
 
-    private static void add1(ValueSender<Integer> sender, int operand, Dispatcher dispatcher) {
+    private static void add1(Sender.Value<Integer> sender, int operand, Dispatcher dispatcher) {
         sender.sendValue(operand);
     }
 
-    private static void add2(ValueSender<Integer> sender, int operand1, int operand2, Dispatcher dispatcher) {
+    private static void add2(Sender.Value<Integer> sender, int operand1, int operand2, Dispatcher dispatcher) {
         int sum = operand1 + operand2;
         sender.sendValue(sum);
     }
 
     private static void add3(
-            ValueSender<Integer> sender, int operand1, int operand2, int operand3, Dispatcher dispatcher) {
+            Sender.Value<Integer> sender, int operand1, int operand2, int operand3, Dispatcher dispatcher) {
         int sum = operand1 + operand2 + operand3;
         sender.sendValue(sum);
     }
 
     private static void add4(
-            ValueSender<Integer> sender,
+            Sender.Value<Integer> sender,
             int operand1,
             int operand2,
             int operand3,
@@ -110,7 +110,7 @@ public final class AdaptedApiHandlerTest {
 
     /** Test exchange. */
     private record TestExchange(
-            FakeValueSender<Integer> sender,
+            FakeSender.Value<Integer> sender,
             Dispatcher dispatcher,
             String operand1,
             String operand2,
@@ -119,7 +119,7 @@ public final class AdaptedApiHandlerTest {
 
         public static TestExchange of(String operand1, String operand2, String operand3, String operand4) {
             return new TestExchange(
-                    FakeValueSender.create(), StubDispatcher.get(), operand1, operand2, operand3, operand4);
+                    FakeSender.Value.create(), StubDispatcher.get(), operand1, operand2, operand3, operand4);
         }
 
         public HttpOptional<Integer> extractOperand1() {

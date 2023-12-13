@@ -19,7 +19,7 @@ import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.ValueSender;
+import org.example.age.api.base.Sender;
 import org.example.age.api.infra.UndertowJsonApiHandler;
 import org.example.age.data.json.JsonValues;
 import org.example.age.testing.api.StubDispatcher;
@@ -83,7 +83,7 @@ public final class DispatcherOkHttpClientTest {
             client = TestComponent.createDispatcherOkHttpClient();
         }
 
-        private void sendGreeting(ValueSender<String> sender, Dispatcher dispatcher) {
+        private void sendGreeting(Sender.Value<String> sender, Dispatcher dispatcher) {
             Request request = new Request.Builder().url(backendServer.rootUrl()).build();
             Call call = client.get(dispatcher).newCall(request);
             Callback callback = new RecipientCallback(sender, dispatcher);
@@ -91,7 +91,7 @@ public final class DispatcherOkHttpClientTest {
             dispatcher.dispatched();
         }
 
-        private record RecipientCallback(ValueSender<String> sender, Dispatcher dispatcher) implements Callback {
+        private record RecipientCallback(Sender.Value<String> sender, Dispatcher dispatcher) implements Callback {
 
             @Override
             public void onResponse(Call call, Response response) {
@@ -103,7 +103,7 @@ public final class DispatcherOkHttpClientTest {
                 sender.sendErrorCode(StatusCodes.BAD_GATEWAY);
             }
 
-            private static void onRecipientReceived(ValueSender<String> sender, Response response) {
+            private static void onRecipientReceived(Sender.Value<String> sender, Response response) {
                 Optional<String> maybeRecipient = tryGetRecipient(response);
                 if (maybeRecipient.isEmpty()) {
                     sender.sendErrorCode(StatusCodes.BAD_GATEWAY);

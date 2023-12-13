@@ -4,8 +4,7 @@ import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.StatusCodeSender;
-import org.example.age.api.base.ValueSender;
+import org.example.age.api.base.Sender;
 import org.example.age.api.common.AuthMatchData;
 import org.example.age.api.common.VerificationState;
 import org.example.age.api.site.SiteApi;
@@ -21,14 +20,14 @@ final class StubSiteService implements SiteApi {
     public StubSiteService() {}
 
     @Override
-    public void getVerificationState(ValueSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+    public void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         VerificationState state = VerificationState.unverified();
         sender.sendValue(state);
     }
 
     @Override
     public void createVerificationSession(
-            ValueSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+            Sender.Value<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
         VerificationSession session = VerificationSession.create(request);
         sender.sendValue(session);
@@ -36,7 +35,7 @@ final class StubSiteService implements SiteApi {
 
     @Override
     public void processAgeCertificate(
-            StatusCodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+            Sender.StatusCode sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
         sender.sendOk();
     }
 }

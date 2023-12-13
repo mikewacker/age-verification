@@ -9,7 +9,7 @@ import io.undertow.util.StatusCodes;
 import java.io.IOException;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.ValueSender;
+import org.example.age.api.base.Sender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -67,7 +67,7 @@ public final class UndertowDispatcherTest {
         @Override
         public void handleRequest(HttpServerExchange exchange) {
             Dispatcher dispatcher = UndertowDispatcher.create(exchange);
-            ValueSender<String> sender = UndertowJsonValueSender.create(exchange);
+            Sender.Value<String> sender = UndertowSender.JsonValue.create(exchange);
             if (!dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -103,7 +103,7 @@ public final class UndertowDispatcherTest {
             }
         }
 
-        private static void workerHandler(ValueSender<String> sender, Dispatcher dispatcher) {
+        private static void workerHandler(Sender.Value<String> sender, Dispatcher dispatcher) {
             if (dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -112,7 +112,7 @@ public final class UndertowDispatcherTest {
             sender.sendValue("test");
         }
 
-        private static void ioThreadHandler(ValueSender<String> sender, Dispatcher dispatcher) {
+        private static void ioThreadHandler(Sender.Value<String> sender, Dispatcher dispatcher) {
             if (!dispatcher.isInIoThread()) {
                 sender.sendErrorCode(418);
                 return;
@@ -121,7 +121,7 @@ public final class UndertowDispatcherTest {
             sender.sendValue("test");
         }
 
-        private static void badHandler(ValueSender<String> sender, Dispatcher dispatcher) {
+        private static void badHandler(Sender.Value<String> sender, Dispatcher dispatcher) {
             throw new RuntimeException();
         }
 

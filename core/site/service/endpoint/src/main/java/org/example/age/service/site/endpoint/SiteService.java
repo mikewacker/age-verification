@@ -6,8 +6,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.StatusCodeSender;
-import org.example.age.api.base.ValueSender;
+import org.example.age.api.base.Sender;
 import org.example.age.api.common.AuthMatchData;
 import org.example.age.api.common.VerificationState;
 import org.example.age.api.site.SiteApi;
@@ -36,14 +35,14 @@ final class SiteService implements SiteApi {
     }
 
     @Override
-    public void getVerificationState(ValueSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+    public void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         VerificationState state = verificationManager.getVerificationState(accountId);
         sender.sendValue(state);
     }
 
     @Override
     public void createVerificationSession(
-            ValueSender<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+            Sender.Value<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         requestDispatcher
                 .requestBuilder(dispatcher, new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
@@ -52,7 +51,7 @@ final class SiteService implements SiteApi {
 
     @Override
     public void processAgeCertificate(
-            StatusCodeSender sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+            Sender.StatusCode sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
         int statusCode = verificationManager.onSignedAgeCertificateReceived(signedCertificate);
         sender.send(statusCode);
     }
@@ -66,7 +65,7 @@ final class SiteService implements SiteApi {
 
     /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
     private void handleVerificationSessionResponse(
-            ValueSender<VerificationSession> sender,
+            Sender.Value<VerificationSession> sender,
             String accountId,
             AuthMatchData authData,
             HttpOptional<VerificationSession> maybeSession,

@@ -6,8 +6,6 @@ import javax.inject.Singleton;
 import org.example.age.api.avs.AvsApi;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.Sender;
-import org.example.age.api.base.StatusCodeSender;
-import org.example.age.api.base.ValueSender;
 import org.example.age.api.common.AuthMatchData;
 import org.example.age.api.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -39,13 +37,13 @@ final class FakeAvsService implements AvsApi {
     }
 
     @Override
-    public void getVerificationState(ValueSender<VerificationState> sender, String accountId, Dispatcher dispatcher) {
+    public void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher) {
         sender.sendErrorCode(418);
     }
 
     @Override
     public void createVerificationSession(
-            ValueSender<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
+            Sender.Value<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
         reset();
         storedSession = verificationFactory.createVerificationSession(siteId);
         sender.sendValue(storedSession);
@@ -53,7 +51,7 @@ final class FakeAvsService implements AvsApi {
 
     @Override
     public void linkVerificationRequest(
-            StatusCodeSender sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
+            Sender.StatusCode sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
         if ((storedSession == null)
                 || !requestId.equals(storedSession.verificationRequest().id())) {
             resetAndSendUserError(sender);
@@ -66,7 +64,7 @@ final class FakeAvsService implements AvsApi {
 
     @Override
     public void sendAgeCertificate(
-            StatusCodeSender sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+            Sender.StatusCode sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         if (!accountId.equals(storedAccountId)) {
             resetAndSendUserError(sender);
             return;
@@ -89,7 +87,7 @@ final class FakeAvsService implements AvsApi {
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void handleAgeCertificateResponse(StatusCodeSender sender, int statusCode, Dispatcher dispatcher) {
+    private void handleAgeCertificateResponse(Sender.StatusCode sender, int statusCode, Dispatcher dispatcher) {
         sender.send(statusCode);
     }
 
