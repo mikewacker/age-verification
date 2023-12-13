@@ -19,7 +19,7 @@ interface UndertowSender {
 
         @Override
         public void send(int statusCode) {
-            UndertowResponse.sendStatusCode(exchange, statusCode);
+            UndertowResponses.sendStatusCode(exchange, statusCode);
         }
 
         private StatusCode(HttpServerExchange exchange) {
@@ -40,12 +40,12 @@ interface UndertowSender {
         @Override
         public void send(HttpOptional<V> maybeValue) {
             if (maybeValue.isEmpty()) {
-                UndertowResponse.sendStatusCode(exchange, maybeValue.statusCode());
+                UndertowResponses.sendStatusCode(exchange, maybeValue.statusCode());
                 return;
             }
             V value = maybeValue.get();
 
-            UndertowResponse.sendJsonValue(exchange, value);
+            UndertowResponses.sendJsonValue(exchange, value);
         }
 
         private JsonValue(HttpServerExchange exchange) {

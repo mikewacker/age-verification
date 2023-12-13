@@ -7,7 +7,7 @@ import org.example.age.data.json.JsonValues;
 import org.xnio.IoUtils;
 
 /** Utilities for sending a response with Undertow, with protections against double-sending a response. */
-final class UndertowResponse {
+final class UndertowResponses {
 
     /** Sends a status code. */
     public static void sendStatusCode(HttpServerExchange exchange, int statusCode) {
@@ -41,5 +41,5 @@ final class UndertowResponse {
     }
 
     // static class
-    private UndertowResponse() {}
+    private UndertowResponses() {}
 }
