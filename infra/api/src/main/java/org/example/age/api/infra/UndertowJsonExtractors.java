@@ -57,7 +57,7 @@ final class UndertowJsonExtractors {
             try {
                 callback.onValueExtracted(HttpOptional.fromOptional(maybeValue, StatusCodes.BAD_REQUEST));
             } catch (Exception e) {
-                UndertowResponse.sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
+                UndertowResponses.sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
             }
         }
     }

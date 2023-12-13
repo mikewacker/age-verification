@@ -25,8 +25,12 @@ public final class UndertowJsonApiHandlerTest {
     private static final TestServer<?> addServer =
             TestUndertowServer.register("add", UndertowJsonApiHandlerTest::createAddHandler);
 
+    @RegisterExtension
+    private static final TestServer<?> notFoundServer =
+            TestUndertowServer.register("notFound", UndertowJsonApiHandler::notFound);
+
     @Test
-    public void exchange_Ok() throws IOException {
+    public void exchange_StatusCode() throws IOException {
         int statusCode = executeOkRequest();
         assertThat(statusCode).isEqualTo(200);
     }
@@ -35,6 +39,12 @@ public final class UndertowJsonApiHandlerTest {
     public void exchange_JsonValue() throws IOException {
         HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", 2);
         assertThat(maybeSum).hasValue(4);
+    }
+
+    @Test
+    public void exchange_NotFound() throws IOException {
+        int statusCode = executeNotFoundRequest();
+        assertThat(statusCode).isEqualTo(404);
     }
 
     @Test
@@ -70,6 +80,10 @@ public final class UndertowJsonApiHandlerTest {
                 .post(addServer.url(path))
                 .body(bodyOperand)
                 .execute();
+    }
+
+    private static int executeNotFoundRequest() throws IOException {
+        return TestClient.requestBuilder().get(notFoundServer.rootUrl()).execute();
     }
 
     /** Creates an {@link HttpHandler} that sends a 200 status code. */
