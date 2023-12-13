@@ -122,20 +122,11 @@ public final class JsonApiClientTest {
     }
 
     @Test
-    public void error_MethodAndUrlNotSet() {
-        JsonApiClient.RequestBuilder requestBuilder = JsonApiClient.requestBuilder(client);
-        assertThatThrownBy(requestBuilder::execute)
+    public void error_StageCompleted() {
+        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client);
+        requestBuilder.get(mockServerUrl);
+        assertThatThrownBy(() -> requestBuilder.get(mockServerUrl))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("method and URL are not set");
-    }
-
-    @Test
-    public void error_BodySetForGetRequest() {
-        JsonApiClient.RequestBuilder requestBuilder = JsonApiClient.requestBuilder(client)
-                .get(mockServerUrl)
-                .body("\"test\"".getBytes(StandardCharsets.UTF_8));
-        assertThatThrownBy(requestBuilder::execute)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("body is set for GET request");
+                .hasMessage("stage already completed");
     }
 }

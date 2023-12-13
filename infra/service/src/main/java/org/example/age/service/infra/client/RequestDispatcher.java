@@ -14,22 +14,31 @@ import org.example.age.api.base.Sender;
 public interface RequestDispatcher {
 
     /** Creates a builder for a request whose response is only a status code. */
-    RequestBuilder<Integer> requestBuilder(Dispatcher dispatcher);
+    UrlStageRequestBuilder<Integer> requestBuilder(Dispatcher dispatcher);
 
     /** Creates a builder for a request whose response is a value (or an error status code). */
-    <V> RequestBuilder<HttpOptional<V>> requestBuilder(Dispatcher dispatcher, TypeReference<V> responseValueTypeRef);
+    <V> UrlStageRequestBuilder<HttpOptional<V>> requestBuilder(
+            Dispatcher dispatcher, TypeReference<V> responseValueTypeRef);
 
-    /** Builder for a request to the backend server. */
-    interface RequestBuilder<V> {
+    /** Builder for a request that can set the method and the URL together. */
+    interface UrlStageRequestBuilder<V> {
 
         /** Uses a GET request at the specified URL. */
-        RequestBuilder<V> get(String url);
+        FinalStageRequestBuilder<V> get(String url);
 
         /** Uses a POST request at the specified URL. */
-        RequestBuilder<V> post(String url);
+        BodyOrFinalStageRequestBuilder<V> post(String url);
+    }
+
+    /** Builder for a request that can set the body, or build and dispatch the request. */
+    interface BodyOrFinalStageRequestBuilder<V> extends FinalStageRequestBuilder<V> {
 
         /** Sets the body. */
-        RequestBuilder<V> body(Object requestValue);
+        FinalStageRequestBuilder<V> body(Object requestValue);
+    }
+
+    /** Builder for a request that can build and dispatch the request. */
+    interface FinalStageRequestBuilder<V> {
 
         /** Dispatches the request using a callback. */
         <S extends Sender> void dispatch(S sender, ApiHandler.OneArg<S, V> callback);
