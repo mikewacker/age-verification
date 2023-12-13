@@ -28,54 +28,84 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     @Override
-    public RequestBuilder<Integer> requestBuilder(Dispatcher dispatcher) {
-        return new RequestBuilderImpl<>(dispatcher, Response::code);
+    public UrlStageRequestBuilder<Integer> requestBuilder(Dispatcher dispatcher) {
+        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
+        AdaptedDispatcher<Integer> adaptedDispatcher = new AdaptedDispatcher<>(dispatcher, Response::code);
+        return new UrlStageRequestBuilderImpl<>(requestBuilder, adaptedDispatcher);
     }
 
     @Override
-    public <V> RequestBuilder<HttpOptional<V>> requestBuilder(
+    public <V> UrlStageRequestBuilder<HttpOptional<V>> requestBuilder(
             Dispatcher dispatcher, TypeReference<V> responseValueTypeRef) {
+        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
         ResponseConverter<HttpOptional<V>> responseConverter = new JsonValueResponseConverter<>(responseValueTypeRef);
-        return new RequestBuilderImpl<>(dispatcher, responseConverter);
+        AdaptedDispatcher<HttpOptional<V>> adaptedDispatcher = new AdaptedDispatcher<>(dispatcher, responseConverter);
+        return new UrlStageRequestBuilderImpl<>(requestBuilder, adaptedDispatcher);
     }
 
-    /** Internal {@link RequestBuilder} implementation. */
-    private final class RequestBuilderImpl<V> implements RequestBuilder<V> {
-
-        private final JsonApiClient.RequestBuilder requestBuilder;
-
-        private final Dispatcher dispatcher;
-        private final ResponseConverter<V> responseConverter;
+    /** Internal {@link UrlStageRequestBuilder} implementation. */
+    private record UrlStageRequestBuilderImpl<V>(
+            JsonApiClient.UrlStageRequestBuilder requestBuilder, AdaptedDispatcher<V> dispatcher)
+            implements UrlStageRequestBuilder<V> {
 
         @Override
-        public RequestBuilder<V> get(String url) {
-            requestBuilder.get(url);
-            return this;
+        public FinalStageRequestBuilder<V> get(String url) {
+            return new FinalStageRequestBuilderImpl<>(requestBuilder.get(url), dispatcher);
         }
 
         @Override
-        public RequestBuilder<V> post(String url) {
-            requestBuilder.post(url);
-            return this;
+        public BodyOrFinalStageRequestBuilder<V> post(String url) {
+            return new BodyOrFinalStageRequestBuilderImpl<>(requestBuilder.post(url), dispatcher);
         }
+    }
+
+    /**
+     * Internal {@link FinalStageRequestBuilder} implementation.
+     *
+     * <p>Also implements the {@link UrlStageRequestBuilder#get} branch.</p>
+     */
+    private record FinalStageRequestBuilderImpl<V>(
+            JsonApiClient.FinalStageRequestBuilder requestBuilder, AdaptedDispatcher<V> dispatcher)
+            implements FinalStageRequestBuilder<V> {
 
         @Override
-        public RequestBuilder<V> body(Object requestValue) {
+        public <S extends Sender> void dispatch(S sender, ApiHandler.OneArg<S, V> callback) {
+            dispatcher.dispatch(requestBuilder, sender, callback);
+        }
+    }
+
+    /**
+     * Internal {@link BodyOrFinalStageRequestBuilder} (and {@link FinalStageRequestBuilder}) implementation.
+     *
+     * <p>Also implements the {@link UrlStageRequestBuilder#post} branch.</p>
+     */
+    private record BodyOrFinalStageRequestBuilderImpl<V>(
+            JsonApiClient.BodyOrFinalStageRequestBuilder requestBuilder, AdaptedDispatcher<V> dispatcher)
+            implements BodyOrFinalStageRequestBuilder<V> {
+
+        @Override
+        public FinalStageRequestBuilder<V> body(Object requestValue) {
             requestBuilder.body(requestValue);
             return this;
         }
 
         @Override
         public <S extends Sender> void dispatch(S sender, ApiHandler.OneArg<S, V> callback) {
+            dispatcher.dispatch(requestBuilder, sender, callback);
+        }
+    }
+
+    /**
+     * Adapts {@link FinalStageRequestBuilder#dispatch(Sender, ApiHandler.OneArg)}
+     * to {@link JsonApiClient.FinalStageRequestBuilder#enqueue(Callback)}.
+     */
+    private record AdaptedDispatcher<V>(Dispatcher dispatcher, ResponseConverter<V> responseConverter) {
+
+        public <S extends Sender> void dispatch(
+                JsonApiClient.FinalStageRequestBuilder requestBuilder, S sender, ApiHandler.OneArg<S, V> callback) {
             Callback adaptedCallback = new AdaptedCallback<>(sender, responseConverter, dispatcher, callback);
             requestBuilder.enqueue(adaptedCallback);
             dispatcher.dispatched();
-        }
-
-        private RequestBuilderImpl(Dispatcher dispatcher, ResponseConverter<V> responseConverter) {
-            requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
-            this.dispatcher = dispatcher;
-            this.responseConverter = responseConverter;
         }
     }
 

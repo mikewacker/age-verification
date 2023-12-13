@@ -3,12 +3,8 @@ package org.example.age.client.infra;
 import java.io.IOException;
 import java.util.Map;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.data.json.JsonValues;
 
 /**
  * HTTP client for a JSON API.
@@ -20,106 +16,55 @@ import org.example.age.data.json.JsonValues;
  *     <li>whether to support synchronous calls, asynchronous calls, or both.</li>
  * </ul>
  *
- * <p>In practice, consumers will create a specialized builder that is backed by a {@link RequestBuilder}.
+ * <p>In practice, consumers will create a specialized builder that is backed by a {@link JsonApiClient}.
  * This specialized builder will typically use the {@code OkHttp} library in the implementation,
  * but not expose it as part of the public API.</p>
  */
-public final class JsonApiClient {
+public interface JsonApiClient {
 
-    /** Creates a builder for a JSON API request, using the specified client. */
-    public static RequestBuilder requestBuilder(OkHttpClient client) {
-        return new RequestBuilder(client);
+    /** Creates a builder for a JSON API request, using the specified {@link OkHttpClient}. */
+    static UrlStageRequestBuilder requestBuilder(OkHttpClient client) {
+        return JsonApiClientImpl.requestBuilder(client);
     }
 
-    // static class
-    private JsonApiClient() {}
-
-    /** Builder for a JSON API request. */
-    public static final class RequestBuilder {
-
-        private static final MediaType JSON_CONTENT_TYPE = MediaType.get("application/json");
-        private static final RequestBody EMPTY_BODY = RequestBody.create(new byte[0]);
-
-        private final OkHttpClient client;
-
-        private String method = null;
-        private String url = null;
-        private Map<String, String> headers = Map.of();
-        private RequestBody body = EMPTY_BODY;
+    /** Builder for a JSON API request that can set the method and the URL together. */
+    interface UrlStageRequestBuilder {
 
         /** Uses a GET request at the specified URL. */
-        public RequestBuilder get(String url) {
-            method = "GET";
-            this.url = url;
-            return this;
-        }
+        HeadersOrFinalStageRequestBuilder get(String url);
 
         /** Uses a POST request at the specified URL. */
-        public RequestBuilder post(String url) {
-            method = "POST";
-            this.url = url;
-            return this;
-        }
+        HeadersOrBodyOrFinalStageRequestBuilder post(String url);
+    }
+
+    /** Builder for a JSON API request that can set the headers, or build and make the request. */
+    interface HeadersOrFinalStageRequestBuilder extends FinalStageRequestBuilder {
 
         /** Sets the headers. */
-        public RequestBuilder headers(Map<String, String> headers) {
-            this.headers = Map.copyOf(headers);
-            return this;
-        }
+        FinalStageRequestBuilder headers(Map<String, String> headers);
+    }
+
+    /** Builder for a JSON API request that can set the headers, set the body, or build and make the request. */
+    interface HeadersOrBodyOrFinalStageRequestBuilder extends BodyOrFinalStageRequestBuilder {
+
+        /** Sets the headers. */
+        BodyOrFinalStageRequestBuilder headers(Map<String, String> headers);
+    }
+
+    /** Builder for a JSON API request that can set the body, or build and make the request. */
+    interface BodyOrFinalStageRequestBuilder extends FinalStageRequestBuilder {
 
         /** Sets the body. */
-        public RequestBuilder body(Object requestValue) {
-            byte[] rawRequestValue = JsonValues.serialize(requestValue);
-            body = RequestBody.create(rawRequestValue, JSON_CONTENT_TYPE);
-            return this;
-        }
+        FinalStageRequestBuilder body(Object requestValue);
+    }
 
-        /** Makes the request synchronously, returning the response. */
-        public Response execute() throws IOException {
-            Request request = build();
-            return client.newCall(request).execute();
-        }
+    /** Builder for a JSON API request that can build and make the request. */
+    interface FinalStageRequestBuilder {
 
-        /** Makes the request asynchronously, using a callback. */
-        public void enqueue(Callback callback) {
-            Request request = build();
-            client.newCall(request).enqueue(callback);
-        }
+        /** Makes the request synchronously, returning the {@link Response}. */
+        Response execute() throws IOException;
 
-        /** Builds the request. */
-        private Request build() {
-            checkMethodAndUrlSet();
-            checkBodyNotSetForGetRequest();
-            Request.Builder requestBuilder = new Request.Builder().url(url);
-            headers.forEach((name, value) -> requestBuilder.header(name, value));
-            if (method.equals("GET")) {
-                requestBuilder.get();
-            } else {
-                requestBuilder.method(method, body);
-            }
-            return requestBuilder.build();
-        }
-
-        /** Checks that the method and URL have been set. */
-        private void checkMethodAndUrlSet() {
-            if (method == null) {
-                throw new IllegalStateException("method and URL are not set");
-            }
-        }
-
-        /** Checks that a GET request does not have a body. */
-        private void checkBodyNotSetForGetRequest() {
-            if (!method.equals("GET")) {
-                return;
-            }
-
-            if (body != EMPTY_BODY) {
-                throw new IllegalStateException("body is set for GET request");
-            }
-        }
-
-        private RequestBuilder(OkHttpClient client) {
-            this.client = client;
-        }
+        /** Makes the request asynchronously using a {@link Callback}. */
+        void enqueue(Callback callback);
     }
 }
