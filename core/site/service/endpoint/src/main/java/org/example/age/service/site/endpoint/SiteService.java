@@ -10,6 +10,7 @@ import org.example.age.api.common.AuthMatchData;
 import org.example.age.api.common.VerificationState;
 import org.example.age.api.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
+import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.module.config.site.RefreshableSiteConfigProvider;
 import org.example.age.module.location.common.AvsLocation;
@@ -44,8 +45,8 @@ final class SiteService implements SiteApi {
     }
 
     @Override
-    public void createVerificationSession(
-            Sender.Value<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+    public void createVerificationRequest(
+            Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         requestDispatcher
                 .requestBuilder(dispatcher, new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
@@ -68,7 +69,7 @@ final class SiteService implements SiteApi {
 
     /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
     private void handleVerificationSessionResponse(
-            Sender.Value<VerificationSession> sender,
+            Sender.Value<VerificationRequest> sender,
             String accountId,
             AuthMatchData authData,
             HttpOptional<VerificationSession> maybeSession,
@@ -86,7 +87,7 @@ final class SiteService implements SiteApi {
             return;
         }
 
-        sender.sendValue(session);
+        sender.sendValue(session.verificationRequest());
     }
 
     /** Maps the backend error code to a frontend error code. */

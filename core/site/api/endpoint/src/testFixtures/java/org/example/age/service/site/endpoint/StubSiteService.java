@@ -10,7 +10,6 @@ import org.example.age.api.common.VerificationState;
 import org.example.age.api.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
-import org.example.age.data.certificate.VerificationSession;
 
 /** Stub service for {@link SiteApi}. */
 @Singleton
@@ -26,11 +25,10 @@ final class StubSiteService implements SiteApi {
     }
 
     @Override
-    public void createVerificationSession(
-            Sender.Value<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+    public void createVerificationRequest(
+            Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
-        VerificationSession session = VerificationSession.create(request);
-        sender.sendValue(session);
+        sender.sendValue(request);
     }
 
     @Override

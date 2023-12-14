@@ -9,7 +9,7 @@ import org.example.age.api.common.VerificationState;
 import org.example.age.api.infra.UndertowJsonApiHandler;
 import org.example.age.api.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
-import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.module.extractor.common.AccountIdExtractor;
 import org.example.age.module.extractor.common.AuthMatchDataExtractor;
 
@@ -27,10 +27,10 @@ final class SiteApiEndpointHandler implements HttpHandler {
         verificationStateHandler = UndertowJsonApiHandler.builder(new TypeReference<VerificationState>() {})
                 .addExtractor(accountIdExtractor)
                 .build(siteApi::getVerificationState);
-        verificationSessionHandler = UndertowJsonApiHandler.builder(new TypeReference<VerificationSession>() {})
+        verificationSessionHandler = UndertowJsonApiHandler.builder(new TypeReference<VerificationRequest>() {})
                 .addExtractor(accountIdExtractor)
                 .addExtractor(authDataExtractor)
-                .build(siteApi::createVerificationSession);
+                .build(siteApi::createVerificationRequest);
         ageCertificateHandler = UndertowJsonApiHandler.builder()
                 .addBody(new TypeReference<SignedAgeCertificate>() {})
                 .build(siteApi::processAgeCertificate);
@@ -41,7 +41,7 @@ final class SiteApiEndpointHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange exchange) throws Exception {
         switch (exchange.getRelativePath()) {
             case "/verification-state" -> verificationStateHandler.handleRequest(exchange);
-            case "/verification-session" -> verificationSessionHandler.handleRequest(exchange);
+            case "/verification-request" -> verificationSessionHandler.handleRequest(exchange);
             case "/age-certificate" -> ageCertificateHandler.handleRequest(exchange);
             default -> notFoundHandler.handleRequest(exchange);
         }
