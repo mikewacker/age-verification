@@ -8,8 +8,8 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
     annotationProcessor("org.immutables:value")
 
-    api(project(":api:base"))
-    api(project(":api:data:json"))
+    api(project(":base:api:base"))
+    api(project(":base:data:json"))
     api(project(":core:common:api:module"))
     api(project(":core:common:api:types"))
     api("com.fasterxml.jackson.core:jackson-annotations")
@@ -22,9 +22,9 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":api:base"))
-    testImplementation(testFixtures(project(":api:base")))
-    testImplementation(project(":api:data:json"))
+    testImplementation(project(":base:api:base"))
+    testImplementation(testFixtures(project(":base:api:base")))
+    testImplementation(project(":base:data:json"))
     testImplementation(project(":core:common:api:module"))
     testImplementation(project(":core:common:api:types"))
     testImplementation("com.fasterxml.jackson.core:jackson-core")

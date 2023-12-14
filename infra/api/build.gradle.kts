@@ -5,17 +5,17 @@ plugins {
 
 dependencies {
     // main
-    api(project(":api:base"))
-    api(project(":api:adapter"))
+    api(project(":base:api:base"))
+    api(project(":base:api:adapter"))
     api("com.fasterxml.jackson.core:jackson-core")
     api("io.undertow:undertow-core")
 
-    implementation(project(":api:data:json"))
+    implementation(project(":base:data:json"))
     implementation("org.jboss.xnio:xnio-api")
 
     // test
-    testImplementation(project(":api:base"))
-    testImplementation(testFixtures(project(":api:base")))
+    testImplementation(project(":base:api:base"))
+    testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("io.undertow:undertow-core")

@@ -12,14 +12,14 @@ dependencies {
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
-    testFixturesImplementation(project(":api:base"))
+    testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation("io.undertow:undertow-core")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":api:base"))
-    testImplementation(testFixtures(project(":api:base")))
+    testImplementation(project(":base:api:base"))
+    testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(project(":core:common:api:module"))
     testImplementation("com.google.dagger:dagger")
     testImplementation("io.undertow:undertow-core")
