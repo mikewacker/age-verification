@@ -1,22 +1,13 @@
 package org.example.age.module.config.site.test;
 
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-import org.example.age.module.config.site.SiteConfig;
-import org.example.age.module.location.common.AvsLocation;
-import org.example.age.module.location.common.test.TestAvsLocationModule;
-import org.example.age.testing.server.TestServer;
+import org.example.age.module.config.site.RefreshableSiteConfigProvider;
 
-/**
- * Dagger module that publishes a binding for {@link SiteConfig}.
- *
- * <p>Depends on an unbound <code>@Named("avs") {@link TestServer}&lt;?&gt;</code>.</p>
- */
-@Module(includes = TestAvsLocationModule.class)
+/** Dagger module that publishes a binding for {@link RefreshableSiteConfigProvider}. */
+@Module
 public interface TestSiteConfigModule {
 
-    @Provides
-    static SiteConfig provideSiteConfig(AvsLocation avsLocation) {
-        return TestSiteConfigs.create(avsLocation);
-    }
+    @Binds
+    RefreshableSiteConfigProvider bindRefreshableSiteConfigProvider(TestSiteConfigProvider impl);
 }

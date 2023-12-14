@@ -9,15 +9,13 @@ dependencies {
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testFixturesApi(project(":core:site:service:module"))
-    testFixturesApi(testFixtures(project(":testing")))
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
-
-    testFixturesApi(testFixtures(project(":module:location:common:test")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.squareup.okhttp3:mockwebserver")
+    testImplementation(project(":core:site:service:module"))
+    testImplementation("com.google.dagger:dagger")
+    testImplementation("javax.inject:javax.inject")
 }

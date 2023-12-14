@@ -6,16 +6,12 @@ import org.example.age.module.config.site.test.TestSiteConfigModule;
 import org.example.age.module.extractor.common.builtin.DisabledAuthMatchDataExtractorModule;
 import org.example.age.module.extractor.common.test.TestAccountIdExtractorModule;
 import org.example.age.module.key.common.test.TestKeyModule;
+import org.example.age.module.location.common.test.TestAvsLocationModule;
 import org.example.age.module.store.common.inmemory.InMemoryPendingStoreFactoryModule;
 import org.example.age.module.store.common.inmemory.InMemoryVerificationStoreModule;
 import org.example.age.service.site.endpoint.SiteServiceModule;
-import org.example.age.testing.server.TestServer;
 
-/**
- * Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>.
- *
- * <p>Depends on an unbound <code>@Named("avs") {@link TestServer}&lt?&gt;</code>.</p>
- */
+/** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
 @Module(
         includes = {
             SiteServiceModule.class,
@@ -25,5 +21,6 @@ import org.example.age.testing.server.TestServer;
             InMemoryPendingStoreFactoryModule.class,
             TestKeyModule.class,
             TestSiteConfigModule.class,
+            TestAvsLocationModule.class,
         })
 interface TestSiteServiceModule {}

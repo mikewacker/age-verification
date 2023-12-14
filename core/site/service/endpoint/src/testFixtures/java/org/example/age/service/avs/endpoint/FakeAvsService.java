@@ -1,7 +1,6 @@
 package org.example.age.service.avs.endpoint;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.avs.AvsApi;
 import org.example.age.api.base.Dispatcher;
@@ -11,6 +10,7 @@ import org.example.age.api.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
+import org.example.age.module.location.common.RefreshableSiteLocationProvider;
 import org.example.age.module.location.common.SiteLocation;
 import org.example.age.service.avs.verification.internal.FakeAvsVerificationFactory;
 import org.example.age.service.infra.client.RequestDispatcher;
@@ -20,7 +20,7 @@ import org.example.age.service.infra.client.RequestDispatcher;
 final class FakeAvsService implements AvsApi {
 
     private final FakeAvsVerificationFactory verificationFactory;
-    private final Provider<SiteLocation> siteLocationProvider;
+    private final RefreshableSiteLocationProvider siteLocationProvider;
     private final RequestDispatcher requestDispatcher;
 
     private VerificationSession storedSession = null;
@@ -29,7 +29,7 @@ final class FakeAvsService implements AvsApi {
     @Inject
     public FakeAvsService(
             FakeAvsVerificationFactory verificationFactory,
-            Provider<SiteLocation> siteLocationProvider,
+            RefreshableSiteLocationProvider siteLocationProvider,
             RequestDispatcher requestDispatcher) {
         this.verificationFactory = verificationFactory;
         this.siteLocationProvider = siteLocationProvider;
@@ -70,20 +70,22 @@ final class FakeAvsService implements AvsApi {
             return;
         }
 
+        String siteId = storedSession.verificationRequest().siteId();
         SignedAgeCertificate signedCertificate =
                 verificationFactory.createSignedAgeCertificate(accountId, authData, storedSession);
         reset();
 
         requestDispatcher
                 .requestBuilder(dispatcher)
-                .post(getAgeCertificateUrl())
+                .post(getAgeCertificateUrl(siteId))
                 .body(signedCertificate)
                 .dispatch(sender, this::handleAgeCertificateResponse);
     }
 
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
-    private String getAgeCertificateUrl() {
-        return siteLocationProvider.get().ageCertificateUrl();
+    private String getAgeCertificateUrl(String siteId) {
+        SiteLocation siteLocation = siteLocationProvider.get(siteId);
+        return siteLocation.ageCertificateUrl();
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */

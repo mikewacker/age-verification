@@ -2,7 +2,6 @@ package org.example.age.service.site.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
@@ -12,8 +11,9 @@ import org.example.age.api.common.VerificationState;
 import org.example.age.api.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.config.site.RefreshableSiteConfigProvider;
 import org.example.age.module.location.common.AvsLocation;
+import org.example.age.module.location.common.RefreshableAvsLocationProvider;
 import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.site.verification.internal.SiteVerificationManager;
 
@@ -21,16 +21,19 @@ import org.example.age.service.site.verification.internal.SiteVerificationManage
 final class SiteService implements SiteApi {
 
     private final SiteVerificationManager verificationManager;
-    private final Provider<SiteConfig> siteConfigProvider;
+    private final RefreshableSiteConfigProvider siteConfigProvider;
+    private final RefreshableAvsLocationProvider avsLocationProvider;
     private final RequestDispatcher requestDispatcher;
 
     @Inject
     public SiteService(
             SiteVerificationManager verificationManager,
-            Provider<SiteConfig> siteConfigProvider,
+            RefreshableSiteConfigProvider siteConfigProvider,
+            RefreshableAvsLocationProvider avsLocationProvider,
             RequestDispatcher requestDispatcher) {
         this.verificationManager = verificationManager;
         this.siteConfigProvider = siteConfigProvider;
+        this.avsLocationProvider = avsLocationProvider;
         this.requestDispatcher = requestDispatcher;
     }
 
@@ -58,7 +61,7 @@ final class SiteService implements SiteApi {
 
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
     private String getVerificationSessionUrl() {
-        AvsLocation avsLocation = siteConfigProvider.get().avsLocation();
+        AvsLocation avsLocation = avsLocationProvider.get();
         String siteId = siteConfigProvider.get().id();
         return avsLocation.verificationSessionUrl(siteId);
     }

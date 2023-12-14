@@ -2,63 +2,30 @@ package org.example.age.module.config.site.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dagger.BindsInstance;
 import dagger.Component;
-import java.io.IOException;
-import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
-import okhttp3.mockwebserver.MockResponse;
-import org.example.age.data.crypto.SecureId;
+import org.example.age.module.config.site.RefreshableSiteConfigProvider;
 import org.example.age.module.config.site.SiteConfig;
-import org.example.age.testing.client.TestClient;
-import org.example.age.testing.server.TestServer;
-import org.example.age.testing.server.mock.MockServer;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class TestSiteConfigTest {
 
-    @RegisterExtension
-    private static final MockServer avsServer = MockServer.register("avs");
-
-    private static Provider<SiteConfig> siteConfigProvider;
-
-    @BeforeAll
-    public static void createSiteConfigProvider() {
-        siteConfigProvider = TestComponent.createSiteConfigProvider();
-    }
-
     @Test
-    public void exchange() throws IOException {
-        avsServer.enqueue(new MockResponse());
-        String avsUrl = siteConfigProvider.get().avsLocation().redirectUrl(SecureId.generate());
-        int statusCode = TestClient.requestBuilder().get(avsUrl).execute();
-        assertThat(statusCode).isEqualTo(200);
-    }
-
-    @Test
-    public void exchange_DifferentTest() throws IOException {
-        exchange();
+    public void get() {
+        RefreshableSiteConfigProvider siteConfigProvider = TestComponent.createRefreshableSiteConfigProvider();
+        SiteConfig siteConfig = siteConfigProvider.get();
+        assertThat(siteConfig).isNotNull();
     }
 
     @Component(modules = TestSiteConfigModule.class)
     @Singleton
     interface TestComponent {
 
-        static Provider<SiteConfig> createSiteConfigProvider() {
-            TestComponent component =
-                    DaggerTestSiteConfigTest_TestComponent.factory().create(avsServer);
-            return component.siteConfigProvider();
+        static RefreshableSiteConfigProvider createRefreshableSiteConfigProvider() {
+            TestComponent component = DaggerTestSiteConfigTest_TestComponent.create();
+            return component.refreshableSiteConfigProvider();
         }
 
-        Provider<SiteConfig> siteConfigProvider();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("avs") TestServer<?> avsServer);
-        }
+        RefreshableSiteConfigProvider refreshableSiteConfigProvider();
     }
 }

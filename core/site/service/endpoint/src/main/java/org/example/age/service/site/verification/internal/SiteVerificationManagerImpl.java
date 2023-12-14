@@ -3,7 +3,6 @@ package org.example.age.service.site.verification.internal;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
@@ -17,7 +16,7 @@ import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.config.site.RefreshableSiteConfigProvider;
 import org.example.age.module.store.common.PendingStore;
 import org.example.age.module.store.common.PendingStoreFactory;
 import org.example.age.module.store.common.VerificationStore;
@@ -28,7 +27,7 @@ import org.example.age.service.common.crypto.internal.VerifiedUserLocalizer;
 @Singleton
 final class SiteVerificationManagerImpl implements SiteVerificationManager {
 
-    private static final String VERIFICATION_STORE_NAME = "verification";
+    private static final String PENDING_VERIFICATION_STORE_NAME = "verification";
     private static final String PSEUDONYM_KEY_NAME = "local";
 
     private final VerificationStore verificationStore;
@@ -36,7 +35,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     private final AgeCertificateVerifier certificateVerifier;
     private final VerifiedUserLocalizer userLocalizer;
     private final AuthMatchDataEncryptor authDataEncryptor;
-    private final Provider<SiteConfig> siteConfigProvider;
+    private final RefreshableSiteConfigProvider siteConfigProvider;
 
     @Inject
     public SiteVerificationManagerImpl(
@@ -45,7 +44,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
             AgeCertificateVerifier certificateVerifier,
             VerifiedUserLocalizer userLocalizer,
             AuthMatchDataEncryptor authDataEncryptor,
-            Provider<SiteConfig> siteConfigProvider) {
+            RefreshableSiteConfigProvider siteConfigProvider) {
         this.verificationStore = verificationStore;
         this.pendingStoreFactory = pendingStoreFactory;
         this.certificateVerifier = certificateVerifier;
@@ -97,7 +96,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     /** Puts a pending verification. */
     private void putPendingVerification(Verification pendingVerification, Dispatcher dispatcher) {
         PendingStore<Verification> pendingVerifications =
-                pendingStoreFactory.getOrCreate(VERIFICATION_STORE_NAME, new TypeReference<>() {});
+                pendingStoreFactory.getOrCreate(PENDING_VERIFICATION_STORE_NAME, new TypeReference<>() {});
         VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
         SecureId requestId = request.id();
         long expiration = request.expiration();
@@ -126,7 +125,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     /** Removes and returns the pending verification for the request ID, if present. */
     private Optional<Verification> tryRemovePendingVerification(SecureId requestId) {
         PendingStore<Verification> pendingVerifications =
-                pendingStoreFactory.getOrCreate(VERIFICATION_STORE_NAME, new TypeReference<>() {});
+                pendingStoreFactory.getOrCreate(PENDING_VERIFICATION_STORE_NAME, new TypeReference<>() {});
         return pendingVerifications.tryRemove(requestId.toString());
     }
 
