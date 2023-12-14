@@ -12,8 +12,8 @@ import org.example.age.api.common.VerificationState;
 import org.example.age.api.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.module.config.common.AvsLocation;
 import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.location.common.AvsLocation;
 import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.site.verification.internal.SiteVerificationManager;
 

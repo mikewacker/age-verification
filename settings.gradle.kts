@@ -41,8 +41,9 @@ include(
 
         "module:key:common:test",
 
-        "module:config:common:test",
         "module:config:site:test",
+
+        "module:location:common:test",
 
         // other
         "core:verification-poc",

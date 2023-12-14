@@ -1,8 +1,8 @@
 package org.example.age.module.config.site.test;
 
 import java.time.Duration;
-import org.example.age.module.config.common.AvsLocation;
 import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.location.common.AvsLocation;
 
 /** Test {@link SiteConfig}'s. */
 final class TestSiteConfigs {

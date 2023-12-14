@@ -2,9 +2,9 @@ package org.example.age.module.config.site.test;
 
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.module.config.common.AvsLocation;
-import org.example.age.module.config.common.test.TestAvsLocationModule;
 import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.location.common.AvsLocation;
+import org.example.age.module.location.common.test.TestAvsLocationModule;
 import org.example.age.testing.server.TestServer;
 
 /**

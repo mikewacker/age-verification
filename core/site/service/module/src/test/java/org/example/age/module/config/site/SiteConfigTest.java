@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Duration;
 import org.example.age.data.json.JsonValues;
-import org.example.age.module.config.common.AvsLocation;
+import org.example.age.module.location.common.AvsLocation;
 import org.junit.jupiter.api.Test;
 
 public final class SiteConfigTest {

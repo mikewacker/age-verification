@@ -3,7 +3,7 @@ package org.example.age.module.config.site;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.example.age.data.json.JsonStyle;
-import org.example.age.module.config.common.AvsLocation;
+import org.example.age.module.location.common.AvsLocation;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */
