@@ -8,7 +8,6 @@ dependencies {
     annotationProcessor("org.immutables:value")
 
     api(project(":api:data:json"))
-    api(project(":core:common:service:module"))
     api(project(":core:data"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-databind")

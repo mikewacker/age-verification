@@ -7,13 +7,8 @@ import org.example.age.module.extractor.common.test.TestAccountIdExtractorModule
 import org.example.age.module.key.common.test.TestKeyModule;
 import org.example.age.module.location.common.test.TestSiteLocationModule;
 import org.example.age.service.avs.endpoint.FakeAvsServiceModule;
-import org.example.age.testing.server.TestServer;
 
-/**
- * Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>.
- *
- * <p>Depends on an unbound <code>@Named("site") {@link TestServer}&lt?&gt;</code>.</p>
- */
+/** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
 @Module(
         includes = {
             FakeAvsServiceModule.class,

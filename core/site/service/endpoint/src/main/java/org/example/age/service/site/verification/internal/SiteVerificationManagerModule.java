@@ -2,7 +2,7 @@ package org.example.age.service.site.verification.internal;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.module.config.site.SiteConfig;
+import org.example.age.module.config.site.RefreshableSiteConfigProvider;
 import org.example.age.module.key.common.RefreshableKeyProvider;
 import org.example.age.module.store.common.PendingStoreFactory;
 import org.example.age.module.store.common.VerificationStore;
@@ -18,7 +18,7 @@ import org.example.age.service.common.crypto.internal.VerifiedUserLocalizerModul
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
  *     <li>{@link RefreshableKeyProvider}</li>
- *     <li><code>Provider&lt;{@link SiteConfig}&gt;</code></li>
+ *     <li>{@link RefreshableSiteConfigProvider}</li>
  * </ul>
  */
 @Module(
