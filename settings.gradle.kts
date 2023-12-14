@@ -18,34 +18,24 @@ include(
         "testing",
 
         /* product modules */
-
-        // data
         "core:data",
-
-        // api
-        "core:common:api:types",
-        "core:common:api:module",
-        "core:avs:api:types",
-        "core:avs:api:endpoint",
-        "core:site:api:types",
-        "core:site:api:endpoint",
+        "core:api:types:common",
+        "core:api:types:site",
+        "core:api:types:avs",
+        "core:api:module:common",
+        "core:api:endpoint:site",
+        "core:api:endpoint:avs",
+        "core:service:module:common",
+        "core:service:module:site",
+        "core:service:module:avs",
+        "core:service:endpoint:common",
+        "core:service:endpoint:site",
 
         "module:extractor:common:builtin",
         "module:extractor:common:test",
-
-        // service
-        "core:common:service:module",
-        "core:common:service:endpoint",
-        "core:avs:service:module",
-        "core:site:service:module",
-        "core:site:service:endpoint",
-
         "module:store:common:inmemory",
-
         "module:key:common:test",
-
         "module:config:site:test",
-
         "module:location:common:test",
 
         // other
