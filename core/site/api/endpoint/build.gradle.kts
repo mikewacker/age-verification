@@ -14,8 +14,8 @@ dependencies {
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
 
-    implementation(project(":api:adapter"))
-    implementation(project(":api:base"))
+    implementation(project(":base:api:adapter"))
+    implementation(project(":base:api:base"))
     implementation(project(":core:common:api:types"))
     implementation(project(":core:data"))
     implementation(project(":infra:api"))
@@ -26,7 +26,7 @@ dependencies {
 
     testFixturesApi("io.undertow:undertow-core")
 
-    testFixturesImplementation(project(":api:base"))
+    testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":core:common:api:module"))
     testFixturesImplementation(project(":core:common:api:types"))
     testFixturesImplementation(project(":core:data"))
@@ -37,9 +37,9 @@ dependencies {
     testFixturesImplementation("javax.inject:javax.inject")
 
     // test
-    testImplementation(project(":api:base"))
-    testImplementation(testFixtures(project(":api:base")))
-    testImplementation(project(":api:data:crypto"))
+    testImplementation(project(":base:api:base"))
+    testImplementation(testFixtures(project(":base:api:base")))
+    testImplementation(project(":base:data:crypto"))
     testImplementation(project(":core:common:api:types"))
     testImplementation(project(":core:data"))
     testImplementation(testFixtures(project(":testing")))
