@@ -21,13 +21,13 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 spotless {
     java {
-        palantirJavaFormat("2.38.0")
+        palantirJavaFormat("2.39.0")
     }
 }
 

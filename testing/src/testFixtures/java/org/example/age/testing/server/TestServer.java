@@ -32,7 +32,7 @@ public abstract class TestServer<T>
     private int port;
     private String rootUrl;
 
-    /** Gets a registered test server. */
+    /** Gets a registered {@link TestServer}. */
     public static TestServer<?> get(String name) {
         TestServer<?> server = servers.get(name);
         if (server == null) {
@@ -113,33 +113,32 @@ public abstract class TestServer<T>
         }
     }
 
-    /** Creates and registers a {@link TestServer}, specifying whether a fresh server is created for each test. */
-    protected TestServer(String name, TestServerFactory<T> serverFactory, boolean createForEachTest) {
+    /** Creates a {@link TestServer}, specifying whether a fresh server is created for each test. */
+    protected TestServer(TestServerFactory<T> serverFactory, boolean createForEachTest) {
         this.serverFactory = serverFactory;
         this.createForEachTest = createForEachTest;
         clear();
-        register(name);
     }
 
-    /** Starts the server. */
-    protected abstract void start(T server, int port) throws Exception;
-
-    /** Stops the server. */
-    protected abstract void stop(T server) throws Exception;
-
-    /** Registers this {@link TestServer}. */
-    private void register(String name) {
-        TestServer<?> conflictingServer = servers.putIfAbsent(name, this);
+    /** Registers a {@link TestServer}. */
+    protected static void register(String name, TestServer<?> server) {
+        TestServer<?> conflictingServer = servers.putIfAbsent(name, server);
         if (conflictingServer != null) {
             String message = String.format("server already registered: %s", name);
             throw new IllegalStateException(message);
         }
     }
 
+    /** Starts the underlying server. */
+    protected abstract void start(T server, int port) throws Exception;
+
+    /** Stops the underlying server. */
+    protected abstract void stop(T server) throws Exception;
+
     /** Creates and starts a fresh server. */
     private void createAndStart() throws Exception {
         try {
-            port = getAvailablePort();
+            port = findAvailablePort();
             rootUrl = String.format("http://localhost:%d", port);
             server = serverFactory.create(port);
             start(server, port);
@@ -158,8 +157,8 @@ public abstract class TestServer<T>
         }
     }
 
-    /** Gets an available port. */
-    private static int getAvailablePort() throws IOException {
+    /** Finds an available port. */
+    private static int findAvailablePort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
             return socket.getLocalPort();
         }
