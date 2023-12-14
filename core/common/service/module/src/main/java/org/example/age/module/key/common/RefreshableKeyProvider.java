@@ -2,6 +2,7 @@ package org.example.age.module.key.common;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.NoSuchElementException;
 import org.example.age.data.crypto.SecureId;
 
 /**
@@ -9,9 +10,10 @@ import org.example.age.data.crypto.SecureId;
  *
  * <p>The keys provided may be refreshed.</p>
  *
- * <p>A site will not have a private signing key, but it will have the other types of keys.</p>
+ * <p>Signing keys must be {@code Ed25519} keys. A site will not have the private signing key.</p>
  *
- * <p>Signing keys must be {@code Ed25519} keys.</p>
+ * <p>It is not expected that a key would be retrieved that does not exist;
+ * if this occurs, a {@link NoSuchElementException} will be thrown.</p>
  */
 public interface RefreshableKeyProvider {
 

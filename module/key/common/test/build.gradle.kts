@@ -16,4 +16,9 @@ dependencies {
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
+
+    testImplementation(project(":api:data:crypto"))
+    testImplementation(project(":core:common:service:module"))
+    testImplementation("com.google.dagger:dagger")
+    testImplementation("javax.inject:javax.inject")
 }
