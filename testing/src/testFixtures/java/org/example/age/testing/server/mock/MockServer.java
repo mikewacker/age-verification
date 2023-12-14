@@ -14,7 +14,9 @@ public final class MockServer extends TestServer<MockWebServer> {
 
     /** Creates and registers a {@link MockServer}. */
     public static MockServer register(String name) {
-        return new MockServer(name);
+        MockServer server = new MockServer();
+        TestServer.register(name, server);
+        return server;
     }
 
     /** Enqueues a {@link MockResponse}. */
@@ -32,8 +34,8 @@ public final class MockServer extends TestServer<MockWebServer> {
         server.shutdown();
     }
 
-    private MockServer(String name) {
-        super(name, MockServer::create, true);
+    private MockServer() {
+        super(MockServer::create, true);
     }
 
     /** Creates a {@link MockWebServer}. */

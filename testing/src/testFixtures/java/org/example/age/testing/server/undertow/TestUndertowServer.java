@@ -15,7 +15,9 @@ public final class TestUndertowServer extends TestServer<Undertow> {
 
     /** Creates and registers a {@link TestUndertowServer}. */
     public static TestUndertowServer register(String name, TestServerFactory<Undertow> serverFactory) {
-        return new TestUndertowServer(name, serverFactory);
+        TestUndertowServer server = new TestUndertowServer(serverFactory);
+        TestServer.register(name, server);
+        return server;
     }
 
     /** Creates and registers a {@link TestUndertowServer} that is built from a root {@link HttpHandler}. */
@@ -40,8 +42,8 @@ public final class TestUndertowServer extends TestServer<Undertow> {
         server.stop();
     }
 
-    private TestUndertowServer(String name, TestServerFactory<Undertow> serverFactory) {
-        super(name, serverFactory, false);
+    private TestUndertowServer(TestServerFactory<Undertow> serverFactory) {
+        super(serverFactory, false);
     }
 
     /** {@link TestServerFactory} that is built from a {@link TestHandlerFactory}. */

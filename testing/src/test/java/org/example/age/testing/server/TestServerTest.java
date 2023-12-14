@@ -71,7 +71,9 @@ public final class TestServerTest {
     private static final class StubServer extends TestServer<Object> {
 
         public static StubServer register(String name) {
-            return new StubServer(name);
+            StubServer server = new StubServer();
+            TestServer.register(name, server);
+            return server;
         }
 
         @Override
@@ -80,8 +82,8 @@ public final class TestServerTest {
         @Override
         protected void stop(Object server) {}
 
-        private StubServer(String name) {
-            super(name, port -> new Object(), true);
+        private StubServer() {
+            super(port -> new Object(), true);
         }
     }
 }
