@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.example.age.data.json.JsonValues;
 import org.example.age.data.user.AgeThresholds;
-import org.example.age.module.config.common.SiteLocation;
+import org.example.age.module.location.common.SiteLocation;
 import org.junit.jupiter.api.Test;
 
 public final class RegisteredSiteConfigTest {

@@ -2,10 +2,10 @@ package org.example.age.service.avs.endpoint.test;
 
 import dagger.Module;
 import io.undertow.server.HttpHandler;
-import org.example.age.module.config.common.test.TestSiteLocationModule;
 import org.example.age.module.extractor.common.builtin.DisabledAuthMatchDataExtractorModule;
 import org.example.age.module.extractor.common.test.TestAccountIdExtractorModule;
 import org.example.age.module.key.common.test.TestKeyModule;
+import org.example.age.module.location.common.test.TestSiteLocationModule;
 import org.example.age.service.avs.endpoint.FakeAvsServiceModule;
 import org.example.age.testing.server.TestServer;
 
