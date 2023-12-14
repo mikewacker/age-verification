@@ -11,7 +11,7 @@ import org.example.age.module.key.common.RefreshableKeyProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public final class TestKeyProviderTest {
+public final class TestKeyTest {
 
     private static RefreshableKeyProvider siteKeyProvider;
     private static RefreshableKeyProvider avsKeyProvider;
@@ -45,7 +45,7 @@ public final class TestKeyProviderTest {
     interface TestComponent {
 
         static RefreshableKeyProvider createRefreshableKeyProvider() {
-            TestComponent component = DaggerTestKeyProviderTest_TestComponent.create();
+            TestComponent component = DaggerTestKeyTest_TestComponent.create();
             return component.refreshableKeyProvider();
         }
 
