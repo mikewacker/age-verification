@@ -7,7 +7,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":base:api:base"))
-    api(project(":core:common:service:module"))
+    api(project(":core:service:module:common"))
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
 
