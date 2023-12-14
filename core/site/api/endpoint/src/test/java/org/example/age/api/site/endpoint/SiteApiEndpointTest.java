@@ -12,7 +12,6 @@ import org.example.age.api.common.VerificationState;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
-import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
@@ -41,13 +40,13 @@ public final class SiteApiEndpointTest {
     }
 
     @Test
-    public void verificationSession() throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
-                        new TypeReference<VerificationSession>() {})
-                .post(siteServer.url("/api/verification-session"))
+    public void verificationRequest() throws IOException {
+        HttpOptional<VerificationRequest> maybeRequest = TestClient.requestBuilder(
+                        new TypeReference<VerificationRequest>() {})
+                .post(siteServer.url("/api/verification-request"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .execute();
-        assertThat(maybeSession).isPresent();
+        assertThat(maybeRequest).isPresent();
     }
 
     @Test

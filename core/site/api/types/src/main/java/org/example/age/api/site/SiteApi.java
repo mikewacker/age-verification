@@ -5,7 +5,7 @@ import org.example.age.api.base.Sender;
 import org.example.age.api.common.AuthMatchData;
 import org.example.age.api.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
-import org.example.age.data.certificate.VerificationSession;
+import org.example.age.data.certificate.VerificationRequest;
 
 /** Asynchronous API for a site. */
 public interface SiteApi {
@@ -14,9 +14,9 @@ public interface SiteApi {
     void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher)
             throws Exception;
 
-    /** Creates a {@link VerificationSession} for the account. */
-    void createVerificationSession(
-            Sender.Value<VerificationSession> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
+    /** Creates a {@link VerificationRequest} for the account. */
+    void createVerificationRequest(
+            Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
             throws Exception;
 
     /** Processes a {@link SignedAgeCertificate} from the age verification service. */

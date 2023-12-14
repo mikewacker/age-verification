@@ -9,8 +9,7 @@ import java.util.Map;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.common.VerificationState;
 import org.example.age.api.common.VerificationStatus;
-import org.example.age.data.certificate.VerificationSession;
-import org.example.age.data.crypto.SecureId;
+import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.service.avs.endpoint.test.FakeAvsComponent;
 import org.example.age.service.site.endpoint.test.TestSiteComponent;
 import org.example.age.testing.client.TestClient;
@@ -41,17 +40,16 @@ public final class SiteServiceEndpointTest {
     }
 
     private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
-                        new TypeReference<VerificationSession>() {})
-                .post(siteServer.url("/api/verification-session"))
+        HttpOptional<VerificationRequest> maybeRequest = TestClient.requestBuilder(
+                        new TypeReference<VerificationRequest>() {})
+                .post(siteServer.url("/api/verification-request"))
                 .headers(Map.of("Account-Id", siteAccountId))
                 .execute();
-        assertThat(maybeSession).isPresent();
-        VerificationSession session = maybeSession.get();
+        assertThat(maybeRequest).isPresent();
+        VerificationRequest request = maybeRequest.get();
 
-        SecureId requestId = session.verificationRequest().id();
         int linkStatusCode = TestClient.requestBuilder()
-                .post(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", requestId))
+                .post(fakeAvsServer.url("/api/linked-verification-request?request-id=%s", request.id()))
                 .headers(Map.of("Account-Id", avsAccountId))
                 .execute();
         assertThat(linkStatusCode).isEqualTo(200);
