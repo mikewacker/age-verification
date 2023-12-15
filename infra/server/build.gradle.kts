@@ -14,6 +14,11 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
+    testImplementation(project(":base:api:base"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
+    testImplementation("com.fasterxml.jackson.core:jackson-core")
+    testImplementation("com.google.dagger:dagger")
+    testImplementation("io.undertow:undertow-core")
+    testImplementation("javax.inject:javax.inject")
 }

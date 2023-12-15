@@ -7,7 +7,6 @@ dependencies {
     // main
     api("com.squareup.okhttp3:okhttp")
 
-    implementation(project(":base:api:base"))
     implementation(project(":base:data:json"))
 
     // test
