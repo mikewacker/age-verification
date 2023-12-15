@@ -25,9 +25,11 @@ include(
         "core:api:module:common",
         "core:api:endpoint:site",
         "core:api:endpoint:avs",
+        "core:service:types:common",
+        "core:service:types:site",
+        "core:service:types:avs",
         "core:service:module:common",
         "core:service:module:site",
-        "core:service:module:avs",
         "core:service:endpoint:common",
         "core:service:endpoint:site",
 
