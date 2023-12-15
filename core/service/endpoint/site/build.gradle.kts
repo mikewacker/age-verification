@@ -21,6 +21,8 @@ dependencies {
     implementation(project(":core:api:types:common"))
     implementation(project(":core:api:types:site"))
     implementation(project(":core:api:endpoint:site"))
+    implementation(project(":core:service:types:common"))
+    implementation(project(":core:service:types:site"))
     implementation(project(":infra:service"))
     implementation(project(":core:service:endpoint:common"))
     implementation("com.fasterxml.jackson.core:jackson-core")
@@ -28,16 +30,17 @@ dependencies {
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesImplementation("io.undertow:undertow-core")
+    testFixturesApi(project(":base:data:crypto"))
+    testFixturesApi(project(":core:data"))
+    testFixturesApi(project(":core:api:types:common"))
+    testFixturesApi("io.undertow:undertow-core")
 
-    testFixturesImplementation(project(":base:data:crypto"))
-    testFixturesImplementation(project(":core:data"))
     testFixturesImplementation(project(":base:api:base"))
-    testFixturesImplementation(project(":core:api:types:common"))
     testFixturesImplementation(project(":core:api:types:avs"))
     testFixturesImplementation(project(":core:api:module:common"))
     testFixturesImplementation(project(":core:api:endpoint:site")) // Dagger component
     testFixturesImplementation(project(":core:api:endpoint:avs"))
+    testFixturesImplementation(project(":core:service:types:common"))
     testFixturesImplementation(project(":core:service:module:common"))
     testFixturesImplementation(project(":infra:service"))
     testFixturesImplementation(project(":core:service:endpoint:common"))
