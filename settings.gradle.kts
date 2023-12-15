@@ -12,7 +12,6 @@ include(
         // infra (depends on Undertow, OkHttp)
         "infra:api",
         "infra:service",
-        "infra:server",
         "infra:client",
 
         "testing",
