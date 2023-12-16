@@ -146,8 +146,8 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
         long expiresIn = siteConfigProvider.get().verifiedAccountExpiresIn();
         long expiration = now + expiresIn;
         VerificationState state = VerificationState.verified(user, expiration);
-        Optional<String> maybeDuplicateAccountId = verificationStore.trySave(accountId, state);
-        return maybeDuplicateAccountId.isEmpty() ? 200 : 409;
+        Optional<String> maybeConflictingAccountId = verificationStore.trySave(accountId, state);
+        return maybeConflictingAccountId.isEmpty() ? 200 : 409;
     }
 
     /** Pending verification. */

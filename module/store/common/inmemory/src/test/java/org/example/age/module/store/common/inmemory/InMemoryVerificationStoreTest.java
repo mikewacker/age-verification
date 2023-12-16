@@ -23,53 +23,44 @@ public final class InMemoryVerificationStoreTest {
     }
 
     @Test
-    public void loadUnverified() {
+    public void load_Unverified() {
         VerificationState state = verificationStore.load("username");
         assertThat(state.status()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 
     @Test
     public void verify() {
-        VerificationState state = createAndVerifyUser();
-        Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username", state);
-        assertThat(maybeDuplicateAccountId).isEmpty();
+        VerificationState state = VerificationState.verified(createVerifiedUser(), createExpiration());
+        Optional<String> maybeConflictingAccountId = verificationStore.trySave("username", state);
+        assertThat(maybeConflictingAccountId).isEmpty();
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
-    public void verifySameAccountTwice() {
-        VerificationState state = createAndVerifyUser();
+    public void reverify() {
+        VerificationState state = VerificationState.verified(createVerifiedUser(), createExpiration());
         verificationStore.trySave("username", state);
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
 
-        Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username", state);
-        assertThat(maybeDuplicateAccountId).isEmpty();
+        Optional<String> maybeConflictingAccountId = verificationStore.trySave("username", state);
+        assertThat(maybeConflictingAccountId).isEmpty();
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
-    public void updateState() {
-        VerificationState state = createAndVerifyUser(-10);
-        verificationStore.trySave("username", state);
-        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.EXPIRED);
-    }
-
-    @Test
-    public void switchVerifiedAccount() {
-        VerificationState state = createAndVerifyUser();
+    public void verifyFails_DuplicationVerification() {
+        VerificationState state = VerificationState.verified(createVerifiedUser(), createExpiration());
         verificationStore.trySave("username1", state);
         assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.VERIFIED);
 
-        verificationStore.trySave("username1", VerificationState.invalidated());
-        Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username2", state);
-        assertThat(maybeDuplicateAccountId).isEmpty();
-        assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.INVALIDATED);
-        assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.VERIFIED);
+        Optional<String> maybeConflictingAccountId = verificationStore.trySave("username2", state);
+        assertThat(maybeConflictingAccountId).hasValue("username1");
+        assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 
     @Test
     public void delete() {
-        VerificationState state = createAndVerifyUser();
+        VerificationState state = VerificationState.verified(createVerifiedUser(), createExpiration());
         verificationStore.trySave("username", state);
         assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.VERIFIED);
 
@@ -78,25 +69,35 @@ public final class InMemoryVerificationStoreTest {
     }
 
     @Test
-    public void error_DuplicateVerification() {
-        VerificationState state = createAndVerifyUser();
-        verificationStore.trySave("username1", state);
-        assertThat(verificationStore.load("username1").status()).isEqualTo(VerificationStatus.VERIFIED);
-
-        Optional<String> maybeDuplicateAccountId = verificationStore.trySave("username2", state);
-        assertThat(maybeDuplicateAccountId).hasValue("username1");
-        assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.UNVERIFIED);
+    public void load_UpdateState() {
+        VerificationState state = VerificationState.verified(createVerifiedUser(), createExpiration(-10));
+        verificationStore.trySave("username", state);
+        assertThat(verificationStore.load("username").status()).isEqualTo(VerificationStatus.EXPIRED);
     }
 
-    private static VerificationState createAndVerifyUser() {
-        return createAndVerifyUser(10);
+    @Test
+    public void verify_DuplicateVerificationExpired() {
+        VerifiedUser user = createVerifiedUser();
+        VerificationState state1 = VerificationState.verified(user, createExpiration(-10));
+        verificationStore.trySave("username1", state1);
+
+        VerificationState state2 = VerificationState.verified(user, createExpiration());
+        Optional<String> maybeConflictingAccountId = verificationStore.trySave("username2", state2);
+        assertThat(maybeConflictingAccountId).isEmpty();
+        assertThat(verificationStore.load("username2").status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
-    private static VerificationState createAndVerifyUser(long expiresIn) {
-        VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
+    private static VerifiedUser createVerifiedUser() {
+        return VerifiedUser.of(SecureId.generate(), 18);
+    }
+
+    private static long createExpiration() {
+        return createExpiration(10);
+    }
+
+    private static long createExpiration(long expiresIn) {
         long now = System.currentTimeMillis() / 1000;
-        long expiration = now + expiresIn;
-        return VerificationState.verified(user, expiration);
+        return now + expiresIn;
     }
 
     /** Dagger component that provides a {@link VerificationStore}. */
