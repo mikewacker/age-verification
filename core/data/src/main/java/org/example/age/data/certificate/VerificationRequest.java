@@ -7,7 +7,7 @@ import org.example.age.data.crypto.SecureId;
 import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
-/** Request to verify an account on a social media site. */
+/** Request to verify an account on a site. */
 @Value.Immutable
 @JsonStyle
 @JsonDeserialize(as = ImmutableVerificationRequest.class)

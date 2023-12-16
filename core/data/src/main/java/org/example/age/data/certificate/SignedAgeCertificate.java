@@ -12,6 +12,8 @@ import org.immutables.value.Value;
  * Age certificate that is signed to verify the sender's identity.
  *
  * <p>Only {@code Ed25519} keys are supported.</p>
+ *
+ * <p>A real implementation would also use a public key certificate to verify that the sender owns the public key.</p>
  */
 @Value.Immutable
 @JsonStyle

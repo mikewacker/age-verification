@@ -40,6 +40,7 @@ public final class TestKeyTest {
         assertThat(pseudonymKey1).isEqualTo(pseudonymKey3);
     }
 
+    /** Dagger component that provides a {@link RefreshableKeyProvider}. */
     @Component(modules = TestKeyModule.class)
     @Singleton
     interface TestComponent {
