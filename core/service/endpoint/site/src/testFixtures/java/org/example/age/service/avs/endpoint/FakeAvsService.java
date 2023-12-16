@@ -2,11 +2,11 @@ package org.example.age.service.avs.endpoint;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.avs.AvsApi;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.Sender;
-import org.example.age.api.common.AuthMatchData;
-import org.example.age.api.common.VerificationState;
+import org.example.age.api.def.avs.AvsApi;
+import org.example.age.api.def.common.AuthMatchData;
+import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
