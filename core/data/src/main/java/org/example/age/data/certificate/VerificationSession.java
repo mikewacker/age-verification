@@ -5,7 +5,7 @@ import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
-/** Session to pseudonymously verify a person's age (and guardians, if applicable). */
+/** Session to verify an account on a site. */
 @Value.Immutable
 @JsonStyle
 @JsonDeserialize(as = ImmutableVerificationSession.class)

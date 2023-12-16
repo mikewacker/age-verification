@@ -45,7 +45,7 @@ public interface VerifiedUser {
     /** Pseudonyms of the guardians, if the user is a minor. */
     List<SecureId> guardianPseudonyms();
 
-    /** Changes the pseudonym using the key. */
+    /** Localizes the pseudonyms using the key. */
     default VerifiedUser localize(SecureId key) {
         SecureId localPseudonym = pseudonym().localize(key);
         List<SecureId> localGuardianPseudonyms =

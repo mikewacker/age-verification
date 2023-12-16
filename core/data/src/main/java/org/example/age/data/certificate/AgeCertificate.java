@@ -6,7 +6,7 @@ import org.example.age.data.json.JsonStyle;
 import org.example.age.data.user.VerifiedUser;
 import org.immutables.value.Value;
 
-/** Certificate that pseudonymously verifies the age (and guardians, if applicable) of a person. */
+/** Certificate that pseudonymously verifies the age and guardians (if applicable) of a person. */
 @Value.Immutable
 @JsonStyle
 @JsonDeserialize(as = ImmutableAgeCertificate.class)
