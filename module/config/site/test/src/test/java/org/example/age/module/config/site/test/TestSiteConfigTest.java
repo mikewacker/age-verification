@@ -17,6 +17,7 @@ public final class TestSiteConfigTest {
         assertThat(siteConfig).isNotNull();
     }
 
+    /** Dagger component that provides a {@link RefreshableSiteConfigProvider}. */
     @Component(modules = TestSiteConfigModule.class)
     @Singleton
     interface TestComponent {
