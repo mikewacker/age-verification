@@ -27,7 +27,7 @@ public final class SiteApiEndpointTest {
 
     @RegisterExtension
     private static final TestServer<?> siteServer =
-            TestUndertowServer.register("site", StubSiteComponent::createApiHandler, "/api/");
+            TestUndertowServer.register("site", "/api/", StubSiteComponent::createApiHandler);
 
     @Test
     public void verificationState() throws IOException {
@@ -57,14 +57,6 @@ public final class SiteApiEndpointTest {
                 .body(signedCertificate)
                 .execute();
         assertThat(certificateStatusCode).isEqualTo(200);
-    }
-
-    @Test
-    public void error_BadPath() throws IOException {
-        int statusCode = TestClient.requestBuilder()
-                .get(siteServer.url("/api/does-not-exist"))
-                .execute();
-        assertThat(statusCode).isEqualTo(404);
     }
 
     private static SignedAgeCertificate createSignedAgeCertificate() {

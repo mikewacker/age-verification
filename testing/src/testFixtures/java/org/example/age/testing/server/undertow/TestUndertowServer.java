@@ -27,8 +27,8 @@ public final class TestUndertowServer extends TestServer<Undertow> {
     }
 
     /** Creates and registers a {@link TestUndertowServer} that is built from a prefix {@link HttpHandler}. */
-    public static TestUndertowServer register(String name, TestHandlerFactory prefixHandlerFactory, String prefixPath) {
-        TestHandlerFactory rootHandlerFactory = new PrefixHandlerAdapter(prefixHandlerFactory, prefixPath);
+    public static TestUndertowServer register(String name, String prefixPath, TestHandlerFactory prefixHandlerFactory) {
+        TestHandlerFactory rootHandlerFactory = new PrefixHandlerAdapter(prefixPath, prefixHandlerFactory);
         return register(name, rootHandlerFactory);
     }
 
@@ -60,7 +60,7 @@ public final class TestUndertowServer extends TestServer<Undertow> {
     }
 
     /** Root {@link TestHandlerFactory} that is built from a prefix {@link TestHandlerFactory}. */
-    private record PrefixHandlerAdapter(TestHandlerFactory prefixHandlerFactory, String prefixPath)
+    private record PrefixHandlerAdapter(String prefixPath, TestHandlerFactory prefixHandlerFactory)
             implements TestHandlerFactory {
 
         @Override

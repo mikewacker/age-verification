@@ -1,9 +1,10 @@
 package org.example.age.api.avs.endpoint;
 
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.example.age.api.avs.AvsApi;
 import org.example.age.module.extractor.common.AccountIdExtractor;
 import org.example.age.module.extractor.common.AuthMatchDataExtractor;
@@ -21,7 +22,11 @@ import org.example.age.module.extractor.common.AuthMatchDataExtractor;
 @Module
 public interface AvsApiModule {
 
-    @Binds
+    @Provides
     @Named("api")
-    HttpHandler bindApiHandler(AvsApiEndpointHandler impl);
+    @Singleton
+    static HttpHandler provideApiHandler(
+            AvsApi api, AccountIdExtractor accountIdExtractor, AuthMatchDataExtractor authDataExtractor) {
+        return AvsApiEndpoint.createHandler(api, accountIdExtractor, authDataExtractor);
+    }
 }

@@ -22,11 +22,11 @@ public final class SiteServiceEndpointTest {
 
     @RegisterExtension
     private static final TestServer<?> siteServer =
-            TestUndertowServer.register("site", TestSiteComponent::createApiHandler, "/api/");
+            TestUndertowServer.register("site", "/api/", TestSiteComponent::createApiHandler);
 
     @RegisterExtension
     private static final TestServer<?> fakeAvsServer =
-            TestUndertowServer.register("avs", FakeAvsComponent::createApiHandler, "/api/");
+            TestUndertowServer.register("avs", "/api/", FakeAvsComponent::createApiHandler);
 
     @Test
     public void verify() throws IOException {

@@ -17,7 +17,7 @@ public final class DispatcherOkHttpClientTest {
 
     @RegisterExtension
     private static final TestServer<?> frontendServer =
-            TestUndertowServer.register("frontend", GreetingHandler::create);
+            TestUndertowServer.register("frontend", GreetingService::createHandler);
 
     @RegisterExtension
     private static final MockServer backendServer = MockServer.register("backend");
