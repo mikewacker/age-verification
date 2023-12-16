@@ -8,7 +8,7 @@ import org.example.age.api.def.common.VerificationStatus;
 import org.example.age.service.store.common.VerificationStore;
 import org.junit.jupiter.api.Test;
 
-public final class TestVerificationStoreTest {
+public final class TestAvsVerificationStoreTest {
 
     @Test
     public void getVerifiedPeople() {
@@ -18,12 +18,12 @@ public final class TestVerificationStoreTest {
     }
 
     /** Dagger component that provides a {@link VerificationStore}. */
-    @Component(modules = TestVerificationStoreModule.class)
+    @Component(modules = TestAvsVerificationStoreModule.class)
     @Singleton
     interface TestComponent {
 
         static VerificationStore createVerificationStore() {
-            TestComponent component = DaggerTestVerificationStoreTest_TestComponent.create();
+            TestComponent component = DaggerTestAvsVerificationStoreTest_TestComponent.create();
             return component.verificationStore();
         }
 

@@ -40,6 +40,15 @@ public final class SiteServiceEndpointTest {
     }
 
     private void verify(String siteAccountId, String avsAccountId, int expectedStatusCode) throws IOException {
+        HttpOptional<VerificationState> maybeAvsState = TestClient.requestBuilder(
+                        new TypeReference<VerificationState>() {})
+                .get(fakeAvsServer.url("/api/verification-state"))
+                .headers(Map.of("Account-Id", avsAccountId))
+                .execute();
+        assertThat(maybeAvsState).isPresent();
+        VerificationState avsState = maybeAvsState.get();
+        assertThat(avsState.status()).isEqualTo(VerificationStatus.VERIFIED);
+
         HttpOptional<VerificationRequest> maybeRequest = TestClient.requestBuilder(
                         new TypeReference<VerificationRequest>() {})
                 .post(siteServer.url("/api/verification-request"))
@@ -63,13 +72,13 @@ public final class SiteServiceEndpointTest {
             return;
         }
 
-        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder(
+        HttpOptional<VerificationState> maybeSiteState = TestClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", siteAccountId))
                 .execute();
-        assertThat(maybeState).isPresent();
-        VerificationState state = maybeState.get();
+        assertThat(maybeSiteState).isPresent();
+        VerificationState state = maybeSiteState.get();
         assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
     }
 }

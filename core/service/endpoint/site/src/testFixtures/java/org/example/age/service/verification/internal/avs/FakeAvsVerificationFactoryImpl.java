@@ -1,34 +1,40 @@
 package org.example.age.service.verification.internal.avs;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.def.common.AuthMatchData;
+import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.service.crypto.internal.common.AgeCertificateSigner;
 import org.example.age.service.crypto.internal.common.AuthMatchDataEncryptor;
+import org.example.age.service.store.common.VerificationStore;
 
 @Singleton
 final class FakeAvsVerificationFactoryImpl implements FakeAvsVerificationFactory {
 
+    private final VerificationStore verificationStore;
     private final AgeCertificateSigner certificateSigner;
     private final AuthMatchDataEncryptor authDataEncryptor;
 
-    private final Map<String, VerifiedUser> users = populateAccounts();
-
     @Inject
     public FakeAvsVerificationFactoryImpl(
-            AgeCertificateSigner certificateSigner, AuthMatchDataEncryptor authDataEncryptor) {
+            VerificationStore verificationStore,
+            AgeCertificateSigner certificateSigner,
+            AuthMatchDataEncryptor authDataEncryptor) {
+        this.verificationStore = verificationStore;
         this.certificateSigner = certificateSigner;
         this.authDataEncryptor = authDataEncryptor;
+    }
+
+    @Override
+    public VerificationState getVerificationState(String accountId) {
+        return verificationStore.load(accountId);
     }
 
     @Override
@@ -52,25 +58,8 @@ final class FakeAvsVerificationFactoryImpl implements FakeAvsVerificationFactory
     @Override
     public SignedAgeCertificate createSignedAgeCertificate(
             String accountId, AesGcmEncryptionPackage authToken, VerificationSession session) {
-        VerifiedUser user = loadVerifiedUser(accountId);
+        VerifiedUser user = getVerificationState(accountId).verifiedUser();
         AgeCertificate certificate = AgeCertificate.of(session.verificationRequest(), user, authToken);
         return certificateSigner.sign(certificate);
-    }
-
-    /** Populates preset accounts. */
-    private static Map<String, VerifiedUser> populateAccounts() {
-        VerifiedUser parent = VerifiedUser.of(SecureId.generate(), 40);
-        VerifiedUser child = VerifiedUser.of(SecureId.generate(), 13, List.of(parent.pseudonym()));
-        return Map.of("John Smith", parent, "Billy Smith", child);
-    }
-
-    /** Loads the {@link VerifiedUser} for an account. */
-    private VerifiedUser loadVerifiedUser(String accountId) {
-        VerifiedUser user = users.get(accountId);
-        if (user == null) {
-            String message = String.format("account is not verified: %s", accountId);
-            throw new IllegalArgumentException(message);
-        }
-        return user;
     }
 }

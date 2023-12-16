@@ -47,6 +47,7 @@ dependencies {
     testFixturesImplementation(project(":module:extractor:common:builtin"))
     testFixturesImplementation(testFixtures(project(":module:extractor:common:test")))
     testFixturesImplementation(project(":module:store:common:inmemory"))
+    testFixturesImplementation(testFixtures(project(":module:store:avs:test")))
     testFixturesImplementation(testFixtures(project(":module:key:common:test")))
     testFixturesImplementation(testFixtures(project(":module:config:site:test")))
     testFixturesImplementation(testFixtures(project(":module:location:common:test")))

@@ -38,7 +38,8 @@ final class FakeAvsService implements AvsApi {
 
     @Override
     public void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher) {
-        sender.sendErrorCode(418);
+        VerificationState state = verificationFactory.getVerificationState(accountId);
+        sender.sendValue(state);
     }
 
     @Override

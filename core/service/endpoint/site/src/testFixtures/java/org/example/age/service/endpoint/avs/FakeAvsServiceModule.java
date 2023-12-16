@@ -10,6 +10,7 @@ import org.example.age.api.module.extractor.common.AuthMatchDataExtractor;
 import org.example.age.service.infra.client.RequestDispatcherModule;
 import org.example.age.service.module.key.common.RefreshableKeyProvider;
 import org.example.age.service.module.location.common.RefreshableSiteLocationProvider;
+import org.example.age.service.store.common.VerificationStore;
 import org.example.age.service.verification.internal.avs.FakeAvsVerificationFactoryModule;
 
 /**
@@ -19,6 +20,7 @@ import org.example.age.service.verification.internal.avs.FakeAvsVerificationFact
  * <ul>
  *     <li>{@link AccountIdExtractor}</li>
  *     <li>{@link AuthMatchDataExtractor}</li>
+ *     <li>{@link VerificationStore}</li>
  *     <li>{@link RefreshableKeyProvider}</li>
  *     <li>{@link RefreshableSiteLocationProvider}</li>
  * </ul>
