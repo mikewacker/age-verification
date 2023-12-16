@@ -13,5 +13,5 @@ import org.example.age.testing.server.TestServer;
 public interface TestAvsLocationModule {
 
     @Binds
-    RefreshableAvsLocationProvider bindRefreshableAvsLocationProvider(TestAvsLocationProvider impl);
+    RefreshableAvsLocationProvider bindRefreshableAvsLocationProvider(TestLocationProvider impl);
 }

@@ -14,6 +14,7 @@ dependencies {
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-core")
     api("com.fasterxml.jackson.core:jackson-databind")
+    api("com.google.errorprone:error_prone_annotations")
     api("org.immutables:value-annotations")
 
     // test
