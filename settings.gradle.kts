@@ -29,6 +29,7 @@ include(
         "core:service:types:avs",
         "core:service:module:common",
         "core:service:module:site",
+        "core:service:module:avs",
         "core:service:endpoint:common",
         "core:service:endpoint:site",
 
@@ -37,6 +38,7 @@ include(
         "module:store:common:inmemory",
         "module:key:common:test",
         "module:config:site:test",
+        "module:config:avs:test",
         "module:location:common:test",
 
         // other
