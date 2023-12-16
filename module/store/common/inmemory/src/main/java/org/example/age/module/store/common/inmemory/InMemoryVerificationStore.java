@@ -1,94 +1,58 @@
 package org.example.age.module.store.common.inmemory;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.api.def.common.VerificationStatus;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.user.VerifiedUser;
 import org.example.age.service.store.common.VerificationStore;
 
 /** In-memory {@link VerificationStore}. */
 @Singleton
 final class InMemoryVerificationStore implements VerificationStore {
 
-    private final Map<String, VerificationState> states = new HashMap<>();
-    private final BiMap<SecureId, String> verifiedAccountIds = HashBiMap.create();
+    private static final VerificationState UNVERIFIED = VerificationState.unverified();
 
-    private final Object lock = new Object();
+    private final BiKeyMap<String, SecureId, VerificationState> store = BiKeyMap.create();
 
     @Inject
     public InMemoryVerificationStore() {}
 
     @Override
     public VerificationState load(String accountId) {
-        synchronized (lock) {
-            Optional<VerificationState> maybeState = Optional.ofNullable(states.get(accountId));
-            if (maybeState.isEmpty()) {
-                return VerificationState.unverified();
-            }
-
-            VerificationState state = maybeState.get();
-            VerificationState updatedState = state.update();
-            if (updatedState != state) {
-                save(accountId, updatedState);
-            }
-
-            return updatedState;
+        Optional<VerificationState> maybeState = store.tryGet(accountId);
+        if (maybeState.isEmpty()) {
+            return UNVERIFIED;
         }
+        VerificationState state = maybeState.get();
+
+        // Save if the state is updated.
+        VerificationState updatedState = state.update();
+        if (updatedState != state) {
+            trySave(accountId, updatedState);
+        }
+        return updatedState;
     }
 
     @Override
     public Optional<String> trySave(String accountId, VerificationState state) {
-        synchronized (lock) {
-            Optional<String> maybeDuplicateAccountId = checkNoDuplicateVerifications(accountId, state);
-            if (maybeDuplicateAccountId.isPresent()) {
-                return maybeDuplicateAccountId;
-            }
-
-            save(accountId, state);
+        Optional<SecureId> maybePseudonym = state.status().equals(VerificationStatus.VERIFIED)
+                ? Optional.of(state.verifiedUser().pseudonym())
+                : Optional.empty();
+        Optional<String> maybeConflictingAccountId = store.tryPut(accountId, maybePseudonym, state);
+        if (maybeConflictingAccountId.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        // Update the other account, in case it's expired.
+        String conflictingAccountId = maybeConflictingAccountId.get();
+        load(conflictingAccountId);
+        return store.tryPut(accountId, maybePseudonym, state);
     }
 
     @Override
     public void delete(String accountId) {
-        synchronized (lock) {
-            states.remove(accountId);
-            verifiedAccountIds.inverse().remove(accountId);
-        }
-    }
-
-    /** Checks that two accounts are not verified with the same {@link VerifiedUser}. */
-    private Optional<String> checkNoDuplicateVerifications(String accountId, VerificationState state) {
-        if (state.status() != VerificationStatus.VERIFIED) {
-            return Optional.empty();
-        }
-
-        SecureId pseudonym = state.verifiedUser().pseudonym();
-        Optional<String> maybeVerifiedAccountId = Optional.ofNullable(verifiedAccountIds.get(pseudonym));
-        if (maybeVerifiedAccountId.isEmpty()) {
-            return Optional.empty();
-        }
-
-        String verifiedAccountId = maybeVerifiedAccountId.get();
-        return verifiedAccountId.equals(accountId) ? Optional.empty() : Optional.of(verifiedAccountId);
-    }
-
-    /** Saves the {@link VerificationState} for an account. */
-    private void save(String accountId, VerificationState state) {
-        states.put(accountId, state);
-        if (state.status() != VerificationStatus.VERIFIED) {
-            verifiedAccountIds.inverse().remove(accountId);
-            return;
-        }
-
-        SecureId pseudonym = state.verifiedUser().pseudonym();
-        verifiedAccountIds.put(pseudonym, accountId);
+        store.remove(accountId);
     }
 }
