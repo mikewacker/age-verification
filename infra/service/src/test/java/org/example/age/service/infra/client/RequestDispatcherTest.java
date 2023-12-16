@@ -18,7 +18,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class RequestDispatcherTest {
 
     @RegisterExtension
-    private static final TestServer<?> frontendServer = TestUndertowServer.register("frontend", ProxyHandler::create);
+    private static final TestServer<?> frontendServer =
+            TestUndertowServer.register("frontend", ProxyService::createHandler);
 
     @RegisterExtension
     private static final MockServer backendServer = MockServer.register("backend");

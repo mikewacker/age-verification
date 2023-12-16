@@ -18,7 +18,7 @@ public final class TestUndertowServerTest {
 
     @RegisterExtension
     private static final TestServer<?> server =
-            TestUndertowServer.register("test", () -> TestUndertowServerTest::handleApiRequest, "/api/");
+            TestUndertowServer.register("test", "/api/", () -> TestUndertowServerTest::handleApiRequest);
 
     @Test
     public void exchange_HandledPath() throws IOException {

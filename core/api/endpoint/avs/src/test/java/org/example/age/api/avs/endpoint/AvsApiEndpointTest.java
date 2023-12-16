@@ -21,7 +21,7 @@ public final class AvsApiEndpointTest {
 
     @RegisterExtension
     private static final TestServer<?> avsServer =
-            TestUndertowServer.register("avs", StubAvsComponent::createApiHandler, "/api/");
+            TestUndertowServer.register("avs", "/api/", StubAvsComponent::createApiHandler);
 
     @Test
     public void verificationState() throws IOException {
@@ -59,13 +59,5 @@ public final class AvsApiEndpointTest {
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .execute();
         assertThat(certificateStatusCode).isEqualTo(200);
-    }
-
-    @Test
-    public void error_BadPath() throws IOException {
-        int statusCode = TestClient.requestBuilder()
-                .get(avsServer.url("/api/does-not-exist"))
-                .execute();
-        assertThat(statusCode).isEqualTo(404);
     }
 }

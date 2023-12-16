@@ -1,9 +1,10 @@
 package org.example.age.api.site.endpoint;
 
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.example.age.api.site.SiteApi;
 import org.example.age.module.extractor.common.AccountIdExtractor;
 import org.example.age.module.extractor.common.AuthMatchDataExtractor;
@@ -21,7 +22,11 @@ import org.example.age.module.extractor.common.AuthMatchDataExtractor;
 @Module
 public interface SiteApiModule {
 
-    @Binds
+    @Provides
     @Named("api")
-    HttpHandler bindApiHandler(SiteApiEndpointHandler impl);
+    @Singleton
+    static HttpHandler provideApiHandler(
+            SiteApi api, AccountIdExtractor accountIdExtractor, AuthMatchDataExtractor authDataExtractor) {
+        return SiteApiEndpoint.createHandler(api, accountIdExtractor, authDataExtractor);
+    }
 }

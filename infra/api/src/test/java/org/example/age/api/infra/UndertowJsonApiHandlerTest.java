@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class UndertowJsonApiHandlerTest {
 
     @RegisterExtension
-    private static final TestServer<?> server = TestUndertowServer.register("test", AddHandler::create);
+    private static final TestServer<?> server = TestUndertowServer.register("test", "/api/", AddService::createHandler);
 
     @Test
     public void exchange_StatusCode() throws IOException {
@@ -25,7 +25,7 @@ public final class UndertowJsonApiHandlerTest {
 
     @Test
     public void exchange_JsonValue() throws IOException {
-        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", 2);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/api/add?operand=2", 2);
         assertThat(maybeSum).hasValue(4);
     }
 
@@ -37,25 +37,25 @@ public final class UndertowJsonApiHandlerTest {
 
     @Test
     public void error_InvalidBody() throws IOException {
-        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", "a");
+        HttpOptional<Integer> maybeSum = executeAddRequest("/api/add?operand=2", "a");
         assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_MissingParam() throws IOException {
-        HttpOptional<Integer> maybeSum = executeAddRequest("/add", 2);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/api/add", 2);
         assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_InvalidParam() throws IOException {
-        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=a", 2);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/api/add?operand=a", 2);
         assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
     public void error_UncaughtExceptionInHandler() throws IOException {
-        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=200", 300);
+        HttpOptional<Integer> maybeSum = executeAddRequest("/api/add?operand=200", 300);
         assertThat(maybeSum).isEmptyWithErrorCode(500);
     }
 
@@ -67,10 +67,10 @@ public final class UndertowJsonApiHandlerTest {
     }
 
     private static int executeHealthRequest() throws IOException {
-        return TestClient.requestBuilder().get(server.url("/health")).execute();
+        return TestClient.requestBuilder().get(server.url("/api/health")).execute();
     }
 
     private static int executeRequestAtBadPath() throws IOException {
-        return TestClient.requestBuilder().get(server.url("/dne")).execute();
+        return TestClient.requestBuilder().get(server.url("/api/dne")).execute();
     }
 }
