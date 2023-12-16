@@ -16,7 +16,7 @@ public final class TestAvsConfigTest {
         AvsConfig avsConfig = avsConfigProvider.get();
         assertThat(avsConfig).isNotNull();
     }
-    
+
     /** Dagger component that provides a {@link RefreshableAvsConfigProvider}. */
     @Component(modules = TestAvsConfigModule.class)
     @Singleton
