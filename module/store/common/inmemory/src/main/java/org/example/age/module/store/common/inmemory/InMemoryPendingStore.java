@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.util.Optional;
 import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.data.json.JsonValues;
-import org.example.age.module.store.common.PendingStore;
+import org.example.age.service.store.common.PendingStore;
 
 /**
  * In-memory {@link PendingStore}.

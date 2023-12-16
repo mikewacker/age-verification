@@ -9,7 +9,7 @@ import org.example.age.module.key.common.test.TestKeyModule;
 import org.example.age.module.location.common.test.TestAvsLocationModule;
 import org.example.age.module.store.common.inmemory.InMemoryPendingStoreFactoryModule;
 import org.example.age.module.store.common.inmemory.InMemoryVerificationStoreModule;
-import org.example.age.service.site.endpoint.SiteServiceModule;
+import org.example.age.service.endpoint.site.SiteServiceModule;
 
 /** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */
 @Module(

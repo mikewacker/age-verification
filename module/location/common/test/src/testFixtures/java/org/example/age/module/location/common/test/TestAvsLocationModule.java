@@ -2,7 +2,7 @@ package org.example.age.module.location.common.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.module.location.common.RefreshableAvsLocationProvider;
+import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
 import org.example.age.testing.server.TestServer;
 
 /**

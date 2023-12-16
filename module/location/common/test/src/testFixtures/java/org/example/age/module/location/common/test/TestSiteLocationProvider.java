@@ -3,8 +3,8 @@ package org.example.age.module.location.common.test;
 import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.module.location.common.RefreshableSiteLocationProvider;
-import org.example.age.module.location.common.SiteLocation;
+import org.example.age.service.location.common.SiteLocation;
+import org.example.age.service.module.location.common.RefreshableSiteLocationProvider;
 import org.example.age.testing.server.TestServer;
 
 @Singleton

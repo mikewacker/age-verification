@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.module.store.common.PendingStore;
-import org.example.age.module.store.common.PendingStoreFactory;
+import org.example.age.service.store.common.PendingStore;
+import org.example.age.service.store.common.PendingStoreFactory;
 
 /** Factory that creates {@link InMemoryPendingStore}'s. */
 @Singleton
