@@ -13,8 +13,8 @@ import org.example.age.service.store.common.VerificationStore;
  * <p>It populates the store with accounts for {@code "John Smith"} (parent) and {@code "Billy Smith"} (child).</p>
  */
 @Module(includes = InMemoryVerificationStoreModule.class)
-public interface TestVerificationStoreModule {
+public interface TestAvsVerificationStoreModule {
 
     @Binds
-    VerificationStoreInitializer bindVerificationStoreInitializer(TestVerificationStoreInitializer impl);
+    VerificationStoreInitializer bindVerificationStoreInitializer(TestAvsVerificationStoreInitializer impl);
 }

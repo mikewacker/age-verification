@@ -11,10 +11,10 @@ import org.example.age.module.store.common.inmemory.VerificationStoreInitializer
 import org.example.age.service.store.common.VerificationStore;
 
 @Singleton
-final class TestVerificationStoreInitializer implements VerificationStoreInitializer {
+final class TestAvsVerificationStoreInitializer implements VerificationStoreInitializer {
 
     @Inject
-    public TestVerificationStoreInitializer() {}
+    public TestAvsVerificationStoreInitializer() {}
 
     @Override
     public void initialize(VerificationStore store) {
