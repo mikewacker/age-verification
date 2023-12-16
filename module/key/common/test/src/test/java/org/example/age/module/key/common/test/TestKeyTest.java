@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import javax.inject.Singleton;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.module.key.common.RefreshableKeyProvider;
+import org.example.age.service.module.key.common.RefreshableKeyProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

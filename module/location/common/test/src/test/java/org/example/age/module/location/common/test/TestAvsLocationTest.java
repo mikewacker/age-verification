@@ -6,7 +6,7 @@ import dagger.Component;
 import java.io.IOException;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
-import org.example.age.module.location.common.RefreshableAvsLocationProvider;
+import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.mock.MockServer;
 import org.junit.jupiter.api.BeforeAll;

@@ -11,7 +11,7 @@ import org.example.age.api.def.common.VerificationState;
 import org.example.age.api.def.common.VerificationStatus;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.module.store.common.VerificationStore;
+import org.example.age.service.store.common.VerificationStore;
 
 /** In-memory {@link VerificationStore}. */
 @Singleton

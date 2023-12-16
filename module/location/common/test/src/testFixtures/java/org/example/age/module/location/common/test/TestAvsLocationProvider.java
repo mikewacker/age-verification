@@ -2,8 +2,8 @@ package org.example.age.module.location.common.test;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.module.location.common.AvsLocation;
-import org.example.age.module.location.common.RefreshableAvsLocationProvider;
+import org.example.age.service.location.common.AvsLocation;
+import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
 import org.example.age.testing.server.TestServer;
 
 @Singleton
