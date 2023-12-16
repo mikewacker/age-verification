@@ -11,7 +11,7 @@ import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.service.infra.client.RequestDispatcher;
-import org.example.age.service.location.common.SiteLocation;
+import org.example.age.service.location.common.Location;
 import org.example.age.service.module.location.common.RefreshableSiteLocationProvider;
 import org.example.age.service.verification.internal.avs.FakeAvsVerificationFactory;
 
@@ -84,8 +84,8 @@ final class FakeAvsService implements AvsApi {
 
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
     private String getAgeCertificateUrl(String siteId) {
-        SiteLocation siteLocation = siteLocationProvider.get(siteId);
-        return siteLocation.ageCertificateUrl();
+        Location siteLocation = siteLocationProvider.getSite(siteId);
+        return siteLocation.apiUrl("/age-certificate");
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */

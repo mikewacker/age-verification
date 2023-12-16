@@ -62,17 +62,16 @@ public abstract class TestServer<T>
     }
 
     /** Gets the URL at the specified path. */
-    @SuppressWarnings("FormatStringAnnotation")
     public final String url(String path) {
-        return url(path, new Object[0]);
+        path = path.replaceFirst("^/", "");
+        return String.format("%s/%s", rootUrl(), path);
     }
 
     /** Gets the URL at the specified path. */
     @FormatMethod
     public final String url(String pathFormat, Object... args) {
-        pathFormat = pathFormat.replaceFirst("^/", "");
         String path = String.format(pathFormat, args);
-        return String.format("%s/%s", rootUrl(), path);
+        return url(path);
     }
 
     /** Gets the underlying server. */

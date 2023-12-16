@@ -1,14 +1,14 @@
 package org.example.age.service.module.location.common;
 
-import org.example.age.service.location.common.AvsLocation;
+import org.example.age.service.location.common.Location;
 
 /**
- * Provides an {@link AvsLocation}.
+ * Provides a {@link Location} for the age verification service.
  *
  * <p>The location provided may be refreshed.</p>
  */
 @FunctionalInterface
 public interface RefreshableAvsLocationProvider {
 
-    AvsLocation get();
+    Location getAvs();
 }

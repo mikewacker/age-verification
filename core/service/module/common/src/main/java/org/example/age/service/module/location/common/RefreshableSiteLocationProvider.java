@@ -1,10 +1,10 @@
 package org.example.age.service.module.location.common;
 
 import java.util.NoSuchElementException;
-import org.example.age.service.location.common.SiteLocation;
+import org.example.age.service.location.common.Location;
 
 /**
- * Provides a {@link SiteLocation} for each registered site.
+ * Provides a {@link Location} for each registered site.
  *
  * <p>The locations provided may be refreshed.</p>
  *
@@ -14,5 +14,5 @@ import org.example.age.service.location.common.SiteLocation;
 @FunctionalInterface
 public interface RefreshableSiteLocationProvider {
 
-    SiteLocation get(String siteId);
+    Location getSite(String siteId);
 }

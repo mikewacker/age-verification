@@ -13,7 +13,7 @@ import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.service.infra.client.RequestDispatcher;
-import org.example.age.service.location.common.AvsLocation;
+import org.example.age.service.location.common.Location;
 import org.example.age.service.module.config.site.RefreshableSiteConfigProvider;
 import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
 import org.example.age.service.verification.internal.site.SiteVerificationManager;
@@ -62,9 +62,9 @@ final class SiteService implements SiteApi {
 
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
     private String getVerificationSessionUrl() {
-        AvsLocation avsLocation = avsLocationProvider.get();
+        Location avsLocation = avsLocationProvider.getAvs();
         String siteId = siteConfigProvider.get().id();
-        return avsLocation.verificationSessionUrl(siteId);
+        return avsLocation.apiUrl("/verification-session?site-id=%s", siteId);
     }
 
     /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
