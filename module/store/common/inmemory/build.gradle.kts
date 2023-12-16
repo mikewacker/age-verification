@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":core:service:types:common"))

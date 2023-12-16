@@ -36,6 +36,7 @@ include(
         "module:extractor:common:builtin",
         "module:extractor:common:test",
         "module:store:common:inmemory",
+        "module:store:avs:test",
         "module:key:common:test",
         "module:config:site:test",
         "module:config:avs:test",

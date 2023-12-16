@@ -17,7 +17,9 @@ final class InMemoryVerificationStore implements VerificationStore {
     private final BiKeyMap<String, SecureId, VerificationState> store = BiKeyMap.create();
 
     @Inject
-    public InMemoryVerificationStore() {}
+    public InMemoryVerificationStore(Optional<VerificationStoreInitializer> maybeInitializer) {
+        maybeInitializer.ifPresent(initializer -> initializer.initialize(this));
+    }
 
     @Override
     public VerificationState load(String accountId) {
