@@ -4,11 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.undertow.server.HttpHandler;
 import java.io.IOException;
-import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -18,20 +15,11 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class UndertowJsonApiHandlerTest {
 
     @RegisterExtension
-    private static final TestServer<?> okServer =
-            TestUndertowServer.register("ok", UndertowJsonApiHandlerTest::createOkHandler);
-
-    @RegisterExtension
-    private static final TestServer<?> addServer =
-            TestUndertowServer.register("add", UndertowJsonApiHandlerTest::createAddHandler);
-
-    @RegisterExtension
-    private static final TestServer<?> notFoundServer =
-            TestUndertowServer.register("notFound", UndertowJsonApiHandler::notFound);
+    private static final TestServer<?> server = TestUndertowServer.register("test", AddHandler::create);
 
     @Test
     public void exchange_StatusCode() throws IOException {
-        int statusCode = executeOkRequest();
+        int statusCode = executeHealthRequest();
         assertThat(statusCode).isEqualTo(200);
     }
 
@@ -43,8 +31,14 @@ public final class UndertowJsonApiHandlerTest {
 
     @Test
     public void exchange_NotFound() throws IOException {
-        int statusCode = executeNotFoundRequest();
+        int statusCode = executeRequestAtBadPath();
         assertThat(statusCode).isEqualTo(404);
+    }
+
+    @Test
+    public void error_InvalidBody() throws IOException {
+        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", "a");
+        assertThat(maybeSum).isEmptyWithErrorCode(400);
     }
 
     @Test
@@ -60,59 +54,23 @@ public final class UndertowJsonApiHandlerTest {
     }
 
     @Test
-    public void error_InvalidBody() throws IOException {
-        HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=2", "a");
-        assertThat(maybeSum).isEmptyWithErrorCode(400);
-    }
-
-    @Test
-    public void error_UncaughtExceptionInCallback() throws IOException {
+    public void error_UncaughtExceptionInHandler() throws IOException {
         HttpOptional<Integer> maybeSum = executeAddRequest("/add?operand=200", 300);
         assertThat(maybeSum).isEmptyWithErrorCode(500);
     }
 
-    private static int executeOkRequest() throws IOException {
-        return TestClient.requestBuilder().get(okServer.rootUrl()).execute();
-    }
-
     private static HttpOptional<Integer> executeAddRequest(String path, Object bodyOperand) throws IOException {
         return TestClient.requestBuilder(new TypeReference<Integer>() {})
-                .post(addServer.url(path))
+                .post(server.url(path))
                 .body(bodyOperand)
                 .execute();
     }
 
-    private static int executeNotFoundRequest() throws IOException {
-        return TestClient.requestBuilder().get(notFoundServer.rootUrl()).execute();
+    private static int executeHealthRequest() throws IOException {
+        return TestClient.requestBuilder().get(server.url("/health")).execute();
     }
 
-    /** Creates an {@link HttpHandler} that sends a 200 status code. */
-    private static HttpHandler createOkHandler() {
-        return UndertowJsonApiHandler.builder().build(UndertowJsonApiHandlerTest::ok);
-    }
-
-    private static void ok(Sender.StatusCode sender, Dispatcher dispatcher) {
-        sender.sendOk();
-    }
-
-    /**
-     * Creates an {@link HttpHandler} that adds two numbers: one in the request body, and one in a query parameter.
-     *
-     * <p>The handler throw an exception if the sum is 500.</p>
-     */
-    private static HttpHandler createAddHandler() {
-        return UndertowJsonApiHandler.builder(new TypeReference<Integer>() {})
-                .addBody(new TypeReference<Integer>() {})
-                .addQueryParam("operand", new TypeReference<Integer>() {})
-                .build(UndertowJsonApiHandlerTest::add);
-    }
-
-    private static void add(Sender.Value<Integer> sender, int operand1, int operand2, Dispatcher dispatcher) {
-        int sum = operand1 + operand2;
-        if (sum == 500) {
-            throw new RuntimeException();
-        }
-
-        sender.sendValue(sum);
+    private static int executeRequestAtBadPath() throws IOException {
+        return TestClient.requestBuilder().get(server.url("/dne")).execute();
     }
 }

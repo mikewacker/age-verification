@@ -1,6 +1,7 @@
 plugins {
     id("org.example.age.java-conventions")
     `java-library`
+    `java-test-fixtures`
 }
 
 dependencies {
@@ -16,18 +17,26 @@ dependencies {
     implementation(project(":infra:client"))
     implementation("com.squareup.okhttp3:okhttp")
 
-    // test
-    testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    // test fixtures
+    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":base:data:json"))
+    testFixturesApi("io.undertow:undertow-core")
+
+    testFixturesImplementation(project(":base:data:json"))
+    testFixturesImplementation(project(":base:api:base"))
+    testFixturesImplementation(project(":infra:api"))
+    testFixturesImplementation(project(":infra:client"))
+    testFixturesImplementation(testFixtures(project(":testing")))
+    testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
+    testFixturesImplementation("com.google.dagger:dagger")
+    testFixturesImplementation("com.squareup.okhttp3:okhttp")
+    testFixturesImplementation("javax.inject:javax.inject")
+
+    // test
     testImplementation(project(":base:api:base"))
-    testImplementation(project(":infra:api"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
-    testImplementation("com.google.dagger:dagger")
     testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("com.squareup.okhttp3:okhttp")
     testImplementation("io.undertow:undertow-core")
-    testImplementation("javax.inject:javax.inject")
 }
