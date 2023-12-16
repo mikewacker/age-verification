@@ -1,7 +1,7 @@
 package org.example.age.module.extractor.common.builtin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.api.common.AuthMatchData;
+import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 

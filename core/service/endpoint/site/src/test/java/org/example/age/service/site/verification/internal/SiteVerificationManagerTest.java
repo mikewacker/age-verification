@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.api.common.VerificationState;
-import org.example.age.api.common.VerificationStatus;
+import org.example.age.api.def.common.VerificationState;
+import org.example.age.api.def.common.VerificationStatus;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;

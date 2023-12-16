@@ -1,7 +1,7 @@
 package org.example.age.service.avs.verification.internal;
 
 import java.time.Duration;
-import org.example.age.api.common.AuthMatchData;
+import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
