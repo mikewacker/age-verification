@@ -88,7 +88,7 @@ final class UndertowJsonExtractors {
             Extractor<HttpServerExchange, String> textExtractor = new QueryParamTextExtractor(name);
             HttpOptional<String> maybeTextValue = textExtractor.tryExtract(exchange);
             if (maybeTextValue.isEmpty()) {
-                return HttpOptional.empty(maybeTextValue.statusCode());
+                return maybeTextValue.convertEmpty();
             }
             String textValue = maybeTextValue.get();
 

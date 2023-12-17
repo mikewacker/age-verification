@@ -50,6 +50,16 @@ public final class HttpOptional<V> {
         return statusCode;
     }
 
+    /** Converts an empty {@link HttpOptional} to a different type. */
+    @SuppressWarnings("unchecked")
+    public <U> HttpOptional<U> convertEmpty() {
+        if (value != null) {
+            throw new IllegalStateException("value is present");
+        }
+
+        return (HttpOptional<U>) this;
+    }
+
     /** Converts this {@link HttpOptional} to an {@link Optional}. */
     public Optional<V> toOptional() {
         return isPresent() ? Optional.of(value) : Optional.empty();

@@ -46,6 +46,14 @@ public final class HttpOptionalTest {
     }
 
     @Test
+    public void convertEmpty() {
+        HttpOptional<String> maybeText = HttpOptional.empty(400);
+        HttpOptional<Integer> maybeNum = maybeText.convertEmpty();
+        assertThat(maybeNum.isEmpty()).isTrue();
+        assertThat(maybeNum.statusCode()).isEqualTo(400);
+    }
+
+    @Test
     public void equals() {
         new EqualsTester()
                 .addEqualityGroup(HttpOptional.of("a"), HttpOptional.of("a"))
@@ -65,5 +73,13 @@ public final class HttpOptionalTest {
     public void error_Get_Empty() {
         HttpOptional<String> maybeValue = HttpOptional.empty(500);
         assertThatThrownBy(maybeValue::get).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void error_ConvertEmpty_Present() {
+        HttpOptional<String> maybeValue = HttpOptional.of("a");
+        assertThatThrownBy(() -> maybeValue.<Integer>convertEmpty())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("value is present");
     }
 }
