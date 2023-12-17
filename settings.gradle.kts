@@ -32,6 +32,7 @@ include(
         "core:service:module:avs",
         "core:service:endpoint:common",
         "core:service:endpoint:site",
+        "core:service:endpoint:avs",
 
         "module:extractor:common:builtin",
         "module:extractor:common:test",
