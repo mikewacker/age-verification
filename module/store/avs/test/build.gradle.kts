@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     // test fixtures
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testFixturesApi(project(":core:service:types:common"))
     testFixturesApi("com.google.dagger:dagger")
