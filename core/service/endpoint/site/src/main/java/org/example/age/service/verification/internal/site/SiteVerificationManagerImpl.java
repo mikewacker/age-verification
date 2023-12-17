@@ -27,9 +27,6 @@ import org.example.age.service.store.common.VerificationStore;
 @Singleton
 final class SiteVerificationManagerImpl implements SiteVerificationManager {
 
-    private static final String PENDING_VERIFICATION_STORE_NAME = "verification";
-    private static final String PSEUDONYM_KEY_NAME = "local";
-
     private final VerificationStore verificationStore;
     private final PendingStoreFactory pendingStoreFactory;
     private final AgeCertificateVerifier certificateVerifier;
@@ -74,10 +71,10 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
         }
 
         AgeCertificate certificate = signedCertificate.ageCertificate();
-        Optional<Verification> maybePendingVerification =
+        HttpOptional<Verification> maybePendingVerification =
                 tryRemovePendingVerification(certificate.verificationRequest().id());
         if (maybePendingVerification.isEmpty()) {
-            return 404;
+            return maybePendingVerification.statusCode();
         }
         Verification pendingVerification = maybePendingVerification.get();
 
@@ -89,18 +86,8 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
             return authStatusCode;
         }
 
-        VerifiedUser localUser = userLocalizer.localize(certificate.verifiedUser(), PSEUDONYM_KEY_NAME);
+        VerifiedUser localUser = userLocalizer.localize(certificate.verifiedUser(), "local");
         return trySaveUser(pendingVerification.accountId(), localUser);
-    }
-
-    /** Puts a pending verification. */
-    private void putPendingVerification(Verification pendingVerification, Dispatcher dispatcher) {
-        PendingStore<Verification> pendingVerifications =
-                pendingStoreFactory.getOrCreate(PENDING_VERIFICATION_STORE_NAME, new TypeReference<>() {});
-        VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
-        SecureId requestId = request.id();
-        long expiration = request.expiration();
-        pendingVerifications.put(requestId.toString(), pendingVerification, expiration, dispatcher.getIoThread());
     }
 
     /** Verifies a {@link SignedAgeCertificate}, returning a status code. */
@@ -122,16 +109,9 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
         return 200;
     }
 
-    /** Removes and returns the pending verification for the request ID, if present. */
-    private Optional<Verification> tryRemovePendingVerification(SecureId requestId) {
-        PendingStore<Verification> pendingVerifications =
-                pendingStoreFactory.getOrCreate(PENDING_VERIFICATION_STORE_NAME, new TypeReference<>() {});
-        return pendingVerifications.tryRemove(requestId.toString());
-    }
-
-    /** Runs an authentication check, returning a status code. */
-    private int authenticate(AuthMatchData authData, AesGcmEncryptionPackage remoteAuthToken, Aes256Key key) {
-        HttpOptional<AuthMatchData> maybeRemoteAuthData = authDataEncryptor.tryDecrypt(remoteAuthToken, key);
+    /** Runs an authentication check, returning a 403 error if the check fails. */
+    private int authenticate(AuthMatchData authData, AesGcmEncryptionPackage remoteAuthToken, Aes256Key authKey) {
+        HttpOptional<AuthMatchData> maybeRemoteAuthData = authDataEncryptor.tryDecrypt(remoteAuthToken, authKey);
         if (maybeRemoteAuthData.isEmpty()) {
             return maybeRemoteAuthData.statusCode();
         }
@@ -140,7 +120,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
         return authData.match(remoteAuthData) ? 200 : 403;
     }
 
-    /** Saves a {@link VerifiedUser} for the account, returning a status code. */
+    /** Saves a {@link VerifiedUser} for the account, returning a 409 error if a duplicate verification occurs. */
     private int trySaveUser(String accountId, VerifiedUser user) {
         long now = System.currentTimeMillis() / 1000;
         long expiresIn = siteConfigProvider.get().verifiedAccountExpiresIn();
@@ -148,6 +128,26 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
         VerificationState state = VerificationState.verified(user, expiration);
         Optional<String> maybeConflictingAccountId = verificationStore.trySave(accountId, state);
         return maybeConflictingAccountId.isEmpty() ? 200 : 409;
+    }
+
+    /** Puts a pending verification. */
+    private void putPendingVerification(Verification pendingVerification, Dispatcher dispatcher) {
+        PendingStore<Verification> pendingVerifications = getPendingVerifications();
+        VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
+        pendingVerifications.put(
+                request.id().toString(), pendingVerification, request.expiration(), dispatcher.getIoThread());
+    }
+
+    /** Removes and returns the pending verification for the request ID, or returns a 404 error. */
+    private HttpOptional<Verification> tryRemovePendingVerification(SecureId requestId) {
+        PendingStore<Verification> pendingVerifications = getPendingVerifications();
+        Optional<Verification> maybePendingVerification = pendingVerifications.tryRemove(requestId.toString());
+        return HttpOptional.fromOptional(maybePendingVerification, 404);
+    }
+
+    /** Gets the store for pending verifications. */
+    private PendingStore<Verification> getPendingVerifications() {
+        return pendingStoreFactory.getOrCreate("verification", new TypeReference<>() {});
     }
 
     /** Pending verification. */
