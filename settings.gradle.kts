@@ -9,7 +9,7 @@ include(
         "base:data:json",
         "base:data:crypto",
 
-        // infra (depends on Undertow, OkHttp)
+        // infra + testing (depends on Undertow, OkHttp)
         "infra:api",
         "infra:service",
         "infra:client",
@@ -33,6 +33,7 @@ include(
         "core:service:endpoint:common",
         "core:service:endpoint:site",
         "core:service:endpoint:avs",
+        "core:integration-test",
 
         "module:extractor:common:builtin",
         "module:extractor:common:test",

@@ -37,7 +37,6 @@ dependencies {
 
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":core:api:types:avs"))
-    testFixturesImplementation(project(":core:api:module:common"))
     testFixturesImplementation(project(":core:api:endpoint:site")) // Dagger component
     testFixturesImplementation(project(":core:api:endpoint:avs"))
     testFixturesImplementation(project(":core:service:types:common"))
@@ -60,8 +59,8 @@ dependencies {
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types:common"))
     testImplementation(project(":module:extractor:common:builtin"))
+    testImplementation(testFixtures(project(":core:integration-test")))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("io.undertow:undertow-core")
 }
