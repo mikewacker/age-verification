@@ -1,4 +1,4 @@
-package org.example.age.service.module.config;
+package org.example.age.service.module.config.avs;
 
 import java.util.Optional;
 import org.example.age.service.config.avs.RegisteredSiteConfig;

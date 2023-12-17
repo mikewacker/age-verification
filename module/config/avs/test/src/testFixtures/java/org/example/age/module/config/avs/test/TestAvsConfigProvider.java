@@ -4,7 +4,7 @@ import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.service.config.avs.AvsConfig;
-import org.example.age.service.module.config.RefreshableAvsConfigProvider;
+import org.example.age.service.module.config.avs.RefreshableAvsConfigProvider;
 
 @Singleton
 final class TestAvsConfigProvider implements RefreshableAvsConfigProvider {
