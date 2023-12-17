@@ -8,17 +8,22 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
+    api(project(":core:api:module:common"))
     api(project(":core:service:types:common"))
     api(project(":core:service:module:common"))
     api(project(":core:service:module:avs"))
     api("com.google.dagger:dagger")
+    api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
 
     implementation(project(":base:data:crypto"))
     implementation(project(":core:data"))
     implementation(project(":base:api:base"))
     implementation(project(":core:api:types:common"))
+    implementation(project(":core:api:types:avs"))
+    implementation(project(":core:api:endpoint:avs"))
     implementation(project(":core:service:types:avs"))
+    implementation(project(":infra:service"))
     implementation(project(":core:service:endpoint:common"))
     implementation("com.fasterxml.jackson.core:jackson-core")
 
@@ -27,15 +32,26 @@ dependencies {
 
     testFixturesApi(project(":core:data"))
     testFixturesApi(project(":core:api:types:common"))
+    testFixturesApi("io.undertow:undertow-core")
 
+    testFixturesImplementation(project(":base:api:base"))
+    testFixturesImplementation(project(":core:api:types:site"))
+    testFixturesImplementation(project(":core:api:endpoint:site"))
+    testFixturesImplementation(project(":core:api:endpoint:avs")) // Dagger component
     testFixturesImplementation(project(":core:service:types:common"))
+    testFixturesImplementation(project(":core:service:module:common"))
+    testFixturesImplementation(project(":infra:service"))
     testFixturesImplementation(project(":core:service:endpoint:common"))
+    testFixturesImplementation(project(":module:extractor:common:builtin"))
+    testFixturesImplementation(testFixtures(project(":module:extractor:common:test")))
     testFixturesImplementation(project(":module:store:common:inmemory"))
     testFixturesImplementation(testFixtures(project(":module:store:avs:test")))
     testFixturesImplementation(testFixtures(project(":module:key:common:test")))
     testFixturesImplementation(testFixtures(project(":module:config:avs:test")))
+    testFixturesImplementation(testFixtures(project(":module:location:common:test")))
     testFixturesImplementation("com.google.dagger:dagger")
     testFixturesImplementation("javax.inject:javax.inject")
+    testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
 
     // test
     testImplementation(project(":base:data:crypto"))
@@ -43,5 +59,8 @@ dependencies {
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types:common"))
     testImplementation(project(":module:extractor:common:builtin"))
+    testImplementation(testFixtures(project(":core:integration-test")))
     testImplementation(testFixtures(project(":base:api:base")))
+    testImplementation(testFixtures(project(":testing")))
+    testImplementation("io.undertow:undertow-core")
 }

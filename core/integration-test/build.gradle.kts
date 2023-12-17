@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    // test fixtures
     testFixturesImplementation(project(":base:data:crypto"))
     testFixturesImplementation(project(":core:data"))
     testFixturesImplementation(project(":base:api:base"))
@@ -12,4 +13,10 @@ dependencies {
     testFixturesImplementation(testFixtures(project(":testing")))
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
     testFixturesImplementation("org.assertj:assertj-core")
+
+    // test
+    testImplementation(testFixtures(project(":core:service:endpoint:site")))
+    testImplementation(testFixtures(project(":core:service:endpoint:avs")))
+    testImplementation(testFixtures(project(":testing")))
+    testImplementation("io.undertow:undertow-core")
 }
