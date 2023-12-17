@@ -9,6 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":core:api:module:common"))
+    api(project(":core:service:types:common"))
     api(project(":core:service:module:common"))
     api(project(":core:service:module:site"))
     api("com.google.dagger:dagger")
@@ -21,7 +22,6 @@ dependencies {
     implementation(project(":core:api:types:common"))
     implementation(project(":core:api:types:site"))
     implementation(project(":core:api:endpoint:site"))
-    implementation(project(":core:service:types:common"))
     implementation(project(":core:service:types:site"))
     implementation(project(":infra:service"))
     implementation(project(":core:service:endpoint:common"))

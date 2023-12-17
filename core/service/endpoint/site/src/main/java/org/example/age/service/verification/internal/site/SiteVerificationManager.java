@@ -12,10 +12,10 @@ public interface SiteVerificationManager {
     /** Gets the {@link VerificationState} for an account. */
     VerificationState getVerificationState(String accountId);
 
-    /** Called when a {@link VerificationSession} is received for an account, returning a status code. */
+    /** Called when a {@link VerificationSession} is received for an account. */
     int onVerificationSessionReceived(
             String accountId, AuthMatchData authData, VerificationSession session, Dispatcher dispatcher);
 
-    /** Called when a {@link SignedAgeCertificate} is received, returning a status code. */
-    int onSignedAgeCertificateReceived(SignedAgeCertificate signedCertificate);
+    /** Called when a {@link SignedAgeCertificate} is received. */
+    int onAgeCertificateReceived(SignedAgeCertificate signedCertificate);
 }

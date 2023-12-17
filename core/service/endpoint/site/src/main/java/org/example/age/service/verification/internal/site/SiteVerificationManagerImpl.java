@@ -67,7 +67,7 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     }
 
     @Override
-    public int onSignedAgeCertificateReceived(SignedAgeCertificate signedCertificate) {
+    public int onAgeCertificateReceived(SignedAgeCertificate signedCertificate) {
         int verifyStatusCode = verifySignedAgeCertificate(signedCertificate);
         if (verifyStatusCode != 200) {
             return verifyStatusCode;
