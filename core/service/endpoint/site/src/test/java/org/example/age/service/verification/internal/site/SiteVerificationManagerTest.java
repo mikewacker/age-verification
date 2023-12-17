@@ -10,6 +10,7 @@ import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
+import org.example.age.data.user.VerifiedUser;
 import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
 import org.example.age.service.verification.internal.avs.FakeAvsVerificationFactory;
 import org.example.age.service.verification.internal.avs.fake.FakeAvsVerificationComponent;
@@ -26,7 +27,7 @@ public final class SiteVerificationManagerTest {
     private static FakeAvsVerificationFactory fakeAvsVerificationFactory;
 
     @BeforeEach
-    public void createSiteVerificationManagerEtAl() {
+    public void createSiteVerificationManager() {
         siteVerificationManager = TestSiteVerificationComponent.createSiteVerificationManager();
     }
 
@@ -37,6 +38,10 @@ public final class SiteVerificationManagerTest {
 
     @Test
     public void verify() {
+        VerificationState avsState = fakeAvsVerificationFactory.getVerificationState("John Smith");
+        assertThat(avsState.status()).isEqualTo(VerificationStatus.VERIFIED);
+        VerifiedUser avsUser = avsState.verifiedUser();
+
         VerificationSession session = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode = siteVerificationManager.onVerificationSessionReceived(
                 "publius", UserAgentAuthMatchData.of("agent"), session, StubDispatcher.get());
@@ -47,13 +52,13 @@ public final class SiteVerificationManagerTest {
         int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
         assertThat(certificateStatusCode).isEqualTo(200);
 
-        VerificationState state = siteVerificationManager.getVerificationState("publius");
-        assertThat(state.status()).isEqualTo(VerificationStatus.VERIFIED);
-        assertThat(state.verifiedUser())
-                .isNotEqualTo(signedCertificate.ageCertificate().verifiedUser());
+        VerificationState siteState = siteVerificationManager.getVerificationState("publius");
+        assertThat(siteState.status()).isEqualTo(VerificationStatus.VERIFIED);
+        VerifiedUser siteUser = siteState.verifiedUser();
+        assertThat(siteUser.pseudonym()).isNotEqualTo(avsUser.pseudonym());
         long now = System.currentTimeMillis() / 1000;
         long expectedExpiration = now + Duration.ofDays(30).toSeconds();
-        assertThat(state.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
+        assertThat(siteState.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
     }
 
     @Test
