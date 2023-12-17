@@ -6,7 +6,7 @@ import dagger.Component;
 import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.service.config.avs.RegisteredSiteConfig;
-import org.example.age.service.module.config.RefreshableRegisteredSiteConfigProvider;
+import org.example.age.service.module.config.avs.RefreshableRegisteredSiteConfigProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
