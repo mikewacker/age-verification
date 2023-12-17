@@ -56,7 +56,7 @@ final class SiteService implements SiteApi {
     @Override
     public void processAgeCertificate(
             Sender.StatusCode sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
-        int statusCode = verificationManager.onSignedAgeCertificateReceived(signedCertificate);
+        int statusCode = verificationManager.onAgeCertificateReceived(signedCertificate);
         sender.send(statusCode);
     }
 

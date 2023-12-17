@@ -4,7 +4,7 @@ import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.Sender;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.api.def.common.VerificationState;
-import org.example.age.data.certificate.AgeCertificate;
+import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
@@ -12,7 +12,7 @@ import org.example.age.data.crypto.SecureId;
 /** Asynchronous API for the age verification service. */
 public interface AvsApi {
 
-    /** Gets the {@link VerificationState} for an account. */
+    /** Gets the {@link VerificationState} for a person. */
     void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher)
             throws Exception;
 
@@ -20,11 +20,14 @@ public interface AvsApi {
     void createVerificationSession(Sender.Value<VerificationSession> sender, String siteId, Dispatcher dispatcher)
             throws Exception;
 
-    /** Links a pending {@link VerificationRequest} to an account. */
+    /** Links a pending {@link VerificationRequest} to a person. */
     void linkVerificationRequest(Sender.StatusCode sender, String accountId, SecureId requestId, Dispatcher dispatcher)
             throws Exception;
 
-    /** Sends an {@link AgeCertificate} for the pending {@link VerificationRequest} that is linked to the account. */
+    /**
+     * Sends a {@link SignedAgeCertificate} for a person,
+     * using the pending {@link VerificationRequest} that is linked to that person.
+     */
     void sendAgeCertificate(Sender.StatusCode sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
             throws Exception;
 }

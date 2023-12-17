@@ -14,7 +14,7 @@ public interface SiteApi {
     void getVerificationState(Sender.Value<VerificationState> sender, String accountId, Dispatcher dispatcher)
             throws Exception;
 
-    /** Creates a {@link VerificationRequest} for the account. */
+    /** Creates a {@link VerificationRequest} for an account. */
     void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
             throws Exception;
