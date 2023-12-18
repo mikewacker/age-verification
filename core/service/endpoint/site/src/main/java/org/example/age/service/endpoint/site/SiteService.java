@@ -88,7 +88,8 @@ final class SiteService implements SiteApi {
         }
         VerificationSession session = maybeSession.get();
 
-        int statusCode = verificationManager.onVerificationSessionReceived(accountId, authData, session, dispatcher);
+        int statusCode = verificationManager.onVerificationSessionReceived(
+                accountId, authData, session, dispatcher.getIoThread());
         if (statusCode != 200) {
             sender.sendErrorCode(statusCode);
             return;

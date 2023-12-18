@@ -5,8 +5,8 @@ import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.api.def.common.VerificationStatus;
@@ -62,7 +62,7 @@ final class AvsVerificationManagerImpl implements AvsVerificationManager {
     }
 
     @Override
-    public HttpOptional<VerificationSession> createVerificationSession(String siteId, Dispatcher dispatcher) {
+    public HttpOptional<VerificationSession> createVerificationSession(String siteId, ScheduledExecutor executor) {
         HttpOptional<RegisteredSiteConfig> maybeSiteConfig = tryGetSiteConfig(siteId);
         if (maybeSiteConfig.isEmpty()) {
             return maybeSiteConfig.convertEmpty();
@@ -71,18 +71,18 @@ final class AvsVerificationManagerImpl implements AvsVerificationManager {
 
         VerificationSession session = createVerificationSession(siteId);
         Verification pendingVerification = new Verification(siteConfig, session);
-        putUnlinkedPendingVerification(pendingVerification, dispatcher);
+        putUnlinkedPendingVerification(pendingVerification, executor);
         return HttpOptional.of(session);
     }
 
     @Override
-    public int linkVerificationRequest(String accountId, SecureId requestId, Dispatcher dispatcher) {
+    public int linkVerificationRequest(String accountId, SecureId requestId, ScheduledExecutor executor) {
         HttpOptional<VerifiedUser> maybeUser = tryGetVerifiedUser(accountId);
         if (maybeUser.isEmpty()) {
             return maybeUser.statusCode();
         }
 
-        return tryLinkPendingVerification(accountId, requestId, dispatcher);
+        return tryLinkPendingVerification(accountId, requestId, executor);
     }
 
     @Override
@@ -142,15 +142,14 @@ final class AvsVerificationManagerImpl implements AvsVerificationManager {
     }
 
     /** Puts an unlinked pending verification. */
-    private void putUnlinkedPendingVerification(Verification pendingVerification, Dispatcher dispatcher) {
+    private void putUnlinkedPendingVerification(Verification pendingVerification, ScheduledExecutor executor) {
         PendingStore<Verification> unlinkedPendingVerifications = getUnlinkedPendingVerifications();
         VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
-        unlinkedPendingVerifications.put(
-                request.id().toString(), pendingVerification, request.expiration(), dispatcher.getIoThread());
+        unlinkedPendingVerifications.put(request.id().toString(), pendingVerification, request.expiration(), executor);
     }
 
     /** Links the pending verification for the request ID to an account ID, or returns a 404 error. */
-    private int tryLinkPendingVerification(String accountId, SecureId requestId, Dispatcher dispatcher) {
+    private int tryLinkPendingVerification(String accountId, SecureId requestId, ScheduledExecutor executor) {
         PendingStore<Verification> unlinkedPendingVerifications = getUnlinkedPendingVerifications();
         Optional<Verification> maybePendingVerification = unlinkedPendingVerifications.tryRemove(requestId.toString());
         if (maybePendingVerification.isEmpty()) {
@@ -160,7 +159,7 @@ final class AvsVerificationManagerImpl implements AvsVerificationManager {
 
         PendingStore<Verification> linkedPendingVerifications = getLinkedPendingVerifications();
         VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
-        linkedPendingVerifications.put(accountId, pendingVerification, request.expiration(), dispatcher.getIoThread());
+        linkedPendingVerifications.put(accountId, pendingVerification, request.expiration(), executor);
         return 200;
     }
 

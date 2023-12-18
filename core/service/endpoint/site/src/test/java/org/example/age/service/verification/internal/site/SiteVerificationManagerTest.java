@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import org.assertj.core.data.Offset;
+import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.api.def.common.VerificationStatus;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -15,7 +16,7 @@ import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
 import org.example.age.service.verification.internal.avs.FakeAvsVerificationFactory;
 import org.example.age.service.verification.internal.avs.fake.FakeAvsVerificationComponent;
 import org.example.age.service.verification.internal.site.test.TestSiteVerificationComponent;
-import org.example.age.testing.api.StubDispatcher;
+import org.example.age.testing.api.StubScheduledExecutor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,14 +27,17 @@ public final class SiteVerificationManagerTest {
 
     private static FakeAvsVerificationFactory fakeAvsVerificationFactory;
 
+    private static ScheduledExecutor executor;
+
     @BeforeEach
     public void createSiteVerificationManager() {
         siteVerificationManager = TestSiteVerificationComponent.createSiteVerificationManager();
     }
 
     @BeforeAll
-    public static void createFakeAvsVerificationFactory() {
+    public static void createFakeAvsVerificationFactoryEtAl() {
         fakeAvsVerificationFactory = FakeAvsVerificationComponent.createFakeAvsVerificationFactory();
+        executor = StubScheduledExecutor.get();
     }
 
     @Test
@@ -44,7 +48,7 @@ public final class SiteVerificationManagerTest {
 
         VerificationSession session = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode = siteVerificationManager.onVerificationSessionReceived(
-                "publius", UserAgentAuthMatchData.of("agent"), session, StubDispatcher.get());
+                "publius", UserAgentAuthMatchData.of("agent"), session, executor);
         assertThat(sessionStatusCode).isEqualTo(200);
 
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
@@ -65,7 +69,7 @@ public final class SiteVerificationManagerTest {
     public void verifyFailed_DuplicateVerification() {
         VerificationSession session1 = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode1 = siteVerificationManager.onVerificationSessionReceived(
-                "publius", UserAgentAuthMatchData.of("agent"), session1, StubDispatcher.get());
+                "publius", UserAgentAuthMatchData.of("agent"), session1, executor);
         assertThat(sessionStatusCode1).isEqualTo(200);
 
         SignedAgeCertificate signedCertificate1 = fakeAvsVerificationFactory.createSignedAgeCertificate(
@@ -75,7 +79,7 @@ public final class SiteVerificationManagerTest {
 
         VerificationSession session2 = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode2 = siteVerificationManager.onVerificationSessionReceived(
-                "drop-table", UserAgentAuthMatchData.of("agent"), session2, StubDispatcher.get());
+                "drop-table", UserAgentAuthMatchData.of("agent"), session2, executor);
         assertThat(sessionStatusCode2).isEqualTo(200);
 
         SignedAgeCertificate signedCertificate2 = fakeAvsVerificationFactory.createSignedAgeCertificate(
@@ -88,7 +92,7 @@ public final class SiteVerificationManagerTest {
     public void verifyFailed_AuthenticationFailed() {
         VerificationSession session = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode = siteVerificationManager.onVerificationSessionReceived(
-                "drop-table", UserAgentAuthMatchData.of("agent1"), session, StubDispatcher.get());
+                "drop-table", UserAgentAuthMatchData.of("agent1"), session, executor);
         assertThat(sessionStatusCode).isEqualTo(200);
 
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
@@ -139,7 +143,7 @@ public final class SiteVerificationManagerTest {
     public void verifyFailed_DecryptAuthTokenFailed() {
         VerificationSession session = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode = siteVerificationManager.onVerificationSessionReceived(
-                "publius", UserAgentAuthMatchData.of("agent"), session, StubDispatcher.get());
+                "publius", UserAgentAuthMatchData.of("agent"), session, executor);
         assertThat(sessionStatusCode).isEqualTo(200);
 
         AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();

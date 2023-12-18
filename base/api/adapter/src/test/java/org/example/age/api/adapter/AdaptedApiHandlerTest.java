@@ -1,12 +1,12 @@
 package org.example.age.api.adapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
 import org.example.age.testing.api.FakeSender;
-import org.example.age.testing.api.StubDispatcher;
 import org.junit.jupiter.api.Test;
 
 public final class AdaptedApiHandlerTest {
@@ -119,7 +119,7 @@ public final class AdaptedApiHandlerTest {
 
         public static TestExchange of(String operand1, String operand2, String operand3, String operand4) {
             return new TestExchange(
-                    FakeSender.Value.create(), StubDispatcher.get(), operand1, operand2, operand3, operand4);
+                    FakeSender.Value.create(), mock(Dispatcher.class), operand1, operand2, operand3, operand4);
         }
 
         public HttpOptional<Integer> extractOperand1() {

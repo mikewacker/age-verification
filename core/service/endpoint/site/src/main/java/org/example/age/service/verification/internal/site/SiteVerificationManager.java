@@ -1,6 +1,6 @@
 package org.example.age.service.verification.internal.site;
 
-import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -14,7 +14,7 @@ public interface SiteVerificationManager {
 
     /** Called when a {@link VerificationSession} is received for an account. */
     int onVerificationSessionReceived(
-            String accountId, AuthMatchData authData, VerificationSession session, Dispatcher dispatcher);
+            String accountId, AuthMatchData authData, VerificationSession session, ScheduledExecutor executor);
 
     /** Called when a {@link SignedAgeCertificate} is received. */
     int onAgeCertificateReceived(SignedAgeCertificate signedCertificate);
