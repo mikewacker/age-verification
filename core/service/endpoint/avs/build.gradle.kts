@@ -16,7 +16,7 @@ dependencies {
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
 
-    implementation(project(":base:data:crypto"))
+    implementation(project(":crypto:data"))
     implementation(project(":core:data"))
     implementation(project(":base:api:base"))
     implementation(project(":core:api:types:common"))
@@ -24,7 +24,7 @@ dependencies {
     implementation(project(":core:api:endpoint:avs"))
     implementation(project(":core:service:types:avs"))
     implementation(project(":infra:service"))
-    implementation(project(":core:service:endpoint:common"))
+    implementation(project(":core:service:crypto:common"))
     implementation("com.fasterxml.jackson.core:jackson-core")
 
     // test fixtures
@@ -41,7 +41,7 @@ dependencies {
     testFixturesImplementation(project(":core:service:types:common"))
     testFixturesImplementation(project(":core:service:module:common"))
     testFixturesImplementation(project(":infra:service"))
-    testFixturesImplementation(project(":core:service:endpoint:common"))
+    testFixturesImplementation(project(":core:service:crypto:common"))
     testFixturesImplementation(project(":module:extractor:common:builtin"))
     testFixturesImplementation(testFixtures(project(":module:extractor:common:test")))
     testFixturesImplementation(project(":module:store:common:inmemory"))
@@ -54,7 +54,7 @@ dependencies {
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
 
     // test
-    testImplementation(project(":base:data:crypto"))
+    testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types:common"))

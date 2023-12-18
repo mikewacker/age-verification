@@ -3,11 +3,13 @@ rootProject.name = "age-verification"
 include(
         /* generic modules */
 
-        // base (:api depends on nothing, :data only depends on Jackson, Immutables)
+        // base + crypto (only depends on Jackson, Immutables; ":base:api" depends on nothing)
         "base:api:base",
         "base:api:adapter",
         "base:data:json",
         "base:data:crypto",
+
+        "crypto:data",
 
         // infra + testing (depends on Undertow, OkHttp)
         "infra:api",
@@ -30,7 +32,7 @@ include(
         "core:service:module:common",
         "core:service:module:site",
         "core:service:module:avs",
-        "core:service:endpoint:common",
+        "core:service:crypto:common",
         "core:service:endpoint:site",
         "core:service:endpoint:avs",
         "core:integration-test",

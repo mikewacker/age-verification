@@ -11,7 +11,7 @@ dependencies {
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
-    testFixturesImplementation(project(":base:data:crypto"))
+    testFixturesImplementation(project(":crypto:data"))
     testFixturesImplementation(project(":core:data"))
     testFixturesImplementation(project(":core:api:types:common"))
     testFixturesImplementation(project(":module:store:common:inmemory"))

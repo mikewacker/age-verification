@@ -7,7 +7,7 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":base:data:crypto"))
+    api(project(":crypto:data"))
     api(project(":core:data"))
     api(project(":base:api:base"))
     api(project(":core:api:types:common"))
@@ -21,7 +21,7 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":base:data:crypto"))
+    testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types:common"))

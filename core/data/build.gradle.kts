@@ -7,7 +7,7 @@ dependencies {
     // main
     annotationProcessor("org.immutables:value")
 
-    api(project(":base:data:crypto"))
+    api(project(":crypto:data"))
     api(project(":base:data:json"))
     api("com.fasterxml.jackson.core:jackson-annotations")
     api("com.fasterxml.jackson.core:jackson-databind")
