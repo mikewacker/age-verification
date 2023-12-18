@@ -39,6 +39,10 @@ public interface Sender {
             send(HttpOptional.empty(errorCode));
         }
 
+        default <U> void sendErrorCode(HttpOptional<U> emptyValue) {
+            sendErrorCode(emptyValue.statusCode());
+        }
+
         void send(HttpOptional<V> maybeValue);
     }
 }

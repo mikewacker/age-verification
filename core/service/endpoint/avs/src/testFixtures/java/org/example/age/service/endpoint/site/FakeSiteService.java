@@ -76,7 +76,7 @@ final class FakeSiteService implements SiteApi {
             Dispatcher dispatcher) {
         // TODO: Add redirect URL.
         if (maybeSession.isEmpty()) {
-            sender.sendErrorCode(maybeSession.statusCode());
+            sender.sendErrorCode(maybeSession);
             return;
         }
         VerificationSession session = maybeSession.get();
