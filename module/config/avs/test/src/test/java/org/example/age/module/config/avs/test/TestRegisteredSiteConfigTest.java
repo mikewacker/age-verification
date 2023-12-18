@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import java.util.Optional;
 import javax.inject.Singleton;
+import org.example.age.service.config.avs.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.config.avs.RegisteredSiteConfig;
-import org.example.age.service.module.config.avs.RefreshableRegisteredSiteConfigProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

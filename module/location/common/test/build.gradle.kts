@@ -7,18 +7,16 @@ dependencies {
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":core:service:module:common"))
+    testFixturesApi(project(":core:service:types:common"))
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
-    testFixturesImplementation(project(":core:service:types:common"))
     testFixturesImplementation(testFixtures(project(":testing")))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(project(":core:service:types:common"))
-    testImplementation(project(":core:service:module:common"))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.google.dagger:dagger")
     testImplementation("com.squareup.okhttp3:mockwebserver")

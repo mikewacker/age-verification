@@ -12,10 +12,10 @@ import org.example.age.api.def.site.SiteApi;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
+import org.example.age.service.config.site.RefreshableSiteConfigProvider;
 import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.location.common.Location;
-import org.example.age.service.module.config.site.RefreshableSiteConfigProvider;
-import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
+import org.example.age.service.location.common.RefreshableAvsLocationProvider;
 import org.example.age.service.verification.internal.site.SiteVerificationManager;
 
 @Singleton

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
-import org.example.age.service.module.key.common.RefreshableKeyProvider;
+import org.example.age.service.key.common.RefreshableKeyProvider;
 
 @Singleton
 final class TestKeyProvider implements RefreshableKeyProvider {

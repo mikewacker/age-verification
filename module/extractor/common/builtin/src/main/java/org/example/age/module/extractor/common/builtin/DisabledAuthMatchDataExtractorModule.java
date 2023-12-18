@@ -2,7 +2,7 @@ package org.example.age.module.extractor.common.builtin;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.api.module.extractor.common.AuthMatchDataExtractor;
+import org.example.age.api.extractor.common.AuthMatchDataExtractor;
 
 /**
  * Dagger module that publishes a binding for {@link AuthMatchDataExtractor}, which always returns a successful match.

@@ -2,7 +2,7 @@ package org.example.age.module.config.site.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.module.config.site.RefreshableSiteConfigProvider;
+import org.example.age.service.config.site.RefreshableSiteConfigProvider;
 
 /** Dagger module that publishes a binding for {@link RefreshableSiteConfigProvider}. */
 @Module

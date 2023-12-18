@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.service.location.common.Location;
-import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
-import org.example.age.service.module.location.common.RefreshableSiteLocationProvider;
+import org.example.age.service.location.common.RefreshableAvsLocationProvider;
+import org.example.age.service.location.common.RefreshableSiteLocationProvider;
 import org.example.age.testing.server.TestServer;
 
 @Singleton

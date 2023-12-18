@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":core:api:types:site"))
-    api(project(":core:api:module:common"))
+    api(project(":core:api:extractors:common"))
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
@@ -30,7 +30,7 @@ dependencies {
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":core:api:types:common"))
     testFixturesImplementation(project(":core:api:types:site"))
-    testFixturesImplementation(project(":core:api:module:common"))
+    testFixturesImplementation(project(":core:api:extractors:common"))
     testFixturesImplementation(project(":module:extractor:common:builtin"))
     testFixturesImplementation(testFixtures(project(":module:extractor:common:test")))
     testFixturesImplementation("com.google.dagger:dagger")

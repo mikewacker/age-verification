@@ -4,8 +4,8 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.data.user.AgeThresholds;
+import org.example.age.service.config.avs.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.config.avs.RegisteredSiteConfig;
-import org.example.age.service.module.config.avs.RefreshableRegisteredSiteConfigProvider;
 
 @Singleton
 final class TestRegisteredSiteConfigProvider implements RefreshableRegisteredSiteConfigProvider {

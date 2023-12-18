@@ -8,10 +8,9 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":core:api:module:common"))
+    api(project(":core:api:extractors:common"))
     api(project(":core:service:types:common"))
-    api(project(":core:service:module:common"))
-    api(project(":core:service:module:site"))
+    api(project(":core:service:types:site"))
     api("com.google.dagger:dagger")
     api("io.undertow:undertow-core")
     api("javax.inject:javax.inject")
@@ -22,7 +21,6 @@ dependencies {
     implementation(project(":core:api:types:common"))
     implementation(project(":core:api:types:site"))
     implementation(project(":core:api:endpoint:site"))
-    implementation(project(":core:service:types:site"))
     implementation(project(":infra:service"))
     implementation(project(":core:service:crypto:common"))
     implementation("com.fasterxml.jackson.core:jackson-core")
@@ -40,7 +38,6 @@ dependencies {
     testFixturesImplementation(project(":core:api:endpoint:site")) // Dagger component
     testFixturesImplementation(project(":core:api:endpoint:avs"))
     testFixturesImplementation(project(":core:service:types:common"))
-    testFixturesImplementation(project(":core:service:module:common"))
     testFixturesImplementation(project(":infra:service"))
     testFixturesImplementation(project(":core:service:crypto:common"))
     testFixturesImplementation(project(":module:extractor:common:builtin"))

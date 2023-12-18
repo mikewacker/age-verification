@@ -12,7 +12,7 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.common.AuthMatchData;
-import org.example.age.api.module.extractor.common.AuthMatchDataExtractor;
+import org.example.age.api.extractor.common.AuthMatchDataExtractor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

@@ -2,12 +2,12 @@ package org.example.age.service.verification.internal.avs;
 
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.service.config.avs.RefreshableAvsConfigProvider;
+import org.example.age.service.config.avs.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.crypto.internal.common.AgeCertificateSignerModule;
 import org.example.age.service.crypto.internal.common.AuthMatchDataEncryptorModule;
 import org.example.age.service.crypto.internal.common.VerifiedUserLocalizerModule;
-import org.example.age.service.module.config.avs.RefreshableAvsConfigProvider;
-import org.example.age.service.module.config.avs.RefreshableRegisteredSiteConfigProvider;
-import org.example.age.service.module.key.common.RefreshableKeyProvider;
+import org.example.age.service.key.common.RefreshableKeyProvider;
 import org.example.age.service.store.common.PendingStoreFactory;
 import org.example.age.service.store.common.VerificationStore;
 
