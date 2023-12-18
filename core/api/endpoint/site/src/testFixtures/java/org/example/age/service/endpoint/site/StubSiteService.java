@@ -27,13 +27,13 @@ final class StubSiteService implements SiteApi {
     @Override
     public void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
+        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5), "");
         sender.sendValue(request);
     }
 
     @Override
     public void processAgeCertificate(
-            Sender.StatusCode sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
-        sender.sendOk();
+            Sender.Value<String> sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+        sender.sendValue("");
     }
 }

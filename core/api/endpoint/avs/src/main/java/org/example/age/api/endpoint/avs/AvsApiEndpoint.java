@@ -28,7 +28,7 @@ public final class AvsApiEndpoint {
                 .addExtractor(accountIdExtractor)
                 .addQueryParam("request-id", new TypeReference<SecureId>() {})
                 .build(api::linkVerificationRequest);
-        HttpHandler ageCertificateHandler = UndertowJsonApiHandler.builder()
+        HttpHandler ageCertificateHandler = UndertowJsonApiHandler.builder(new TypeReference<String>() {})
                 .addExtractor(accountIdExtractor)
                 .addExtractor(authDataExtractor)
                 .build(api::sendAgeCertificate);

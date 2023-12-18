@@ -55,9 +55,15 @@ final class SiteService implements SiteApi {
 
     @Override
     public void processAgeCertificate(
-            Sender.StatusCode sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+            Sender.Value<String> sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
+        // TODO: Add redirect path.
         int statusCode = verificationManager.onAgeCertificateReceived(signedCertificate);
-        sender.send(statusCode);
+        if (statusCode != 200) {
+            sender.sendErrorCode(statusCode);
+            return;
+        }
+
+        sender.sendValue("");
     }
 
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
@@ -74,6 +80,7 @@ final class SiteService implements SiteApi {
             AuthMatchData authData,
             HttpOptional<VerificationSession> maybeSession,
             Dispatcher dispatcher) {
+        // TODO: Add redirect URL.
         if (maybeSession.isEmpty()) {
             int errorCode = mapVerificationSessionErrorCode(maybeSession.statusCode());
             sender.sendErrorCode(errorCode);

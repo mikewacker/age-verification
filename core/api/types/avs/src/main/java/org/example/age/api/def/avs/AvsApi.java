@@ -27,7 +27,10 @@ public interface AvsApi {
     /**
      * Sends a {@link SignedAgeCertificate} for a person,
      * using the pending {@link VerificationRequest} that is linked to that person.
+     *
+     * <p>Sends back a redirect URL.</p>
      */
-    void sendAgeCertificate(Sender.StatusCode sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
+    void sendAgeCertificate(
+            Sender.Value<String> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
             throws Exception;
 }

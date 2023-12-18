@@ -182,7 +182,7 @@ public final class SiteVerificationComponentTest {
 
         @Override
         public VerificationRequest generateVerificationRequestForSite(String siteId) {
-            VerificationRequest request = VerificationRequest.generateForSite(siteId, EXPIRES_IN);
+            VerificationRequest request = VerificationRequest.generateForSite(siteId, EXPIRES_IN, "");
             pendingRequests.put(request.id(), request);
             return request;
         }
