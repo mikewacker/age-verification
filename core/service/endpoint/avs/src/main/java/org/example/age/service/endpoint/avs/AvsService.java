@@ -61,7 +61,7 @@ final class AvsService implements AvsApi {
         HttpOptional<SignedAgeCertificate> maybeSignedCertificate =
                 verificationManager.createAgeCertificate(accountId, authData);
         if (maybeSignedCertificate.isEmpty()) {
-            sender.sendErrorCode(maybeSignedCertificate.statusCode());
+            sender.sendErrorCode(maybeSignedCertificate);
             return;
         }
         SignedAgeCertificate signedCertificate = maybeSignedCertificate.get();
