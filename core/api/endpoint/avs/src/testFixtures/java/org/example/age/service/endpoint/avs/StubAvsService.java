@@ -28,8 +28,8 @@ final class StubAvsService implements AvsApi {
     @Override
     public void createVerificationSession(
             Sender.Value<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, Duration.ofMinutes(5));
-        VerificationSession session = VerificationSession.create(request);
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, Duration.ofMinutes(5), "");
+        VerificationSession session = VerificationSession.generate(request);
         sender.sendValue(session);
     }
 
@@ -41,7 +41,7 @@ final class StubAvsService implements AvsApi {
 
     @Override
     public void sendAgeCertificate(
-            Sender.StatusCode sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        sender.sendOk();
+            Sender.Value<String> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+        sender.sendValue("");
     }
 }

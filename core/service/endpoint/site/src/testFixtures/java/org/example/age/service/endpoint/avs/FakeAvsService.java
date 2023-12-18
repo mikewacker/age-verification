@@ -1,8 +1,10 @@
 package org.example.age.service.endpoint.avs;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
 import org.example.age.api.def.avs.AvsApi;
 import org.example.age.api.def.common.AuthMatchData;
@@ -65,7 +67,7 @@ final class FakeAvsService implements AvsApi {
 
     @Override
     public void sendAgeCertificate(
-            Sender.StatusCode sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+            Sender.Value<String> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         if (!accountId.equals(storedAccountId)) {
             resetAndSendUserError(sender);
             return;
@@ -77,7 +79,7 @@ final class FakeAvsService implements AvsApi {
         reset();
 
         requestDispatcher
-                .requestBuilder(dispatcher)
+                .requestBuilder(dispatcher, new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(siteId))
                 .body(signedCertificate)
                 .dispatch(sender, this::handleAgeCertificateResponse);
@@ -90,8 +92,10 @@ final class FakeAvsService implements AvsApi {
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void handleAgeCertificateResponse(Sender.StatusCode sender, int statusCode, Dispatcher dispatcher) {
-        sender.send(statusCode);
+    private void handleAgeCertificateResponse(
+            Sender.Value<String> sender, HttpOptional<String> maybeRedirectPath, Dispatcher dispatcher) {
+        // TODO: Add redirect URL.
+        sender.send(maybeRedirectPath);
     }
 
     /** Clears the stored verification data. */

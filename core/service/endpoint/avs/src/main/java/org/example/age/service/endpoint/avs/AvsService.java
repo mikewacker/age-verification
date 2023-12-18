@@ -1,5 +1,6 @@
 package org.example.age.service.endpoint.avs;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
@@ -56,7 +57,7 @@ final class AvsService implements AvsApi {
 
     @Override
     public void sendAgeCertificate(
-            Sender.StatusCode sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
+            Sender.Value<String> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         HttpOptional<SignedAgeCertificate> maybeSignedCertificate =
                 verificationManager.createAgeCertificate(accountId, authData);
         if (maybeSignedCertificate.isEmpty()) {
@@ -66,7 +67,7 @@ final class AvsService implements AvsApi {
         SignedAgeCertificate signedCertificate = maybeSignedCertificate.get();
 
         requestDispatcher
-                .requestBuilder(dispatcher)
+                .requestBuilder(dispatcher, new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(signedCertificate))
                 .body(signedCertificate)
                 .dispatch(sender, this::handleAgeCertificateResponse);
@@ -80,7 +81,9 @@ final class AvsService implements AvsApi {
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */
-    private void handleAgeCertificateResponse(Sender.StatusCode sender, int statusCode, Dispatcher dispatcher) {
-        sender.send(statusCode);
+    private void handleAgeCertificateResponse(
+            Sender.Value<String> sender, HttpOptional<String> maybeRedirectPath, Dispatcher dispatcher) {
+        // TODO: Add redirect URL.
+        sender.send(maybeRedirectPath);
     }
 }

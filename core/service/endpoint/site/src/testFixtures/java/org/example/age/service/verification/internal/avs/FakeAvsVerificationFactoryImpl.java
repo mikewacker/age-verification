@@ -44,8 +44,9 @@ final class FakeAvsVerificationFactoryImpl implements FakeAvsVerificationFactory
 
     @Override
     public VerificationSession createVerificationSession(String siteId, Duration expiresIn) {
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn);
-        return VerificationSession.create(request);
+        // TODO: Add redirect path.
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn, "");
+        return VerificationSession.generate(request);
     }
 
     @Override

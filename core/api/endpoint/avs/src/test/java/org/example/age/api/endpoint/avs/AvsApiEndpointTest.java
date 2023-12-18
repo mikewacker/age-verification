@@ -45,19 +45,19 @@ public final class AvsApiEndpointTest {
     @Test
     public void linkedVerificationRequest() throws IOException {
         SecureId requestId = SecureId.generate();
-        int linkStatusCode = TestClient.requestBuilder()
+        int statusCode = TestClient.requestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .execute();
-        assertThat(linkStatusCode).isEqualTo(200);
+        assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
     public void ageCertificate() throws IOException {
-        int certificateStatusCode = TestClient.requestBuilder()
+        HttpOptional<String> maybeRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .execute();
-        assertThat(certificateStatusCode).isEqualTo(200);
+        assertThat(maybeRedirectUrl).isPresent();
     }
 }

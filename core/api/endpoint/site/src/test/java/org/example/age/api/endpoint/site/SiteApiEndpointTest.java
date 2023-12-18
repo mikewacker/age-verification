@@ -1,6 +1,5 @@
 package org.example.age.api.endpoint.site;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -51,16 +50,16 @@ public final class SiteApiEndpointTest {
 
     @Test
     public void ageCertificate() throws IOException {
-        SignedAgeCertificate signedCertificate = createSignedAgeCertificate();
-        int certificateStatusCode = TestClient.requestBuilder()
+        SignedAgeCertificate signedCertificate = createStubSignedAgeCertificate();
+        HttpOptional<String> maybeRedirectPath = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(siteServer.url("/api/age-certificate"))
                 .body(signedCertificate)
                 .execute();
-        assertThat(certificateStatusCode).isEqualTo(200);
+        assertThat(maybeRedirectPath).isPresent();
     }
 
-    private static SignedAgeCertificate createSignedAgeCertificate() {
-        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
+    private static SignedAgeCertificate createStubSignedAgeCertificate() {
+        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5), "");
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
         AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
         AgeCertificate certificate = AgeCertificate.of(request, user, authToken);

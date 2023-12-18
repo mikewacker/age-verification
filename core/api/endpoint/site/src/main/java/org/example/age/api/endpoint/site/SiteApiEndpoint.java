@@ -25,7 +25,7 @@ public final class SiteApiEndpoint {
                 .addExtractor(accountIdExtractor)
                 .addExtractor(authDataExtractor)
                 .build(api::createVerificationRequest);
-        HttpHandler ageCertificateHandler = UndertowJsonApiHandler.builder()
+        HttpHandler ageCertificateHandler = UndertowJsonApiHandler.builder(new TypeReference<String>() {})
                 .addBody(new TypeReference<SignedAgeCertificate>() {})
                 .build(api::processAgeCertificate);
 

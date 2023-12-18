@@ -46,7 +46,8 @@ public final class AgeCertificateSignerVerifierTest {
     }
 
     private static AgeCertificate createAgeCertificate() {
-        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
+        VerificationRequest request =
+                VerificationRequest.generateForSite("Site", Duration.ofMinutes(5), "http://localhost/verify");
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
         AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
         return AgeCertificate.of(request, user, authToken);

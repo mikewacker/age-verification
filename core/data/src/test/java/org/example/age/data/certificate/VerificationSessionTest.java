@@ -11,8 +11,9 @@ public final class VerificationSessionTest {
 
     @Test
     public void serializeThenDeserialize() {
-        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
-        VerificationSession session = VerificationSession.create(request);
+        VerificationRequest request =
+                VerificationRequest.generateForSite("Site", Duration.ofMinutes(5), "http://localhost/verify");
+        VerificationSession session = VerificationSession.generate(request);
         byte[] rawSession = JsonValues.serialize(session);
         VerificationSession rtSession = JsonValues.deserialize(rawSession, new TypeReference<>() {});
         assertThat(rtSession).isEqualTo(session);

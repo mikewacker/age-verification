@@ -64,7 +64,8 @@ public final class SignedAgeCertificateTest {
     }
 
     private static AgeCertificate createAgeCertificate() {
-        VerificationRequest request = VerificationRequest.generateForSite("Site", Duration.ofMinutes(5));
+        VerificationRequest request =
+                VerificationRequest.generateForSite("Site", Duration.ofMinutes(5), "http://localhost/verify");
         VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
         byte[] authData = "auth data".getBytes(StandardCharsets.UTF_8);
         Aes256Key authKey = Aes256Key.generate();

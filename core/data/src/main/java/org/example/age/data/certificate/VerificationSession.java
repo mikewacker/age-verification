@@ -19,8 +19,8 @@ public interface VerificationSession {
                 .build();
     }
 
-    /** Creates a verification session for the verification request. */
-    static VerificationSession create(VerificationRequest request) {
+    /** Generates a verification session for the verification request. */
+    static VerificationSession generate(VerificationRequest request) {
         Aes256Key authKey = Aes256Key.generate();
         return of(request, authKey);
     }

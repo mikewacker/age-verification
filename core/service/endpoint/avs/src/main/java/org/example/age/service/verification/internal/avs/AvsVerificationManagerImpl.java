@@ -127,9 +127,10 @@ final class AvsVerificationManagerImpl implements AvsVerificationManager {
 
     /** Creates a {@link VerificationSession} for a site. */
     private VerificationSession createVerificationSession(String siteId) {
+        // TODO: Add redirect path.
         Duration expiresIn = Duration.ofSeconds(avsConfigProvider.get().verificationSessionExpiresIn());
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn);
-        return VerificationSession.create(request);
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn, "");
+        return VerificationSession.generate(request);
     }
 
     /** Creates a {@link SignedAgeCertificate} for a {@link VerifiedUser}. */

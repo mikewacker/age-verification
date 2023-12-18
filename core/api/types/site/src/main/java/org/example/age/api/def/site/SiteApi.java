@@ -19,7 +19,12 @@ public interface SiteApi {
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher)
             throws Exception;
 
-    /** Processes a {@link SignedAgeCertificate} from the age verification service. */
-    void processAgeCertificate(Sender.StatusCode sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher)
+    /**
+     * Processes a {@link SignedAgeCertificate} from the age verification service.
+     *
+     * <p>Sends back a redirect path.</p>
+     */
+    void processAgeCertificate(
+            Sender.Value<String> sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher)
             throws Exception;
 }

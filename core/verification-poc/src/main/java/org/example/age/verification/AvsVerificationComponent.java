@@ -84,7 +84,7 @@ public final class AvsVerificationComponent implements AvsUi, AvsApi, VerifiedUs
             throw new IllegalArgumentException("site not registered");
         }
 
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, EXPIRES_IN);
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, EXPIRES_IN, "");
         pendingRequests.put(request.id(), request);
         return request;
     }

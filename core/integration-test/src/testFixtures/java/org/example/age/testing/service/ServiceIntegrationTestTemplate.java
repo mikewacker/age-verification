@@ -63,13 +63,14 @@ public final class ServiceIntegrationTestTemplate {
                 .execute();
         assertThat(linkStatusCode).isEqualTo(200);
 
-        int certificateStatusCode = TestClient.requestBuilder()
+        HttpOptional<String> maybeSiteRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", avsAccountId))
                 .execute();
-        int expectedCertificateStatusCode = succeeds ? 200 : 409;
-        assertThat(certificateStatusCode).isEqualTo(expectedCertificateStatusCode);
-        if (!succeeds) {
+        if (succeeds) {
+            assertThat(maybeSiteRedirectUrl).isPresent();
+        } else {
+            assertThat(maybeSiteRedirectUrl).isEmptyWithErrorCode(409);
             return;
         }
 
