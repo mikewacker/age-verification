@@ -10,4 +10,5 @@ dependencies {
     // test
     testImplementation(project(":base:api:base"))
     testImplementation(testFixtures(project(":base:api:base")))
+    testImplementation("org.mockito:mockito-core")
 }

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.AgeCertificate;
@@ -57,9 +57,9 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
 
     @Override
     public int onVerificationSessionReceived(
-            String accountId, AuthMatchData authData, VerificationSession session, Dispatcher dispatcher) {
+            String accountId, AuthMatchData authData, VerificationSession session, ScheduledExecutor executor) {
         Verification pendingVerification = new Verification(accountId, authData, session);
-        putPendingVerification(pendingVerification, dispatcher);
+        putPendingVerification(pendingVerification, executor);
         return 200;
     }
 
@@ -131,11 +131,10 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     }
 
     /** Puts a pending verification. */
-    private void putPendingVerification(Verification pendingVerification, Dispatcher dispatcher) {
+    private void putPendingVerification(Verification pendingVerification, ScheduledExecutor executor) {
         PendingStore<Verification> pendingVerifications = getPendingVerifications();
         VerificationRequest request = pendingVerification.verificationSession().verificationRequest();
-        pendingVerifications.put(
-                request.id().toString(), pendingVerification, request.expiration(), dispatcher.getIoThread());
+        pendingVerifications.put(request.id().toString(), pendingVerification, request.expiration(), executor);
     }
 
     /** Removes and returns the pending verification for the request ID, or returns a 404 error. */

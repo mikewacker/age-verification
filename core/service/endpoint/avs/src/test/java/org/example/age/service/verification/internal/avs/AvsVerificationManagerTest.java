@@ -6,6 +6,7 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
 import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.api.def.common.VerificationStatus;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -18,7 +19,7 @@ import org.example.age.module.extractor.common.builtin.DisabledAuthMatchData;
 import org.example.age.service.verification.internal.avs.test.TestAvsVerificationComponent;
 import org.example.age.service.verification.internal.site.FakeSiteVerificationProcessor;
 import org.example.age.service.verification.internal.site.fake.FakeSiteVerificationComponent;
-import org.example.age.testing.api.StubDispatcher;
+import org.example.age.testing.api.StubScheduledExecutor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,14 +30,17 @@ public final class AvsVerificationManagerTest {
 
     private static AvsVerificationManager avsVerificationManager;
 
+    private static ScheduledExecutor executor;
+
     @BeforeEach
     public void createFakeSiteVerificationProcessor() {
         fakeSiteVerificationProcessor = FakeSiteVerificationComponent.createFakeSiteVerificationProcessor();
     }
 
     @BeforeAll
-    public static void createAvsVerificationManager() {
+    public static void createAvsVerificationManagerEtAl() {
         avsVerificationManager = TestAvsVerificationComponent.createAvsVerificationManager();
+        executor = StubScheduledExecutor.get();
     }
 
     @Test
@@ -46,7 +50,7 @@ public final class AvsVerificationManagerTest {
         VerifiedUser avsUser = avsState.verifiedUser();
 
         HttpOptional<VerificationSession> maybeSession =
-                avsVerificationManager.createVerificationSession("Site", StubDispatcher.get());
+                avsVerificationManager.createVerificationSession("Site", executor);
         assertThat(maybeSession).isPresent();
         VerificationRequest request = maybeSession.get().verificationRequest();
         assertThat(request.siteId()).isEqualTo("Site");
@@ -55,8 +59,7 @@ public final class AvsVerificationManagerTest {
         assertThat(request.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
         fakeSiteVerificationProcessor.beginVerification("publius");
 
-        int linkStatusCode =
-                avsVerificationManager.linkVerificationRequest("John Smith", request.id(), StubDispatcher.get());
+        int linkStatusCode = avsVerificationManager.linkVerificationRequest("John Smith", request.id(), executor);
         assertThat(linkStatusCode).isEqualTo(200);
 
         HttpOptional<SignedAgeCertificate> maybeSignedCertificate =
@@ -76,15 +79,14 @@ public final class AvsVerificationManagerTest {
     @Test
     public void verifyFailed_SiteNotRegistered() {
         HttpOptional<VerificationSession> maybeSession =
-                avsVerificationManager.createVerificationSession("Other Site", StubDispatcher.get());
+                avsVerificationManager.createVerificationSession("Other Site", executor);
         assertThat(maybeSession).isEmptyWithErrorCode(404);
     }
 
     @Test
     public void verifyFailed_PersonNotVerified() {
         SecureId requestId = SecureId.generate();
-        int linkStatusCode =
-                avsVerificationManager.linkVerificationRequest("Bobby Tables", requestId, StubDispatcher.get());
+        int linkStatusCode = avsVerificationManager.linkVerificationRequest("Bobby Tables", requestId, executor);
         assertThat(linkStatusCode).isEqualTo(403);
 
         HttpOptional<SignedAgeCertificate> maybeSignedCertificate =
@@ -95,8 +97,7 @@ public final class AvsVerificationManagerTest {
     @Test
     public void verifyFailed_PendingVerificationNotFound() {
         SecureId requestId = SecureId.generate();
-        int linkStatusCode =
-                avsVerificationManager.linkVerificationRequest("John Smith", requestId, StubDispatcher.get());
+        int linkStatusCode = avsVerificationManager.linkVerificationRequest("John Smith", requestId, executor);
         assertThat(linkStatusCode).isEqualTo(404);
 
         HttpOptional<SignedAgeCertificate> maybeSignedCertificate =

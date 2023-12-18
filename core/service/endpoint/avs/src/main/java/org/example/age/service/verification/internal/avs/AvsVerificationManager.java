@@ -1,7 +1,7 @@
 package org.example.age.service.verification.internal.avs;
 
-import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
+import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -16,10 +16,10 @@ public interface AvsVerificationManager {
     VerificationState getVerificationState(String accountId);
 
     /** Creates a {@link VerificationSession} for a site. */
-    HttpOptional<VerificationSession> createVerificationSession(String siteId, Dispatcher dispatcher);
+    HttpOptional<VerificationSession> createVerificationSession(String siteId, ScheduledExecutor executor);
 
     /** Links a pending {@link VerificationRequest} to a person. */
-    int linkVerificationRequest(String accountId, SecureId requestId, Dispatcher dispatcher);
+    int linkVerificationRequest(String accountId, SecureId requestId, ScheduledExecutor executor);
 
     /**
      * Creates a {@link SignedAgeCertificate} for a person,

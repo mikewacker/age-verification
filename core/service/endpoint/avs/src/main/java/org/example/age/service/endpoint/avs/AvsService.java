@@ -44,14 +44,14 @@ final class AvsService implements AvsApi {
     public void createVerificationSession(
             Sender.Value<VerificationSession> sender, String siteId, Dispatcher dispatcher) {
         HttpOptional<VerificationSession> maybeSession =
-                verificationManager.createVerificationSession(siteId, dispatcher);
+                verificationManager.createVerificationSession(siteId, dispatcher.getIoThread());
         sender.send(maybeSession);
     }
 
     @Override
     public void linkVerificationRequest(
             Sender.StatusCode sender, String accountId, SecureId requestId, Dispatcher dispatcher) {
-        int statusCode = verificationManager.linkVerificationRequest(accountId, requestId, dispatcher);
+        int statusCode = verificationManager.linkVerificationRequest(accountId, requestId, dispatcher.getIoThread());
         sender.send(statusCode);
     }
 
