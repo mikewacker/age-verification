@@ -15,7 +15,7 @@ dependencies {
     api("javax.inject:javax.inject")
 
     implementation(project(":base:data:json"))
-    implementation(project(":core:service:module:common"))
+    implementation(project(":core:service:types:common"))
     implementation("com.fasterxml.jackson.core:jackson-core")
 
     // test

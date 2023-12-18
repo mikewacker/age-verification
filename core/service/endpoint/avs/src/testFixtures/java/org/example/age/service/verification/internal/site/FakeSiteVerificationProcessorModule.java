@@ -3,7 +3,7 @@ package org.example.age.service.verification.internal.site;
 import dagger.Binds;
 import dagger.Module;
 import org.example.age.service.crypto.internal.common.AgeCertificateVerifierModule;
-import org.example.age.service.module.key.common.RefreshableKeyProvider;
+import org.example.age.service.key.common.RefreshableKeyProvider;
 import org.example.age.service.store.common.VerificationStore;
 
 /**

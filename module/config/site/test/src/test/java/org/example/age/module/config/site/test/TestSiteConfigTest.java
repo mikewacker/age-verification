@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import org.example.age.service.config.site.RefreshableSiteConfigProvider;
 import org.example.age.service.config.site.SiteConfig;
-import org.example.age.service.module.config.site.RefreshableSiteConfigProvider;
 import org.junit.jupiter.api.Test;
 
 public final class TestSiteConfigTest {

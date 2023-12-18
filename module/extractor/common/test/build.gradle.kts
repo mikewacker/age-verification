@@ -7,7 +7,7 @@ dependencies {
     // test fixtures
     testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testFixturesApi(project(":core:api:module:common"))
+    testFixturesApi(project(":core:api:extractors:common"))
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
@@ -18,7 +18,7 @@ dependencies {
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
     testImplementation(project(":base:api:base"))
-    testImplementation(project(":core:api:module:common"))
+    testImplementation(project(":core:api:extractors:common"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation("com.google.dagger:dagger")
     testImplementation("io.undertow:undertow-core")

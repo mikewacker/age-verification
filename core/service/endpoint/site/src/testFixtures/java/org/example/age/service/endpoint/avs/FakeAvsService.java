@@ -12,7 +12,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.location.common.Location;
-import org.example.age.service.module.location.common.RefreshableSiteLocationProvider;
+import org.example.age.service.location.common.RefreshableSiteLocationProvider;
 import org.example.age.service.verification.internal.avs.FakeAvsVerificationFactory;
 
 /** Fake service for {@link AvsApi}. */

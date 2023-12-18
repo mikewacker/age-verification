@@ -2,8 +2,8 @@ package org.example.age.module.config.avs.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.module.config.avs.RefreshableAvsConfigProvider;
-import org.example.age.service.module.config.avs.RefreshableRegisteredSiteConfigProvider;
+import org.example.age.service.config.avs.RefreshableAvsConfigProvider;
+import org.example.age.service.config.avs.RefreshableRegisteredSiteConfigProvider;
 
 /**
  * Dagger module that publishes bindings for...

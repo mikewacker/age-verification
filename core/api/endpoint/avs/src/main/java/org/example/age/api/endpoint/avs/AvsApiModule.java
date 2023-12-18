@@ -6,8 +6,8 @@ import io.undertow.server.HttpHandler;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.api.def.avs.AvsApi;
-import org.example.age.api.module.extractor.common.AccountIdExtractor;
-import org.example.age.api.module.extractor.common.AuthMatchDataExtractor;
+import org.example.age.api.extractor.common.AccountIdExtractor;
+import org.example.age.api.extractor.common.AuthMatchDataExtractor;
 
 /**
  * Dagger module that publishes a binding for <code>@Named("api") {@link HttpHandler}</code>.

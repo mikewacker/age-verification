@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.undertow.server.HttpHandler;
 import org.example.age.api.def.avs.AvsApi;
 import org.example.age.api.def.common.VerificationState;
+import org.example.age.api.extractor.common.AccountIdExtractor;
+import org.example.age.api.extractor.common.AuthMatchDataExtractor;
 import org.example.age.api.infra.UndertowApiRouter;
 import org.example.age.api.infra.UndertowJsonApiHandler;
-import org.example.age.api.module.extractor.common.AccountIdExtractor;
-import org.example.age.api.module.extractor.common.AuthMatchDataExtractor;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 

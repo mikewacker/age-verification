@@ -14,7 +14,7 @@ import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.location.common.Location;
-import org.example.age.service.module.location.common.RefreshableAvsLocationProvider;
+import org.example.age.service.location.common.RefreshableAvsLocationProvider;
 import org.example.age.service.verification.internal.site.FakeSiteVerificationProcessor;
 
 @Singleton

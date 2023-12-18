@@ -2,7 +2,7 @@ package org.example.age.module.extractor.common.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.api.module.extractor.common.AccountIdExtractor;
+import org.example.age.api.extractor.common.AccountIdExtractor;
 
 /**
  * Dagger module that publishes a binding for {@link AccountIdExtractor},

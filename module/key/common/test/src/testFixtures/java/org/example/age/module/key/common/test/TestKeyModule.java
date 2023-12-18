@@ -2,7 +2,7 @@ package org.example.age.module.key.common.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.module.key.common.RefreshableKeyProvider;
+import org.example.age.service.key.common.RefreshableKeyProvider;
 
 /** Dagger module that publishes a binding for {@link RefreshableKeyProvider}. */
 @Module
