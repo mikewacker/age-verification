@@ -11,6 +11,8 @@ dependencies {
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
+    testFixturesImplementation(project(":core:data"))
+
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
