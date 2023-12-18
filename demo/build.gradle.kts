@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     // main
-    implementation(project(":base:data:crypto"))
+    implementation(project(":crypto:data"))
     implementation(project(":core:data"))
     implementation(project(":core:verification-poc"))
     implementation("com.google.errorprone:error_prone_annotations")
@@ -14,11 +14,21 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk18on")
 
     // test
-    testImplementation(project(":base:data:crypto"))
+    testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
     testImplementation(project(":core:verification-poc"))
 }
 
 application {
     mainClass.set("org.example.age.demo.Main")
+}
+
+// Avoids a duplicate JAR error; we don't need to run these tasks anyway.
+tasks {
+    distTar {
+        enabled = false
+    }
+    distZip {
+        enabled = false
+    }
 }

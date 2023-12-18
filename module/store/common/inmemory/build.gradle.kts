@@ -12,7 +12,7 @@ dependencies {
     api("javax.inject:javax.inject")
 
     implementation(project(":base:data:json"))
-    implementation(project(":base:data:crypto"))
+    implementation(project(":crypto:data"))
     implementation(project(":core:data"))
     implementation(project(":base:api:base"))
     implementation(project(":core:api:types:common"))
@@ -22,7 +22,7 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":base:data:crypto"))
+    testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types:common"))

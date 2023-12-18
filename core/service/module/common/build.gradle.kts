@@ -5,6 +5,6 @@ plugins {
 
 dependencies {
     // main
-    api(project(":base:data:crypto"))
+    api(project(":crypto:data"))
     api(project(":core:service:types:common"))
 }

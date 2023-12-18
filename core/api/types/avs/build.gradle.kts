@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":base:data:crypto"))
+    api(project(":crypto:data"))
     api(project(":core:data"))
     api(project(":base:api:base"))
     api(project(":core:api:types:common"))

@@ -37,7 +37,7 @@ dependencies {
     testFixturesImplementation("javax.inject:javax.inject")
 
     // test
-    testImplementation(project(":base:data:crypto"))
+    testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types:common"))

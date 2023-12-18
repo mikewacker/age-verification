@@ -11,12 +11,12 @@ dependencies {
     testFixturesApi("com.google.dagger:dagger")
     testFixturesApi("javax.inject:javax.inject")
 
-    testFixturesImplementation(project(":base:data:crypto"))
+    testFixturesImplementation(project(":crypto:data"))
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":base:data:crypto"))
+    testImplementation(project(":crypto:data"))
     testImplementation(project(":core:service:module:common"))
     testImplementation("com.google.dagger:dagger")
     testImplementation("javax.inject:javax.inject")
