@@ -1,21 +1,25 @@
-package org.example.age.service.infra.client.internal;
+package org.example.age.service.infra.client;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import org.example.age.api.base.Dispatcher;
 
-@Singleton
-final class DispatcherOkHttpClientImpl implements DispatcherOkHttpClient {
+/**
+ * Shared {@link OkHttpClient} for backend requests. The client uses the worker of the underlying server
+ * (i.e., {@link Dispatcher#getWorker()}).
+ *
+ * <p>The client is lazily initialized on the first call to {@link #get(Dispatcher)}.</p>
+ */
+final class DispatcherOkHttpClient {
 
     private volatile OkHttpClient client = null;
-
     private final Object lock = new Object();
 
-    @Inject
-    public DispatcherOkHttpClientImpl() {}
+    /** Creates a {@link DispatcherOkHttpClient}. */
+    public static DispatcherOkHttpClient create() {
+        return new DispatcherOkHttpClient();
+    }
 
-    @Override
+    /** Gets the shared {@link OkHttpClient}. */
     public OkHttpClient get(Dispatcher dispatcher) {
         // Use double-checked locking.
         OkHttpClient localClient = client;
@@ -36,4 +40,6 @@ final class DispatcherOkHttpClientImpl implements DispatcherOkHttpClient {
         okhttp3.Dispatcher clientDispatcher = new okhttp3.Dispatcher(dispatcher.getWorker());
         return new OkHttpClient.Builder().dispatcher(clientDispatcher).build();
     }
+
+    private DispatcherOkHttpClient() {}
 }

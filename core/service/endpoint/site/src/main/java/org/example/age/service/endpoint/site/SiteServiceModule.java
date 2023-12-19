@@ -2,13 +2,15 @@ package org.example.age.service.endpoint.site;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
+import javax.inject.Singleton;
 import org.example.age.api.def.site.SiteApi;
 import org.example.age.api.endpoint.site.SiteApiModule;
 import org.example.age.api.extractor.common.AccountIdExtractor;
 import org.example.age.api.extractor.common.AuthMatchDataExtractor;
 import org.example.age.service.config.site.RefreshableSiteConfigProvider;
-import org.example.age.service.infra.client.RequestDispatcherModule;
+import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.key.common.RefreshableKeyProvider;
 import org.example.age.service.location.common.RefreshableAvsLocationProvider;
 import org.example.age.service.store.common.PendingStoreFactory;
@@ -29,9 +31,15 @@ import org.example.age.service.verification.internal.site.SiteVerificationManage
  *     <li>{@link RefreshableAvsLocationProvider}</li>
  * </ul>
  */
-@Module(includes = {SiteApiModule.class, SiteVerificationManagerModule.class, RequestDispatcherModule.class})
+@Module(includes = {SiteApiModule.class, SiteVerificationManagerModule.class})
 public interface SiteServiceModule {
 
     @Binds
     SiteApi bindSiteApi(SiteService service);
+
+    @Provides
+    @Singleton
+    static RequestDispatcher provideRequestDispatcher() {
+        return RequestDispatcher.create();
+    }
 }

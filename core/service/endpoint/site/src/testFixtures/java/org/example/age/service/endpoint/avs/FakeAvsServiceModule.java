@@ -2,12 +2,14 @@ package org.example.age.service.endpoint.avs;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import io.undertow.server.HttpHandler;
+import javax.inject.Singleton;
 import org.example.age.api.def.avs.AvsApi;
 import org.example.age.api.endpoint.avs.AvsApiModule;
 import org.example.age.api.extractor.common.AccountIdExtractor;
 import org.example.age.api.extractor.common.AuthMatchDataExtractor;
-import org.example.age.service.infra.client.RequestDispatcherModule;
+import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.key.common.RefreshableKeyProvider;
 import org.example.age.service.location.common.RefreshableSiteLocationProvider;
 import org.example.age.service.store.common.VerificationStore;
@@ -25,9 +27,15 @@ import org.example.age.service.verification.internal.avs.FakeAvsVerificationFact
  *     <li>{@link RefreshableSiteLocationProvider}</li>
  * </ul>
  */
-@Module(includes = {AvsApiModule.class, FakeAvsVerificationFactoryModule.class, RequestDispatcherModule.class})
+@Module(includes = {AvsApiModule.class, FakeAvsVerificationFactoryModule.class})
 public interface FakeAvsServiceModule {
 
     @Binds
     AvsApi bindAvsApi(FakeAvsService service);
+
+    @Provides
+    @Singleton
+    static RequestDispatcher provideRequestDispatcher() {
+        return RequestDispatcher.create();
+    }
 }
