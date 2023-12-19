@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
     // test fixtures
-    testFixturesImplementation(project(":crypto:data"))
     testFixturesImplementation(project(":core:data"))
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":core:api:types:common"))

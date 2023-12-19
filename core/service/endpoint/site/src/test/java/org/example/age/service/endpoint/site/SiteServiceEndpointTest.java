@@ -1,8 +1,8 @@
 package org.example.age.service.endpoint.site;
 
 import java.io.IOException;
-import org.example.age.service.endpoint.avs.fake.FakeAvsComponent;
-import org.example.age.service.endpoint.site.test.TestSiteComponent;
+import org.example.age.service.component.fake.avs.FakeAvsComponent;
+import org.example.age.service.component.test.site.TestSiteComponent;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.example.age.testing.service.ServiceIntegrationTestTemplate;
