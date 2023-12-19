@@ -10,7 +10,7 @@ import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.service.endpoint.avs.stub.StubAvsComponent;
+import org.example.age.service.component.stub.avs.StubAvsComponent;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
