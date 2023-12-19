@@ -2,13 +2,13 @@ package org.example.age.service.component.test.avs;
 
 import dagger.Module;
 import io.undertow.server.HttpHandler;
-import org.example.age.module.config.avs.test.TestAvsConfigModule;
-import org.example.age.module.extractor.common.builtin.DisabledAuthMatchDataExtractorModule;
-import org.example.age.module.extractor.common.test.TestAccountIdExtractorModule;
-import org.example.age.module.key.common.test.TestKeyModule;
-import org.example.age.module.location.common.test.TestSiteLocationModule;
-import org.example.age.module.store.avs.test.TestAvsVerificationStoreModule;
-import org.example.age.module.store.common.inmemory.InMemoryPendingStoreFactoryModule;
+import org.example.age.module.config.test.avs.TestAvsConfigModule;
+import org.example.age.module.extractor.builtin.common.DisabledAuthMatchDataExtractorModule;
+import org.example.age.module.extractor.test.common.TestAccountIdExtractorModule;
+import org.example.age.module.key.test.common.TestKeyModule;
+import org.example.age.module.location.test.common.TestSiteLocationModule;
+import org.example.age.module.store.test.avs.TestAvsVerificationStoreModule;
+import org.example.age.module.store.inmemory.common.InMemoryPendingStoreFactoryModule;
 import org.example.age.service.endpoint.avs.AvsServiceModule;
 
 /** Dagger module that binds dependencies for <code>@Named("api") {@link HttpHandler}</code>. */

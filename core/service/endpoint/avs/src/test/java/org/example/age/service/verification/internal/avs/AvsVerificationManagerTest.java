@@ -15,7 +15,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.AgeRange;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.module.extractor.common.builtin.DisabledAuthMatchData;
+import org.example.age.module.extractor.builtin.common.DisabledAuthMatchData;
 import org.example.age.service.component.fake.site.FakeSiteVerificationComponent;
 import org.example.age.service.component.test.avs.TestAvsVerificationComponent;
 import org.example.age.service.verification.internal.site.FakeSiteVerificationProcessor;

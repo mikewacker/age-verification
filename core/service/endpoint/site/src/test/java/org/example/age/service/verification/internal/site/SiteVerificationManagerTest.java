@@ -14,7 +14,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
+import org.example.age.module.extractor.builtin.common.UserAgentAuthMatchData;
 import org.example.age.service.component.fake.avs.FakeAvsVerificationComponent;
 import org.example.age.service.component.test.site.TestSiteVerificationComponent;
 import org.example.age.service.verification.internal.avs.FakeAvsVerificationFactory;

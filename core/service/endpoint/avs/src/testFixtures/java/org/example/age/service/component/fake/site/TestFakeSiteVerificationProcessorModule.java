@@ -1,8 +1,8 @@
 package org.example.age.service.component.fake.site;
 
 import dagger.Module;
-import org.example.age.module.key.common.test.TestKeyModule;
-import org.example.age.module.store.common.inmemory.InMemoryVerificationStoreModule;
+import org.example.age.module.key.test.common.TestKeyModule;
+import org.example.age.module.store.inmemory.common.InMemoryVerificationStoreModule;
 import org.example.age.service.verification.internal.site.FakeSiteVerificationProcessor;
 import org.example.age.service.verification.internal.site.FakeSiteVerificationProcessorModule;
 
