@@ -33,8 +33,8 @@ dependencies {
     testFixturesImplementation(project(":core:api:types:common"))
     testFixturesImplementation(project(":core:api:types:avs"))
     testFixturesImplementation(project(":core:api:extractors:common"))
-    testFixturesImplementation(project(":module:extractor:common:builtin"))
-    testFixturesImplementation(testFixtures(project(":module:extractor:common:test")))
+    testFixturesImplementation(project(":module:extractor:builtin:common"))
+    testFixturesImplementation(testFixtures(project(":module:extractor:test:common")))
     testFixturesImplementation("com.google.dagger:dagger")
     testFixturesImplementation("javax.inject:javax.inject")
 

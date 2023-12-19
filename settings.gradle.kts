@@ -34,14 +34,12 @@ include(
         "core:service:endpoint:avs",
         "core:integration-test",
 
-        "module:extractor:common:builtin",
-        "module:extractor:common:test",
-        "module:store:common:inmemory",
-        "module:store:avs:test",
-        "module:key:common:test",
-        "module:config:site:test",
-        "module:config:avs:test",
-        "module:location:common:test",
+        "module:extractor:builtin:common",
+        "module:extractor:test:common",
+        "module:store:inmemory:common",
+        "module:service:test:common",
+        "module:service:test:site",
+        "module:service:test:avs",
 
         // other
         "core:verification-poc",
