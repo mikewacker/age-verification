@@ -1,9 +1,11 @@
 package org.example.age.service.verification.internal.site;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import java.time.Duration;
 import org.assertj.core.data.Offset;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.api.def.common.VerificationStatus;
@@ -53,8 +55,8 @@ public final class SiteVerificationManagerTest {
 
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(200);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).hasValue("/api/verification-state");
 
         VerificationState siteState = siteVerificationManager.getVerificationState("publius");
         assertThat(siteState.status()).isEqualTo(VerificationStatus.VERIFIED);
@@ -74,8 +76,8 @@ public final class SiteVerificationManagerTest {
 
         SignedAgeCertificate signedCertificate1 = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session1);
-        int certificateStatusCode1 = siteVerificationManager.onAgeCertificateReceived(signedCertificate1);
-        assertThat(certificateStatusCode1).isEqualTo(200);
+        HttpOptional<String> maybeRedirectPath1 = siteVerificationManager.onAgeCertificateReceived(signedCertificate1);
+        assertThat(maybeRedirectPath1).isPresent();
 
         VerificationSession session2 = fakeAvsVerificationFactory.createVerificationSession("Site");
         int sessionStatusCode2 = siteVerificationManager.onVerificationSessionReceived(
@@ -84,8 +86,8 @@ public final class SiteVerificationManagerTest {
 
         SignedAgeCertificate signedCertificate2 = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session2);
-        int certificateStatusCode2 = siteVerificationManager.onAgeCertificateReceived(signedCertificate2);
-        assertThat(certificateStatusCode2).isEqualTo(409);
+        HttpOptional<String> maybeRedirectPath2 = siteVerificationManager.onAgeCertificateReceived(signedCertificate2);
+        assertThat(maybeRedirectPath2).isEmptyWithErrorCode(409);
     }
 
     @Test
@@ -97,8 +99,8 @@ public final class SiteVerificationManagerTest {
 
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent2"), session);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(403);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).isEmptyWithErrorCode(403);
     }
 
     @Test
@@ -107,8 +109,8 @@ public final class SiteVerificationManagerTest {
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session);
         SignedAgeCertificate forgedCertificate = forgeSignedAgeCertificate(signedCertificate);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(forgedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(401);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(forgedCertificate);
+        assertThat(maybeRedirectPath).isEmptyWithErrorCode(401);
     }
 
     @Test
@@ -116,8 +118,8 @@ public final class SiteVerificationManagerTest {
         VerificationSession session = fakeAvsVerificationFactory.createVerificationSession("Other Site");
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(403);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).isEmptyWithErrorCode(403);
     }
 
     @Test
@@ -126,8 +128,8 @@ public final class SiteVerificationManagerTest {
                 fakeAvsVerificationFactory.createVerificationSession("Site", Duration.ofMinutes(-1));
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(410);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).isEmptyWithErrorCode(410);
     }
 
     @Test
@@ -135,8 +137,8 @@ public final class SiteVerificationManagerTest {
         VerificationSession session = fakeAvsVerificationFactory.createVerificationSession("Site");
         SignedAgeCertificate signedCertificate = fakeAvsVerificationFactory.createSignedAgeCertificate(
                 "John Smith", UserAgentAuthMatchData.of("agent"), session);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(404);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).isEmptyWithErrorCode(404);
     }
 
     @Test
@@ -149,8 +151,8 @@ public final class SiteVerificationManagerTest {
         AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.empty();
         SignedAgeCertificate signedCertificate =
                 fakeAvsVerificationFactory.createSignedAgeCertificate("John Smith", authToken, session);
-        int certificateStatusCode = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(401);
+        HttpOptional<String> maybeRedirectPath = siteVerificationManager.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).isEmptyWithErrorCode(401);
     }
 
     private static SignedAgeCertificate forgeSignedAgeCertificate(SignedAgeCertificate signedCertificate) {

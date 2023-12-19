@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.common.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.user.VerifiedUser;
@@ -37,14 +38,14 @@ final class FakeSiteVerificationProcessorImpl implements FakeSiteVerificationPro
     }
 
     @Override
-    public int onAgeCertificateReceived(SignedAgeCertificate signedCertificate) {
+    public HttpOptional<String> onAgeCertificateReceived(SignedAgeCertificate signedCertificate) {
         if (!certificateVerifier.verify(signedCertificate)) {
-            return 401;
+            return HttpOptional.empty(401);
         }
 
         if (storedAccountId == null) {
             reset();
-            return 418;
+            return HttpOptional.empty(418);
         }
 
         String accountId = storedAccountId;
@@ -54,7 +55,11 @@ final class FakeSiteVerificationProcessorImpl implements FakeSiteVerificationPro
         long expiration = createExpiration();
         VerificationState state = VerificationState.verified(user, expiration);
         Optional<String> maybeConflictingAccountId = verificationStore.trySave(accountId, state);
-        return maybeConflictingAccountId.isEmpty() ? 200 : 409;
+        if (maybeConflictingAccountId.isPresent()) {
+            return HttpOptional.empty(409);
+        }
+
+        return HttpOptional.of("/api/verification-state");
     }
 
     /** Creates an expiration timestamp in seconds. */

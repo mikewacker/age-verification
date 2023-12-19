@@ -73,16 +73,16 @@ final class FakeAvsService implements AvsApi {
             return;
         }
 
-        String siteId = storedSession.verificationRequest().siteId();
         SignedAgeCertificate signedCertificate =
                 verificationFactory.createSignedAgeCertificate(accountId, authData, storedSession);
         reset();
 
+        String siteId = signedCertificate.ageCertificate().verificationRequest().siteId();
         requestDispatcher
                 .requestBuilder(dispatcher, new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(siteId))
                 .body(signedCertificate)
-                .dispatch(sender, this::handleAgeCertificateResponse);
+                .dispatch(sender, siteId, this::handleAgeCertificateResponse);
     }
 
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
@@ -93,9 +93,21 @@ final class FakeAvsService implements AvsApi {
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */
     private void handleAgeCertificateResponse(
-            Sender.Value<String> sender, HttpOptional<String> maybeRedirectPath, Dispatcher dispatcher) {
-        // TODO: Add redirect URL.
-        sender.send(maybeRedirectPath);
+            Sender.Value<String> sender, String siteId, HttpOptional<String> maybeRedirectPath, Dispatcher dispatcher) {
+        if (maybeRedirectPath.isEmpty()) {
+            sender.sendErrorCode(maybeRedirectPath);
+            return;
+        }
+        String redirectPath = maybeRedirectPath.get();
+
+        String redirectUrl = toRedirectUrl(redirectPath, siteId);
+        sender.sendValue(redirectUrl);
+    }
+
+    /** Converts a redirect path to a redirect URL. */
+    private String toRedirectUrl(String redirectPath, String siteId) {
+        Location siteLocation = siteLocationProvider.getSite(siteId);
+        return siteLocation.url(redirectPath);
     }
 
     /** Clears the stored verification data. */

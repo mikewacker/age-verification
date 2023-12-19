@@ -17,6 +17,7 @@ import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.service.config.avs.AvsConfig;
 import org.example.age.service.config.avs.RefreshableAvsConfigProvider;
 import org.example.age.service.config.avs.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.config.avs.RegisteredSiteConfig;
@@ -127,9 +128,10 @@ final class AvsVerificationManagerImpl implements AvsVerificationManager {
 
     /** Creates a {@link VerificationSession} for a site. */
     private VerificationSession createVerificationSession(String siteId) {
-        // TODO: Add redirect path.
-        Duration expiresIn = Duration.ofSeconds(avsConfigProvider.get().verificationSessionExpiresIn());
-        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn, "");
+        AvsConfig avsConfig = avsConfigProvider.get();
+        Duration expiresIn = Duration.ofSeconds(avsConfig.verificationSessionExpiresIn());
+        String redirectPath = avsConfig.redirectPath();
+        VerificationRequest request = VerificationRequest.generateForSite(siteId, expiresIn, redirectPath);
         return VerificationSession.generate(request);
     }
 

@@ -14,6 +14,7 @@ public final class SiteConfigTest {
         SiteConfig siteConfig = SiteConfig.builder()
                 .id("Site")
                 .verifiedAccountExpiresInMinutes(Duration.ofDays(30).toMinutes())
+                .redirectPath("/verify")
                 .build();
         byte[] rawSiteConfig = JsonValues.serialize(siteConfig);
         SiteConfig rtSiteConfig = JsonValues.deserialize(rawSiteConfig, new TypeReference<>() {});

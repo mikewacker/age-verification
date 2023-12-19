@@ -64,17 +64,17 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
     }
 
     @Override
-    public int onAgeCertificateReceived(SignedAgeCertificate signedCertificate) {
+    public HttpOptional<String> onAgeCertificateReceived(SignedAgeCertificate signedCertificate) {
         int verifyStatusCode = verifySignedAgeCertificate(signedCertificate);
         if (verifyStatusCode != 200) {
-            return verifyStatusCode;
+            return HttpOptional.empty(verifyStatusCode);
         }
 
         AgeCertificate certificate = signedCertificate.ageCertificate();
         HttpOptional<Verification> maybePendingVerification =
                 tryRemovePendingVerification(certificate.verificationRequest().id());
         if (maybePendingVerification.isEmpty()) {
-            return maybePendingVerification.statusCode();
+            return maybePendingVerification.convertEmpty();
         }
         Verification pendingVerification = maybePendingVerification.get();
 
@@ -83,11 +83,17 @@ final class SiteVerificationManagerImpl implements SiteVerificationManager {
                 certificate.authToken(),
                 pendingVerification.verificationSession().authKey());
         if (authStatusCode != 200) {
-            return authStatusCode;
+            return HttpOptional.empty(authStatusCode);
         }
 
         VerifiedUser localUser = userLocalizer.localize(certificate.verifiedUser(), "local");
-        return trySaveUser(pendingVerification.accountId(), localUser);
+        int saveStatusCode = trySaveUser(pendingVerification.accountId(), localUser);
+        if (saveStatusCode != 200) {
+            return HttpOptional.empty(saveStatusCode);
+        }
+
+        String redirectPath = siteConfigProvider.get().redirectPath();
+        return HttpOptional.of(redirectPath);
     }
 
     /** Verifies a {@link SignedAgeCertificate}, returning a status code. */

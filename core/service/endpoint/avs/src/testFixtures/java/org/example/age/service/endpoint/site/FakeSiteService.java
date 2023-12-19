@@ -52,14 +52,8 @@ final class FakeSiteService implements SiteApi {
     @Override
     public void processAgeCertificate(
             Sender.Value<String> sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
-        // TODO: Add redirect path.
-        int statusCode = verificationProcessor.onAgeCertificateReceived(signedCertificate);
-        if (statusCode != 200) {
-            sender.sendErrorCode(statusCode);
-            return;
-        }
-
-        sender.sendValue("");
+        HttpOptional<String> maybeRedirectPath = verificationProcessor.onAgeCertificateReceived(signedCertificate);
+        sender.send(maybeRedirectPath);
     }
 
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
@@ -74,7 +68,6 @@ final class FakeSiteService implements SiteApi {
             String accountId,
             HttpOptional<VerificationSession> maybeSession,
             Dispatcher dispatcher) {
-        // TODO: Add redirect URL.
         if (maybeSession.isEmpty()) {
             sender.sendErrorCode(maybeSession);
             return;
@@ -82,6 +75,13 @@ final class FakeSiteService implements SiteApi {
         VerificationSession session = maybeSession.get();
 
         verificationProcessor.beginVerification(accountId);
-        sender.sendValue(session.verificationRequest());
+        VerificationRequest request = toRedirectUrl(session.verificationRequest());
+        sender.sendValue(request);
+    }
+
+    /** Converts a redirect path in a {@link VerificationRequest} to a redirect URL. */
+    private VerificationRequest toRedirectUrl(VerificationRequest request) {
+        Location avsLocation = avsLocationProvider.getAvs();
+        return request.convertRedirectPathToUrl(avsLocation.rootUrl());
     }
 }

@@ -12,6 +12,7 @@ final class TestSiteConfigProvider implements RefreshableSiteConfigProvider {
     private static final SiteConfig siteConfig = SiteConfig.builder()
             .id("Site")
             .verifiedAccountExpiresInMinutes(Duration.ofDays(30).toMinutes())
+            .redirectPath("/api/verification-state")
             .build();
 
     @Inject

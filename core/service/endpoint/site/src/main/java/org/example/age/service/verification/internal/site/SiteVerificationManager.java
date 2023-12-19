@@ -1,5 +1,6 @@
 package org.example.age.service.verification.internal.site;
 
+import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.api.def.common.VerificationState;
@@ -16,6 +17,6 @@ public interface SiteVerificationManager {
     int onVerificationSessionReceived(
             String accountId, AuthMatchData authData, VerificationSession session, ScheduledExecutor executor);
 
-    /** Called when a {@link SignedAgeCertificate} is received. */
-    int onAgeCertificateReceived(SignedAgeCertificate signedCertificate);
+    /** Called when a {@link SignedAgeCertificate} is received, returning a redirect path. */
+    HttpOptional<String> onAgeCertificateReceived(SignedAgeCertificate signedCertificate);
 }

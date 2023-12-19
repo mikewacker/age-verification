@@ -18,5 +18,8 @@ public interface AvsConfig {
     /** Expiration (in seconds) for verification sessions. */
     long verificationSessionExpiresIn();
 
+    /** Path to redirect the user to in order to continue age verification. */
+    String redirectPath();
+
     final class Builder extends ImmutableAvsConfig.Builder {}
 }

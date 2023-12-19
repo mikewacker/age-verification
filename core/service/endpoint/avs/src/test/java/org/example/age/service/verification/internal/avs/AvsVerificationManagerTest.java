@@ -57,6 +57,8 @@ public final class AvsVerificationManagerTest {
         long now = System.currentTimeMillis() / 1000;
         long expectedExpiration = now + Duration.ofMinutes(5).toSeconds();
         assertThat(request.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
+        String expectedRedirectPath = String.format("/api/linked-verification-request?request-id=%s", request.id());
+        assertThat(request.redirectUrl()).isEqualTo(expectedRedirectPath);
         fakeSiteVerificationProcessor.beginVerification("publius");
 
         int linkStatusCode = avsVerificationManager.linkVerificationRequest("John Smith", request.id(), executor);
@@ -66,8 +68,9 @@ public final class AvsVerificationManagerTest {
                 avsVerificationManager.createAgeCertificate("John Smith", DisabledAuthMatchData.of());
         assertThat(maybeSignedCertificate).isPresent();
         SignedAgeCertificate signedCertificate = maybeSignedCertificate.get();
-        int certificateStatusCode = fakeSiteVerificationProcessor.onAgeCertificateReceived(signedCertificate);
-        assertThat(certificateStatusCode).isEqualTo(200);
+        HttpOptional<String> maybeRedirectPath =
+                fakeSiteVerificationProcessor.onAgeCertificateReceived(signedCertificate);
+        assertThat(maybeRedirectPath).isPresent();
 
         VerificationState siteState = fakeSiteVerificationProcessor.getVerificationState("publius");
         assertThat(siteState.status()).isEqualTo(VerificationStatus.VERIFIED);
