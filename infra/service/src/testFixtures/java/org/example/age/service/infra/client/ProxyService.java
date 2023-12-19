@@ -1,9 +1,7 @@
 package org.example.age.service.infra.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.Component;
 import io.undertow.server.HttpHandler;
-import javax.inject.Singleton;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
@@ -12,7 +10,7 @@ import org.example.age.testing.server.TestServer;
 /** Test service for {@link ProxyApi} that uses a {@link RequestDispatcher}. */
 public final class ProxyService implements ProxyApi {
 
-    private final RequestDispatcher requestDispatcher = TestComponent.createRequestDispatcher();
+    private final RequestDispatcher requestDispatcher = RequestDispatcher.create();
     private final TestServer<?> backendServer = TestServer.get("backend");
 
     /** Creates an {@link HttpHandler} from a {@link ProxyService}. */
@@ -49,17 +47,4 @@ public final class ProxyService implements ProxyApi {
     }
 
     private ProxyService() {}
-
-    /** Dagger component that provides a {@link RequestDispatcher}. */
-    @Component(modules = RequestDispatcherModule.class)
-    @Singleton
-    interface TestComponent {
-
-        static RequestDispatcher createRequestDispatcher() {
-            TestComponent component = DaggerProxyService_TestComponent.create();
-            return component.requestDispatcher();
-        }
-
-        RequestDispatcher requestDispatcher();
-    }
 }

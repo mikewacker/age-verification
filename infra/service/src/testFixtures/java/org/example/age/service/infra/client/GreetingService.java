@@ -1,11 +1,9 @@
-package org.example.age.service.infra.client.internal;
+package org.example.age.service.infra.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.Component;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Optional;
-import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -18,7 +16,7 @@ import org.example.age.testing.server.TestServer;
 /** Test service for {@link GreetingApi} that uses a {@link DispatcherOkHttpClient}. */
 public final class GreetingService implements GreetingApi {
 
-    private final DispatcherOkHttpClient client = TestComponent.createDispatcherOkHttpClient();
+    private final DispatcherOkHttpClient client = DispatcherOkHttpClient.create();
     private final TestServer<?> backendServer = TestServer.get("backend");
 
     /** Creates an {@link HttpHandler} from a {@link GreetingService}. */
@@ -78,18 +76,5 @@ public final class GreetingService implements GreetingApi {
                 return Optional.empty();
             }
         }
-    }
-
-    /** Dagger component that provides a {@link DispatcherOkHttpClient}. */
-    @Component(modules = DispatcherOkHttpClientModule.class)
-    @Singleton
-    interface TestComponent {
-
-        static DispatcherOkHttpClient createDispatcherOkHttpClient() {
-            TestComponent component = DaggerGreetingService_TestComponent.create();
-            return component.dispatcherOkHttpClient();
-        }
-
-        DispatcherOkHttpClient dispatcherOkHttpClient();
     }
 }

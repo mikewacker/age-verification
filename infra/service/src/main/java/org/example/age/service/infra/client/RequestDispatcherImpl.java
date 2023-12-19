@@ -3,8 +3,6 @@ package org.example.age.service.infra.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -15,16 +13,13 @@ import org.example.age.api.base.Sender;
 import org.example.age.client.infra.JsonApiClient;
 import org.example.age.client.infra.ResponseConverter;
 import org.example.age.data.json.JsonValues;
-import org.example.age.service.infra.client.internal.DispatcherOkHttpClient;
 
-@Singleton
 final class RequestDispatcherImpl implements RequestDispatcher {
 
-    private final DispatcherOkHttpClient client;
+    private final DispatcherOkHttpClient client = DispatcherOkHttpClient.create();
 
-    @Inject
-    public RequestDispatcherImpl(DispatcherOkHttpClient client) {
-        this.client = client;
+    public static RequestDispatcher create() {
+        return new RequestDispatcherImpl();
     }
 
     @Override
@@ -42,6 +37,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         AdaptedDispatcher<HttpOptional<V>> adaptedDispatcher = new AdaptedDispatcher<>(dispatcher, responseConverter);
         return new UrlStageRequestBuilderImpl<>(requestBuilder, adaptedDispatcher);
     }
+
+    private RequestDispatcherImpl() {}
 
     /** Internal {@link UrlStageRequestBuilder} implementation. */
     private record UrlStageRequestBuilderImpl<V>(

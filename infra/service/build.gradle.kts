@@ -10,8 +10,6 @@ dependencies {
 
     api(project(":base:api:base"))
     api("com.fasterxml.jackson.core:jackson-core")
-    api("com.google.dagger:dagger")
-    api("javax.inject:javax.inject")
 
     implementation(project(":base:data:json"))
     implementation(project(":infra:client"))
@@ -28,9 +26,7 @@ dependencies {
     testFixturesImplementation(project(":infra:client"))
     testFixturesImplementation(testFixtures(project(":testing")))
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
-    testFixturesImplementation("com.google.dagger:dagger")
     testFixturesImplementation("com.squareup.okhttp3:okhttp")
-    testFixturesImplementation("javax.inject:javax.inject")
 
     // test
     testImplementation(project(":base:api:base"))

@@ -10,8 +10,15 @@ import org.example.age.api.base.Sender;
  * Dispatches HTTP requests to a backend server as part of a frontend exchange.
  *
  * <p>Failures for the backend request are not handled by the callback; the frontend server will send a 502 error.</p>
+ *
+ * <p>Consumers should create and share a single {@link RequestDispatcher}; each instance creates a new client.</p>
  */
 public interface RequestDispatcher {
+
+    /** Creates a {@link RequestDispatcher}. */
+    static RequestDispatcher create() {
+        return RequestDispatcherImpl.create();
+    }
 
     /** Creates a builder for a request whose response is only a status code. */
     UrlStageRequestBuilder<Integer> requestBuilder(Dispatcher dispatcher);

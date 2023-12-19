@@ -1,4 +1,4 @@
-package org.example.age.service.infra.client.internal;
+package org.example.age.service.infra.client;
 
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
