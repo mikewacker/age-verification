@@ -56,14 +56,8 @@ final class SiteService implements SiteApi {
     @Override
     public void processAgeCertificate(
             Sender.Value<String> sender, SignedAgeCertificate signedCertificate, Dispatcher dispatcher) {
-        // TODO: Add redirect path.
-        int statusCode = verificationManager.onAgeCertificateReceived(signedCertificate);
-        if (statusCode != 200) {
-            sender.sendErrorCode(statusCode);
-            return;
-        }
-
-        sender.sendValue("");
+        HttpOptional<String> maybeRedirectPath = verificationManager.onAgeCertificateReceived(signedCertificate);
+        sender.send(maybeRedirectPath);
     }
 
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
@@ -80,7 +74,6 @@ final class SiteService implements SiteApi {
             AuthMatchData authData,
             HttpOptional<VerificationSession> maybeSession,
             Dispatcher dispatcher) {
-        // TODO: Add redirect URL.
         if (maybeSession.isEmpty()) {
             int errorCode = mapVerificationSessionErrorCode(maybeSession.statusCode());
             sender.sendErrorCode(errorCode);
@@ -95,11 +88,18 @@ final class SiteService implements SiteApi {
             return;
         }
 
-        sender.sendValue(session.verificationRequest());
+        VerificationRequest request = toRedirectUrl(session.verificationRequest());
+        sender.sendValue(request);
     }
 
     /** Maps the backend error code to a frontend error code. */
     private static int mapVerificationSessionErrorCode(int backendErrorCode) {
         return (backendErrorCode / 100 == 5) ? 502 : 500;
+    }
+
+    /** Converts a redirect path in a {@link VerificationRequest} to a redirect URL. */
+    private VerificationRequest toRedirectUrl(VerificationRequest request) {
+        Location avsLocation = avsLocationProvider.getAvs();
+        return request.convertRedirectPathToUrl(avsLocation.rootUrl());
     }
 }

@@ -58,26 +58,27 @@ public final class ServiceIntegrationTestTemplate {
         VerificationRequest request = maybeRequest.get();
 
         int linkStatusCode = TestClient.requestBuilder()
-                .post(avsServer.url("/api/linked-verification-request?request-id=%s", request.id()))
+                .post(request.redirectUrl())
                 .headers(Map.of("Account-Id", avsAccountId))
                 .execute();
         assertThat(linkStatusCode).isEqualTo(200);
 
-        HttpOptional<String> maybeSiteRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
+        HttpOptional<String> maybeRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", avsAccountId))
                 .execute();
         if (succeeds) {
-            assertThat(maybeSiteRedirectUrl).isPresent();
+            assertThat(maybeRedirectUrl).isPresent();
         } else {
-            assertThat(maybeSiteRedirectUrl).isEmptyWithErrorCode(409);
+            assertThat(maybeRedirectUrl).isEmptyWithErrorCode(409);
             return;
         }
+        String redirectUrl = maybeRedirectUrl.get();
 
         // Check updated state.
         HttpOptional<VerificationState> maybeNewSiteState = TestClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
-                .get(siteServer.url("/api/verification-state"))
+                .get(redirectUrl)
                 .headers(Map.of("Account-Id", siteAccountId))
                 .execute();
         assertThat(maybeNewSiteState).isPresent();

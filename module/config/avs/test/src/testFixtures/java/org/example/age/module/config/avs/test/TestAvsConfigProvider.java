@@ -11,6 +11,7 @@ final class TestAvsConfigProvider implements RefreshableAvsConfigProvider {
 
     private static final AvsConfig avsConfig = AvsConfig.builder()
             .verificationSessionExpiresIn(Duration.ofMinutes(5).toSeconds())
+            .redirectPath("/api/linked-verification-request?request-id=%s")
             .build();
 
     @Inject

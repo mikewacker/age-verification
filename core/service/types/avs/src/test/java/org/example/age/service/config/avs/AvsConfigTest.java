@@ -13,6 +13,7 @@ public final class AvsConfigTest {
     public void serializeThenDeserialize() {
         AvsConfig avsConfig = AvsConfig.builder()
                 .verificationSessionExpiresIn(Duration.ofMinutes(5).toSeconds())
+                .redirectPath("/verify")
                 .build();
         byte[] rawAvsConfig = JsonValues.serialize(avsConfig);
         AvsConfig rtAvsConfig = JsonValues.deserialize(rawAvsConfig, new TypeReference<>() {});

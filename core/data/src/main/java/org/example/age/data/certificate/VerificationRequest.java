@@ -23,12 +23,18 @@ public interface VerificationRequest {
                 .build();
     }
 
-    /** Generates a verification request for the site. */
-    static VerificationRequest generateForSite(String siteId, Duration expiresIn, String redirectUrl) {
+    /**
+     * Generates a verification request for a site.
+     *
+     * <p>The redirect URL will initially be a redirect path; it will later be converted to a redirect URL.
+     * It is provided as a format string, so that the request ID can be incorporated into the redirect path.</p>
+     */
+    static VerificationRequest generateForSite(String siteId, Duration expiresIn, String redirectPathFormat) {
         SecureId id = SecureId.generate();
         long now = System.currentTimeMillis() / 1000;
         long expiration = now + expiresIn.toSeconds();
-        return of(id, siteId, expiration, redirectUrl);
+        String redirectPath = String.format(redirectPathFormat, id);
+        return of(id, siteId, expiration, redirectPath);
     }
 
     /** ID of the request. */
@@ -46,6 +52,14 @@ public interface VerificationRequest {
 
     /** URL to redirect the user to in order to continue age verification. */
     String redirectUrl();
+
+    /** Converts the redirect path to a redirect URL. */
+    default VerificationRequest convertRedirectPathToUrl(String rootUrl) {
+        rootUrl = rootUrl.replaceFirst("/$", "");
+        String redirectPath = redirectUrl().replaceFirst("^/", "");
+        String redirectUrl = String.format("%s/%s", rootUrl, redirectPath);
+        return VerificationRequest.of(id(), siteId(), expiration(), redirectUrl);
+    }
 
     /** Determines if the request is intended for a site. */
     default boolean isIntendedRecipient(String siteId) {

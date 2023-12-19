@@ -10,7 +10,7 @@ import org.example.age.service.config.avs.RegisteredSiteConfig;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class TestRegisteredSiteConfigTest {
+public final class TestRegisteredSiteConfigTest {
 
     private static RefreshableRegisteredSiteConfigProvider siteConfigProvider;
 

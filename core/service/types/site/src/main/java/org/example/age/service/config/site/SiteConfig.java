@@ -29,5 +29,8 @@ public interface SiteConfig {
         return verifiedAccountExpiresInMinutes() * 60;
     }
 
+    /** Path to redirect the user to in order to continue age verification. */
+    String redirectPath();
+
     class Builder extends ImmutableSiteConfig.Builder {}
 }
