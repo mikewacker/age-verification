@@ -9,7 +9,7 @@ import org.example.age.api.def.site.SiteApi;
 import org.example.age.api.endpoint.site.SiteApiModule;
 import org.example.age.api.extractor.common.AccountIdExtractor;
 import org.example.age.api.extractor.common.AuthMatchDataExtractor;
-import org.example.age.module.location.common.test.TestAvsLocationModule;
+import org.example.age.module.location.test.common.TestAvsLocationModule;
 import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.key.common.RefreshableKeyProvider;
 import org.example.age.service.location.common.RefreshableAvsLocationProvider;

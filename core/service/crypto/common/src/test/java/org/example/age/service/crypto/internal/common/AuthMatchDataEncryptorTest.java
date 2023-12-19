@@ -8,7 +8,7 @@ import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.common.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.module.extractor.common.builtin.UserAgentAuthMatchData;
+import org.example.age.module.extractor.builtin.common.UserAgentAuthMatchData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

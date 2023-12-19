@@ -6,7 +6,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.module.key.common.test.TestKeyModule;
+import org.example.age.module.key.test.common.TestKeyModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

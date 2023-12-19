@@ -1,10 +1,10 @@
 package org.example.age.service.component.test.avs;
 
 import dagger.Module;
-import org.example.age.module.config.avs.test.TestAvsConfigModule;
-import org.example.age.module.key.common.test.TestKeyModule;
-import org.example.age.module.store.avs.test.TestAvsVerificationStoreModule;
-import org.example.age.module.store.common.inmemory.InMemoryPendingStoreFactoryModule;
+import org.example.age.module.config.test.avs.TestAvsConfigModule;
+import org.example.age.module.key.test.common.TestKeyModule;
+import org.example.age.module.store.inmemory.common.InMemoryPendingStoreFactoryModule;
+import org.example.age.module.store.test.avs.TestAvsVerificationStoreModule;
 import org.example.age.service.verification.internal.avs.AvsVerificationManager;
 import org.example.age.service.verification.internal.avs.AvsVerificationManagerModule;
 
