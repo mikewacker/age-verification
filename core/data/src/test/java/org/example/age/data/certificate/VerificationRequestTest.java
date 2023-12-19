@@ -29,7 +29,7 @@ public final class VerificationRequestTest {
     @Test
     public void convertRedirectPathToUrl() {
         VerificationRequest request = VerificationRequest.generateForSite(SITE_ID, EXPIRES_IN, REDIRECT_PATH);
-        VerificationRequest convertedRequest = request.convertRedirectPathToUrl("http://localhost:80/");
+        VerificationRequest convertedRequest = request.convertRedirectPathToUrl("http://localhost/");
         String expectedRedirectPath = String.format("http://localhost/verify?request-id=%s", request.id());
         assertThat(convertedRequest.redirectUrl()).isEqualTo(expectedRedirectPath);
     }
