@@ -35,6 +35,7 @@ include(
         "core:integration-test",
 
         "module:extractor:builtin:common",
+        "module:extractor:demo:common",
         "module:extractor:test:common",
         "module:store:inmemory:common",
         "module:service:test:common",
