@@ -36,13 +36,6 @@ public interface VerificationState {
                 .build();
     }
 
-    /** Creates an invalidated state. */
-    static VerificationState invalidated() {
-        return ImmutableVerificationState.builder()
-                .status(VerificationStatus.INVALIDATED)
-                .build();
-    }
-
     /** Gets the current verification status. */
     VerificationStatus status();
 
