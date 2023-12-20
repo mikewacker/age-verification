@@ -1,4 +1,4 @@
-package org.example.age.service.component.stub.avs;
+package org.example.age.service.component.stub.site;
 
 import dagger.Module;
 import io.undertow.server.HttpHandler;
