@@ -1,18 +1,18 @@
 plugins {
     id("org.example.age.java-conventions")
-    `java-library`
+    `java-test-fixtures`
 }
 
 dependencies {
-    // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    // test fixtures
+    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":core:api:extractors"))
-    api("com.google.dagger:dagger")
-    api("javax.inject:javax.inject")
+    testFixturesApi(project(":core:api:extractors"))
+    testFixturesApi("com.google.dagger:dagger")
+    testFixturesApi("javax.inject:javax.inject")
 
-    implementation(project(":base:api:base"))
-    implementation("io.undertow:undertow-core")
+    testFixturesImplementation(project(":base:api:base"))
+    testFixturesImplementation("io.undertow:undertow-core")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
