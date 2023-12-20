@@ -47,14 +47,6 @@ public final class VerificationStateTest {
     }
 
     @Test
-    public void invalidated() {
-        VerificationState state = VerificationState.invalidated();
-        assertThat(state.status()).isEqualTo(VerificationStatus.INVALIDATED);
-        assertThat(state.verifiedUser()).isNull();
-        assertThat(state.expiration()).isNull();
-    }
-
-    @Test
     public void update_Unverified() {
         VerificationState state = VerificationState.unverified();
         VerificationState updatedState = state.update();
@@ -93,12 +85,6 @@ public final class VerificationStateTest {
     @Test
     public void serializeThenDeserialize_Expired() {
         VerificationState state = VerificationState.expired(expiration);
-        serializeThenDeserialize(state);
-    }
-
-    @Test
-    public void serializeThenDeserialize_Invalidated() {
-        VerificationState state = VerificationState.invalidated();
         serializeThenDeserialize(state);
     }
 
