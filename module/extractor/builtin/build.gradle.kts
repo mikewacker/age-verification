@@ -26,6 +26,7 @@ dependencies {
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types"))
     testImplementation(project(":core:api:extractors"))
+    testImplementation(testFixtures(project(":base:data:json")))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("com.google.dagger:dagger")

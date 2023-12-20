@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,18 +36,7 @@ public final class DigitalSignatureTest {
 
     @Test
     public void serializeThenDeserialize() {
-        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] rawSignature = JsonValues.serialize(signature);
-        DigitalSignature rtSignature = JsonValues.deserialize(rawSignature, new TypeReference<>() {});
-        assertThat(rtSignature).isEqualTo(signature);
-    }
-
-    @Test
-    public void signThenSerializeThenDeserializeThenVerify() {
-        DigitalSignature signature = DigitalSignature.sign(MESSAGE, keyPair.getPrivate());
-        byte[] rawSignature = JsonValues.serialize(signature);
-        DigitalSignature rtSignature = JsonValues.deserialize(rawSignature, new TypeReference<>() {});
-        boolean wasVerified = rtSignature.verify(MESSAGE, keyPair.getPublic());
-        assertThat(wasVerified).isTrue();
+        JsonTester.serializeThenDeserialize(
+                DigitalSignature.sign(MESSAGE, keyPair.getPrivate()), new TypeReference<>() {});
     }
 }

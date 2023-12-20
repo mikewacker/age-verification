@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.example.age.api.def.AuthMatchData;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class UserAgentAuthMatchDataTest {
@@ -27,9 +27,6 @@ public final class UserAgentAuthMatchDataTest {
 
     @Test
     public void serializeThenDeserialize() {
-        AuthMatchData authData = UserAgentAuthMatchData.of("agent");
-        byte[] rawAuthData = JsonValues.serialize(authData);
-        AuthMatchData rtAuthData = JsonValues.deserialize(rawAuthData, new TypeReference<>() {});
-        assertThat(rtAuthData).isEqualTo(authData);
+        JsonTester.serializeThenDeserialize(UserAgentAuthMatchData.of("agent"), new TypeReference<>() {});
     }
 }

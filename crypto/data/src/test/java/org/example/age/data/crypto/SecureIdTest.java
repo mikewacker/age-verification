@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class SecureIdTest {
@@ -26,10 +26,7 @@ public final class SecureIdTest {
 
     @Test
     public void serializeThenDeserialize() {
-        SecureId id = SecureId.generate();
-        byte[] rawId = JsonValues.serialize(id);
-        SecureId rtId = JsonValues.deserialize(rawId, new TypeReference<>() {});
-        assertThat(rtId).isEqualTo(id);
+        JsonTester.serializeThenDeserialize(SecureId.generate(), new TypeReference<>() {});
     }
 
     @Test
