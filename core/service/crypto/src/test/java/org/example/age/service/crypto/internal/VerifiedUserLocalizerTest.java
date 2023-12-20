@@ -31,7 +31,7 @@ public final class VerifiedUserLocalizerTest {
     }
 
     /** Dagger component that provides a {@link VerifiedUserLocalizer}. */
-    @Component(modules = {VerifiedUserLocalizerModule.class, TestKeyModule.class})
+    @Component(modules = {VerifierCryptoModule.class, TestKeyModule.class})
     @Singleton
     interface TestComponent {
 
