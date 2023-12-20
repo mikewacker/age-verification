@@ -26,7 +26,6 @@ include(
         "core:service:types",
         "core:service:crypto",
         "core:service:endpoint",
-        "core:integration-test",
 
         "module:extractor:builtin",
         "module:extractor:demo",

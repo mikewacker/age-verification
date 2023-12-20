@@ -50,7 +50,6 @@ dependencies {
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types"))
     testImplementation(project(":module:extractor:builtin"))
-    testImplementation(testFixtures(project(":core:integration-test")))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("io.undertow:undertow-core")
