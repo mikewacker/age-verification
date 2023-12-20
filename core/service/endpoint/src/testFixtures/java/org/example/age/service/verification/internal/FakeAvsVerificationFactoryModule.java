@@ -2,8 +2,7 @@ package org.example.age.service.verification.internal;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.crypto.internal.AgeCertificateSignerModule;
-import org.example.age.service.crypto.internal.AuthMatchDataEncryptorModule;
+import org.example.age.service.crypto.internal.SignerCryptoModule;
 import org.example.age.service.key.RefreshableKeyProvider;
 import org.example.age.service.store.VerificationStore;
 
@@ -16,7 +15,7 @@ import org.example.age.service.store.VerificationStore;
  *     <li>{@link RefreshableKeyProvider}</li>
  * </ul>
  */
-@Module(includes = {AgeCertificateSignerModule.class, AuthMatchDataEncryptorModule.class})
+@Module(includes = SignerCryptoModule.class)
 public interface FakeAvsVerificationFactoryModule {
 
     @Binds

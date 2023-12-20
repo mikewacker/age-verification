@@ -23,9 +23,8 @@ public final class AgeCertificateSignerVerifierTest {
 
     @BeforeAll
     public static void createAgeCertificateSignerAndVerifier() {
-        TestComponent component = TestComponent.create();
-        certificateSigner = component.ageCertificateSigner();
-        certificateVerifier = component.ageCertificateVerifier();
+        certificateSigner = TestAvsComponent.createAgeCertificateSigner();
+        certificateVerifier = TestSiteComponent.createAgeCertificateVerifier();
     }
 
     @Test
@@ -53,16 +52,28 @@ public final class AgeCertificateSignerVerifierTest {
         return AgeCertificate.of(request, user, authToken);
     }
 
-    /** Dagger component that provides an {@link AgeCertificateSigner} and an {@link AgeCertificateVerifier}. */
-    @Component(modules = {AgeCertificateSignerModule.class, AgeCertificateVerifierModule.class, TestKeyModule.class})
+    /** Dagger component that provides an {@link AgeCertificateSigner}. */
+    @Component(modules = {SignerCryptoModule.class, TestKeyModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestAvsComponent {
 
-        static TestComponent create() {
-            return DaggerAgeCertificateSignerVerifierTest_TestComponent.create();
+        static AgeCertificateSigner createAgeCertificateSigner() {
+            TestAvsComponent component = DaggerAgeCertificateSignerVerifierTest_TestAvsComponent.create();
+            return component.ageCertificateSigner();
         }
 
         AgeCertificateSigner ageCertificateSigner();
+    }
+
+    /** Dagger component that provides an {@link AgeCertificateVerifier}. */
+    @Component(modules = {VerifierCryptoModule.class, TestKeyModule.class})
+    @Singleton
+    interface TestSiteComponent {
+
+        static AgeCertificateVerifier createAgeCertificateVerifier() {
+            TestSiteComponent component = DaggerAgeCertificateSignerVerifierTest_TestSiteComponent.create();
+            return component.ageCertificateVerifier();
+        }
 
         AgeCertificateVerifier ageCertificateVerifier();
     }

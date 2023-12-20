@@ -52,7 +52,7 @@ public final class AuthMatchDataEncryptorTest {
     }
 
     /** Dagger component that provides a {@link AuthMatchDataEncryptor}. */
-    @Component(modules = AuthMatchDataEncryptorModule.class)
+    @Component(modules = VerifierCryptoModule.class)
     @Singleton
     interface TestComponent {
 
