@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class SecureRandomImmutableBytesTest {
@@ -18,10 +18,7 @@ public final class SecureRandomImmutableBytesTest {
 
     @Test
     public void serializeThenDeserialize() {
-        TestValue value = TestValue.generate();
-        byte[] rawValue = JsonValues.serialize(value);
-        TestValue rtValue = JsonValues.deserialize(rawValue, new TypeReference<>() {});
-        assertThat(rtValue).isEqualTo(value);
+        JsonTester.serializeThenDeserialize(TestValue.generate(), new TypeReference<>() {});
     }
 
     /** Test implementations of {@link SecureRandomImmutableBytes}. */

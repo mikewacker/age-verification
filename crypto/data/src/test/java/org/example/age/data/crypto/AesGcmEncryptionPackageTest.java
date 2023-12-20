@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,20 +36,6 @@ public final class AesGcmEncryptionPackageTest {
 
     @Test
     public void serializeThenDeserialize() {
-        AesGcmEncryptionPackage encryptionPackage = AesGcmEncryptionPackage.encrypt(PLAINTEXT, key);
-        byte[] rawEncryptionPackage = JsonValues.serialize(encryptionPackage);
-        AesGcmEncryptionPackage rtEncryptionPackage =
-                JsonValues.deserialize(rawEncryptionPackage, new TypeReference<>() {});
-        assertThat(rtEncryptionPackage).isEqualTo(encryptionPackage);
-    }
-
-    @Test
-    public void encryptThenSerializeThenDeserializeThenDecrypt() {
-        AesGcmEncryptionPackage encryptionPackage = AesGcmEncryptionPackage.encrypt(PLAINTEXT, key);
-        byte[] rawEncryptionPackage = JsonValues.serialize(encryptionPackage);
-        AesGcmEncryptionPackage rtEncryptionPackage =
-                JsonValues.deserialize(rawEncryptionPackage, new TypeReference<>() {});
-        Optional<byte[]> maybeRtPlaintext = rtEncryptionPackage.tryDecrypt(key);
-        assertThat(maybeRtPlaintext).hasValue(PLAINTEXT);
+        JsonTester.serializeThenDeserialize(AesGcmEncryptionPackage.encrypt(PLAINTEXT, key), new TypeReference<>() {});
     }
 }

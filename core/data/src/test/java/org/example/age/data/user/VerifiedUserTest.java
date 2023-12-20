@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class VerifiedUserTest {
@@ -34,9 +34,6 @@ public final class VerifiedUserTest {
 
     @Test
     public void serializeThenDeserialize() {
-        VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        byte[] rawUser = JsonValues.serialize(user);
-        VerifiedUser rtUser = JsonValues.deserialize(rawUser, new TypeReference<>() {});
-        assertThat(rtUser).isEqualTo(user);
+        JsonTester.serializeThenDeserialize(VerifiedUser.of(SecureId.generate(), 18), new TypeReference<>() {});
     }
 }

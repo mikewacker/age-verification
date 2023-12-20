@@ -21,5 +21,6 @@ dependencies {
     // test
     testImplementation(project(":base:data:json"))
     testImplementation(project(":core:data"))
+    testImplementation(testFixtures(project(":base:data:json")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
 }

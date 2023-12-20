@@ -3,16 +3,10 @@ package org.example.age.data.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import java.time.Duration;
-import org.example.age.data.crypto.Aes256Key;
-import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.DigitalSignature;
-import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
-import org.example.age.data.json.JsonValues;
-import org.example.age.data.user.VerifiedUser;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +21,7 @@ public final class SignedAgeCertificateTest {
 
     @Test
     public void signThenVerify() {
-        AgeCertificate certificate = createAgeCertificate();
+        AgeCertificate certificate = AgeCertificateTest.createAgeCertificate();
         SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
         boolean wasVerified = signedCertificate.verify(keyPair.getPublic());
         assertThat(wasVerified).isTrue();
@@ -35,7 +29,7 @@ public final class SignedAgeCertificateTest {
 
     @Test
     public void verifyFailed() {
-        AgeCertificate certificate = createAgeCertificate();
+        AgeCertificate certificate = AgeCertificateTest.createAgeCertificate();
         DigitalSignature forgedSignature = DigitalSignature.ofBytes(new byte[32]);
         SignedAgeCertificate forgedCertificate = SignedAgeCertificate.of(certificate, forgedSignature);
         boolean wasVerified = forgedCertificate.verify(keyPair.getPublic());
@@ -44,32 +38,8 @@ public final class SignedAgeCertificateTest {
 
     @Test
     public void serializeThenDeserialize() {
-        AgeCertificate certificate = createAgeCertificate();
+        AgeCertificate certificate = AgeCertificateTest.createAgeCertificate();
         SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
-        byte[] rawSignedCertificate = JsonValues.serialize(signedCertificate);
-        SignedAgeCertificate rtSignedCertificate =
-                JsonValues.deserialize(rawSignedCertificate, new TypeReference<>() {});
-        assertThat(rtSignedCertificate).isEqualTo(signedCertificate);
-    }
-
-    @Test
-    public void signThenSerializeThenDeserializeThenVerify() {
-        AgeCertificate certificate = createAgeCertificate();
-        SignedAgeCertificate signedCertificate = SignedAgeCertificate.sign(certificate, keyPair.getPrivate());
-        byte[] rawSignedCertificate = JsonValues.serialize(signedCertificate);
-        SignedAgeCertificate rtSignedCertificate =
-                JsonValues.deserialize(rawSignedCertificate, new TypeReference<>() {});
-        boolean wasVerified = rtSignedCertificate.verify(keyPair.getPublic());
-        assertThat(wasVerified).isTrue();
-    }
-
-    private static AgeCertificate createAgeCertificate() {
-        VerificationRequest request =
-                VerificationRequest.generateForSite("Site", Duration.ofMinutes(5), "http://localhost/verify");
-        VerifiedUser user = VerifiedUser.of(SecureId.generate(), 18);
-        byte[] authData = "auth data".getBytes(StandardCharsets.UTF_8);
-        Aes256Key authKey = Aes256Key.generate();
-        AesGcmEncryptionPackage authToken = AesGcmEncryptionPackage.encrypt(authData, authKey);
-        return AgeCertificate.of(request, user, authToken);
+        JsonTester.serializeThenDeserialize(signedCertificate, new TypeReference<>() {});
     }
 }

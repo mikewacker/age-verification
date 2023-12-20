@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
 import java.util.Arrays;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {
@@ -15,10 +15,7 @@ public final class ImmutableBytesTest {
 
     @Test
     public void serializeThenDeserialize() {
-        TestValue value = TestValue.ofBytes(BYTES);
-        byte[] rawValue = JsonValues.serialize(value);
-        TestValue rtValue = JsonValues.deserialize(rawValue, new TypeReference<>() {});
-        assertThat(rtValue).isEqualTo(value);
+        JsonTester.serializeThenDeserialize(TestValue.ofBytes(BYTES), new TypeReference<>() {});
     }
 
     @Test

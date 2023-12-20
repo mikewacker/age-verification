@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
-import org.example.age.data.json.JsonValues;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {
@@ -90,32 +90,22 @@ public final class AgeRangeTest {
 
     @Test
     public void serializeThenDeserialize_Of() {
-        AgeRange ageRange = AgeRange.of(13, 18);
-        serializeThenDeserialize(ageRange);
+        JsonTester.serializeThenDeserialize(AgeRange.of(13, 18), new TypeReference<>() {});
     }
 
     @Test
     public void serializeThenDeserialize_At() {
-        AgeRange ageRange = AgeRange.at(18);
-        serializeThenDeserialize(ageRange);
+        JsonTester.serializeThenDeserialize(AgeRange.at(18), new TypeReference<>() {});
     }
 
     @Test
     public void serializeThenDeserialize_AtOrAbove() {
-        AgeRange ageRange = AgeRange.atOrAbove(18);
-        serializeThenDeserialize(ageRange);
+        JsonTester.serializeThenDeserialize(AgeRange.atOrAbove(18), new TypeReference<>() {});
     }
 
     @Test
     public void serializeThenDeserialize_Below() {
-        AgeRange ageRange = AgeRange.below(13);
-        serializeThenDeserialize(ageRange);
-    }
-
-    private void serializeThenDeserialize(AgeRange ageRange) {
-        byte[] rawAgeRange = JsonValues.serialize(ageRange);
-        AgeRange rtAgeRange = JsonValues.deserialize(rawAgeRange, new TypeReference<>() {});
-        assertThat(rtAgeRange).isEqualTo(ageRange);
+        JsonTester.serializeThenDeserialize(AgeRange.below(13), new TypeReference<>() {});
     }
 
     @Test

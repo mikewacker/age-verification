@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Duration;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.json.JsonValues;
 import org.example.age.data.user.VerifiedUser;
+import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -72,25 +72,16 @@ public final class VerificationStateTest {
 
     @Test
     public void serializeThenDeserialize_Unverified() {
-        VerificationState state = VerificationState.unverified();
-        serializeThenDeserialize(state);
+        JsonTester.serializeThenDeserialize(VerificationState.unverified(), new TypeReference<>() {});
     }
 
     @Test
     public void serializeThenDeserialize_Verified() {
-        VerificationState state = VerificationState.verified(user, expiration);
-        serializeThenDeserialize(state);
+        JsonTester.serializeThenDeserialize(VerificationState.verified(user, expiration), new TypeReference<>() {});
     }
 
     @Test
     public void serializeThenDeserialize_Expired() {
-        VerificationState state = VerificationState.expired(expiration);
-        serializeThenDeserialize(state);
-    }
-
-    private void serializeThenDeserialize(VerificationState state) {
-        byte[] rawState = JsonValues.serialize(state);
-        VerificationState rtState = JsonValues.deserialize(rawState, new TypeReference<>() {});
-        assertThat(rtState).isEqualTo(state);
+        JsonTester.serializeThenDeserialize(VerificationState.expired(expiration), new TypeReference<>() {});
     }
 }
