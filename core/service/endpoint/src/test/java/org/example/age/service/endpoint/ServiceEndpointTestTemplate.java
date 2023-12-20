@@ -1,4 +1,4 @@
-package org.example.age.testing.service;
+package org.example.age.service.endpoint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
@@ -13,8 +13,8 @@ import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 
-/** Test template for service integration tests. */
-public final class ServiceIntegrationTestTemplate {
+/** Test template for service endpoint tests. */
+public final class ServiceEndpointTestTemplate {
 
     public static void verify() throws IOException {
         verify("publius-jr", "Billy Smith", true);
@@ -87,5 +87,5 @@ public final class ServiceIntegrationTestTemplate {
     }
 
     // static class
-    private ServiceIntegrationTestTemplate() {}
+    private ServiceEndpointTestTemplate() {}
 }
