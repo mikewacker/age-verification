@@ -7,21 +7,27 @@ dependencies {
     // main
     annotationProcessor("com.google.dagger:dagger-compiler")
 
-    api(project(":core:api:extractors"))
+    api(project(":core:service:types"))
     api("com.google.dagger:dagger")
     api("javax.inject:javax.inject")
 
+    implementation(project(":base:data:json"))
+    implementation(project(":crypto:data"))
+    implementation(project(":core:data"))
     implementation(project(":base:api:base"))
-    implementation("io.undertow:undertow-core")
+    implementation(project(":core:api:types"))
+    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("com.google.guava:guava")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
+    testImplementation(project(":crypto:data"))
+    testImplementation(project(":core:data"))
     testImplementation(project(":base:api:base"))
-    testImplementation(project(":core:api:extractors"))
+    testImplementation(project(":core:api:types"))
+    testImplementation(project(":core:service:types"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation("com.google.dagger:dagger")
-    testImplementation("io.undertow:undertow-core")
     testImplementation("javax.inject:javax.inject")
-    testImplementation("org.mockito:mockito-core")
 }
