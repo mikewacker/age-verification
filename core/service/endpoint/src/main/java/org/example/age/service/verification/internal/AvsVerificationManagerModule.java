@@ -5,7 +5,8 @@ import dagger.Module;
 import org.example.age.service.config.RefreshableAvsConfigProvider;
 import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.crypto.internal.SignerCryptoModule;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;
+import org.example.age.service.key.RefreshablePseudonymKeyProvider;
 import org.example.age.service.store.PendingStoreFactory;
 import org.example.age.service.store.VerificationStore;
 
@@ -16,7 +17,8 @@ import org.example.age.service.store.VerificationStore;
  * <ul>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li>{@link RefreshableKeyProvider}</li>
+ *     <li>{@link RefreshablePrivateSigningKeyProvider}</li>
+ *     <li>{@link RefreshablePseudonymKeyProvider}</li>
  *     <li>{@link RefreshableRegisteredSiteConfigProvider}</li>
  *     <li>{@link RefreshableAvsConfigProvider}</li>
  * </ul>

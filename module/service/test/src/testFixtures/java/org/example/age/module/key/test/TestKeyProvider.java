@@ -9,10 +9,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;
+import org.example.age.service.key.RefreshablePseudonymKeyProvider;
+import org.example.age.service.key.RefreshablePublicSigningKeyProvider;
 
 @Singleton
-final class TestKeyProvider implements RefreshableKeyProvider {
+final class TestKeyProvider
+        implements RefreshablePrivateSigningKeyProvider,
+                RefreshablePublicSigningKeyProvider,
+                RefreshablePseudonymKeyProvider {
 
     private static final KeyPair signingKeyPair = SigningKeys.generateEd25519KeyPair();
 

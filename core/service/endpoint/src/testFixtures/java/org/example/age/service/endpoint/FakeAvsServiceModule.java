@@ -10,7 +10,7 @@ import org.example.age.api.endpoint.AvsApiModule;
 import org.example.age.api.extractor.AccountIdExtractor;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
 import org.example.age.service.infra.client.RequestDispatcher;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
 import org.example.age.service.store.VerificationStore;
 import org.example.age.service.verification.internal.FakeAvsVerificationFactoryModule;
@@ -23,7 +23,7 @@ import org.example.age.service.verification.internal.FakeAvsVerificationFactoryM
  *     <li>{@link AccountIdExtractor}</li>
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
- *     <li>{@link RefreshableKeyProvider}</li>
+ *     <li>{@link RefreshablePrivateSigningKeyProvider}</li>
  *     <li>{@link RefreshableSiteLocationProvider}</li>
  * </ul>
  */

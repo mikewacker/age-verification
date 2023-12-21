@@ -4,15 +4,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePseudonymKeyProvider;
 
 @Singleton
 final class VerifiedUserLocalizerImpl implements VerifiedUserLocalizer {
 
-    private final RefreshableKeyProvider keyProvider;
+    private final RefreshablePseudonymKeyProvider keyProvider;
 
     @Inject
-    public VerifiedUserLocalizerImpl(RefreshableKeyProvider keyProvider) {
+    public VerifiedUserLocalizerImpl(RefreshablePseudonymKeyProvider keyProvider) {
         this.keyProvider = keyProvider;
     }
 
