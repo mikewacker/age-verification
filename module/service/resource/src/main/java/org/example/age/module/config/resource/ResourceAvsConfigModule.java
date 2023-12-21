@@ -17,7 +17,7 @@ import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
  * <p>Depends on an unbound...</p>
  * <ul>
  *     <li><code>@Named("resources") {@link Class}&lt;?&gt;</code></li>
- *     <li><code>@Named("resourcesAvs") {@link Path}</code></li>
+ *     <li><code>@Named("resources") {@link Path}</code></li>
  * </ul>
  */
 @Module(includes = ResourceLoaderModule.class)

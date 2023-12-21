@@ -18,8 +18,8 @@ final class ResourceRegisteredSiteConfigProvider extends JsonResourceProvider<Ma
         implements RefreshableRegisteredSiteConfigProvider {
 
     @Inject
-    public ResourceRegisteredSiteConfigProvider(ResourceLoader resourceLoader, @Named("resourcesAvs") Path avsPath) {
-        super(resourceLoader, avsPath.resolve("config/siteConfigs.json"), new TypeReference<>() {});
+    public ResourceRegisteredSiteConfigProvider(ResourceLoader resourceLoader, @Named("resources") Path rootPath) {
+        super(resourceLoader, rootPath.resolve("config/siteConfigs.json"), new TypeReference<>() {});
     }
 
     @Override

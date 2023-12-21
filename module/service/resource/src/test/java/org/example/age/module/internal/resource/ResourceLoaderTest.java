@@ -33,7 +33,7 @@ public final class ResourceLoaderTest {
     }
 
     /** Dagger component that provides a {@link ResourceLoader}. */
-    @Component(modules = {ResourceLoaderModule.class, TestResourceModule.class})
+    @Component(modules = {ResourceLoaderModule.class, TestSiteResourceModule.class})
     @Singleton
     interface TestComponent {
 

@@ -15,8 +15,8 @@ import org.example.age.service.config.RefreshableAvsConfigProvider;
 final class ResourceAvsConfigProvider extends JsonResourceProvider<AvsConfig> implements RefreshableAvsConfigProvider {
 
     @Inject
-    public ResourceAvsConfigProvider(ResourceLoader resourceLoader, @Named("resourcesAvs") Path avsPath) {
-        super(resourceLoader, avsPath.resolve("config/config.json"), new TypeReference<>() {});
+    public ResourceAvsConfigProvider(ResourceLoader resourceLoader, @Named("resources") Path rootPath) {
+        super(resourceLoader, rootPath.resolve("config/config.json"), new TypeReference<>() {});
     }
 
     @Override
