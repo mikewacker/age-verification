@@ -11,7 +11,8 @@ import org.example.age.api.extractor.AccountIdExtractor;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
 import org.example.age.service.config.RefreshableSiteConfigProvider;
 import org.example.age.service.infra.client.RequestDispatcher;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePseudonymKeyProvider;
+import org.example.age.service.key.RefreshablePublicSigningKeyProvider;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.store.PendingStoreFactory;
 import org.example.age.service.store.VerificationStore;
@@ -26,7 +27,8 @@ import org.example.age.service.verification.internal.SiteVerificationManagerModu
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
  *     <li>{@link PendingStoreFactory}</li>
- *     <li>{@link RefreshableKeyProvider}</li>
+ *     <li>{@link RefreshablePublicSigningKeyProvider}</li>
+ *     <li>{@link RefreshablePseudonymKeyProvider}</li>
  *     <li>{@link RefreshableSiteConfigProvider}</li>
  *     <li>{@link RefreshableAvsLocationProvider}</li>
  * </ul>

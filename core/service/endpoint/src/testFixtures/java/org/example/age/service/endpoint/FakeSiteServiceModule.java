@@ -11,7 +11,7 @@ import org.example.age.api.extractor.AccountIdExtractor;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
 import org.example.age.module.location.test.TestAvsLocationModule;
 import org.example.age.service.infra.client.RequestDispatcher;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePublicSigningKeyProvider;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.store.VerificationStore;
 import org.example.age.service.verification.internal.FakeSiteVerificationProcessorModule;
@@ -24,7 +24,7 @@ import org.example.age.service.verification.internal.FakeSiteVerificationProcess
  *     <li>{@link AccountIdExtractor}</li>
  *     <li>{@link AuthMatchDataExtractor}</li>
  *     <li>{@link VerificationStore}</li>
- *     <li>{@link RefreshableKeyProvider}</li>
+ *     <li>{@link RefreshablePublicSigningKeyProvider}</li>
  *     <li>{@link RefreshableAvsLocationProvider}</li>
  * </ul>
  */
