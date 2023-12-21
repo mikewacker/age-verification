@@ -1,0 +1,10 @@
+{
+    "John Smith": {
+        "status": "VERIFIED",
+        "verifiedUser": {
+            "pseudonym": "uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4",
+            "ageRange": "40"
+        },
+        "expiration": 4102444800
+    }
+}
