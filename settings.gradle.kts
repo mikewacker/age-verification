@@ -31,6 +31,7 @@ include(
         "module:extractor:demo",
         "module:extractor:test",
         "module:store:inmemory",
+        "module:service:resource",
         "module:service:test",
 
         // other
