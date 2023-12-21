@@ -1,0 +1,12 @@
+{
+    "avs": {
+        "host": "localhost",
+        "port": 8090
+    },
+    "sites": {
+        "Site": {
+            "host": "localhost",
+            "port": 8080
+        }
+    }
+}
