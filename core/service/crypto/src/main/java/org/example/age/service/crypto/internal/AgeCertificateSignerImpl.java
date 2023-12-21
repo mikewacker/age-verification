@@ -4,15 +4,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
-import org.example.age.service.key.RefreshableKeyProvider;
+import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;
 
 @Singleton
 final class AgeCertificateSignerImpl implements AgeCertificateSigner {
 
-    private final RefreshableKeyProvider keyProvider;
+    private final RefreshablePrivateSigningKeyProvider keyProvider;
 
     @Inject
-    public AgeCertificateSignerImpl(RefreshableKeyProvider keyProvider) {
+    public AgeCertificateSignerImpl(RefreshablePrivateSigningKeyProvider keyProvider) {
         this.keyProvider = keyProvider;
     }
 
