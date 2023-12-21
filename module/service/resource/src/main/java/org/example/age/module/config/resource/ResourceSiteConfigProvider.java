@@ -16,8 +16,8 @@ final class ResourceSiteConfigProvider extends JsonResourceProvider<SiteConfig>
         implements RefreshableSiteConfigProvider {
 
     @Inject
-    public ResourceSiteConfigProvider(ResourceLoader resourceLoader, @Named("resourcesSite") Path sitePath) {
-        super(resourceLoader, sitePath.resolve("config/config.json"), new TypeReference<>() {});
+    public ResourceSiteConfigProvider(ResourceLoader resourceLoader, @Named("resources") Path rootPath) {
+        super(resourceLoader, rootPath.resolve("config/config.json"), new TypeReference<>() {});
     }
 
     @Override

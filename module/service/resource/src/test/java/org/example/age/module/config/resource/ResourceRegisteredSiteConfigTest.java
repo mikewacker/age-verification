@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import java.util.Optional;
 import javax.inject.Singleton;
-import org.example.age.module.internal.resource.TestResourceModule;
+import org.example.age.module.internal.resource.TestAvsResourceModule;
 import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.config.RegisteredSiteConfig;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,7 +33,7 @@ public final class ResourceRegisteredSiteConfigTest {
     }
 
     /** Dagger component that provides a {@link RefreshableRegisteredSiteConfigProvider}. */
-    @Component(modules = {ResourceAvsConfigModule.class, TestResourceModule.class})
+    @Component(modules = {ResourceAvsConfigModule.class, TestAvsResourceModule.class})
     @Singleton
     interface TestComponent {
 

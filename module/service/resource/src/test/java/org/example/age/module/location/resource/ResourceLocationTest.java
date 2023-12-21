@@ -6,7 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import dagger.Component;
 import java.util.NoSuchElementException;
 import javax.inject.Singleton;
-import org.example.age.module.internal.resource.TestResourceModule;
+import org.example.age.module.internal.resource.TestAvsResourceModule;
+import org.example.age.module.internal.resource.TestSiteResourceModule;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
@@ -44,7 +45,7 @@ public final class ResourceLocationTest {
     }
 
     /** Dagger component that provides a {@link RefreshableAvsLocationProvider}. */
-    @Component(modules = {ResourceAvsLocationModule.class, TestResourceModule.class})
+    @Component(modules = {ResourceAvsLocationModule.class, TestSiteResourceModule.class})
     @Singleton
     interface TestSiteComponent {
 
@@ -57,7 +58,7 @@ public final class ResourceLocationTest {
     }
 
     /** Dagger component that provides a {@link RefreshableSiteLocationProvider}. */
-    @Component(modules = {ResourceSiteLocationModule.class, TestResourceModule.class})
+    @Component(modules = {ResourceSiteLocationModule.class, TestAvsResourceModule.class})
     @Singleton
     interface TestAvsComponent {
 
