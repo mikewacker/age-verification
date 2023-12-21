@@ -3,7 +3,7 @@ package org.example.age.module.internal.resource;
 import java.util.function.Supplier;
 
 /** Singleton provider that uses double-checked locking. */
-public final class DoubleCheckedProvider<V> implements Supplier<V> {
+final class DoubleCheckedProvider<V> implements Supplier<V> {
 
     private final Supplier<V> valueProvider;
     private volatile V value = null;

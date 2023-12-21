@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import dagger.Component;
 import java.util.NoSuchElementException;
 import javax.inject.Singleton;
+import org.example.age.module.internal.resource.TestResourceModule;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;

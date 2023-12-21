@@ -4,10 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.BindsInstance;
 import dagger.Component;
 import java.nio.file.Path;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,22 +33,15 @@ public final class ResourceLoaderTest {
     }
 
     /** Dagger component that provides a {@link ResourceLoader}. */
-    @Component(modules = ResourceLoaderModule.class)
+    @Component(modules = {ResourceLoaderModule.class, TestResourceModule.class})
     @Singleton
     interface TestComponent {
 
         static ResourceLoader createResourceLoader() {
-            TestComponent component =
-                    DaggerResourceLoaderTest_TestComponent.factory().create(ResourceLoaderTest.class);
+            TestComponent component = DaggerResourceLoaderTest_TestComponent.create();
             return component.resourceLoader();
         }
 
         ResourceLoader resourceLoader();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("resources") Class<?> resourcesClass);
-        }
     }
 }
