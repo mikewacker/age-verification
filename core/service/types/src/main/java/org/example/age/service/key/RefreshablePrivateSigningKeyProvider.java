@@ -12,5 +12,5 @@ import java.security.PrivateKey;
 @FunctionalInterface
 public interface RefreshablePrivateSigningKeyProvider {
 
-    public PrivateKey getPrivateSigningKey();
+    PrivateKey getPrivateSigningKey();
 }
