@@ -58,7 +58,7 @@ public final class ResourceLocationTest {
     }
 
     /** Dagger component that provides a {@link RefreshableSiteLocationProvider}. */
-    @Component(modules = {ResourceSiteLocationModule.class, TestAvsResourceModule.class})
+    @Component(modules = {ResourceSiteLocationModule.class, TestAvsResourceModule.class}) // Site also works.
     @Singleton
     interface TestAvsComponent {
 
