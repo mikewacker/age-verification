@@ -8,4 +8,7 @@ public interface ResourceLoader {
 
     /** Loads and deserializes a value from a JSON file. */
     <V> V loadJson(Path path, TypeReference<V> valueTypeRef);
+
+    /** Loads a PEM object from a PEM file. */
+    Object loadPem(Path path);
 }

@@ -15,6 +15,8 @@ dependencies {
     implementation(project(":core:api:types"))
     implementation(project(":module:store:inmemory"))
     implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("org.bouncycastle:bcpkix-jdk18on")
+    implementation("org.bouncycastle:bcprov-jdk18on")
 
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
@@ -25,4 +27,5 @@ dependencies {
     testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("com.google.dagger:dagger")
     testImplementation("javax.inject:javax.inject")
+    testImplementation("org.bouncycastle:bcprov-jdk18on")
 }

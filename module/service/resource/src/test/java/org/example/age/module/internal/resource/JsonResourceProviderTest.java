@@ -10,8 +10,8 @@ public final class JsonResourceProviderTest {
 
     @Test
     public void get() {
-        TestResourceProvider provider = TestResourceProvider.create();
-        String text = provider.get();
+        TestResourceProvider textProvider = TestResourceProvider.create();
+        String text = textProvider.get();
         assertThat(text).isEqualTo("test");
     }
 
@@ -19,7 +19,7 @@ public final class JsonResourceProviderTest {
     private static final class TestResourceProvider extends JsonResourceProvider<String> {
 
         public static TestResourceProvider create() {
-            return new TestResourceProvider(ResourceLoaderTest.TestComponent.createResourceLoader());
+            return new TestResourceProvider(TestResourceComponent.createResourceLoader());
         }
 
         public String get() {
