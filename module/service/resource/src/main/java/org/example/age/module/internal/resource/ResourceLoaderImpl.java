@@ -3,10 +3,14 @@ package org.example.age.module.internal.resource;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.bouncycastle.openssl.PEMParser;
 import org.example.age.data.json.JsonValues;
 
 @Singleton
@@ -25,10 +29,21 @@ final class ResourceLoaderImpl implements ResourceLoader {
         return JsonValues.deserialize(rawValue, valueTypeRef);
     }
 
+    @Override
+    public Object loadPem(Path path) {
+        try (InputStream in = loadInputStream(path);
+                Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                PEMParser pemParser = new PEMParser(reader)) {
+            return pemParser.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /** Loads a resource file as raw bytes. */
     private byte[] loadBytes(Path path) {
-        try (InputStream stream = loadInputStream(path)) {
-            return stream.readAllBytes();
+        try (InputStream in = loadInputStream(path)) {
+            return in.readAllBytes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

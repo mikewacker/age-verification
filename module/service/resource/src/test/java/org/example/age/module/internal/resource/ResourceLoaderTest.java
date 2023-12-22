@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import dagger.Component;
 import java.nio.file.Path;
-import javax.inject.Singleton;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ public final class ResourceLoaderTest {
 
     @BeforeAll
     public static void createResourceLoader() {
-        resourceLoader = TestComponent.createResourceLoader();
+        resourceLoader = TestResourceComponent.createResourceLoader();
     }
 
     @Test
@@ -26,22 +25,15 @@ public final class ResourceLoaderTest {
     }
 
     @Test
+    public void loadPem() {
+        PrivateKeyInfo key = (PrivateKeyInfo) resourceLoader.loadPem(Path.of("test/test.pem"));
+        assertThat(key).isNotNull();
+    }
+
+    @Test
     public void error_FileNotFound() {
         assertThatThrownBy(() -> resourceLoader.loadJson(Path.of("dne.json"), new TypeReference<String>() {}))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("resource not found: dne.json");
-    }
-
-    /** Dagger component that provides a {@link ResourceLoader}. */
-    @Component(modules = {ResourceLoaderModule.class, TestSiteResourceModule.class})
-    @Singleton
-    interface TestComponent {
-
-        static ResourceLoader createResourceLoader() {
-            TestComponent component = DaggerResourceLoaderTest_TestComponent.create();
-            return component.resourceLoader();
-        }
-
-        ResourceLoader resourceLoader();
     }
 }

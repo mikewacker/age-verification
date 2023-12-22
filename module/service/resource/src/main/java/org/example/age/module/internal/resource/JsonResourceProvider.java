@@ -13,7 +13,7 @@ public abstract class JsonResourceProvider<V> {
 
     private final Supplier<V> valueProvider = DoubleCheckedProvider.create(this::loadValue);
 
-    /** Creates a provider that reads and deserializes a JSON resource file. */
+    /** Creates a value provider that reads and deserializes a JSON resource file. */
     protected JsonResourceProvider(ResourceLoader resourceLoader, Path path, TypeReference<V> valueTypeRef) {
         this.resourceLoader = resourceLoader;
         this.path = path;
