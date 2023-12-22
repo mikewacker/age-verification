@@ -9,7 +9,7 @@ import org.example.age.module.internal.resource.TestAvsResourceModule;
 import org.example.age.service.store.VerificationStore;
 import org.junit.jupiter.api.Test;
 
-public final class ResourceAvsVerificationStoreTest {
+public final class ResourceVerificationStoreTest {
 
     @Test
     public void getVerifiedPeople() {
@@ -18,12 +18,12 @@ public final class ResourceAvsVerificationStoreTest {
     }
 
     /** Dagger component that provides a {@link VerificationStore}. */
-    @Component(modules = {ResourceAvsVerificationStoreModule.class, TestAvsResourceModule.class})
+    @Component(modules = {ResourceVerificationStoreModule.class, TestAvsResourceModule.class}) // Site also works.
     @Singleton
     interface TestComponent {
 
         static VerificationStore createVerificationStore() {
-            TestComponent component = DaggerResourceAvsVerificationStoreTest_TestComponent.create();
+            TestComponent component = DaggerResourceVerificationStoreTest_TestComponent.create();
             return component.verificationStore();
         }
 

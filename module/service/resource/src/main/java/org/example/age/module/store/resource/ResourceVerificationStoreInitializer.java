@@ -14,11 +14,11 @@ import org.example.age.service.store.VerificationStore;
 
 /** {@link VerificationStoreInitializer} that gets accounts from a resource file. */
 @Singleton
-final class ResourceAvsVerificationStoreInitializer extends JsonResourceProvider<Map<String, VerificationState>>
+final class ResourceVerificationStoreInitializer extends JsonResourceProvider<Map<String, VerificationState>>
         implements VerificationStoreInitializer {
 
     @Inject
-    public ResourceAvsVerificationStoreInitializer(ResourceLoader resourceLoader, @Named("resources") Path rootPath) {
+    public ResourceVerificationStoreInitializer(ResourceLoader resourceLoader, @Named("resources") Path rootPath) {
         super(resourceLoader, rootPath.resolve("store/accounts.json"), new TypeReference<>() {});
     }
 

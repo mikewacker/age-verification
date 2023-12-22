@@ -10,8 +10,8 @@ import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
 /**
  * Dagger module that publishes bindings for...
  * <ul>
- *     <li>{@link RefreshableAvsConfigProvider}</li>
- *     <li>{@link RefreshableRegisteredSiteConfigProvider}</li>
+ *     <li>{@link RefreshableAvsConfigProvider}, which loads config from {@code config/config.json}</li>
+ *     <li>{@link RefreshableRegisteredSiteConfigProvider}, which loads config from {@code config/siteConfigs.json}</li>
  * </ul>
  *
  * <p>Depends on an unbound...</p>
@@ -19,6 +19,8 @@ import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
  *     <li><code>@Named("resources") {@link Class}&lt;?&gt;</code></li>
  *     <li><code>@Named("resources") {@link Path}</code></li>
  * </ul>
+ *
+ * <p>It loads resources before the server starts and is not refreshable.</p>
  */
 @Module(includes = ResourceLoaderModule.class)
 public interface ResourceAvsConfigModule {

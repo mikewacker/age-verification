@@ -22,6 +22,10 @@ public final class PemResourceProviderTest {
             return new TestResourceProvider(TestResourceComponent.createResourceLoader());
         }
 
+        public PrivateKeyInfo get() {
+            return getInternal();
+        }
+
         @Override
         protected PrivateKeyInfo createKey(Object pemObject) {
             return (PrivateKeyInfo) pemObject;
