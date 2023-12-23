@@ -24,6 +24,7 @@ dependencies {
     testImplementation(project(":core:api:types"))
     testImplementation(project(":core:service:types"))
     testImplementation(project(":module:store:inmemory")) // Dagger component
+    testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.google.dagger:dagger")
     testImplementation("com.squareup.okhttp3:mockwebserver")

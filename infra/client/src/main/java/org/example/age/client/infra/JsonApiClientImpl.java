@@ -1,4 +1,4 @@
-package org.example.age.testing.client;
+package org.example.age.client.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
@@ -7,11 +7,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.client.infra.OkHttpJsonApiClient;
 
-final class TestClientImpl extends OkHttpJsonApiClient implements TestClient {
+final class JsonApiClientImpl extends OkHttpJsonApiClient implements JsonApiClient {
 
-    private static final TestClientImpl instance = new TestClientImpl();
+    private static final JsonApiClientImpl instance = new JsonApiClientImpl();
 
     private static final OkHttpClient client = new OkHttpClient();
 
@@ -26,7 +25,7 @@ final class TestClientImpl extends OkHttpJsonApiClient implements TestClient {
         return instance.requestBuilder(ExecuteStageImpl::new, responseValueTypeRef);
     }
 
-    private TestClientImpl() {}
+    private JsonApiClientImpl() {}
 
     /** Internal {@link ExecuteStage} implementation. */
     private static final class ExecuteStageImpl<V> implements ExecuteStage<V> {

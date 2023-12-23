@@ -1,4 +1,4 @@
-package org.example.age.testing.client;
+package org.example.age.client.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,7 +12,7 @@ import org.example.age.testing.server.mock.MockServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class TestClientTest {
+public final class JsonApiClientTest {
 
     @RegisterExtension
     private static final MockServer mockServer = MockServer.register("test");
@@ -21,7 +21,7 @@ public final class TestClientTest {
     public void statusCodeResponse() throws IOException {
         mockServer.enqueue(new MockResponse());
         int statusCode =
-                TestClient.requestBuilder().get(mockServer.rootUrl()).build().execute();
+                JsonApiClient.requestBuilder().get(mockServer.rootUrl()).build().execute();
         assertThat(statusCode).isEqualTo(200);
     }
 
@@ -29,7 +29,7 @@ public final class TestClientTest {
     public void jsonValueResponse() throws IOException {
         mockServer.enqueue(
                 new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
-        HttpOptional<String> maybeText = TestClient.requestBuilder(new TypeReference<String>() {})
+        HttpOptional<String> maybeText = JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .get(mockServer.rootUrl())
                 .build()
                 .execute();
@@ -39,8 +39,8 @@ public final class TestClientTest {
     @Test
     public void error_ExecuteTwice() throws IOException {
         mockServer.enqueue(new MockResponse());
-        TestClient.ExecuteStage<Integer> executor =
-                TestClient.requestBuilder().get(mockServer.rootUrl()).build();
+        JsonApiClient.ExecuteStage<Integer> executor =
+                JsonApiClient.requestBuilder().get(mockServer.rootUrl()).build();
         executor.execute();
         assertThatThrownBy(executor::execute)
                 .isInstanceOf(IllegalStateException.class)

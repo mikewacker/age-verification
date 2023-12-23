@@ -12,7 +12,6 @@ dependencies {
     api(project(":infra:client"))
     api("com.fasterxml.jackson.core:jackson-core")
 
-    implementation(project(":base:data:json"))
     implementation("com.squareup.okhttp3:okhttp")
 
     // test fixtures
@@ -23,12 +22,14 @@ dependencies {
     testFixturesImplementation(project(":base:data:json"))
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":infra:api"))
+    testFixturesImplementation(project(":infra:client"))
     testFixturesImplementation(testFixtures(project(":testing")))
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
     testFixturesImplementation("com.squareup.okhttp3:okhttp")
 
     // test
     testImplementation(project(":base:api:base"))
+    testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")

@@ -14,6 +14,7 @@ dependencies {
     // test
     testImplementation(project(":base:api:base"))
     testImplementation(testFixtures(project(":base:api:base")))
+    testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("com.squareup.okhttp3:okhttp")

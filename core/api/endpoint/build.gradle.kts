@@ -42,6 +42,7 @@ dependencies {
     testImplementation(project(":core:data"))
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types"))
+    testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")

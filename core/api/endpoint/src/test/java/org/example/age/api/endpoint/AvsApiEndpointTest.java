@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.Map;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.VerificationState;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.service.component.stub.StubAvsComponent;
-import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void verificationState() throws IOException {
-        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder(
+        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(avsServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
@@ -36,7 +36,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void verificationSession() throws IOException {
-        HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
+        HttpOptional<VerificationSession> maybeSession = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationSession>() {})
                 .post(avsServer.url("/api/verification-session?site-id=Site"))
                 .build()
@@ -47,7 +47,7 @@ public final class AvsApiEndpointTest {
     @Test
     public void linkedVerificationRequest() throws IOException {
         SecureId requestId = SecureId.generate();
-        int statusCode = TestClient.requestBuilder()
+        int statusCode = JsonApiClient.requestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .build()
@@ -57,7 +57,7 @@ public final class AvsApiEndpointTest {
 
     @Test
     public void ageCertificate() throws IOException {
-        HttpOptional<String> maybeRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
+        HttpOptional<String> maybeRedirectUrl = JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
                 .build()

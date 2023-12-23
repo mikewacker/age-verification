@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.testing.client.TestClient;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.mock.MockServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
@@ -25,7 +25,7 @@ public final class DispatcherOkHttpClientProviderTest {
     @Test
     public void backendRequest() throws IOException {
         backendServer.enqueue(new MockResponse().setBody("\"world\""));
-        HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
+        HttpOptional<String> maybeGreeting = JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .get(frontendServer.rootUrl())
                 .build()
                 .execute();
