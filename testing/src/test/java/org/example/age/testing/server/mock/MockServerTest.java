@@ -21,6 +21,7 @@ public final class MockServerTest {
                 new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
         HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.rootUrl())
+                .build()
                 .execute();
         assertThat(maybeValue).hasValue("test");
     }

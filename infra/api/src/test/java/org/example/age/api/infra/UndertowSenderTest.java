@@ -54,12 +54,13 @@ public final class UndertowSenderTest {
     }
 
     private static int executeStatusCodeRequest(String path) throws IOException {
-        return TestClient.requestBuilder().get(server.url(path)).execute();
+        return TestClient.requestBuilder().get(server.url(path)).build().execute();
     }
 
     private static HttpOptional<String> executeTextRequest(String path) throws IOException {
         return TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url(path))
+                .build()
                 .execute();
     }
 }

@@ -27,6 +27,7 @@ public final class DispatcherOkHttpClientProviderTest {
         backendServer.enqueue(new MockResponse().setBody("\"world\""));
         HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(frontendServer.rootUrl())
+                .build()
                 .execute();
         assertThat(maybeGreeting).hasValue("Hello, world!");
     }
