@@ -63,14 +63,18 @@ public final class UndertowJsonApiHandlerTest {
         return TestClient.requestBuilder(new TypeReference<Integer>() {})
                 .post(server.url(path))
                 .body(bodyOperand)
+                .build()
                 .execute();
     }
 
     private static int executeHealthRequest() throws IOException {
-        return TestClient.requestBuilder().get(server.url("/api/health")).execute();
+        return TestClient.requestBuilder()
+                .get(server.url("/api/health"))
+                .build()
+                .execute();
     }
 
     private static int executeRequestAtBadPath() throws IOException {
-        return TestClient.requestBuilder().get(server.url("/api/dne")).execute();
+        return TestClient.requestBuilder().get(server.url("/api/dne")).build().execute();
     }
 }

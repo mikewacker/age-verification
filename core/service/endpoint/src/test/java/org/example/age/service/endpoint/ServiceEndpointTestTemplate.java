@@ -34,6 +34,7 @@ public final class ServiceEndpointTestTemplate {
                         new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", siteAccountId))
+                .build()
                 .execute();
         assertThat(maybeSiteState).isPresent();
         VerificationState siteState = maybeSiteState.get();
@@ -43,6 +44,7 @@ public final class ServiceEndpointTestTemplate {
                         new TypeReference<VerificationState>() {})
                 .get(avsServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", avsAccountId))
+                .build()
                 .execute();
         assertThat(maybeAvsState).isPresent();
         VerificationState avsState = maybeAvsState.get();
@@ -53,6 +55,7 @@ public final class ServiceEndpointTestTemplate {
                         new TypeReference<VerificationRequest>() {})
                 .post(siteServer.url("/api/verification-request"))
                 .headers(Map.of("Account-Id", siteAccountId))
+                .build()
                 .execute();
         assertThat(maybeRequest).isPresent();
         VerificationRequest request = maybeRequest.get();
@@ -60,12 +63,14 @@ public final class ServiceEndpointTestTemplate {
         int linkStatusCode = TestClient.requestBuilder()
                 .post(request.redirectUrl())
                 .headers(Map.of("Account-Id", avsAccountId))
+                .build()
                 .execute();
         assertThat(linkStatusCode).isEqualTo(200);
 
         HttpOptional<String> maybeRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", avsAccountId))
+                .build()
                 .execute();
         if (succeeds) {
             assertThat(maybeRedirectUrl).isPresent();
@@ -80,6 +85,7 @@ public final class ServiceEndpointTestTemplate {
                         new TypeReference<VerificationState>() {})
                 .get(redirectUrl)
                 .headers(Map.of("Account-Id", siteAccountId))
+                .build()
                 .execute();
         assertThat(maybeNewSiteState).isPresent();
         VerificationState newSiteState = maybeNewSiteState.get();

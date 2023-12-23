@@ -34,6 +34,7 @@ public final class SiteApiEndpointTest {
                         new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .build()
                 .execute();
         assertThat(maybeState).isPresent();
     }
@@ -44,6 +45,7 @@ public final class SiteApiEndpointTest {
                         new TypeReference<VerificationRequest>() {})
                 .post(siteServer.url("/api/verification-request"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .build()
                 .execute();
         assertThat(maybeRequest).isPresent();
     }
@@ -54,6 +56,7 @@ public final class SiteApiEndpointTest {
         HttpOptional<String> maybeRedirectPath = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(siteServer.url("/api/age-certificate"))
                 .body(signedCertificate)
+                .build()
                 .execute();
         assertThat(maybeRedirectPath).isPresent();
     }

@@ -49,6 +49,7 @@ public final class UndertowDispatcherTest {
     private static HttpOptional<String> executeRequest(String path) throws IOException {
         return TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url(path))
+                .build()
                 .execute();
     }
 }

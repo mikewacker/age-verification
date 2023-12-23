@@ -24,6 +24,7 @@ public final class TestUndertowServerTest {
     public void exchange_HandledPath() throws IOException {
         HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url("/api/test"))
+                .build()
                 .execute();
         assertThat(maybeValue).hasValue("test");
     }
@@ -32,6 +33,7 @@ public final class TestUndertowServerTest {
     public void exchange_UnhandledPath() throws IOException {
         HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.rootUrl())
+                .build()
                 .execute();
         assertThat(maybeValue).isEmptyWithErrorCode(404);
     }

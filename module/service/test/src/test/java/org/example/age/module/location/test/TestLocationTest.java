@@ -38,7 +38,8 @@ public final class TestLocationTest {
     public void siteRequestToAvs() throws IOException {
         avsServer.enqueue(new MockResponse());
         Location avsLocation = avsLocationProvider.getAvs();
-        int statusCode = TestClient.requestBuilder().get(avsLocation.rootUrl()).execute();
+        int statusCode =
+                TestClient.requestBuilder().get(avsLocation.rootUrl()).build().execute();
         assertThat(statusCode).isEqualTo(200);
     }
 
@@ -46,7 +47,8 @@ public final class TestLocationTest {
     public void avsRequestToSite() throws IOException {
         siteServer.enqueue(new MockResponse());
         Location siteLocation = siteLocationProvider.getSite("Site");
-        int statusCode = TestClient.requestBuilder().get(siteLocation.rootUrl()).execute();
+        int statusCode =
+                TestClient.requestBuilder().get(siteLocation.rootUrl()).build().execute();
         assertThat(statusCode).isEqualTo(200);
     }
 

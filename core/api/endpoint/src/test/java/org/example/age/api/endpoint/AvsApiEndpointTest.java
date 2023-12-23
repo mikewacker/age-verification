@@ -29,6 +29,7 @@ public final class AvsApiEndpointTest {
                         new TypeReference<VerificationState>() {})
                 .get(avsServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .build()
                 .execute();
         assertThat(maybeState).isPresent();
     }
@@ -38,6 +39,7 @@ public final class AvsApiEndpointTest {
         HttpOptional<VerificationSession> maybeSession = TestClient.requestBuilder(
                         new TypeReference<VerificationSession>() {})
                 .post(avsServer.url("/api/verification-session?site-id=Site"))
+                .build()
                 .execute();
         assertThat(maybeSession).isPresent();
     }
@@ -48,6 +50,7 @@ public final class AvsApiEndpointTest {
         int statusCode = TestClient.requestBuilder()
                 .post(avsServer.url("/api/linked-verification-request?request-id=%s", requestId))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .build()
                 .execute();
         assertThat(statusCode).isEqualTo(200);
     }
@@ -57,6 +60,7 @@ public final class AvsApiEndpointTest {
         HttpOptional<String> maybeRedirectUrl = TestClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .build()
                 .execute();
         assertThat(maybeRedirectUrl).isPresent();
     }

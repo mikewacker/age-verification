@@ -1,76 +1,49 @@
 package org.example.age.testing.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-import io.undertow.util.StatusCodes;
 import java.io.IOException;
+import okhttp3.mockwebserver.MockResponse;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.testing.server.TestServer;
-import org.example.age.testing.server.undertow.TestUndertowServer;
+import org.example.age.testing.server.mock.MockServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class TestClientTest {
 
     @RegisterExtension
-    private static final TestServer<?> server = TestUndertowServer.register("test", TestHandler::create);
+    private static final MockServer mockServer = MockServer.register("test");
 
     @Test
-    public void exchange_StatusCodeResponse_Ok() throws IOException {
+    public void statusCodeResponse() throws IOException {
+        mockServer.enqueue(new MockResponse());
         int statusCode =
-                TestClient.requestBuilder().get(server.url("/health-check")).execute();
+                TestClient.requestBuilder().get(mockServer.rootUrl()).build().execute();
         assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
-    public void exchange_StatusCodeResponse_ErrorCode() throws IOException {
-        int statusCode =
-                TestClient.requestBuilder().get(server.url("/not-found")).execute();
-        assertThat(statusCode).isEqualTo(404);
+    public void jsonValueResponse() throws IOException {
+        mockServer.enqueue(
+                new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
+        HttpOptional<String> maybeText = TestClient.requestBuilder(new TypeReference<String>() {})
+                .get(mockServer.rootUrl())
+                .build()
+                .execute();
+        assertThat(maybeText).hasValue("test");
     }
 
     @Test
-    public void exchange_ValueResponse_Ok() throws IOException {
-        HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
-                .get(server.url("/greeting"))
-                .execute();
-        assertThat(maybeGreeting).hasValue("Hello, world!");
-    }
-
-    @Test
-    public void exchange_ValueResponse_ErrorCode() throws IOException {
-        HttpOptional<String> maybeGreeting = TestClient.requestBuilder(new TypeReference<String>() {})
-                .get(server.url("/not-found"))
-                .execute();
-        assertThat(maybeGreeting).isEmptyWithErrorCode(404);
-    }
-
-    /** Test {@link HttpHandler} for a JSON API. */
-    private static final class TestHandler implements HttpHandler {
-
-        public static HttpHandler create() {
-            return new TestHandler();
-        }
-
-        @Override
-        public void handleRequest(HttpServerExchange exchange) {
-            switch (exchange.getRequestPath()) {
-                case "/greeting":
-                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-                    exchange.getResponseSender().send("\"Hello, world!\"");
-                    return;
-                case "/health-check":
-                    return;
-                default:
-                    exchange.setStatusCode(StatusCodes.NOT_FOUND);
-            }
-        }
-
-        private TestHandler() {}
+    public void error_ExecuteTwice() throws IOException {
+        mockServer.enqueue(new MockResponse());
+        TestClient.ExecuteStage<Integer> executor =
+                TestClient.requestBuilder().get(mockServer.rootUrl()).build();
+        executor.execute();
+        assertThatThrownBy(executor::execute)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("request was already executed");
     }
 }

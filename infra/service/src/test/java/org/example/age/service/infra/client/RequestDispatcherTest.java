@@ -47,7 +47,8 @@ public final class RequestDispatcherTest {
 
     @Test
     public void backendRequest_JsonValueResponse_Ok() throws IOException {
-        backendServer.enqueue(new MockResponse().setBody("\"test\""));
+        backendServer.enqueue(
+                new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
         HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
         assertThat(maybeText).hasValue("test");
     }
@@ -83,12 +84,14 @@ public final class RequestDispatcherTest {
     private int executeRequestWithStatusCodeResponse() throws IOException {
         return TestClient.requestBuilder()
                 .get(frontendServer.url("/status-code"))
+                .build()
                 .execute();
     }
 
     private HttpOptional<String> executeRequestWithJsonValueResponse() throws IOException {
         return TestClient.requestBuilder(new TypeReference<String>() {})
                 .get(frontendServer.url("/text"))
+                .build()
                 .execute();
     }
 }
