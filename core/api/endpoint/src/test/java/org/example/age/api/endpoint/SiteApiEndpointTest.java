@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.Map;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.VerificationState;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -16,7 +17,6 @@ import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.service.component.stub.StubSiteComponent;
-import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public final class SiteApiEndpointTest {
 
     @Test
     public void verificationState() throws IOException {
-        HttpOptional<VerificationState> maybeState = TestClient.requestBuilder(
+        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
@@ -41,7 +41,7 @@ public final class SiteApiEndpointTest {
 
     @Test
     public void verificationRequest() throws IOException {
-        HttpOptional<VerificationRequest> maybeRequest = TestClient.requestBuilder(
+        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationRequest>() {})
                 .post(siteServer.url("/api/verification-request"))
                 .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
@@ -53,7 +53,7 @@ public final class SiteApiEndpointTest {
     @Test
     public void ageCertificate() throws IOException {
         SignedAgeCertificate signedCertificate = createStubSignedAgeCertificate();
-        HttpOptional<String> maybeRedirectPath = TestClient.requestBuilder(new TypeReference<String>() {})
+        HttpOptional<String> maybeRedirectPath = JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .post(siteServer.url("/api/age-certificate"))
                 .body(signedCertificate)
                 .build()

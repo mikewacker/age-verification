@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
-import org.example.age.testing.client.TestClient;
 import org.example.age.testing.server.mock.MockServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,8 +38,10 @@ public final class TestLocationTest {
     public void siteRequestToAvs() throws IOException {
         avsServer.enqueue(new MockResponse());
         Location avsLocation = avsLocationProvider.getAvs();
-        int statusCode =
-                TestClient.requestBuilder().get(avsLocation.rootUrl()).build().execute();
+        int statusCode = JsonApiClient.requestBuilder()
+                .get(avsLocation.rootUrl())
+                .build()
+                .execute();
         assertThat(statusCode).isEqualTo(200);
     }
 
@@ -47,8 +49,10 @@ public final class TestLocationTest {
     public void avsRequestToSite() throws IOException {
         siteServer.enqueue(new MockResponse());
         Location siteLocation = siteLocationProvider.getSite("Site");
-        int statusCode =
-                TestClient.requestBuilder().get(siteLocation.rootUrl()).build().execute();
+        int statusCode = JsonApiClient.requestBuilder()
+                .get(siteLocation.rootUrl())
+                .build()
+                .execute();
         assertThat(statusCode).isEqualTo(200);
     }
 

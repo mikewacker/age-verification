@@ -1,15 +1,12 @@
 package org.example.age.testing.server.undertow;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
 import java.io.IOException;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.testing.client.TestClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.example.age.testing.server.TestClient;
 import org.example.age.testing.server.TestServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -18,29 +15,19 @@ public final class TestUndertowServerTest {
 
     @RegisterExtension
     private static final TestServer<?> server =
-            TestUndertowServer.register("test", "/api/", () -> TestUndertowServerTest::handleApiRequest);
+            TestUndertowServer.register("test", "/api/", () -> HttpServerExchange::endExchange);
 
     @Test
     public void exchange_HandledPath() throws IOException {
-        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
-                .get(server.url("/api/test"))
-                .build()
-                .execute();
-        assertThat(maybeValue).hasValue("test");
+        Request request = new Request.Builder().url(server.url("/api/test")).build();
+        Response response = TestClient.get().newCall(request).execute();
+        assertThat(response.code()).isEqualTo(200);
     }
 
     @Test
     public void exchange_UnhandledPath() throws IOException {
-        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
-                .get(server.rootUrl())
-                .build()
-                .execute();
-        assertThat(maybeValue).isEmptyWithErrorCode(404);
-    }
-
-    /** {@link HttpHandler} for API requests that sends a stub response. */
-    private static void handleApiRequest(HttpServerExchange exchange) {
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send("\"test\"");
+        Request request = new Request.Builder().url(server.rootUrl()).build();
+        Response response = TestClient.get().newCall(request).execute();
+        assertThat(response.code()).isEqualTo(404);
     }
 }

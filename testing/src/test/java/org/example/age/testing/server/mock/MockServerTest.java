@@ -1,12 +1,12 @@
 package org.example.age.testing.server.mock;
 
-import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.testing.client.TestClient;
+import org.example.age.testing.server.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -17,12 +17,9 @@ public final class MockServerTest {
 
     @Test
     public void exchange() throws IOException {
-        server.enqueue(
-                new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
-        HttpOptional<String> maybeValue = TestClient.requestBuilder(new TypeReference<String>() {})
-                .get(server.rootUrl())
-                .build()
-                .execute();
-        assertThat(maybeValue).hasValue("test");
+        server.enqueue(new MockResponse());
+        Request request = new Request.Builder().url(server.rootUrl()).build();
+        Response response = TestClient.get().newCall(request).execute();
+        assertThat(response.code()).isEqualTo(200);
     }
 }

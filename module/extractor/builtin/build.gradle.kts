@@ -22,7 +22,6 @@ dependencies {
     // test
     testAnnotationProcessor("com.google.dagger:dagger-compiler")
 
-    testImplementation(project(":base:data:json"))
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types"))
     testImplementation(project(":core:api:extractors"))

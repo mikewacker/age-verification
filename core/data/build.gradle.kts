@@ -14,7 +14,6 @@ dependencies {
     api("org.immutables:value-annotations")
 
     // test
-    testImplementation(project(":base:data:json"))
     testImplementation(testFixtures(project(":base:data:json")))
     testImplementation("com.fasterxml.jackson.core:jackson-core")
     testImplementation("com.google.guava:guava-testlib")

@@ -6,7 +6,7 @@ import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import org.example.age.api.base.HttpOptional;
-import org.example.age.testing.client.TestClient;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.testing.server.TestServer;
 import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
@@ -54,11 +54,11 @@ public final class UndertowSenderTest {
     }
 
     private static int executeStatusCodeRequest(String path) throws IOException {
-        return TestClient.requestBuilder().get(server.url(path)).build().execute();
+        return JsonApiClient.requestBuilder().get(server.url(path)).build().execute();
     }
 
     private static HttpOptional<String> executeTextRequest(String path) throws IOException {
-        return TestClient.requestBuilder(new TypeReference<String>() {})
+        return JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .get(server.url(path))
                 .build()
                 .execute();
