@@ -44,9 +44,10 @@ final class FakeSiteService implements SiteApi {
     public void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         requestDispatcher
-                .requestBuilder(dispatcher, new TypeReference<VerificationSession>() {})
+                .requestBuilder(new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
-                .dispatch(sender, accountId, this::handleVerificationSessionResponse);
+                .build()
+                .dispatch(sender, accountId, dispatcher, this::handleVerificationSessionResponse);
     }
 
     @Override

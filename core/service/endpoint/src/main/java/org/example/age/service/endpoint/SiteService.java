@@ -48,9 +48,10 @@ final class SiteService implements SiteApi {
     public void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         requestDispatcher
-                .requestBuilder(dispatcher, new TypeReference<VerificationSession>() {})
+                .requestBuilder(new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
-                .dispatch(sender, accountId, authData, this::handleVerificationSessionResponse);
+                .build()
+                .dispatch(sender, accountId, authData, dispatcher, this::handleVerificationSessionResponse);
     }
 
     @Override

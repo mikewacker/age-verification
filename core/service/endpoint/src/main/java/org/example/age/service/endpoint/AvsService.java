@@ -68,10 +68,11 @@ final class AvsService implements AvsApi {
 
         String siteId = signedCertificate.ageCertificate().verificationRequest().siteId();
         requestDispatcher
-                .requestBuilder(dispatcher, new TypeReference<String>() {})
+                .requestBuilder(new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(signedCertificate))
                 .body(signedCertificate)
-                .dispatch(sender, siteId, this::handleAgeCertificateResponse);
+                .build()
+                .dispatch(sender, siteId, dispatcher, this::handleAgeCertificateResponse);
     }
 
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
