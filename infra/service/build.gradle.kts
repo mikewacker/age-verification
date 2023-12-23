@@ -9,10 +9,10 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     api(project(":base:api:base"))
+    api(project(":infra:client"))
     api("com.fasterxml.jackson.core:jackson-core")
 
     implementation(project(":base:data:json"))
-    implementation(project(":infra:client"))
     implementation("com.squareup.okhttp3:okhttp")
 
     // test fixtures

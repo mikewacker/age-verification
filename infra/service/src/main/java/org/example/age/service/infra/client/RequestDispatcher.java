@@ -5,6 +5,7 @@ import org.example.age.api.base.ApiHandler;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.HttpOptional;
 import org.example.age.api.base.Sender;
+import org.example.age.client.infra.ApiClient;
 
 /**
  * Dispatches HTTP requests to a backend server as part of a frontend exchange.
@@ -13,58 +14,52 @@ import org.example.age.api.base.Sender;
  *
  * <p>Consumers should create and share a single {@link RequestDispatcher}; each instance creates a new client.</p>
  */
-public interface RequestDispatcher {
+public interface RequestDispatcher extends ApiClient {
 
     /** Creates a {@link RequestDispatcher}. */
     static RequestDispatcher create() {
         return RequestDispatcherImpl.create();
     }
 
-    /** Creates a builder for a request whose response is only a status code. */
-    UrlStageRequestBuilder<Integer> requestBuilder(Dispatcher dispatcher);
+    /** Creates a builder for a JSON API request whose response is only a status code. */
+    UrlStageRequestBuilder<DispatchStage<Integer>> requestBuilder();
 
-    /** Creates a builder for a request whose response is a value (or an error status code). */
-    <V> UrlStageRequestBuilder<HttpOptional<V>> requestBuilder(
-            Dispatcher dispatcher, TypeReference<V> responseValueTypeRef);
+    /** Creates a builder for a JSON API request whose response is a JSON value (or an error status code). */
+    <V> UrlStageRequestBuilder<DispatchStage<HttpOptional<V>>> requestBuilder(TypeReference<V> responseValueTypeRef);
 
-    /** Builder for a request that can set the method and the URL together. */
-    interface UrlStageRequestBuilder<V> {
-
-        /** Uses a GET request at the specified URL. */
-        FinalStageRequestBuilder<V> get(String url);
-
-        /** Uses a POST request at the specified URL. */
-        BodyOrFinalStageRequestBuilder<V> post(String url);
-    }
-
-    /** Builder for a request that can set the body, or build and dispatch the request. */
-    interface BodyOrFinalStageRequestBuilder<V> extends FinalStageRequestBuilder<V> {
-
-        /** Sets the body. */
-        FinalStageRequestBuilder<V> body(Object requestValue);
-    }
-
-    /** Builder for a request that can build and dispatch the request. */
-    interface FinalStageRequestBuilder<V> {
+    /** Post-build stage that can asynchronously dispatch the request. */
+    interface DispatchStage<V> {
 
         /** Dispatches the request using a callback. */
-        <S extends Sender> void dispatch(S sender, ApiHandler.OneArg<S, V> callback);
+        <S extends Sender> void dispatch(S sender, Dispatcher dispatcher, ApiHandler.OneArg<S, V> callback);
 
         /** Dispatches the request using a callback, passing one additional argument along to the callback. */
-        default <S extends Sender, A> void dispatch(S sender, A arg, ApiHandler.TwoArg<S, A, V> callback) {
-            dispatch(sender, (s, responseValue, d) -> callback.handleRequest(s, arg, responseValue, d));
+        default <S extends Sender, A> void dispatch(
+                S sender, A arg, Dispatcher dispatcher, ApiHandler.TwoArg<S, A, V> callback) {
+            dispatch(sender, dispatcher, (s, responseValue, d) -> callback.handleRequest(s, arg, responseValue, d));
         }
 
         /** Dispatches the request using a callback, passing two additional arguments along to the callback. */
         default <S extends Sender, A1, A2> void dispatch(
-                S sender, A1 arg1, A2 arg2, ApiHandler.ThreeArg<S, A1, A2, V> callback) {
-            dispatch(sender, (s, responseValue, d) -> callback.handleRequest(s, arg1, arg2, responseValue, d));
+                S sender, A1 arg1, A2 arg2, Dispatcher dispatcher, ApiHandler.ThreeArg<S, A1, A2, V> callback) {
+            dispatch(
+                    sender,
+                    dispatcher,
+                    (s, responseValue, d) -> callback.handleRequest(s, arg1, arg2, responseValue, d));
         }
 
         /** Dispatches the request using a callback, passing three additional arguments along to the callback. */
         default <S extends Sender, A1, A2, A3> void dispatch(
-                S sender, A1 arg1, A2 arg2, A3 arg3, ApiHandler.FourArg<S, A1, A2, A3, V> callback) {
-            dispatch(sender, (s, responseValue, d) -> callback.handleRequest(s, arg1, arg2, arg3, responseValue, d));
+                S sender,
+                A1 arg1,
+                A2 arg2,
+                A3 arg3,
+                Dispatcher dispatcher,
+                ApiHandler.FourArg<S, A1, A2, A3, V> callback) {
+            dispatch(
+                    sender,
+                    dispatcher,
+                    (s, responseValue, d) -> callback.handleRequest(s, arg1, arg2, arg3, responseValue, d));
         }
     }
 }

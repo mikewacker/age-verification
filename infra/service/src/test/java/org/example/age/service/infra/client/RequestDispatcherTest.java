@@ -25,28 +25,14 @@ public final class RequestDispatcherTest {
     private static final MockServer backendServer = MockServer.register("backend");
 
     @Test
-    public void backendRequest_StatusCodeResponse_Ok() throws IOException {
+    public void backendRequest_StatusCodeResponse() throws IOException {
         backendServer.enqueue(new MockResponse());
         int statusCode = executeRequestWithStatusCodeResponse();
         assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
-    public void backendRequest_StatusCodeResponse_ErrorCode() throws IOException {
-        backendServer.enqueue(new MockResponse().setResponseCode(403));
-        int statusCode = executeRequestWithStatusCodeResponse();
-        assertThat(statusCode).isEqualTo(403);
-    }
-
-    @Test
-    public void backendRequest_StatusCodeResponse_RequestFails() throws IOException {
-        backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        int statusCode = executeRequestWithStatusCodeResponse();
-        assertThat(statusCode).isEqualTo(502);
-    }
-
-    @Test
-    public void backendRequest_JsonValueResponse_Ok() throws IOException {
+    public void backendRequest_JsonValueResponse() throws IOException {
         backendServer.enqueue(
                 new MockResponse().setHeader("Content-Type", "application/json").setBody("\"test\""));
         HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
@@ -54,29 +40,15 @@ public final class RequestDispatcherTest {
     }
 
     @Test
-    public void backendRequest_JsonValueResponse_ErrorCode() throws IOException {
-        backendServer.enqueue(new MockResponse().setResponseCode(403));
-        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
-        assertThat(maybeText).isEmptyWithErrorCode(403);
-    }
-
-    @Test
-    public void backendRequest_JsonValueResponse_RequestFails() throws IOException {
+    public void backendRequest_RequestFails() throws IOException {
         backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
-        assertThat(maybeText).isEmptyWithErrorCode(502);
+        int statusCode = executeRequestWithStatusCodeResponse();
+        assertThat(statusCode).isEqualTo(502);
     }
 
     @Test
-    public void backendRequest_JsonValueResponse_ReadResponseBodyFails() throws IOException {
-        backendServer.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY));
-        HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
-        assertThat(maybeText).isEmptyWithErrorCode(502);
-    }
-
-    @Test
-    public void backendRequest_JsonValueResponse_DeserializeResponseBodyFails() throws IOException {
-        backendServer.enqueue(new MockResponse().setBody("{"));
+    public void backendRequest_InvalidResponse() throws IOException {
+        backendServer.enqueue(new MockResponse());
         HttpOptional<String> maybeText = executeRequestWithJsonValueResponse();
         assertThat(maybeText).isEmptyWithErrorCode(502);
     }

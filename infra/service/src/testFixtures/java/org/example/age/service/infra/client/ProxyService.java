@@ -22,17 +22,19 @@ public final class ProxyService implements ProxyApi {
     @Override
     public void proxyStatusCode(Sender.StatusCode sender, Dispatcher dispatcher) {
         requestDispatcher
-                .requestBuilder(dispatcher)
+                .requestBuilder()
                 .get(backendServer.rootUrl())
-                .dispatch(sender, this::handleStatusCodeResponse);
+                .build()
+                .dispatch(sender, dispatcher, this::handleStatusCodeResponse);
     }
 
     @Override
     public void proxyText(Sender.Value<String> sender, Dispatcher dispatcher) {
         requestDispatcher
-                .requestBuilder(dispatcher, new TypeReference<String>() {})
+                .requestBuilder(new TypeReference<String>() {})
                 .get(backendServer.rootUrl())
-                .dispatch(sender, this::handleTextResponse);
+                .build()
+                .dispatch(sender, dispatcher, this::handleTextResponse);
     }
 
     /** Callback for a backend request whose response is a status code. */
