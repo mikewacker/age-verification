@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Optional;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.example.age.api.base.ApiHandler;
 import org.example.age.api.base.Dispatcher;
@@ -16,7 +17,7 @@ import org.example.age.data.json.JsonValues;
 
 final class RequestDispatcherImpl implements RequestDispatcher {
 
-    private final DispatcherOkHttpClient client = DispatcherOkHttpClient.create();
+    private final DispatcherOkHttpClientProvider clientProvider = DispatcherOkHttpClientProvider.create();
 
     public static RequestDispatcher create() {
         return new RequestDispatcherImpl();
@@ -24,7 +25,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
     @Override
     public UrlStageRequestBuilder<Integer> requestBuilder(Dispatcher dispatcher) {
-        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
+        OkHttpClient client = clientProvider.get(dispatcher);
+        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client);
         AdaptedDispatcher<Integer> adaptedDispatcher = new AdaptedDispatcher<>(dispatcher, Response::code);
         return new UrlStageRequestBuilderImpl<>(requestBuilder, adaptedDispatcher);
     }
@@ -32,7 +34,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     @Override
     public <V> UrlStageRequestBuilder<HttpOptional<V>> requestBuilder(
             Dispatcher dispatcher, TypeReference<V> responseValueTypeRef) {
-        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client.get(dispatcher));
+        OkHttpClient client = clientProvider.get(dispatcher);
+        JsonApiClient.UrlStageRequestBuilder requestBuilder = JsonApiClient.requestBuilder(client);
         ResponseConverter<HttpOptional<V>> responseConverter = new JsonValueResponseConverter<>(responseValueTypeRef);
         AdaptedDispatcher<HttpOptional<V>> adaptedDispatcher = new AdaptedDispatcher<>(dispatcher, responseConverter);
         return new UrlStageRequestBuilderImpl<>(requestBuilder, adaptedDispatcher);

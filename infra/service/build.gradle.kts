@@ -23,7 +23,6 @@ dependencies {
     testFixturesImplementation(project(":base:data:json"))
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":infra:api"))
-    testFixturesImplementation(project(":infra:client"))
     testFixturesImplementation(testFixtures(project(":testing")))
     testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
     testFixturesImplementation("com.squareup.okhttp3:okhttp")

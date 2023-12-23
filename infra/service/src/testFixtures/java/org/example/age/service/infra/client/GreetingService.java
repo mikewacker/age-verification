@@ -6,17 +6,18 @@ import java.io.IOException;
 import java.util.Optional;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.api.base.Dispatcher;
 import org.example.age.api.base.Sender;
-import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.json.JsonValues;
 import org.example.age.testing.server.TestServer;
 
-/** Test service for {@link GreetingApi} that uses a {@link DispatcherOkHttpClient}. */
+/** Test service for {@link GreetingApi} that uses a {@link DispatcherOkHttpClientProvider}. */
 public final class GreetingService implements GreetingApi {
 
-    private final DispatcherOkHttpClient client = DispatcherOkHttpClient.create();
+    private final DispatcherOkHttpClientProvider clientProvider = DispatcherOkHttpClientProvider.create();
     private final TestServer<?> backendServer = TestServer.get("backend");
 
     /** Creates an {@link HttpHandler} from a {@link GreetingService}. */
@@ -27,10 +28,10 @@ public final class GreetingService implements GreetingApi {
 
     @Override
     public void greeting(Sender.Value<String> sender, Dispatcher dispatcher) {
+        OkHttpClient client = clientProvider.get(dispatcher);
+        Request request = new Request.Builder().url(backendServer.rootUrl()).build();
         Callback callback = new RecipientCallback(sender, dispatcher);
-        JsonApiClient.requestBuilder(client.get(dispatcher))
-                .get(backendServer.rootUrl())
-                .enqueue(callback);
+        client.newCall(request).enqueue(callback);
         dispatcher.dispatched();
     }
 

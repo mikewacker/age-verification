@@ -13,7 +13,7 @@ import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class DispatcherOkHttpClientTest {
+public final class DispatcherOkHttpClientProviderTest {
 
     @RegisterExtension
     private static final TestServer<?> frontendServer =

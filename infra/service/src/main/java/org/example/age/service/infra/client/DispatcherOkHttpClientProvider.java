@@ -4,19 +4,19 @@ import okhttp3.OkHttpClient;
 import org.example.age.api.base.Dispatcher;
 
 /**
- * Shared {@link OkHttpClient} for backend requests. The client uses the worker of the underlying server
- * (i.e., {@link Dispatcher#getWorker()}).
+ * Provider for a shared {@link OkHttpClient} that is used for backend requests.
+ * The client uses the worker of the underlying server (i.e., {@link Dispatcher#getWorker()}).
  *
  * <p>The client is lazily initialized on the first call to {@link #get(Dispatcher)}.</p>
  */
-final class DispatcherOkHttpClient {
+final class DispatcherOkHttpClientProvider {
 
     private volatile OkHttpClient client = null;
     private final Object lock = new Object();
 
-    /** Creates a {@link DispatcherOkHttpClient}. */
-    public static DispatcherOkHttpClient create() {
-        return new DispatcherOkHttpClient();
+    /** Creates a {@link DispatcherOkHttpClientProvider}. */
+    public static DispatcherOkHttpClientProvider create() {
+        return new DispatcherOkHttpClientProvider();
     }
 
     /** Gets the shared {@link OkHttpClient}. */
@@ -41,5 +41,5 @@ final class DispatcherOkHttpClient {
         return new OkHttpClient.Builder().dispatcher(clientDispatcher).build();
     }
 
-    private DispatcherOkHttpClient() {}
+    private DispatcherOkHttpClientProvider() {}
 }
