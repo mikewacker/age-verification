@@ -1,5 +1,6 @@
 package org.example.age.demo;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +14,7 @@ public final class MainTest {
     }
 
     @Test
-    public void runDemo() {
+    public void runDemo() throws IOException {
         Main.main(new String[0]);
     }
 }

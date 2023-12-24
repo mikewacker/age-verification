@@ -9,28 +9,26 @@ dependencies {
 
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
-    implementation(project(":core:verification-poc"))
+    implementation(project(":base:api:base"))
+    implementation(project(":core:api:types"))
     implementation(project(":core:service:types"))
     implementation(project(":core:service:endpoint"))
     implementation(project(":module:extractor:demo"))
     implementation(project(":module:extractor:builtin"))
     implementation(project(":module:store:inmemory"))
     implementation(project(":module:service:resource"))
+    implementation(project(":infra:client"))
     implementation(project(":core:api:endpoint")) // Dagger component
     implementation(project(":infra:service")) // Dagger component
     implementation(project(":core:service:crypto")) // Dagger component
+    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.google.errorprone:error_prone_annotations")
     implementation("com.google.dagger:dagger")
-    implementation("com.google.guava:guava")
     implementation("io.undertow:undertow-core")
     implementation("javax.inject:javax.inject")
-    implementation("org.bouncycastle:bcpkix-jdk18on")
-    implementation("org.bouncycastle:bcprov-jdk18on")
 
     // test
-    testImplementation(project(":crypto:data"))
-    testImplementation(project(":core:data"))
-    testImplementation(project(":core:verification-poc"))
     testImplementation("io.undertow:undertow-core")
 }
 
