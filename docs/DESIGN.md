@@ -1,5 +1,7 @@
 # Design
 
+*(Note: This is slightly out-of-date, but it still has lots of great information.)*
+
 ## Goals
 
 Many social media accounts are anonymous; protecting the anonymity of such accounts ia a key consideration.

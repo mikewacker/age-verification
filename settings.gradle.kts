@@ -34,8 +34,5 @@ include(
         "module:service:resource",
         "module:service:test",
 
-        // other
-        "core:verification-poc",
-
         "demo",
 )

@@ -1,256 +1,330 @@
 package org.example.age.demo;
 
+import com.fasterxml.jackson.core.Base64Variants;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.errorprone.annotations.FormatMethod;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.example.age.data.certificate.AgeCertificate;
+import io.undertow.Undertow;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.example.age.api.base.HttpOptional;
+import org.example.age.api.def.VerificationState;
+import org.example.age.api.def.VerificationStatus;
+import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.user.AgeRange;
-import org.example.age.data.user.AgeThresholds;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.verification.AvsUi;
-import org.example.age.verification.SiteUi;
-import org.example.age.verification.VerifiedUserStore;
+import org.example.age.demo.server.DemoAvsServerComponent;
+import org.example.age.demo.server.DemoSiteServerComponent;
 
 /** Demos a proof-of-concept for age verification. */
 public final class Main {
 
-    private static final Demo demo = Demo.create();
+    private static final String SITE1_NAME = "Crackle";
+    private static final String SITE2_NAME = "Pop";
+    private static final String AVS_NAME = "CheckMyAge";
+    private static final int SITE1_PORT = 8080;
+    private static final int SITE2_PORT = 8081;
+    private static final int AVS_PORT = 8090;
+
+    private static final Undertow siteServer1 = DemoSiteServerComponent.createServer(SITE1_NAME);
+    private static final Undertow siteServer2 = DemoSiteServerComponent.createServer(SITE2_NAME);
+    private static final Undertow avsServer = DemoAvsServerComponent.createServer(AVS_NAME);
+
+    private static final ObjectWriter jsonWriter =
+            new ObjectMapper().setBase64Variant(Base64Variants.MODIFIED_FOR_URL).writerWithDefaultPrettyPrinter();
 
     /** Main method. */
-    public static void main(String[] args) {
-        displayBorder();
-
-        // high-level workflow for all sites
-        verifyParentAndChildForAvs();
-        verifyParentAndChildForSite(Demo.SITE1_NAME, Demo.PARENT_SITE1_USERNAME, Demo.CHILD_SITE1_USERNAME);
-        verifyParentAndChildForSite(Demo.SITE2_NAME, Demo.PARENT_SITE2_USERNAME, Demo.CHILD_SITE2_USERNAME);
-        displayBorder();
-
-        // display the user data stored
-        displayParentAndChildDataForSite(Demo.AVS_NAME, Demo.PARENT_REAL_NAME, Demo.CHILD_REAL_NAME);
-        displayParentAndChildDataForSite(Demo.SITE1_NAME, Demo.PARENT_SITE1_USERNAME, Demo.CHILD_SITE1_USERNAME);
-        displayParentAndChildDataForSite(Demo.SITE2_NAME, Demo.PARENT_SITE2_USERNAME, Demo.CHILD_SITE2_USERNAME);
-        displayBorder();
-
-        // detailed workflow for a single account
-        verifyUserForSiteVerbose(Demo.SITE2_NAME, Demo.CHILD_REAL_NAME, Demo.CHILD_SITE2_USERNAME);
-        displayBorder();
-    }
-
-    /** Verifies the age and guardian relationship of a parent and child for the age verification service. */
-    private static void verifyParentAndChildForAvs() {
-        displayIntro();
-        verifyPersonForAvs(Demo.PARENT_REAL_NAME, Demo.PARENT_AGE, Optional.empty());
-        verifyPersonForAvs(Demo.CHILD_REAL_NAME, Demo.CHILD_AGE, Optional.of(Demo.PARENT_REAL_NAME));
-        println();
+    public static void main(String[] args) throws IOException {
+        try {
+            startServers();
+            displayIntro();
+            verifyAccounts();
+            duplicateVerification();
+            displayUserData();
+        } finally {
+            stopServers();
+        }
     }
 
     /** Displays some introductory text. */
     private static void displayIntro() {
-        String avsName = demo.avsUi().getName();
-        String site1Name = demo.siteUi(Demo.SITE1_NAME).getName();
-        String site2Name = demo.siteUi(Demo.SITE2_NAME).getName();
-
-        println("In this proof-of-concept:");
-        println("- %s is a third-party age verification service.", avsName);
-        println("- %s and %s are social media sites that have registered with %s.", site1Name, site2Name, avsName);
-        println(
-                "- %s and %s need to know whether a user's age is %s.",
-                site1Name, site2Name, ageThresholds(Demo.AGE_THRESHOLDS));
+        displayBorder();
+        println("- Crackle and Pop are social media sites.");
+        println("- CheckMyAge is a third-party age verification service.");
+        println("- John Smith (40) and Billy Smith (13, son of John) have accounts on CheckMyAge.");
         println();
+        displayBorder();
     }
 
-    /** Verifies the age and guardian (if applicable) of a person for the age verification service. */
-    private static void verifyPersonForAvs(String realName, int age, Optional<String> maybeGuardian) {
-        println("%s has already verified his identity on %s:", realName, Demo.AVS_NAME);
-        println("- Age: %d", age);
-        if (maybeGuardian.isPresent()) {
-            String guardian = maybeGuardian.get();
-            println("- Guardian: %s", guardian);
+    ////////
+    // the basics
+    ////////
+
+    /** Verifies accounts. */
+    private static void verifyAccounts() throws IOException {
+        verifyAccount(SITE1_NAME, SITE1_PORT, "publius", "John Smith", true);
+        verifyAccount(SITE1_NAME, SITE1_PORT, "publius-jr", "Billy Smith", false);
+        verifyAccount(SITE2_NAME, SITE2_PORT, "JohnS", "John Smith", false);
+        verifyAccount(SITE2_NAME, SITE2_PORT, "BillyS", "Billy Smith", false);
+        displayBorder();
+    }
+
+    /** Verifies an account on a site. */
+    private static void verifyAccount(
+            String siteName, int sitePort, String siteAccountId, String person, boolean verbose) throws IOException {
+        println("%s uses %s to verify his account on %s, \"%s\":", person, AVS_NAME, siteName, siteAccountId);
+        println("- On %s, %s begins the process to verify \"%s\".", siteName, person, siteAccountId);
+        println("- (Behind the scenes, %s contacts %s.)", siteName, AVS_NAME);
+        println("    - %s does NOT share the account name, \"%s\", with %s.", siteName, siteAccountId, AVS_NAME);
+        String requestUrl = verificationRequestUrl(sitePort);
+        VerificationRequest request = createVerificationRequest(requestUrl, siteAccountId);
+        if (verbose) {
+            displayExchange("POST", requestUrl, request);
         }
-    }
 
-    /** Verifies the age and guardian relationship of a parent and child for a site. */
-    private static void verifyParentAndChildForSite(String siteId, String parentUsername, String childUsername) {
-        AvsUi avsUi = demo.avsUi();
-        SiteUi siteUi = demo.siteUi(siteId);
-
-        verifyUserForSite(avsUi, siteUi, Demo.PARENT_REAL_NAME, parentUsername);
-        verifyUserForSite(avsUi, siteUi, Demo.CHILD_REAL_NAME, childUsername);
-        println();
-    }
-
-    /** Verifies the age and guardian (if applicable) of a user for a site. */
-    private static void verifyUserForSite(AvsUi avsUi, SiteUi siteUi, String realName, String username) {
-        // Run the workflow.
-        VerificationRequest request = siteUi.createVerificationRequest(username);
-        avsUi.processVerificationRequest(realName, request.id());
-
-        // Display the results.
-        println("%s uses %s to verify \"%s\" on %s:", realName, avsUi.getName(), username, siteUi.getName());
-        println("- Age: %s", siteUi.getAgeRange(username));
-        if (!siteUi.getGuardians(username).isEmpty()) {
-            String guardian = siteUi.getGuardians(username).get(0);
-            println("- Guardian: %s", guardian);
+        println("- %s redirects %s to CheckMyAge.", siteName, person);
+        linkVerificationRequest(request.redirectUrl(), person);
+        if (verbose) {
+            displayExchange("POST", request.redirectUrl(), 200);
         }
-    }
 
-    /** Displays the data for a parent and child that is stored on a site or service. */
-    private static void displayParentAndChildDataForSite(String name, String parentUsername, String childUsername) {
-        VerifiedUserStore userStore = demo.verifiedUserStore(name);
+        println("- %s confirms with %s that he wants to verify an account on %s.", person, AVS_NAME, siteName);
+        println("    - %s does NOT know which account on %s is being verified.", AVS_NAME, siteName);
+        println("- (Behind the scenes, %s sends an age certificate to %s.)", AVS_NAME, siteName);
+        println("    - %s does NOT share %s's real identity with %s.", AVS_NAME, person, siteName);
+        String certificateUrl = ageCertificateUrl();
+        HttpOptional<String> maybeRedirectUrl = sendAgeCertificate(certificateUrl, person);
+        if (maybeRedirectUrl.isEmpty()) {
+            error();
+        }
+        String redirectUrl = maybeRedirectUrl.get();
+        if (verbose) {
+            displayExchange("POST", certificateUrl, redirectUrl);
+        }
 
-        println("Data stored on %s:", name);
-        displayUserDataForSite(userStore, parentUsername);
-        displayUserDataForSite(userStore, childUsername);
+        println("- %s redirects %s back to %s.", AVS_NAME, person, siteName);
+        println("- %s confirms that \"%s\" is verified!", siteName, siteAccountId);
+        VerificationState state = getVerificationState(redirectUrl, siteAccountId);
+        if (state.status() != VerificationStatus.VERIFIED) {
+            error();
+        }
+        if (verbose) {
+            displayExchange("GET", redirectUrl, state);
+        }
+
+        println("- %s has stored the following data for \"%s\":", siteName, siteAccountId);
+        displayVerifiedUser(state.verifiedUser());
         println();
-    }
-
-    /** Displays the data for a user that is stored on the site or service. */
-    private static void displayUserDataForSite(VerifiedUserStore userStore, String username) {
-        VerifiedUser user = userStore.retrieveVerifiedUser(username);
-
-        println("- %s:", username);
-        displayVerifiedUser(user);
-    }
-
-    /** Verifies the age and guardian (if applicable) of a user for a site. Displays verbose output. */
-    private static void verifyUserForSiteVerbose(String siteId, String realName, String username) {
-        AvsUi avsUi = demo.avsUi();
-        SiteUi siteUi = demo.siteUi(siteId);
-        VerifiedUserStore avsUserStore = demo.verifiedUserStore(Demo.AVS_NAME);
-        VerifiedUserStore siteUserStore = demo.verifiedUserStore(siteId);
-
-        // Run the workflow.
-        VerificationRequest request = siteUi.createVerificationRequest(username);
-        avsUi.processVerificationRequest(realName, request.id());
-
-        // Get verbose information.
-        VerifiedUser avsUser = avsUserStore.retrieveVerifiedUser(realName);
-        AgeCertificate certificate = demo.ageCertificate(request.id());
-        VerifiedUser siteUser = siteUserStore.retrieveVerifiedUser(username);
-
-        // Display the detailed workflow.
-        String avsName = avsUi.getName();
-        String siteName = siteUi.getName();
-
-        println("Detailed workflow to verify \"%s\" on %s:", username, siteName);
-        println("- The current time is %s.", time(System.currentTimeMillis() / 1000));
-        println("- [#1], [#2] is used to denote when data is stored that will be used later.");
-        println();
-        println("For a proof-of-concept, everything runs on a single machine;");
-        println("the demo pretends that %s and %s are separate websites.", avsName, siteName);
-        println("(For the real thing, we assume that engineers know how to build a website.)");
-        println();
-        println("Part I");
-        println("- %s logs in as \"%s\" on %s.", realName, username, siteName);
-        println("- %s starts the process to verify \"%s\".", realName, username);
-        println("- %s asks %s to create a new verification request.", siteName, avsName);
-        println("- %s generates the following verification request:", avsName);
-        displayVerificationRequest(request);
-        println("- [#1] %s stores a copy of the verification request.", avsName);
-        println("- %s sends the verification request back to %s.", avsName, siteName);
-        println("- [#2] %s links the request ID (%s) to \"%s\".", siteName, shortId(request.id()), username);
-        println("- %s opens the following URL in a new window on %s's browser:", siteName, realName);
-        println("  %s", avsUrl(avsName, request.id()));
-        println();
-
-        println("Part II");
-        println("- %s receives a web request at the following URL:", avsName);
-        println("  %s", avsUrl(avsName, request.id()));
-        println("- %s gets the verification request ID (%s) from the URL.", avsName, shortId(request.id()));
-        println("- [#1] %s retrieves the full verification request:", avsName);
-        displayVerificationRequest(request);
-        println("- %s checks that the verification request is not expired.", avsName);
-        println("- %s responds to the web request by displaying a login page.", avsName);
-        println("- %s logs in to %s.", realName, avsName);
-        println("- %s links the request ID (%s) to %s.", avsName, shortId(request.id()), realName);
-        println("- %s confirms that %s wants to verify an account on %s.", avsName, realName, siteName);
-        println("- %s retrieves the user data for %s:", avsName, realName);
-        displayVerifiedUser(avsUser);
-        println(
-                "- %s anonymizes the age that it will share with %s: %s",
-                avsName, siteName, certificate.verifiedUser().ageRange());
-        println("- %s changes the pseudonyms using its secret key for %s.", avsName, siteName);
-        println("- Updated user data:");
-        displayVerifiedUser(certificate.verifiedUser());
-        println("- %s creates the age certificate:", avsName);
-        displayAgeCertificate(certificate);
-        println("- %s digitally signs the age certificate.", avsName);
-        println("- %s securely transmits the signed age certificate to %s.", avsName, siteName);
-        println();
-
-        println("Part III");
-        println("- %s receives a signed age certificate:", siteName);
-        displayAgeCertificate(certificate);
-        println("- %s verifies the signed age certificate.", siteName);
-        println("    - It verifies that the age certificate is signed by %s.", avsName);
-        println("    - It verifies that %s is the recipient in the \"Site\" field.", siteName);
-        println("    - It verifies that the age certificate is not expired.");
-        println("- [#2] %s matches the request ID (%s) to \"%s\".", siteName, shortId(request.id()), username);
-        println("- %s extracts the user data from the age certificate:", siteName);
-        displayVerifiedUser(certificate.verifiedUser());
-        println("- %s changes the pseudonyms using a secret key.", siteName);
-        println("- Updated user data:");
-        displayVerifiedUser(siteUser);
-        println(
-                "- %s checks that no other accounts have the same pseudonym (%s).",
-                siteName, shortId(siteUser.pseudonym()));
-        println("- %s stores this user data for \"%s\". \"%s\" is now verified!", siteName, username, username);
-        println();
-    }
-
-    /** Displays an age certificate. */
-    private static void displayAgeCertificate(AgeCertificate certificate) {
-        displayVerificationRequest(certificate.verificationRequest());
-        displayVerifiedUser(certificate.verifiedUser());
-    }
-
-    /** Displays a verification request. */
-    private static void displayVerificationRequest(VerificationRequest request) {
-        println("    - Request ID: %s", request.id());
-        println("    - Site: %s", request.siteId());
-        println("    - Expiration: %s", time(request.expiration()));
     }
 
     /** Displays a verified user. */
-    private static void displayVerifiedUser(VerifiedUser user) {
-        println("    - Pseudonym: %s", user.pseudonym());
-        println("    - Age: %s", user.ageRange());
-        if (!user.guardianPseudonyms().isEmpty()) {
-            SecureId guardianPseudonym = user.guardianPseudonyms().get(0);
+    private static void displayVerifiedUser(VerifiedUser verifiedUser) {
+        println("    - Pseudonym: %s", verifiedUser.pseudonym());
+        println("    - Age: %s", verifiedUser.ageRange());
+        if (!verifiedUser.guardianPseudonyms().isEmpty()) {
+            SecureId guardianPseudonym = verifiedUser.guardianPseudonyms().get(0);
             println("    - Guardian Pseudonym: %s", guardianPseudonym);
         }
     }
 
-    /** Formats age thresholds. */
-    private static String ageThresholds(AgeThresholds ageThresholds) {
-        List<AgeRange> ageRanges = ageThresholds.toAgeRanges();
-        return ageRanges.stream().map(AgeRange::toString).collect(Collectors.joining(", "));
+    ////////
+    // one person, one account
+    ////////
+
+    /** Demonstrates a (rejected) duplicate verification. */
+    private static void duplicateVerification() throws IOException {
+        duplicateVerification(SITE1_NAME, SITE1_PORT, "drop-table", "Bobby Tables", "John Smith", true);
+        displayBorder();
     }
 
-    /** Formats the URL to verify an account on the age verification service. */
-    private static String avsUrl(String avsName, SecureId requestId) {
-        return String.format("https://www.%s.com/verify/%s", avsName.toLowerCase(Locale.US), requestId);
+    /** Tries to verify a second account using the same person. */
+    private static void duplicateVerification(
+            String siteName, int sitePort, String siteAccountId, String person, String otherPerson, boolean verbose)
+            throws IOException {
+        println("%s uses %s to verify his account on %s, \"%s\":", person, AVS_NAME, siteName, siteAccountId);
+        println("- On %s, %s begins the process to verify \"%s\".", siteName, person, siteAccountId);
+        String requestUrl = verificationRequestUrl(sitePort);
+        VerificationRequest request = createVerificationRequest(requestUrl, siteAccountId);
+        if (verbose) {
+            displayExchange("POST", requestUrl, request);
+        }
+
+        println("- %s redirects %s to CheckMyAge.", siteName, person);
+        linkVerificationRequest(request.redirectUrl(), otherPerson);
+        if (verbose) {
+            displayExchange("POST", request.redirectUrl(), 200);
+        }
+
+        println("- %s tries to use %s's account on %s to verify his account.", person, otherPerson, AVS_NAME);
+        println("- (Behind the scenes, %s sends an age certificate to %s.)", AVS_NAME, siteName);
+        String certificateUrl = ageCertificateUrl();
+        HttpOptional<String> maybeRedirectUrl = sendAgeCertificate(certificateUrl, otherPerson);
+        if (maybeRedirectUrl.statusCode() != 409) {
+            error();
+        }
+        if (verbose) {
+            displayExchange("POST", certificateUrl, maybeRedirectUrl.statusCode());
+        }
+
+        println("- %s rejects the age certificate!", siteName);
+        println();
     }
 
-    /** Formats an ID in a shortened form. */
-    private static String shortId(SecureId id) {
-        String idText = id.toString();
-        return String.format("%s...", idText.substring(0, 8));
+    ////////
+    // data breach!
+    ////////
+
+    /** Displays the user data stored on all sites. */
+    private static void displayUserData() throws IOException {
+        displayUserData(SITE1_NAME, SITE1_PORT, "publius", "publius-jr");
+        displayUserData(SITE2_NAME, SITE2_PORT, "JohnS", "BillyS");
+        displayUserData(AVS_NAME, AVS_PORT, "John Smith", "Billy Smith");
+        displayBorder();
     }
 
-    /** Formats an epoch time. */
-    private static String time(long epoch) {
-        ZonedDateTime localTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault());
-        return localTime.format(DateTimeFormatter.ofPattern("LLLL d, yyyy, h:mm:ss a z"));
+    /** Displays the user data stored on a site for the specified accounts. */
+    private static void displayUserData(String name, int port, String... accountIds) throws IOException {
+        Map<String, VerifiedUser> userData = new LinkedHashMap<>();
+        for (String accountId : accountIds) {
+            String url = verificationStateUrl(port);
+            VerificationState state = getVerificationState(url, accountId);
+            if (state.status() != VerificationStatus.VERIFIED) {
+                error();
+            }
+
+            VerifiedUser user = state.verifiedUser();
+            userData.put(accountId, user);
+        }
+        println("User data stored on %s:\n%s\n", name, prettyJson(userData));
+    }
+
+    ////////
+    // JSON API
+    ////////
+
+    /** Builds the URL to create a verification request. */
+    private static String verificationRequestUrl(int port) {
+        return url(port, "/api/verification-request");
+    }
+
+    /** Creates a verification request for an account. */
+    private static VerificationRequest createVerificationRequest(String url, String siteAccountId) throws IOException {
+        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
+                        new TypeReference<VerificationRequest>() {})
+                .post(url)
+                .headers(Map.of("Account-Id", siteAccountId))
+                .build()
+                .execute();
+        if (maybeRequest.isEmpty()) {
+            error();
+        }
+        return maybeRequest.get();
+    }
+
+    /** Links a verification request to a person. */
+    private static void linkVerificationRequest(String url, String avsAccountId) throws IOException {
+        int statusCode = JsonApiClient.requestBuilder()
+                .post(url)
+                .headers(Map.of("Account-Id", avsAccountId))
+                .build()
+                .execute();
+        if (statusCode != 200) {
+            error();
+        }
+    }
+
+    /** Builds the URL to send an age certificate. */
+    private static String ageCertificateUrl() {
+        return url(AVS_PORT, "/api/age-certificate");
+    }
+
+    /** Sends an age certificate for a person to a site. */
+    private static HttpOptional<String> sendAgeCertificate(String url, String avsAccountId) throws IOException {
+        return JsonApiClient.requestBuilder(new TypeReference<String>() {})
+                .post(url)
+                .headers(Map.of("Account-Id", avsAccountId))
+                .build()
+                .execute();
+    }
+
+    /** Builds the URL to get the verification state. */
+    private static String verificationStateUrl(int port) {
+        return url(port, "/api/verification-state");
+    }
+
+    /** Gets the verification state for an account. */
+    private static VerificationState getVerificationState(String url, String siteAccountId) throws IOException {
+        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
+                        new TypeReference<VerificationState>() {})
+                .get(url)
+                .headers(Map.of("Account-Id", siteAccountId))
+                .build()
+                .execute();
+        if (maybeState.isEmpty()) {
+            error();
+        }
+        return maybeState.get();
+    }
+
+    ////////
+    // utilities
+    ////////
+
+    /** Builds a URL for localhost at the specified port and path. */
+    private static String url(int port, String path) {
+        path = path.replaceFirst("^/", "");
+        return String.format("http://localhost:%d/%s", port, path);
+    }
+
+    /** Converts an object to pretty-printed JSON. */
+    private static String prettyJson(Object value) {
+        try {
+            return jsonWriter.writeValueAsString(value);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Displays an HTTP request and the corresponding HTTP response. */
+    private static void displayExchange(String requestMethod, String requestUrl, int responseStatusCode) {
+        println("[HTTP request]");
+        println("%s %s", requestMethod, requestUrl);
+        println("[HTTP response]");
+        println("%d", responseStatusCode);
+        println();
+    }
+
+    /** Displays an HTTP request and the corresponding HTTP response. */
+    private static void displayExchange(String requestMethod, String requestUrl, Object responseValue) {
+        println("[HTTP request]");
+        println("%s %s", requestMethod, requestUrl);
+        println("[HTTP response]");
+        println("200");
+        println(prettyJson(responseValue));
+        println();
+    }
+
+    /** Starts all the servers. */
+    private static void startServers() {
+        siteServer1.start();
+        siteServer2.start();
+        avsServer.start();
+    }
+
+    /** Stops all the servers. */
+    private static void stopServers() {
+        siteServer1.stop();
+        siteServer2.stop();
+        avsServer.stop();
+    }
+
+    /** Called when an error occurred. */
+    private static void error() {
+        println("***Error occurred!***");
+        throw new AssertionError();
     }
 
     /** Displays a border. */
@@ -259,7 +333,12 @@ public final class Main {
         println();
     }
 
-    /** Syntactic sugar for printing a line that may be formatted. */
+    /** Syntactic sugar for printing a line. */
+    private static void println(String text) {
+        System.out.println(text);
+    }
+
+    /** Syntactic sugar for printing a formatted line. */
     @FormatMethod
     private static void println(String format, Object... args) {
         System.out.format(format, args).println();
