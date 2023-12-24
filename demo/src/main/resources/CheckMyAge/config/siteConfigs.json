@@ -1,0 +1,10 @@
+{
+    "Crackle": {
+        "id": "Crackle",
+        "ageThresholds": [13, 18]
+    },
+    "Pop": {
+        "id": "Pop",
+        "ageThresholds": [13, 18]
+    }
+}
