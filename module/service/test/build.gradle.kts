@@ -5,11 +5,11 @@ plugins {
 
 dependencies {
     // test fixtures
-    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(project(":core:service:types"))
-    testFixturesApi("com.google.dagger:dagger")
-    testFixturesApi("javax.inject:javax.inject")
+    testFixturesApi(libs.dagger.dagger)
+    testFixturesApi(libs.javaxInject.inject)
 
     testFixturesImplementation(project(":crypto:data"))
     testFixturesImplementation(project(":core:data"))
@@ -18,7 +18,7 @@ dependencies {
     testFixturesImplementation(testFixtures(project(":testing")))
 
     // test
-    testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":crypto:data"))
     testImplementation(project(":core:api:types"))
@@ -26,7 +26,7 @@ dependencies {
     testImplementation(project(":module:store:inmemory")) // Dagger component
     testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.google.dagger:dagger")
-    testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("javax.inject:javax.inject")
+    testImplementation(libs.dagger.dagger)
+    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.okhttp3.mockwebserver)
 }

@@ -27,6 +27,7 @@ public final class JsonTesterTest {
     private record BadValue(String text) {
 
         @JsonCreator
+        @SuppressWarnings("unused")
         public static BadValue deserialize(String text) {
             return new BadValue("abc123");
         }

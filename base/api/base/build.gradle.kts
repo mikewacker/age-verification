@@ -6,8 +6,8 @@ plugins {
 
 dependencies {
     // test fixtures
-    testFixturesImplementation("org.assertj:assertj-core")
+    testFixturesImplementation(libs.assertj.core)
 
     // test
-    testImplementation("com.google.guava:guava-testlib")
+    testImplementation(libs.guava.testlib)
 }

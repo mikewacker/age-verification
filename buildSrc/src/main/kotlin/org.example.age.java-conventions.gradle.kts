@@ -1,4 +1,5 @@
 import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
     java
@@ -10,24 +11,26 @@ repositories {
     mavenCentral()
 }
 
+val libs = the<LibrariesForLibs>() // version catalog workaround for convention plugins
+
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core")
+    errorprone(libs.errorprone.core)
 
-    testImplementation("org.assertj:assertj-core")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.junitJupiter.api)
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testRuntimeOnly(libs.junitJupiter.engine)
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 spotless {
     java {
-        palantirJavaFormat("2.39.0")
+        palantirJavaFormat(libs.versions.plugin.spotless.palantir.get())
     }
 }
 
