@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.23.3")
-    implementation("net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin:3.1.0")
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location)) // version catalog workaround for convention plugins
+    implementation(libs.plugin.errorprone)
+    implementation(libs.plugin.spotless)
 }

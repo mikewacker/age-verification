@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    annotationProcessor(libs.dagger.compiler)
 
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
@@ -21,15 +21,15 @@ dependencies {
     implementation(project(":core:api:endpoint")) // Dagger component
     implementation(project(":infra:service")) // Dagger component
     implementation(project(":core:service:crypto")) // Dagger component
-    implementation("com.fasterxml.jackson.core:jackson-core")
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.google.errorprone:error_prone_annotations")
-    implementation("com.google.dagger:dagger")
-    implementation("io.undertow:undertow-core")
-    implementation("javax.inject:javax.inject")
+    implementation(libs.dagger.dagger)
+    implementation(libs.errorprone.annotations)
+    implementation(libs.jackson.core)
+    implementation(libs.jackson.databind)
+    implementation(libs.javaxInject.inject)
+    implementation(libs.undertow.core)
 
     // test
-    testImplementation("io.undertow:undertow-core")
+    testImplementation(libs.undertow.core)
 }
 
 application {

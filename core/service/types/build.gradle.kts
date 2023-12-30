@@ -5,21 +5,21 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("org.immutables:value")
+    annotationProcessor(libs.immutables.value)
 
     api(project(":base:data:json"))
     api(project(":crypto:data"))
     api(project(":core:data"))
     api(project(":base:api:base"))
     api(project(":core:api:types"))
-    api("com.fasterxml.jackson.core:jackson-annotations")
-    api("com.fasterxml.jackson.core:jackson-core")
-    api("com.fasterxml.jackson.core:jackson-databind")
-    api("com.google.errorprone:error_prone_annotations")
-    api("org.immutables:value-annotations")
+    api(libs.errorprone.annotations)
+    api(libs.immutables.annotations)
+    api(libs.jackson.annotations)
+    api(libs.jackson.core)
+    api(libs.jackson.databind)
 
     // test
     testImplementation(project(":core:data"))
     testImplementation(testFixtures(project(":base:data:json")))
-    testImplementation("com.fasterxml.jackson.core:jackson-core")
+    testImplementation(libs.jackson.core)
 }

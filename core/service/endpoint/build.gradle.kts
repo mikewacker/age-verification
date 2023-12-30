@@ -6,13 +6,13 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    annotationProcessor(libs.dagger.compiler)
 
     api(project(":core:api:extractors"))
     api(project(":core:service:types"))
-    api("com.google.dagger:dagger")
-    api("io.undertow:undertow-core")
-    api("javax.inject:javax.inject")
+    api(libs.dagger.compiler)
+    api(libs.javaxInject.inject)
+    api(libs.undertow.core)
 
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
@@ -22,15 +22,15 @@ dependencies {
     implementation(project(":infra:client"))
     implementation(project(":infra:service"))
     implementation(project(":core:service:crypto"))
-    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation(libs.jackson.core)
 
     // test fixtures
-    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(project(":crypto:data"))
     testFixturesApi(project(":core:data"))
     testFixturesApi(project(":core:api:types"))
-    testFixturesApi("io.undertow:undertow-core")
+    testFixturesApi(libs.undertow.core)
 
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":core:api:endpoint"))
@@ -42,9 +42,9 @@ dependencies {
     testFixturesImplementation(testFixtures(project(":module:extractor:test")))
     testFixturesImplementation(project(":module:store:inmemory"))
     testFixturesImplementation(testFixtures(project(":module:service:test")))
-    testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
-    testFixturesImplementation("com.google.dagger:dagger")
-    testFixturesImplementation("javax.inject:javax.inject")
+    testFixturesImplementation(libs.dagger.dagger)
+    testFixturesImplementation(libs.jackson.core)
+    testFixturesImplementation(libs.javaxInject.inject)
 
     // test
     testImplementation(project(":crypto:data"))
@@ -55,5 +55,5 @@ dependencies {
     testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("io.undertow:undertow-core")
+    testImplementation(libs.undertow.core)
 }

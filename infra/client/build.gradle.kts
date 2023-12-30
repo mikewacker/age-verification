@@ -6,8 +6,8 @@ plugins {
 dependencies {
     // main
     api(project(":base:api:base"))
-    api("com.fasterxml.jackson.core:jackson-core")
-    api("com.squareup.okhttp3:okhttp")
+    api(libs.jackson.core)
+    api(libs.okhttp3.okhttp)
 
     implementation(project(":base:data:json"))
 
@@ -15,8 +15,8 @@ dependencies {
     testImplementation(project(":base:api:base"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.fasterxml.jackson.core:jackson-core")
-    testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("com.squareup.okhttp3:okhttp")
-    testImplementation("com.squareup.okio:okio-jvm")
+    testImplementation(libs.jackson.core)
+    testImplementation(libs.okhttp3.mockwebserver)
+    testImplementation(libs.okhttp3.okhttp)
+    testImplementation(libs.okio.jvm)
 }

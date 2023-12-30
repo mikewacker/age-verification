@@ -5,23 +5,23 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    annotationProcessor(libs.dagger.compiler)
 
     api(project(":core:api:extractors"))
-    api("com.google.dagger:dagger")
-    api("javax.inject:javax.inject")
+    api(libs.dagger.dagger)
+    api(libs.javaxInject.inject)
 
     implementation(project(":base:api:base"))
-    implementation("io.undertow:undertow-core")
+    implementation(libs.undertow.core)
 
     // test
-    testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:extractors"))
     testImplementation(testFixtures(project(":base:api:base")))
-    testImplementation("com.google.dagger:dagger")
-    testImplementation("io.undertow:undertow-core")
-    testImplementation("javax.inject:javax.inject")
-    testImplementation("org.mockito:mockito-core")
+    testImplementation(libs.dagger.dagger)
+    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.undertow.core)
 }

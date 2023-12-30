@@ -5,22 +5,22 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    annotationProcessor(libs.dagger.compiler)
 
     api(project(":core:service:types"))
-    api("com.google.dagger:dagger")
-    api("javax.inject:javax.inject")
+    api(libs.dagger.dagger)
+    api(libs.javaxInject.inject)
 
     implementation(project(":base:data:json"))
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
     implementation(project(":base:api:base"))
     implementation(project(":core:api:types"))
-    implementation("com.fasterxml.jackson.core:jackson-core")
-    implementation("com.google.guava:guava")
+    implementation(libs.guava.guava)
+    implementation(libs.jackson.core)
 
     // test
-    testAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
@@ -28,6 +28,6 @@ dependencies {
     testImplementation(project(":core:api:types"))
     testImplementation(project(":core:service:types"))
     testImplementation(testFixtures(project(":base:api:base")))
-    testImplementation("com.google.dagger:dagger")
-    testImplementation("javax.inject:javax.inject")
+    testImplementation(libs.dagger.dagger)
+    testImplementation(libs.javaxInject.inject)
 }

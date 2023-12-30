@@ -6,33 +6,29 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
-
     api(project(":base:api:base"))
     api(project(":infra:client"))
-    api("com.fasterxml.jackson.core:jackson-core")
+    api(libs.jackson.core)
 
-    implementation("com.squareup.okhttp3:okhttp")
+    implementation(libs.okhttp3.okhttp)
 
     // test fixtures
-    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
-
-    testFixturesApi("io.undertow:undertow-core")
+    testFixturesApi(libs.undertow.core)
 
     testFixturesImplementation(project(":base:data:json"))
     testFixturesImplementation(project(":base:api:base"))
     testFixturesImplementation(project(":infra:api"))
     testFixturesImplementation(project(":infra:client"))
     testFixturesImplementation(testFixtures(project(":testing")))
-    testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
-    testFixturesImplementation("com.squareup.okhttp3:okhttp")
+    testFixturesImplementation(libs.jackson.core)
+    testFixturesImplementation(libs.okhttp3.okhttp)
 
     // test
     testImplementation(project(":base:api:base"))
     testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.fasterxml.jackson.core:jackson-core")
-    testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("io.undertow:undertow-core")
+    testImplementation(libs.jackson.core)
+    testImplementation(libs.okhttp3.mockwebserver)
+    testImplementation(libs.undertow.core)
 }

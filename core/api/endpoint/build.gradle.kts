@@ -6,13 +6,13 @@ plugins {
 
 dependencies {
     // main
-    annotationProcessor("com.google.dagger:dagger-compiler")
+    annotationProcessor(libs.dagger.compiler)
 
     api(project(":core:api:types"))
     api(project(":core:api:extractors"))
-    api("com.google.dagger:dagger")
-    api("io.undertow:undertow-core")
-    api("javax.inject:javax.inject")
+    api(libs.dagger.dagger)
+    api(libs.javaxInject.inject)
+    api(libs.undertow.core)
 
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
@@ -20,12 +20,12 @@ dependencies {
     implementation(project(":core:api:types"))
     implementation(project(":base:api:adapter"))
     implementation(project(":infra:api"))
-    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation(libs.jackson.core)
 
     // test fixtures
-    testFixturesAnnotationProcessor("com.google.dagger:dagger-compiler")
+    testFixturesAnnotationProcessor(libs.dagger.compiler)
 
-    testFixturesApi("io.undertow:undertow-core")
+    testFixturesApi(libs.undertow.core)
 
     testFixturesImplementation(project(":crypto:data"))
     testFixturesImplementation(project(":core:data"))
@@ -34,8 +34,8 @@ dependencies {
     testFixturesImplementation(project(":core:api:extractors"))
     testFixturesImplementation(project(":module:extractor:builtin"))
     testFixturesImplementation(testFixtures(project(":module:extractor:test")))
-    testFixturesImplementation("com.google.dagger:dagger")
-    testFixturesImplementation("javax.inject:javax.inject")
+    testFixturesImplementation(libs.dagger.dagger)
+    testFixturesImplementation(libs.javaxInject.inject)
 
     // test
     testImplementation(project(":crypto:data"))
@@ -45,6 +45,6 @@ dependencies {
     testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.fasterxml.jackson.core:jackson-core")
-    testImplementation("io.undertow:undertow-core")
+    testImplementation(libs.jackson.core)
+    testImplementation(libs.undertow.core)
 }

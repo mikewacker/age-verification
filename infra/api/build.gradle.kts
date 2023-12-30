@@ -8,23 +8,23 @@ dependencies {
     // main
     api(project(":base:api:base"))
     api(project(":base:api:adapter"))
-    api("com.fasterxml.jackson.core:jackson-core")
-    api("io.undertow:undertow-core")
+    api(libs.jackson.core)
+    api(libs.undertow.core)
 
     implementation(project(":base:data:json"))
-    implementation("org.jboss.xnio:xnio-api")
+    implementation(libs.xnio.api)
 
     // test fixtures
-    testFixturesApi("io.undertow:undertow-core")
+    testFixturesApi(libs.undertow.core)
 
     testFixturesImplementation(project(":base:api:base"))
-    testFixturesImplementation("com.fasterxml.jackson.core:jackson-core")
+    testFixturesImplementation(libs.jackson.core)
 
     // test
     testImplementation(project(":base:api:base"))
     testImplementation(project(":infra:client"))
     testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(testFixtures(project(":testing")))
-    testImplementation("com.fasterxml.jackson.core:jackson-core")
-    testImplementation("io.undertow:undertow-core")
+    testImplementation(libs.jackson.core)
+    testImplementation(libs.undertow.core)
 }

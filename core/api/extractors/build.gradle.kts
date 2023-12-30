@@ -8,5 +8,5 @@ dependencies {
     api(project(":base:api:base"))
     api(project(":core:api:types"))
     api(project(":base:api:adapter"))
-    api("io.undertow:undertow-core")
+    api(libs.undertow.core)
 }
