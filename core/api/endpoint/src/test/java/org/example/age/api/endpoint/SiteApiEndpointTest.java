@@ -4,6 +4,8 @@ import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.testing.server.TestServer;
+import io.github.mikewacker.drift.testing.server.TestUndertowServer;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
@@ -17,8 +19,6 @@ import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.service.component.stub.StubSiteComponent;
-import org.example.age.testing.server.TestServer;
-import org.example.age.testing.server.undertow.TestUndertowServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

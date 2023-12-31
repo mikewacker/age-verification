@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.Dispatcher;
 import io.github.mikewacker.drift.api.HttpOptional;
 import io.github.mikewacker.drift.api.Sender;
+import io.github.mikewacker.drift.testing.server.TestServer;
 import io.undertow.server.HttpHandler;
-import org.example.age.testing.server.TestServer;
 
 /** Test service for {@link ProxyApi} that uses a {@link RequestDispatcher}. */
 public final class ProxyService implements ProxyApi {

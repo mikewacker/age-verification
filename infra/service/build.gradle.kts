@@ -17,14 +17,13 @@ dependencies {
 
     testFixturesImplementation(project(":infra:api"))
     testFixturesImplementation(project(":infra:client"))
-    testFixturesImplementation(testFixtures(project(":testing")))
     testFixturesImplementation(libs.drift.api)
+    testFixturesImplementation(libs.drift.testlib)
     testFixturesImplementation(libs.jackson.core)
     testFixturesImplementation(libs.okhttp3.okhttp)
 
     // test
     testImplementation(project(":infra:client"))
-    testImplementation(testFixtures(project(":testing")))
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.jackson.core)

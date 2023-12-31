@@ -2,7 +2,7 @@
 assertj = "3.24.2"
 bouncycastle = "1.77"
 dagger = "2.50"
-drift = "0.0.1"
+drift = "0.0.2"
 errorprone = "2.24.0"
 guava = "33.0.0-jre"
 immutables = "2.10.0"

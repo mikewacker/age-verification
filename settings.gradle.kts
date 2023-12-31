@@ -1,21 +1,16 @@
 rootProject.name = "age-verification"
 
 include(
-        /* generic modules */
-
-        // base + crypto (only depends on Jackson, Immutables; ":base:api" depends on nothing)
+        // modules to move to Drift
         "base:api:adapter",
 
-        "crypto:data",
-
-        // infra + testing (depends on Undertow, OkHttp)
         "infra:api",
         "infra:service",
         "infra:client",
 
-        "testing",
+        // modules to keep
+        "crypto:data",
 
-        /* product modules */
         "core:data",
         "core:api:types",
         "core:api:extractors",

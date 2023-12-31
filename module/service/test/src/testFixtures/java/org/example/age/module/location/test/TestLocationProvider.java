@@ -1,12 +1,12 @@
 package org.example.age.module.location.test;
 
+import io.github.mikewacker.drift.testing.server.TestServer;
 import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
-import org.example.age.testing.server.TestServer;
 
 @Singleton
 final class TestLocationProvider implements RefreshableAvsLocationProvider, RefreshableSiteLocationProvider {

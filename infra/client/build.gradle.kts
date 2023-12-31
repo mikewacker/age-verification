@@ -10,7 +10,6 @@ dependencies {
     api(libs.okhttp3.okhttp)
 
     // test
-    testImplementation(testFixtures(project(":testing")))
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.jackson.core)

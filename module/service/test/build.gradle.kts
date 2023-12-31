@@ -15,7 +15,7 @@ dependencies {
     testFixturesImplementation(project(":core:data"))
     testFixturesImplementation(project(":core:api:types"))
     testFixturesImplementation(project(":module:store:inmemory"))
-    testFixturesImplementation(testFixtures(project(":testing")))
+    testFixturesImplementation(libs.drift.testlib)
 
     // test
     testAnnotationProcessor(libs.dagger.compiler)
@@ -25,8 +25,8 @@ dependencies {
     testImplementation(project(":core:service:types"))
     testImplementation(project(":module:store:inmemory")) // Dagger component
     testImplementation(project(":infra:client"))
-    testImplementation(testFixtures(project(":testing")))
     testImplementation(libs.dagger.dagger)
+    testImplementation(libs.drift.testlib)
     testImplementation(libs.javaxInject.inject)
     testImplementation(libs.okhttp3.mockwebserver)
 }

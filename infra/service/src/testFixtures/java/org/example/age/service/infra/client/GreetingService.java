@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.Dispatcher;
 import io.github.mikewacker.drift.api.Sender;
 import io.github.mikewacker.drift.json.JsonValues;
+import io.github.mikewacker.drift.testing.server.TestServer;
 import io.undertow.server.HttpHandler;
 import java.io.IOException;
 import java.util.Optional;
@@ -12,7 +13,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.testing.server.TestServer;
 
 /** Test service for {@link GreetingApi} that uses a {@link DispatcherOkHttpClientProvider}. */
 public final class GreetingService implements GreetingApi {

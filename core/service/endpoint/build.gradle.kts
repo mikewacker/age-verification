@@ -52,7 +52,6 @@ dependencies {
     testImplementation(project(":core:api:types"))
     testImplementation(project(":module:extractor:builtin"))
     testImplementation(project(":infra:client"))
-    testImplementation(testFixtures(project(":testing")))
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.undertow.core)
