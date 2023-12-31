@@ -1,9 +1,9 @@
 package org.example.age.api.infra;
 
+import io.github.mikewacker.drift.api.Sender;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
-import org.example.age.api.base.Sender;
 
 /** Test {@link HttpHandler} that uses an {@link UndertowSender}. */
 public final class UndertowSenderHandler implements HttpHandler {

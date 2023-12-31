@@ -1,10 +1,10 @@
 package org.example.age.service.endpoint;
 
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.Sender;
 import java.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.Sender;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.api.def.AvsApi;
 import org.example.age.api.def.VerificationState;

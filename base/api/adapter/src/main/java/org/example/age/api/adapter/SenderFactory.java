@@ -1,6 +1,6 @@
 package org.example.age.api.adapter;
 
-import org.example.age.api.base.Sender;
+import io.github.mikewacker.drift.api.Sender;
 
 /** Creates a {@link Sender} from the underlying exchange. */
 @FunctionalInterface

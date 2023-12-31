@@ -1,11 +1,11 @@
 package org.example.age.module.extractor.test;
 
+import io.github.mikewacker.drift.api.HttpOptional;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.api.extractor.AccountIdExtractor;
 
 /** Extracts an account ID from the custom {@code Account-Id} header, or sends a 401 error. */

@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import dagger.Component;
+import io.github.mikewacker.drift.testing.api.FakeScheduledExecutor;
 import java.time.Duration;
 import javax.inject.Singleton;
 import org.example.age.service.store.PendingStore;
 import org.example.age.service.store.PendingStoreFactory;
-import org.example.age.testing.api.FakeScheduledExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

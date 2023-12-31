@@ -11,16 +11,16 @@ dependencies {
     api(libs.dagger.dagger)
     api(libs.javaxInject.inject)
 
-    implementation(project(":base:api:base"))
+    implementation(libs.drift.api)
     implementation(libs.undertow.core)
 
     // test
     testAnnotationProcessor(libs.dagger.compiler)
 
-    testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:extractors"))
-    testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(libs.dagger.dagger)
+    testImplementation(libs.drift.api)
+    testImplementation(libs.drift.testlib)
     testImplementation(libs.javaxInject.inject)
     testImplementation(libs.mockito.core)
     testImplementation(libs.undertow.core)

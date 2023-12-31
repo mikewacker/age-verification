@@ -1,6 +1,6 @@
 package org.example.age.service.verification.internal;
 
-import org.example.age.api.base.HttpOptional;
+import io.github.mikewacker.drift.api.HttpOptional;
 import org.example.age.api.def.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 

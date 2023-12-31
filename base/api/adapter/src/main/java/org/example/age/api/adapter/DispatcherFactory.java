@@ -1,6 +1,6 @@
 package org.example.age.api.adapter;
 
-import org.example.age.api.base.Dispatcher;
+import io.github.mikewacker.drift.api.Dispatcher;
 
 /** Creates a {@link Dispatcher} from the underlying exchange. */
 @FunctionalInterface

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
-import org.example.age.testing.json.JsonTester;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class AgeRangeTest {

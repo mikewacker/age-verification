@@ -1,7 +1,7 @@
 package org.example.age.service.infra.client;
 
+import io.github.mikewacker.drift.api.Dispatcher;
 import okhttp3.OkHttpClient;
-import org.example.age.api.base.Dispatcher;
 
 /**
  * Provider for a shared {@link OkHttpClient} that is used for backend requests.

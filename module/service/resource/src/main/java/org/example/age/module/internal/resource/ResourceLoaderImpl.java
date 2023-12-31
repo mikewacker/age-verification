@@ -1,6 +1,7 @@
 package org.example.age.module.internal.resource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.json.JsonValues;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.bouncycastle.openssl.PEMParser;
-import org.example.age.data.json.JsonValues;
 
 @Singleton
 final class ResourceLoaderImpl implements ResourceLoader {

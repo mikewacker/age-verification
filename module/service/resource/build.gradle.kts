@@ -11,12 +11,12 @@ dependencies {
     api(libs.dagger.dagger)
     api(libs.javaxInject.inject)
 
-    implementation(project(":base:data:json"))
     implementation(project(":crypto:data"))
     implementation(project(":core:api:types"))
     implementation(project(":module:store:inmemory"))
     implementation(libs.bouncycastle.pkix)
     implementation(libs.bouncycastle.prov)
+    implementation(libs.drift.api)
     implementation(libs.jackson.core)
 
     // test

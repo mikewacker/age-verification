@@ -2,7 +2,7 @@ package org.example.age.service.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.example.age.data.json.JsonStyle;
+import io.github.mikewacker.drift.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** Configuration for a site. */

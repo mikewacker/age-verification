@@ -1,7 +1,7 @@
 package org.example.age.service.store;
 
+import io.github.mikewacker.drift.api.ScheduledExecutor;
 import java.util.Optional;
-import org.example.age.api.base.ScheduledExecutor;
 
 /**
  * Ephemeral key-value store where a key-value pair is associated with a pending action that expires.

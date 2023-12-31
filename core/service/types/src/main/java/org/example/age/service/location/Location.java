@@ -3,7 +3,7 @@ package org.example.age.service.location;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.errorprone.annotations.FormatMethod;
-import org.example.age.data.json.JsonStyle;
+import io.github.mikewacker.drift.json.JsonStyle;
 import org.immutables.value.Value;
 
 /**

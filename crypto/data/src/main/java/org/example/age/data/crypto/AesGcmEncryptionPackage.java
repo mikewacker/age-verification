@@ -1,8 +1,8 @@
 package org.example.age.data.crypto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
 import java.util.Optional;
-import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** Encryption package for plaintext encrypted using AES-256/GCM. */

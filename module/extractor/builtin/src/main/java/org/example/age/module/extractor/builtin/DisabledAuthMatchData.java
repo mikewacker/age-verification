@@ -1,8 +1,8 @@
 package org.example.age.module.extractor.builtin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
 import org.example.age.api.def.AuthMatchData;
-import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** {@link AuthMatchData} that always returns a successful match. */

@@ -1,8 +1,8 @@
 package org.example.age.client.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
 import java.io.IOException;
-import org.example.age.api.base.HttpOptional;
 
 /** Shared HTTP client that can synchronously make requests to a JSON API. */
 public interface JsonApiClient extends ApiClient {

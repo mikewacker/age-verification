@@ -1,6 +1,10 @@
 package org.example.age.service.infra.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.Sender;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import okhttp3.Call;
@@ -8,10 +12,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
 import org.example.age.client.infra.OkHttpJsonApiClient;
 
 final class RequestDispatcherImpl extends OkHttpJsonApiClient implements RequestDispatcher {

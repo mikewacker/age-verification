@@ -1,10 +1,12 @@
 package org.example.age.client.infra;
 
+import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.json.JsonSerializationException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -14,7 +16,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.testing.server.mock.MockServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -109,7 +110,7 @@ public final class OkHttpJsonApiClientTest {
         TestClient.ExecuteStage<HttpOptional<String>> executor = client.requestBuilder(new TypeReference<String>() {})
                 .get(mockServer.rootUrl())
                 .build();
-        error_InvalidResponse(executor, "response Content-Type is missing");
+        error_InvalidResponse(executor, IllegalArgumentException.class, "response Content-Type is missing");
     }
 
     @Test
@@ -118,7 +119,7 @@ public final class OkHttpJsonApiClientTest {
         TestClient.ExecuteStage<HttpOptional<String>> executor = client.requestBuilder(new TypeReference<String>() {})
                 .get(mockServer.rootUrl())
                 .build();
-        error_InvalidResponse(executor, "failed to parse response Content-Type: abc");
+        error_InvalidResponse(executor, IllegalArgumentException.class, "failed to parse response Content-Type: abc");
     }
 
     @Test
@@ -127,7 +128,8 @@ public final class OkHttpJsonApiClientTest {
         TestClient.ExecuteStage<HttpOptional<String>> executor = client.requestBuilder(new TypeReference<String>() {})
                 .get(mockServer.rootUrl())
                 .build();
-        error_InvalidResponse(executor, "response Content-Type is not application/json: text/html");
+        error_InvalidResponse(
+                executor, IllegalArgumentException.class, "response Content-Type is not application/json: text/html");
     }
 
     @Test
@@ -137,12 +139,13 @@ public final class OkHttpJsonApiClientTest {
         TestClient.ExecuteStage<HttpOptional<String>> executor = client.requestBuilder(new TypeReference<String>() {})
                 .get(mockServer.rootUrl())
                 .build();
-        error_InvalidResponse(executor, "deserialization failed");
+        error_InvalidResponse(executor, JsonSerializationException.class, "deserialization failed");
     }
 
-    private void error_InvalidResponse(TestClient.ExecuteStage<?> executor, String expectedMessage) {
+    private void error_InvalidResponse(
+            TestClient.ExecuteStage<?> executor, Class<?> expectedExceptionClass, String expectedMessage) {
         assertThatThrownBy(() -> executor.execute())
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(expectedExceptionClass)
                 .hasMessage(expectedMessage);
     }
 

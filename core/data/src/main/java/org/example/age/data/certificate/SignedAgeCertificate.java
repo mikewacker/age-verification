@@ -1,11 +1,11 @@
 package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
+import io.github.mikewacker.drift.json.JsonValues;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import org.example.age.data.crypto.DigitalSignature;
-import org.example.age.data.json.JsonStyle;
-import org.example.age.data.json.JsonValues;
 import org.immutables.value.Value;
 
 /**

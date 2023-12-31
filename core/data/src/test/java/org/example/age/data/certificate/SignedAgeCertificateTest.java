@@ -3,10 +3,10 @@ package org.example.age.data.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import java.security.KeyPair;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SigningKeys;
-import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,9 @@
 package org.example.age.data.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
 import java.util.List;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /**
