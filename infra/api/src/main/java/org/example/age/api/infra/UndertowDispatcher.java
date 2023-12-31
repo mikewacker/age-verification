@@ -1,13 +1,13 @@
 package org.example.age.api.infra;
 
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.ScheduledExecutor;
+import io.github.mikewacker.drift.api.Sender;
 import io.undertow.server.Connectors;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.SameThreadExecutor;
 import java.util.concurrent.ExecutorService;
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.ScheduledExecutor;
-import org.example.age.api.base.Sender;
 
 /** {@link Dispatcher} that is backed by an {@link HttpServerExchange}. */
 final class UndertowDispatcher implements Dispatcher {
@@ -69,7 +69,7 @@ final class UndertowDispatcher implements Dispatcher {
     }
 
     @Override
-    public <S extends Sender> void executeHandler(DispatchedHandler handler) {
+    public void executeHandler(DispatchedHandler handler) {
         Connectors.executeRootHandler(ex -> handler.handleRequest(), exchange);
     }
 

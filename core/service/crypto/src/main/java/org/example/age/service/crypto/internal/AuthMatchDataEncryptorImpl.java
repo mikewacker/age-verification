@@ -1,14 +1,14 @@
 package org.example.age.service.crypto.internal;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.json.JsonValues;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
-import org.example.age.data.json.JsonValues;
 
 @Singleton
 final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
@@ -30,7 +30,6 @@ final class AuthMatchDataEncryptorImpl implements AuthMatchDataEncryptor {
         }
         byte[] rawAuthData = maybeRawAuthData.get();
 
-        Optional<AuthMatchData> maybeAuthData = JsonValues.tryDeserialize(rawAuthData, new TypeReference<>() {});
-        return HttpOptional.fromOptional(maybeAuthData, 400);
+        return JsonValues.tryDeserialize(rawAuthData, new TypeReference<>() {}, 400);
     }
 }

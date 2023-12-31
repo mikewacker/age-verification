@@ -3,7 +3,7 @@ package org.example.age.data.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.testing.json.JsonTester;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class BytesValueTest {

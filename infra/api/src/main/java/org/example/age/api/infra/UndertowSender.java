@@ -1,8 +1,8 @@
 package org.example.age.api.infra;
 
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.Sender;
 import io.undertow.server.HttpServerExchange;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
 
 /** {@link Sender} that is backed by an {@link HttpServerExchange}. */
 interface UndertowSender {

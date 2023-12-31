@@ -5,10 +5,10 @@ plugins {
 
 dependencies {
     // main
-    api(project(":base:api:base"))
+    api(libs.drift.api)
 
     // test
-    testImplementation(project(":base:api:base"))
-    testImplementation(testFixtures(project(":base:api:base")))
+    testImplementation(libs.drift.api)
+    testImplementation(libs.drift.testlib)
     testImplementation(libs.mockito.core)
 }

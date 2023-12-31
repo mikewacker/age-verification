@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class AgeThresholdsTest {

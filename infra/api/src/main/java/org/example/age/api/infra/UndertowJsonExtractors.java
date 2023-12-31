@@ -1,15 +1,14 @@
 package org.example.age.api.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.json.JsonValues;
 import io.undertow.io.Receiver;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Optional;
 import org.example.age.api.adapter.Extractor;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.data.json.JsonValues;
 
 /** Repository of {@link Extractor}'s for Undertow that use JSON. */
 final class UndertowJsonExtractors {
@@ -51,11 +50,11 @@ final class UndertowJsonExtractors {
 
         @Override
         public void handle(HttpServerExchange exchange, byte[] rawValue) {
-            Optional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef);
+            HttpOptional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
 
             // FullBytesCallback does not throw an exception, so we must handle exceptions here.
             try {
-                callback.onValueExtracted(HttpOptional.fromOptional(maybeValue, StatusCodes.BAD_REQUEST));
+                callback.onValueExtracted(maybeValue);
             } catch (Exception e) {
                 UndertowResponses.sendStatusCode(exchange, StatusCodes.INTERNAL_SERVER_ERROR);
             }
@@ -93,8 +92,7 @@ final class UndertowJsonExtractors {
             String textValue = maybeTextValue.get();
 
             byte[] rawValue = JsonValues.serialize(textValue);
-            Optional<V> maybeValue = JsonValues.tryDeserialize(rawValue, valueTypeRef);
-            return HttpOptional.fromOptional(maybeValue, StatusCodes.BAD_REQUEST);
+            return JsonValues.tryDeserialize(rawValue, valueTypeRef, StatusCodes.BAD_REQUEST);
         }
     }
 }

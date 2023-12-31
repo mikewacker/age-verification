@@ -9,7 +9,6 @@ dependencies {
 
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
-    implementation(project(":base:api:base"))
     implementation(project(":core:api:types"))
     implementation(project(":core:service:types"))
     implementation(project(":core:service:endpoint"))
@@ -22,6 +21,7 @@ dependencies {
     implementation(project(":infra:service")) // Dagger component
     implementation(project(":core:service:crypto")) // Dagger component
     implementation(libs.dagger.dagger)
+    implementation(libs.drift.api)
     implementation(libs.errorprone.annotations)
     implementation(libs.jackson.core)
     implementation(libs.jackson.databind)

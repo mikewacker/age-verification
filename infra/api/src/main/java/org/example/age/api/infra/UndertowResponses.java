@@ -1,9 +1,9 @@
 package org.example.age.api.infra;
 
+import io.github.mikewacker.drift.json.JsonValues;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import java.nio.ByteBuffer;
-import org.example.age.data.json.JsonValues;
 import org.xnio.IoUtils;
 
 /** Utilities for sending a response with Undertow, with protections against double-sending a response. */

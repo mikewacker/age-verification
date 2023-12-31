@@ -9,12 +9,11 @@ dependencies {
 
     api(project(":crypto:data"))
     api(project(":core:data"))
-    api(project(":base:api:base"))
     api(project(":core:api:types"))
     api(libs.dagger.dagger)
+    api(libs.drift.api)
     api(libs.javaxInject.inject)
 
-    implementation(project(":base:data:json"))
     implementation(project(":core:service:types"))
     implementation(libs.jackson.core)
 
@@ -23,11 +22,11 @@ dependencies {
 
     testImplementation(project(":crypto:data"))
     testImplementation(project(":core:data"))
-    testImplementation(project(":base:api:base"))
     testImplementation(project(":core:api:types"))
     testImplementation(project(":module:extractor:builtin"))
     testImplementation(testFixtures(project(":module:service:test")))
-    testImplementation(testFixtures(project(":base:api:base")))
     testImplementation(libs.dagger.dagger)
+    testImplementation(libs.drift.api)
+    testImplementation(libs.drift.testlib)
     testImplementation(libs.javaxInject.inject)
 }

@@ -1,8 +1,8 @@
 package org.example.age.api.def;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
 import java.util.Objects;
-import org.example.age.data.json.JsonStyle;
 import org.example.age.data.user.VerifiedUser;
 import org.immutables.value.Value;
 

@@ -1,12 +1,12 @@
 package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import java.time.Duration;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
-import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class AgeCertificateTest {

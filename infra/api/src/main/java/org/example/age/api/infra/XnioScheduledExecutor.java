@@ -1,8 +1,8 @@
 package org.example.age.api.infra;
 
+import io.github.mikewacker.drift.api.ScheduledExecutor;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import org.example.age.api.base.ScheduledExecutor;
 import org.xnio.XnioExecutor;
 
 /** {@link ScheduledExecutor} that is backed by a {@link XnioExecutor}. */

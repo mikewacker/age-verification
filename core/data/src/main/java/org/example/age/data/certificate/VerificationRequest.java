@@ -2,9 +2,9 @@ package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
 import java.time.Duration;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** Request to verify an account on a site. */

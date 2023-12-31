@@ -1,11 +1,11 @@
 package org.example.age.service.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.Sender;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.api.def.AvsApi;
 import org.example.age.api.def.VerificationState;

@@ -2,9 +2,9 @@ package org.example.age.data.crypto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.github.mikewacker.drift.json.JsonValues;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import org.example.age.data.json.JsonValues;
 
 /**
  * Immutable wrapper for a {@code byte[]} value.

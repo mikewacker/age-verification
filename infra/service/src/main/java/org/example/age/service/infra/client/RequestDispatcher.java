@@ -1,10 +1,10 @@
 package org.example.age.service.infra.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.Sender;
 import org.example.age.client.infra.ApiClient;
 
 /**

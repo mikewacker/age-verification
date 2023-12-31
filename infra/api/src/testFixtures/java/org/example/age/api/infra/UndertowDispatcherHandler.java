@@ -1,12 +1,12 @@
 package org.example.age.api.infra;
 
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.Sender;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import java.util.concurrent.Executor;
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.Sender;
 
 /** Test {@link HttpHandler} that uses an {@link UndertowDispatcher}. */
 public final class UndertowDispatcherHandler implements HttpHandler {

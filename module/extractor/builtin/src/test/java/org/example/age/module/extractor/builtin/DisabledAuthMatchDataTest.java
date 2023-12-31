@@ -3,8 +3,8 @@ package org.example.age.module.extractor.builtin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import org.example.age.api.def.AuthMatchData;
-import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class DisabledAuthMatchDataTest {

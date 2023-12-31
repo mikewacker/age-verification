@@ -1,12 +1,12 @@
 package org.example.age.api.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Sender;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import org.example.age.api.adapter.Extractor;
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Sender;
 
 /** {@link HttpHandler} that invokes an {@link ApiHandler}. */
 public interface UndertowJsonApiHandler extends HttpHandler {

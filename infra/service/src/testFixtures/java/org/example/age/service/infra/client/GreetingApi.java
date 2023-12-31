@@ -1,9 +1,9 @@
 package org.example.age.service.infra.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.Sender;
 import io.undertow.server.HttpHandler;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.Sender;
 import org.example.age.api.infra.UndertowJsonApiHandler;
 
 /** Asynchronous API that sends a greeting. */

@@ -1,9 +1,9 @@
 package org.example.age.module.extractor.builtin;
 
+import io.github.mikewacker.drift.api.HttpOptional;
 import io.undertow.server.HttpServerExchange;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
 

@@ -4,10 +4,7 @@ include(
         /* generic modules */
 
         // base + crypto (only depends on Jackson, Immutables; ":base:api" depends on nothing)
-        "base:api:base",
         "base:api:adapter",
-        "base:data:json",
-        "base:data:crypto",
 
         "crypto:data",
 

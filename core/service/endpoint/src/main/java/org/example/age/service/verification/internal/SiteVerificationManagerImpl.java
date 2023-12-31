@@ -1,11 +1,11 @@
 package org.example.age.service.verification.internal;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.ScheduledExecutor;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.api.def.VerificationState;
 import org.example.age.data.certificate.AgeCertificate;

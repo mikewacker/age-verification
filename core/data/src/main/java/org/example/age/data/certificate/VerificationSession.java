@@ -1,8 +1,8 @@
 package org.example.age.data.certificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.mikewacker.drift.json.JsonStyle;
 import org.example.age.data.crypto.Aes256Key;
-import org.example.age.data.json.JsonStyle;
 import org.immutables.value.Value;
 
 /** Session to verify an account on a site. */

@@ -1,7 +1,7 @@
 package org.example.age.api.def;
 
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.Sender;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.Sender;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 

@@ -3,10 +3,10 @@ package org.example.age.api.adapter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
-import org.example.age.testing.api.FakeSender;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.Sender;
+import io.github.mikewacker.drift.testing.api.FakeSender;
 import org.junit.jupiter.api.Test;
 
 public final class AdaptedApiHandlerTest {

@@ -1,6 +1,8 @@
 package org.example.age.client.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.json.JsonValues;
 import java.io.IOException;
 import java.util.Map;
 import okhttp3.MediaType;
@@ -8,8 +10,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.data.json.JsonValues;
 
 /**
  * JSON {@link ApiClient} that is internally backed by an {@link OkHttpClient}.

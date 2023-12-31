@@ -3,9 +3,9 @@ package org.example.age.data.certificate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class VerificationRequestTest {

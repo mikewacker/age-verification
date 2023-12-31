@@ -1,12 +1,12 @@
 package org.example.age.client.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.api.base.HttpOptional;
 
 final class JsonApiClientImpl extends OkHttpJsonApiClient implements JsonApiClient {
 

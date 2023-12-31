@@ -1,12 +1,12 @@
 package org.example.age.api.endpoint;
 
+import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.mikewacker.drift.api.HttpOptional;
 import java.io.IOException;
 import java.util.Map;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.VerificationState;
 import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.VerificationSession;

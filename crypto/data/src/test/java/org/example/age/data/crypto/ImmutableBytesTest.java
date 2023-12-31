@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.testing.EqualsTester;
+import io.github.mikewacker.drift.testing.json.JsonTester;
 import java.util.Arrays;
-import org.example.age.testing.json.JsonTester;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {

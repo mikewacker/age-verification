@@ -1,10 +1,10 @@
 package org.example.age.service.verification.internal;
 
+import io.github.mikewacker.drift.api.HttpOptional;
 import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.user.VerifiedUser;

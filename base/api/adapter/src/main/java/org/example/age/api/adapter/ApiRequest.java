@@ -1,8 +1,8 @@
 package org.example.age.api.adapter;
 
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Dispatcher;
-import org.example.age.api.base.Sender;
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Dispatcher;
+import io.github.mikewacker.drift.api.Sender;
 
 /**
  * Internal data structure for an API request.

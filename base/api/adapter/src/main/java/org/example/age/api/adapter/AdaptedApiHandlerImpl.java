@@ -1,9 +1,9 @@
 package org.example.age.api.adapter;
 
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.Sender;
 import java.util.function.Consumer;
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.Sender;
 
 final class AdaptedApiHandlerImpl<E, S extends Sender, A1, A2, A3, A4> implements AdaptedApiHandler<E> {
 

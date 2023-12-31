@@ -1,6 +1,6 @@
 package org.example.age.api.adapter;
 
-import org.example.age.api.base.HttpOptional;
+import io.github.mikewacker.drift.api.HttpOptional;
 
 /** Synchronously extracts a value (or an error status code) from the underlying request. */
 @FunctionalInterface

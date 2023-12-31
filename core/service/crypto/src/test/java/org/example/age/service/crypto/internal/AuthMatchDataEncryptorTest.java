@@ -1,10 +1,10 @@
 package org.example.age.service.crypto.internal;
 
-import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
+import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 
 import dagger.Component;
+import io.github.mikewacker.drift.api.HttpOptional;
 import javax.inject.Singleton;
-import org.example.age.api.base.HttpOptional;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;

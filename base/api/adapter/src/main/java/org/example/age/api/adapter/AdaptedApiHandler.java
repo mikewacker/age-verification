@@ -1,7 +1,7 @@
 package org.example.age.api.adapter;
 
-import org.example.age.api.base.ApiHandler;
-import org.example.age.api.base.Sender;
+import io.github.mikewacker.drift.api.ApiHandler;
+import io.github.mikewacker.drift.api.Sender;
 
 /**
  * Adapts an {@link ApiHandler} to a handler for the underlying server.

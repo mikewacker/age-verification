@@ -1,6 +1,6 @@
 package org.example.age.service.crypto.internal;
 
-import org.example.age.api.base.HttpOptional;
+import io.github.mikewacker.drift.api.HttpOptional;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;

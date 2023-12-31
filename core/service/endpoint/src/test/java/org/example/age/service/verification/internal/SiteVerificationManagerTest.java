@@ -1,12 +1,13 @@
 package org.example.age.service.verification.internal;
 
+import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.api.HttpOptionalAssert.assertThat;
 
+import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.api.ScheduledExecutor;
+import io.github.mikewacker.drift.testing.api.StubScheduledExecutor;
 import java.time.Duration;
 import org.assertj.core.data.Offset;
-import org.example.age.api.base.HttpOptional;
-import org.example.age.api.base.ScheduledExecutor;
 import org.example.age.api.def.VerificationState;
 import org.example.age.api.def.VerificationStatus;
 import org.example.age.data.certificate.SignedAgeCertificate;
@@ -17,7 +18,6 @@ import org.example.age.data.user.VerifiedUser;
 import org.example.age.module.extractor.builtin.UserAgentAuthMatchData;
 import org.example.age.service.component.fake.FakeAvsVerificationComponent;
 import org.example.age.service.component.test.TestSiteVerificationComponent;
-import org.example.age.testing.api.StubScheduledExecutor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
