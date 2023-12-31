@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.testing.server.TestServer;
 import java.io.IOException;
 import java.util.Map;
 import org.example.age.api.def.VerificationState;
 import org.example.age.api.def.VerificationStatus;
 import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.VerificationRequest;
-import org.example.age.testing.server.TestServer;
 
 /** Test template for service endpoint tests. */
 public final class ServiceEndpointTestTemplate {

@@ -42,7 +42,6 @@ dependencies {
     testImplementation(project(":core:data"))
     testImplementation(project(":core:api:types"))
     testImplementation(project(":infra:client"))
-    testImplementation(testFixtures(project(":testing")))
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.jackson.core)
