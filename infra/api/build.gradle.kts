@@ -20,8 +20,8 @@ dependencies {
     testFixturesImplementation(libs.jackson.core)
 
     // test
-    testImplementation(project(":infra:client"))
     testImplementation(libs.drift.api)
+    testImplementation(libs.drift.drift)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.jackson.core)
     testImplementation(libs.undertow.core)

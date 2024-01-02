@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.Dispatcher;
 import io.github.mikewacker.drift.api.HttpOptional;
 import io.github.mikewacker.drift.api.Sender;
+import io.github.mikewacker.drift.backend.BackendDispatcher;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.def.AuthMatchData;
@@ -12,7 +13,6 @@ import org.example.age.api.def.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.certificate.VerificationSession;
-import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.verification.internal.FakeSiteVerificationProcessor;
@@ -22,16 +22,16 @@ final class FakeSiteService implements SiteApi {
 
     private final FakeSiteVerificationProcessor verificationProcessor;
     private final RefreshableAvsLocationProvider avsLocationProvider;
-    private final RequestDispatcher requestDispatcher;
+    private final BackendDispatcher backendDispatcher;
 
     @Inject
     public FakeSiteService(
             FakeSiteVerificationProcessor verificationProcessor,
             RefreshableAvsLocationProvider avsLocationProvider,
-            RequestDispatcher requestDispatcher) {
+            BackendDispatcher backendDispatcher) {
         this.verificationProcessor = verificationProcessor;
         this.avsLocationProvider = avsLocationProvider;
-        this.requestDispatcher = requestDispatcher;
+        this.backendDispatcher = backendDispatcher;
     }
 
     @Override
@@ -43,7 +43,7 @@ final class FakeSiteService implements SiteApi {
     @Override
     public void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
-        requestDispatcher
+        backendDispatcher
                 .requestBuilder(new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
                 .build()

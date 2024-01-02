@@ -5,8 +5,6 @@ include(
         "base:api:adapter",
 
         "infra:api",
-        "infra:service",
-        "infra:client",
 
         // modules to keep
         "crypto:data",

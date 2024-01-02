@@ -4,13 +4,12 @@ import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.client.JsonApiClient;
 import io.github.mikewacker.drift.testing.server.TestServer;
 import io.github.mikewacker.drift.testing.server.TestUndertowServer;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Map;
 import org.example.age.api.def.VerificationState;
-import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;
@@ -33,7 +32,8 @@ public final class SiteApiEndpointTest {
         HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
-                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .header("Account-Id", "username")
+                .header("User-Agent", "agent")
                 .build()
                 .execute();
         assertThat(maybeState).isPresent();
@@ -44,7 +44,8 @@ public final class SiteApiEndpointTest {
         HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationRequest>() {})
                 .post(siteServer.url("/api/verification-request"))
-                .headers(Map.of("Account-Id", "username", "User-Agent", "agent"))
+                .header("Account-Id", "username")
+                .header("User-Agent", "agent")
                 .build()
                 .execute();
         assertThat(maybeRequest).isPresent();

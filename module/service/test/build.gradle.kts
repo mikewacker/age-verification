@@ -24,8 +24,8 @@ dependencies {
     testImplementation(project(":core:api:types"))
     testImplementation(project(":core:service:types"))
     testImplementation(project(":module:store:inmemory")) // Dagger component
-    testImplementation(project(":infra:client"))
     testImplementation(libs.dagger.dagger)
+    testImplementation(libs.drift.drift)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.javaxInject.inject)
     testImplementation(libs.okhttp3.mockwebserver)
