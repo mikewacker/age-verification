@@ -18,10 +18,9 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:api:types"))
     implementation(project(":core:api:endpoint"))
-    implementation(project(":infra:client"))
-    implementation(project(":infra:service"))
     implementation(project(":core:service:crypto"))
     implementation(libs.drift.api)
+    implementation(libs.drift.drift)
     implementation(libs.jackson.core)
 
     // test fixtures
@@ -34,8 +33,6 @@ dependencies {
 
     testFixturesImplementation(project(":core:api:endpoint"))
     testFixturesImplementation(project(":core:service:types"))
-    testFixturesImplementation(project(":infra:client"))
-    testFixturesImplementation(project(":infra:service"))
     testFixturesImplementation(project(":core:service:crypto"))
     testFixturesImplementation(project(":module:extractor:builtin"))
     testFixturesImplementation(testFixtures(project(":module:extractor:test")))
@@ -43,6 +40,7 @@ dependencies {
     testFixturesImplementation(testFixtures(project(":module:service:test")))
     testFixturesImplementation(libs.dagger.dagger)
     testFixturesImplementation(libs.drift.api)
+    testFixturesImplementation(libs.drift.drift)
     testFixturesImplementation(libs.jackson.core)
     testFixturesImplementation(libs.javaxInject.inject)
 
@@ -51,8 +49,8 @@ dependencies {
     testImplementation(project(":core:data"))
     testImplementation(project(":core:api:types"))
     testImplementation(project(":module:extractor:builtin"))
-    testImplementation(project(":infra:client"))
     testImplementation(libs.drift.api)
+    testImplementation(libs.drift.drift)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.undertow.core)
 }

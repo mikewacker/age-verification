@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.Dispatcher;
 import io.github.mikewacker.drift.api.HttpOptional;
 import io.github.mikewacker.drift.api.Sender;
+import io.github.mikewacker.drift.backend.BackendDispatcher;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.example.age.api.def.AuthMatchData;
@@ -12,7 +13,6 @@ import org.example.age.api.def.VerificationState;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationSession;
 import org.example.age.data.crypto.SecureId;
-import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
 import org.example.age.service.verification.internal.FakeAvsVerificationFactory;
@@ -23,7 +23,7 @@ final class FakeAvsService implements AvsApi {
 
     private final FakeAvsVerificationFactory verificationFactory;
     private final RefreshableSiteLocationProvider siteLocationProvider;
-    private final RequestDispatcher requestDispatcher;
+    private final BackendDispatcher backendDispatcher;
 
     private VerificationSession storedSession = null;
     private String storedAccountId = null;
@@ -32,10 +32,10 @@ final class FakeAvsService implements AvsApi {
     public FakeAvsService(
             FakeAvsVerificationFactory verificationFactory,
             RefreshableSiteLocationProvider siteLocationProvider,
-            RequestDispatcher requestDispatcher) {
+            BackendDispatcher backendDispatcher) {
         this.verificationFactory = verificationFactory;
         this.siteLocationProvider = siteLocationProvider;
-        this.requestDispatcher = requestDispatcher;
+        this.backendDispatcher = backendDispatcher;
     }
 
     @Override
@@ -78,7 +78,7 @@ final class FakeAvsService implements AvsApi {
         reset();
 
         String siteId = signedCertificate.ageCertificate().verificationRequest().siteId();
-        requestDispatcher
+        backendDispatcher
                 .requestBuilder(new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(siteId))
                 .body(signedCertificate)

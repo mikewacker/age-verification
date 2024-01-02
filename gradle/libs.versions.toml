@@ -2,7 +2,7 @@
 assertj = "3.24.2"
 bouncycastle = "1.77"
 dagger = "2.50"
-drift = "0.0.2"
+drift = "0.0.3"
 errorprone = "2.24.0"
 guava = "33.0.0-jre"
 immutables = "2.10.0"
@@ -26,6 +26,7 @@ bouncycastle-prov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = 
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 drift-api = { module = "io.github.mikewacker.drift:drift-api", version.ref = "drift" }
+drift-drift = { module = "io.github.mikewacker.drift:drift", version.ref = "drift" }
 drift-testlib = { module = "io.github.mikewacker.drift:drift-testlib", version.ref = "drift" }
 errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }

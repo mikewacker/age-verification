@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.errorprone.annotations.FormatMethod;
 import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.client.JsonApiClient;
 import io.undertow.Undertow;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.example.age.api.def.VerificationState;
 import org.example.age.api.def.VerificationStatus;
-import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.VerificationRequest;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
@@ -215,7 +215,7 @@ public final class Main {
         HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationRequest>() {})
                 .post(url)
-                .headers(Map.of("Account-Id", siteAccountId))
+                .header("Account-Id", siteAccountId)
                 .build()
                 .execute();
         if (maybeRequest.isEmpty()) {
@@ -228,7 +228,7 @@ public final class Main {
     private static void linkVerificationRequest(String url, String avsAccountId) throws IOException {
         int statusCode = JsonApiClient.requestBuilder()
                 .post(url)
-                .headers(Map.of("Account-Id", avsAccountId))
+                .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
         if (statusCode != 200) {
@@ -245,7 +245,7 @@ public final class Main {
     private static HttpOptional<String> sendAgeCertificate(String url, String avsAccountId) throws IOException {
         return JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .post(url)
-                .headers(Map.of("Account-Id", avsAccountId))
+                .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
     }
@@ -260,7 +260,7 @@ public final class Main {
         HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(url)
-                .headers(Map.of("Account-Id", siteAccountId))
+                .header("Account-Id", siteAccountId)
                 .build()
                 .execute();
         if (maybeState.isEmpty()) {

@@ -3,13 +3,13 @@ package org.example.age.service.endpoint;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import io.github.mikewacker.drift.backend.BackendDispatcher;
 import io.undertow.server.HttpHandler;
 import javax.inject.Singleton;
 import org.example.age.api.def.AvsApi;
 import org.example.age.api.endpoint.AvsApiModule;
 import org.example.age.api.extractor.AccountIdExtractor;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
-import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
 import org.example.age.service.store.VerificationStore;
@@ -35,7 +35,7 @@ public interface FakeAvsServiceModule {
 
     @Provides
     @Singleton
-    static RequestDispatcher provideRequestDispatcher() {
-        return RequestDispatcher.create();
+    static BackendDispatcher provideBackendDispatcher() {
+        return BackendDispatcher.create();
     }
 }

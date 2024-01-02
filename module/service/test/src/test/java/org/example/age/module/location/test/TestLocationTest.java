@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dagger.Component;
+import io.github.mikewacker.drift.client.JsonApiClient;
 import io.github.mikewacker.drift.testing.server.MockServer;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import javax.inject.Singleton;
 import okhttp3.mockwebserver.MockResponse;
-import org.example.age.client.infra.JsonApiClient;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;

@@ -5,12 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.api.HttpOptional;
+import io.github.mikewacker.drift.client.JsonApiClient;
 import io.github.mikewacker.drift.testing.server.TestServer;
 import java.io.IOException;
-import java.util.Map;
 import org.example.age.api.def.VerificationState;
 import org.example.age.api.def.VerificationStatus;
-import org.example.age.client.infra.JsonApiClient;
 import org.example.age.data.certificate.VerificationRequest;
 
 /** Test template for service endpoint tests. */
@@ -33,7 +32,7 @@ public final class ServiceEndpointTestTemplate {
         HttpOptional<VerificationState> maybeSiteState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
-                .headers(Map.of("Account-Id", siteAccountId))
+                .header("Account-Id", siteAccountId)
                 .build()
                 .execute();
         assertThat(maybeSiteState).isPresent();
@@ -43,7 +42,7 @@ public final class ServiceEndpointTestTemplate {
         HttpOptional<VerificationState> maybeAvsState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(avsServer.url("/api/verification-state"))
-                .headers(Map.of("Account-Id", avsAccountId))
+                .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
         assertThat(maybeAvsState).isPresent();
@@ -54,7 +53,7 @@ public final class ServiceEndpointTestTemplate {
         HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationRequest>() {})
                 .post(siteServer.url("/api/verification-request"))
-                .headers(Map.of("Account-Id", siteAccountId))
+                .header("Account-Id", siteAccountId)
                 .build()
                 .execute();
         assertThat(maybeRequest).isPresent();
@@ -62,14 +61,14 @@ public final class ServiceEndpointTestTemplate {
 
         int linkStatusCode = JsonApiClient.requestBuilder()
                 .post(request.redirectUrl())
-                .headers(Map.of("Account-Id", avsAccountId))
+                .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
         assertThat(linkStatusCode).isEqualTo(200);
 
         HttpOptional<String> maybeRedirectUrl = JsonApiClient.requestBuilder(new TypeReference<String>() {})
                 .post(avsServer.url("/api/age-certificate"))
-                .headers(Map.of("Account-Id", avsAccountId))
+                .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
         if (succeeds) {
@@ -84,7 +83,7 @@ public final class ServiceEndpointTestTemplate {
         HttpOptional<VerificationState> maybeNewSiteState = JsonApiClient.requestBuilder(
                         new TypeReference<VerificationState>() {})
                 .get(redirectUrl)
-                .headers(Map.of("Account-Id", siteAccountId))
+                .header("Account-Id", siteAccountId)
                 .build()
                 .execute();
         assertThat(maybeNewSiteState).isPresent();

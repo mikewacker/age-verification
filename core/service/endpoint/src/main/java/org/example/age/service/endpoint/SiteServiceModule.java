@@ -3,6 +3,7 @@ package org.example.age.service.endpoint;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import io.github.mikewacker.drift.backend.BackendDispatcher;
 import io.undertow.server.HttpHandler;
 import javax.inject.Singleton;
 import org.example.age.api.def.SiteApi;
@@ -10,7 +11,6 @@ import org.example.age.api.endpoint.SiteApiModule;
 import org.example.age.api.extractor.AccountIdExtractor;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
 import org.example.age.service.config.RefreshableSiteConfigProvider;
-import org.example.age.service.infra.client.RequestDispatcher;
 import org.example.age.service.key.RefreshablePseudonymKeyProvider;
 import org.example.age.service.key.RefreshablePublicSigningKeyProvider;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
@@ -41,7 +41,7 @@ public interface SiteServiceModule {
 
     @Provides
     @Singleton
-    static RequestDispatcher provideRequestDispatcher() {
-        return RequestDispatcher.create();
+    static BackendDispatcher provideBackendDispatcher() {
+        return BackendDispatcher.create();
     }
 }

@@ -16,12 +16,11 @@ dependencies {
     implementation(project(":module:extractor:builtin"))
     implementation(project(":module:store:inmemory"))
     implementation(project(":module:service:resource"))
-    implementation(project(":infra:client"))
     implementation(project(":core:api:endpoint")) // Dagger component
-    implementation(project(":infra:service")) // Dagger component
     implementation(project(":core:service:crypto")) // Dagger component
     implementation(libs.dagger.dagger)
     implementation(libs.drift.api)
+    implementation(libs.drift.drift)
     implementation(libs.errorprone.annotations)
     implementation(libs.jackson.core)
     implementation(libs.jackson.databind)
