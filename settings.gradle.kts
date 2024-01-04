@@ -1,12 +1,6 @@
 rootProject.name = "age-verification"
 
 include(
-        // modules to move to Drift
-        "base:api:adapter",
-
-        "infra:api",
-
-        // modules to keep
         "crypto:data",
 
         "core:data",

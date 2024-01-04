@@ -16,10 +16,8 @@ dependencies {
 
     implementation(project(":crypto:data"))
     implementation(project(":core:data"))
-    implementation(project(":core:api:types"))
-    implementation(project(":base:api:adapter"))
-    implementation(project(":infra:api"))
     implementation(libs.drift.api)
+    implementation(libs.drift.drift)
     implementation(libs.jackson.core)
 
     // test fixtures

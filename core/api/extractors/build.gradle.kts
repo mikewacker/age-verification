@@ -6,7 +6,7 @@ plugins {
 dependencies {
     // main
     api(project(":core:api:types"))
-    api(project(":base:api:adapter"))
     api(libs.drift.api)
+    api(libs.drift.drift)
     api(libs.undertow.core)
 }

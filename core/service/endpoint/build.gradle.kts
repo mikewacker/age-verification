@@ -10,7 +10,7 @@ dependencies {
 
     api(project(":core:api:extractors"))
     api(project(":core:service:types"))
-    api(libs.dagger.compiler)
+    api(libs.dagger.dagger)
     api(libs.javaxInject.inject)
     api(libs.undertow.core)
 
