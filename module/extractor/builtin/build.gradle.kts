@@ -12,6 +12,7 @@ dependencies {
     api(project(":core:api:extractors"))
     api(libs.dagger.dagger)
     api(libs.drift.api)
+    api(libs.drift.drift)
     api(libs.immutables.annotations)
     api(libs.jackson.annotations)
     api(libs.jackson.databind)
