@@ -39,6 +39,7 @@ public final class TestLocationTest {
         avsServer.enqueue(new MockResponse());
         Location avsLocation = avsLocationProvider.getAvs();
         int statusCode = JsonApiClient.requestBuilder()
+                .statusCodeResponse()
                 .get(avsLocation.rootUrl())
                 .build()
                 .execute();
@@ -50,6 +51,7 @@ public final class TestLocationTest {
         siteServer.enqueue(new MockResponse());
         Location siteLocation = siteLocationProvider.getSite("Site");
         int statusCode = JsonApiClient.requestBuilder()
+                .statusCodeResponse()
                 .get(siteLocation.rootUrl())
                 .build()
                 .execute();

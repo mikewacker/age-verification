@@ -207,13 +207,13 @@ public final class Main {
 
     /** Builds the URL to create a verification request. */
     private static String verificationRequestUrl(int port) {
-        return url(port, "/api/verification-request");
+        return url(port, "/api/verification-request/create");
     }
 
     /** Creates a verification request for an account. */
     private static VerificationRequest createVerificationRequest(String url, String siteAccountId) throws IOException {
-        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationRequest>() {})
+        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationRequest>() {})
                 .post(url)
                 .header("Account-Id", siteAccountId)
                 .build()
@@ -227,6 +227,7 @@ public final class Main {
     /** Links a verification request to a person. */
     private static void linkVerificationRequest(String url, String avsAccountId) throws IOException {
         int statusCode = JsonApiClient.requestBuilder()
+                .statusCodeResponse()
                 .post(url)
                 .header("Account-Id", avsAccountId)
                 .build()
@@ -238,12 +239,13 @@ public final class Main {
 
     /** Builds the URL to send an age certificate. */
     private static String ageCertificateUrl() {
-        return url(AVS_PORT, "/api/age-certificate");
+        return url(AVS_PORT, "/api/age-certificate/send");
     }
 
     /** Sends an age certificate for a person to a site. */
     private static HttpOptional<String> sendAgeCertificate(String url, String avsAccountId) throws IOException {
-        return JsonApiClient.requestBuilder(new TypeReference<String>() {})
+        return JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<String>() {})
                 .post(url)
                 .header("Account-Id", avsAccountId)
                 .build()
@@ -257,8 +259,8 @@ public final class Main {
 
     /** Gets the verification state for an account. */
     private static VerificationState getVerificationState(String url, String siteAccountId) throws IOException {
-        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationState>() {})
+        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationState>() {})
                 .get(url)
                 .header("Account-Id", siteAccountId)
                 .build()

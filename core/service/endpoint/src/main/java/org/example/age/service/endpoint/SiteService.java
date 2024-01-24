@@ -48,7 +48,8 @@ final class SiteService implements SiteApi {
     public void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         backendDispatcher
-                .requestBuilder(new TypeReference<VerificationSession>() {})
+                .requestBuilder()
+                .jsonResponse(new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
                 .build()
                 .dispatch(sender, accountId, authData, dispatcher, this::handleVerificationSessionResponse);
@@ -65,7 +66,7 @@ final class SiteService implements SiteApi {
     private String getVerificationSessionUrl() {
         Location avsLocation = avsLocationProvider.getAvs();
         String siteId = siteConfigProvider.get().id();
-        return avsLocation.apiUrl("/verification-session?site-id=%s", siteId);
+        return avsLocation.apiUrl("/verification-session/create?site-id=%s", siteId);
     }
 
     /** Callback for the request to get a {@link VerificationSession} from the age verification service. */

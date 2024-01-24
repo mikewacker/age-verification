@@ -44,7 +44,8 @@ final class FakeSiteService implements SiteApi {
     public void createVerificationRequest(
             Sender.Value<VerificationRequest> sender, String accountId, AuthMatchData authData, Dispatcher dispatcher) {
         backendDispatcher
-                .requestBuilder(new TypeReference<VerificationSession>() {})
+                .requestBuilder()
+                .jsonResponse(new TypeReference<VerificationSession>() {})
                 .post(getVerificationSessionUrl())
                 .build()
                 .dispatch(sender, accountId, dispatcher, this::handleVerificationSessionResponse);
@@ -60,7 +61,7 @@ final class FakeSiteService implements SiteApi {
     /** Gets the URL for the request to get a {@link VerificationSession} from the age verification service. */
     private String getVerificationSessionUrl() {
         Location avsLocation = avsLocationProvider.getAvs();
-        return avsLocation.apiUrl("/verification-session?site-id=Site");
+        return avsLocation.apiUrl("/verification-session/create?site-id=Site");
     }
 
     /** Callback for the request to get a {@link VerificationSession} from the age verification service. */
