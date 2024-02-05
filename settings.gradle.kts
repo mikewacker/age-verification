@@ -10,6 +10,7 @@ include(
         "core:service:types",
         "core:service:crypto",
         "core:service:endpoint",
+        "core:server",
 
         "module:extractor:builtin",
         "module:extractor:demo",

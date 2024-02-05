@@ -6,6 +6,7 @@ import io.undertow.Undertow;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.example.age.module.location.resource.ResourceAvsLocationModule;
+import org.example.age.server.undertow.UndertowModule;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 
 /**
@@ -17,7 +18,6 @@ import org.example.age.service.location.RefreshableAvsLocationProvider;
         includes = {
             UndertowModule.class,
             ResourceAvsLocationModule.class,
-            RootModule.class,
             DemoAvsServiceModule.class,
         })
 interface DemoAvsServerModule {
