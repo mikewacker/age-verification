@@ -68,7 +68,8 @@ final class AvsService implements AvsApi {
 
         String siteId = signedCertificate.ageCertificate().verificationRequest().siteId();
         backendDispatcher
-                .requestBuilder(new TypeReference<String>() {})
+                .requestBuilder()
+                .jsonResponse(new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(signedCertificate))
                 .body(signedCertificate)
                 .build()
@@ -79,7 +80,7 @@ final class AvsService implements AvsApi {
     private String getAgeCertificateUrl(SignedAgeCertificate signedCertificate) {
         String siteId = signedCertificate.ageCertificate().verificationRequest().siteId();
         Location siteLocation = siteLocationProvider.getSite(siteId);
-        return siteLocation.apiUrl("/age-certificate");
+        return siteLocation.apiUrl("/age-certificate/process");
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */

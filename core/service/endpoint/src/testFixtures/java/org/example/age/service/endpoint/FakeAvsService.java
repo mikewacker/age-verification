@@ -79,7 +79,8 @@ final class FakeAvsService implements AvsApi {
 
         String siteId = signedCertificate.ageCertificate().verificationRequest().siteId();
         backendDispatcher
-                .requestBuilder(new TypeReference<String>() {})
+                .requestBuilder()
+                .jsonResponse(new TypeReference<String>() {})
                 .post(getAgeCertificateUrl(siteId))
                 .body(signedCertificate)
                 .build()
@@ -89,7 +90,7 @@ final class FakeAvsService implements AvsApi {
     /** Gets the URL for the request to send a {@link SignedAgeCertificate} to a site. */
     private String getAgeCertificateUrl(String siteId) {
         Location siteLocation = siteLocationProvider.getSite(siteId);
-        return siteLocation.apiUrl("/age-certificate");
+        return siteLocation.apiUrl("/age-certificate/process");
     }
 
     /** Callback for the request to send a {@link SignedAgeCertificate} to a site. */

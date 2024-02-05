@@ -44,8 +44,8 @@ final class FakeAvsVerificationFactoryImpl implements FakeAvsVerificationFactory
 
     @Override
     public VerificationSession createVerificationSession(String siteId, Duration expiresIn) {
-        VerificationRequest request = VerificationRequest.generateForSite(
-                siteId, expiresIn, "/api/linked-verification-request?request-id=%s");
+        VerificationRequest request =
+                VerificationRequest.generateForSite(siteId, expiresIn, "/api/verification-request/link?request-id=%s");
         return VerificationSession.generate(request);
     }
 

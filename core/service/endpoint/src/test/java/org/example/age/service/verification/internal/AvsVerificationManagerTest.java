@@ -56,7 +56,7 @@ public final class AvsVerificationManagerTest {
         long now = System.currentTimeMillis() / 1000;
         long expectedExpiration = now + Duration.ofMinutes(5).toSeconds();
         assertThat(request.expiration()).isCloseTo(expectedExpiration, Offset.offset(1L));
-        String expectedRedirectPath = String.format("/api/linked-verification-request?request-id=%s", request.id());
+        String expectedRedirectPath = String.format("/api/verification-request/link?request-id=%s", request.id());
         assertThat(request.redirectUrl()).isEqualTo(expectedRedirectPath);
         fakeSiteVerificationProcessor.beginVerification("publius");
 

@@ -28,9 +28,9 @@ public final class SiteApiEndpointTest {
             TestUndertowServer.register("site", "/api/", StubSiteComponent::createApiHandler);
 
     @Test
-    public void verificationState() throws IOException {
-        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationState>() {})
+    public void getVerificationState() throws IOException {
+        HttpOptional<VerificationState> maybeState = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .header("Account-Id", "username")
                 .header("User-Agent", "agent")
@@ -40,10 +40,10 @@ public final class SiteApiEndpointTest {
     }
 
     @Test
-    public void verificationRequest() throws IOException {
-        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationRequest>() {})
-                .post(siteServer.url("/api/verification-request"))
+    public void createVerificationRequest() throws IOException {
+        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationRequest>() {})
+                .post(siteServer.url("/api/verification-request/create"))
                 .header("Account-Id", "username")
                 .header("User-Agent", "agent")
                 .build()
@@ -52,10 +52,11 @@ public final class SiteApiEndpointTest {
     }
 
     @Test
-    public void ageCertificate() throws IOException {
+    public void processAgeCertificate() throws IOException {
         SignedAgeCertificate signedCertificate = createStubSignedAgeCertificate();
-        HttpOptional<String> maybeRedirectPath = JsonApiClient.requestBuilder(new TypeReference<String>() {})
-                .post(siteServer.url("/api/age-certificate"))
+        HttpOptional<String> maybeRedirectPath = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<String>() {})
+                .post(siteServer.url("/api/age-certificate/process"))
                 .body(signedCertificate)
                 .build()
                 .execute();

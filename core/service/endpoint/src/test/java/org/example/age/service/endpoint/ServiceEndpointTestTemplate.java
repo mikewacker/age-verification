@@ -29,8 +29,8 @@ public final class ServiceEndpointTestTemplate {
         TestServer<?> avsServer = TestServer.get("avs");
 
         // Check initial state.
-        HttpOptional<VerificationState> maybeSiteState = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationState>() {})
+        HttpOptional<VerificationState> maybeSiteState = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationState>() {})
                 .get(siteServer.url("/api/verification-state"))
                 .header("Account-Id", siteAccountId)
                 .build()
@@ -39,8 +39,8 @@ public final class ServiceEndpointTestTemplate {
         VerificationState siteState = maybeSiteState.get();
         assertThat(siteState.status()).isEqualTo(VerificationStatus.UNVERIFIED);
 
-        HttpOptional<VerificationState> maybeAvsState = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationState>() {})
+        HttpOptional<VerificationState> maybeAvsState = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationState>() {})
                 .get(avsServer.url("/api/verification-state"))
                 .header("Account-Id", avsAccountId)
                 .build()
@@ -50,9 +50,9 @@ public final class ServiceEndpointTestTemplate {
         assertThat(avsState.status()).isEqualTo(VerificationStatus.VERIFIED);
 
         // Verify age.
-        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationRequest>() {})
-                .post(siteServer.url("/api/verification-request"))
+        HttpOptional<VerificationRequest> maybeRequest = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationRequest>() {})
+                .post(siteServer.url("/api/verification-request/create"))
                 .header("Account-Id", siteAccountId)
                 .build()
                 .execute();
@@ -60,14 +60,16 @@ public final class ServiceEndpointTestTemplate {
         VerificationRequest request = maybeRequest.get();
 
         int linkStatusCode = JsonApiClient.requestBuilder()
+                .statusCodeResponse()
                 .post(request.redirectUrl())
                 .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
         assertThat(linkStatusCode).isEqualTo(200);
 
-        HttpOptional<String> maybeRedirectUrl = JsonApiClient.requestBuilder(new TypeReference<String>() {})
-                .post(avsServer.url("/api/age-certificate"))
+        HttpOptional<String> maybeRedirectUrl = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<String>() {})
+                .post(avsServer.url("/api/age-certificate/send"))
                 .header("Account-Id", avsAccountId)
                 .build()
                 .execute();
@@ -80,8 +82,8 @@ public final class ServiceEndpointTestTemplate {
         String redirectUrl = maybeRedirectUrl.get();
 
         // Check updated state.
-        HttpOptional<VerificationState> maybeNewSiteState = JsonApiClient.requestBuilder(
-                        new TypeReference<VerificationState>() {})
+        HttpOptional<VerificationState> maybeNewSiteState = JsonApiClient.requestBuilder()
+                .jsonResponse(new TypeReference<VerificationState>() {})
                 .get(redirectUrl)
                 .header("Account-Id", siteAccountId)
                 .build()

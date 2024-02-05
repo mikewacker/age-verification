@@ -1,4 +1,4 @@
 {
     "verificationSessionExpiresIn": 300,
-    "redirectPath": "/api/linked-verification-request?request-id=%s"
+    "redirectPath": "/api/verification-request/link?request-id=%s"
 }
