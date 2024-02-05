@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":core:api:types"))
     implementation(project(":core:service:types"))
     implementation(project(":core:service:endpoint"))
+    implementation(project(":core:server"))
     implementation(project(":module:extractor:demo"))
     implementation(project(":module:extractor:builtin"))
     implementation(project(":module:store:inmemory"))

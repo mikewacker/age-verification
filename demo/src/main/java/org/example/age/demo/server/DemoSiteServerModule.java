@@ -5,6 +5,7 @@ import dagger.Provides;
 import io.undertow.Undertow;
 import javax.inject.Named;
 import org.example.age.module.location.resource.ResourceSiteLocationModule;
+import org.example.age.server.undertow.UndertowModule;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
 
@@ -17,7 +18,6 @@ import org.example.age.service.location.RefreshableSiteLocationProvider;
         includes = {
             UndertowModule.class,
             ResourceSiteLocationModule.class,
-            RootModule.class,
             DemoSiteServiceModule.class,
         })
 interface DemoSiteServerModule {
