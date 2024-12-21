@@ -12,7 +12,7 @@ dependencies {
     api(project(":core:api:types"))
     api(libs.dagger.dagger)
     api(libs.drift.api)
-    api(libs.javaxInject.inject)
+    api(libs.jakartaInject.api)
 
     implementation(project(":core:service:types"))
     implementation(libs.jackson.core)
@@ -28,5 +28,5 @@ dependencies {
     testImplementation(libs.dagger.dagger)
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
-    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.jakartaInject.api)
 }

@@ -1,13 +1,13 @@
 package org.example.age.module.location.resource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import org.example.age.module.internal.resource.JsonResourceProvider;
 import org.example.age.module.internal.resource.ResourceLoader;
 import org.example.age.service.location.Location;

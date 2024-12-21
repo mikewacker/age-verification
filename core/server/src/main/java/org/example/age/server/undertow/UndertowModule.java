@@ -5,9 +5,9 @@ import dagger.Module;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 /**
  * Dagger module that publishes a binding for {@link Undertow}.

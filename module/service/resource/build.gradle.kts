@@ -9,7 +9,7 @@ dependencies {
 
     api(project(":core:service:types"))
     api(libs.dagger.dagger)
-    api(libs.javaxInject.inject)
+    api(libs.jakartaInject.api)
 
     implementation(project(":crypto:data"))
     implementation(project(":core:api:types"))
@@ -29,5 +29,5 @@ dependencies {
     testImplementation(libs.bouncycastle.prov)
     testImplementation(libs.dagger.dagger)
     testImplementation(libs.jackson.core)
-    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.jakartaInject.api)
 }

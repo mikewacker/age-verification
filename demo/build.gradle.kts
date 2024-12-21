@@ -25,7 +25,7 @@ dependencies {
     implementation(libs.errorprone.annotations)
     implementation(libs.jackson.core)
     implementation(libs.jackson.databind)
-    implementation(libs.javaxInject.inject)
+    implementation(libs.jakartaInject.api)
     implementation(libs.undertow.core)
 
     // test

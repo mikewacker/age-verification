@@ -3,8 +3,8 @@ package org.example.age.module.key.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
+import jakarta.inject.Singleton;
 import java.security.PrivateKey;
-import javax.inject.Singleton;
 import org.example.age.module.internal.resource.TestAvsResourceModule;
 import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;
 import org.junit.jupiter.api.Test;

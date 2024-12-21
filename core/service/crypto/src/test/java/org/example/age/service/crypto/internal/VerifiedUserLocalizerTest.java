@@ -3,7 +3,7 @@ package org.example.age.service.crypto.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;
 import org.example.age.module.key.test.TestKeyModule;

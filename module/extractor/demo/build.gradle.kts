@@ -9,7 +9,7 @@ dependencies {
 
     api(project(":core:api:extractors"))
     api(libs.dagger.dagger)
-    api(libs.javaxInject.inject)
+    api(libs.jakartaInject.api)
 
     implementation(libs.drift.api)
     implementation(libs.undertow.core)
@@ -21,7 +21,7 @@ dependencies {
     testImplementation(libs.dagger.dagger)
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
-    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.jakartaInject.api)
     testImplementation(libs.mockito.core)
     testImplementation(libs.undertow.core)
 }

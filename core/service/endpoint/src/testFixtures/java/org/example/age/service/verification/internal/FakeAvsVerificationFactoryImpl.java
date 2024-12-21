@@ -1,8 +1,8 @@
 package org.example.age.service.verification.internal;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.time.Duration;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.api.def.VerificationState;
 import org.example.age.data.certificate.AgeCertificate;

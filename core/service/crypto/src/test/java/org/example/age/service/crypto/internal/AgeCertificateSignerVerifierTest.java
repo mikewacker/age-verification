@@ -3,8 +3,8 @@ package org.example.age.service.crypto.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
+import jakarta.inject.Singleton;
 import java.time.Duration;
-import javax.inject.Singleton;
 import org.example.age.data.certificate.AgeCertificate;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.data.certificate.VerificationRequest;

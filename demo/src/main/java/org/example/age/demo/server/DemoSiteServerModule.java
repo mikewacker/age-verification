@@ -3,7 +3,7 @@ package org.example.age.demo.server;
 import dagger.Module;
 import dagger.Provides;
 import io.undertow.Undertow;
-import javax.inject.Named;
+import jakarta.inject.Named;
 import org.example.age.module.location.resource.ResourceSiteLocationModule;
 import org.example.age.server.undertow.UndertowModule;
 import org.example.age.service.location.Location;

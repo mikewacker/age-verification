@@ -1,9 +1,9 @@
 package org.example.age.module.location.test;
 
 import io.github.mikewacker.drift.testing.server.TestServer;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.NoSuchElementException;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.service.location.Location;
 import org.example.age.service.location.RefreshableAvsLocationProvider;
 import org.example.age.service.location.RefreshableSiteLocationProvider;

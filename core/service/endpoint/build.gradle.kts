@@ -11,7 +11,7 @@ dependencies {
     api(project(":core:api:extractors"))
     api(project(":core:service:types"))
     api(libs.dagger.dagger)
-    api(libs.javaxInject.inject)
+    api(libs.jakartaInject.api)
     api(libs.undertow.core)
 
     implementation(project(":crypto:data"))
@@ -42,7 +42,7 @@ dependencies {
     testFixturesImplementation(libs.drift.api)
     testFixturesImplementation(libs.drift.drift)
     testFixturesImplementation(libs.jackson.core)
-    testFixturesImplementation(libs.javaxInject.inject)
+    testFixturesImplementation(libs.jakartaInject.api)
 
     // test
     testImplementation(project(":crypto:data"))

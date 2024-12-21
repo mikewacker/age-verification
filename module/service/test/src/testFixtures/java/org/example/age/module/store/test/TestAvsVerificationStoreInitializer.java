@@ -1,9 +1,9 @@
 package org.example.age.module.store.test;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.api.def.VerificationState;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.user.VerifiedUser;

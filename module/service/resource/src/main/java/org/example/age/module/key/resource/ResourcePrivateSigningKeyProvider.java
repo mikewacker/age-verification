@@ -1,10 +1,10 @@
 package org.example.age.module.key.resource;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.security.PrivateKey;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMException;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;

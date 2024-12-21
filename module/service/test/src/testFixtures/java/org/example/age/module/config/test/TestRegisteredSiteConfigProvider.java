@@ -1,8 +1,8 @@
 package org.example.age.module.config.test;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.data.user.AgeThresholds;
 import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.config.RegisteredSiteConfig;

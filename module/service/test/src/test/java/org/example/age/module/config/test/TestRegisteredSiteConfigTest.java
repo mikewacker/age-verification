@@ -3,8 +3,8 @@ package org.example.age.module.config.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 import org.example.age.service.config.RefreshableRegisteredSiteConfigProvider;
 import org.example.age.service.config.RegisteredSiteConfig;
 import org.junit.jupiter.api.BeforeAll;
