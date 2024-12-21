@@ -1,21 +1,21 @@
 [versions]
-assertj = "3.24.2"
-bouncycastle = "1.77"
-dagger = "2.50"
+assertj = "3.26.3"
+bouncycastle = "1.79"
+dagger = "2.53.1"
 drift = "0.2.0"
-errorprone = "2.24.0"
-guava = "33.0.0-jre"
-immutables = "2.10.0"
-jackson = "2.16.1"
+errorprone = "2.36.0"
+guava = "33.4.0-jre"
+immutables = "2.10.1"
+jackson = "2.18.2"
 javaxInject = "1"
 junitJupiter = "5.10.1"
-mockito = "5.8.0"
+mockito = "5.14.2"
 okhttp3 = "4.12.0"
-undertow = "2.3.10.Final"
+undertow = "2.3.18.Final"
 
-plugin-errorprone = "3.1.0"
-plugin-spotless = "6.23.3"
-plugin-spotless-palantir = "2.39.0"
+plugin-errorprone = "4.1.0"
+plugin-spotless = "6.25.0"
+plugin-spotless-palantir = "2.50.0"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
