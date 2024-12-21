@@ -1,7 +1,7 @@
 package org.example.age.service.crypto.internal;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.example.age.data.certificate.SignedAgeCertificate;
 import org.example.age.service.key.RefreshablePublicSigningKeyProvider;
 

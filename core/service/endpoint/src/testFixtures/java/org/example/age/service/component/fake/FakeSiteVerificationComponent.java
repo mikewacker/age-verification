@@ -1,7 +1,7 @@
 package org.example.age.service.component.fake;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.service.verification.internal.FakeSiteVerificationProcessor;
 
 /** Component that creates a test {@link FakeSiteVerificationProcessor}. */

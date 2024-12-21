@@ -2,9 +2,9 @@ package org.example.age.module.internal.resource;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 /**
  * Dagger module that publishes bindings for...

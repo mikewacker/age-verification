@@ -2,8 +2,8 @@ package org.example.age.service.component.fake;
 
 import dagger.Component;
 import io.undertow.server.HttpHandler;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /** Component that creates a fake API {@link HttpHandler} for the age verification service. */
 public final class FakeAvsComponent {

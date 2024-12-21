@@ -1,5 +1,5 @@
 [versions]
-assertj = "3.26.3"
+# main
 bouncycastle = "1.79"
 dagger = "2.53.1"
 drift = "0.2.0"
@@ -7,43 +7,53 @@ errorprone = "2.36.0"
 guava = "33.4.0-jre"
 immutables = "2.10.1"
 jackson = "2.18.2"
-javaxInject = "1"
+jakartaInject = "2.0.1"
+okhttp = "4.12.0"
+undertow = "2.3.18.Final"
+
+# test
+assertj = "3.26.3"
 junitJupiter = "5.11.4"
 junitPlatform = "1.11.4"
 mockito = "5.14.2"
-okhttp3 = "4.12.0"
-undertow = "2.3.18.Final"
 
+# plugin
 plugin-errorprone = "4.1.0"
 plugin-spotless = "6.25.0"
 plugin-spotless-palantir = "2.50.0"
 
 [libraries]
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+# main (annotation processor)
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
+
+# main
 bouncycastle-pkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 bouncycastle-prov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 drift-api = { module = "io.github.mikewacker.drift:drift-api", version.ref = "drift" }
 drift-drift = { module = "io.github.mikewacker.drift:drift", version.ref = "drift" }
-drift-testlib = { module = "io.github.mikewacker.drift:drift-testlib", version.ref = "drift" }
 errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 guava-guava = { module = "com.google.guava:guava", version.ref = "guava" }
-guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
-immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
-javaxInject-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
+jakartaInject-api = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInject" }
+okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+undertow-core = { module = "io.undertow:undertow-core", version.ref = "undertow" }
+
+# test
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+drift-testlib = { module = "io.github.mikewacker.drift:drift-testlib", version.ref = "drift" }
+guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
 junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatform" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-okhttp3-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp3" }
-okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
-undertow-core = { module = "io.undertow:undertow-core", version.ref = "undertow" }
+okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 
+# plugin
 plugin-errorprone = { module = "net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin", version.ref = "plugin-errorprone" }
 plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "plugin-spotless" }

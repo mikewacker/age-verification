@@ -9,7 +9,7 @@ dependencies {
 
     testFixturesApi(project(":core:service:types"))
     testFixturesApi(libs.dagger.dagger)
-    testFixturesApi(libs.javaxInject.inject)
+    testFixturesApi(libs.jakartaInject.api)
 
     testFixturesImplementation(project(":crypto:data"))
     testFixturesImplementation(project(":core:data"))
@@ -27,6 +27,6 @@ dependencies {
     testImplementation(libs.dagger.dagger)
     testImplementation(libs.drift.drift)
     testImplementation(libs.drift.testlib)
-    testImplementation(libs.javaxInject.inject)
-    testImplementation(libs.okhttp3.mockwebserver)
+    testImplementation(libs.jakartaInject.api)
+    testImplementation(libs.okhttp.mockwebserver)
 }

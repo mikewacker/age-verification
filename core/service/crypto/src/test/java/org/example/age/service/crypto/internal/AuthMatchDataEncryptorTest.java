@@ -4,7 +4,7 @@ import static io.github.mikewacker.drift.testing.api.Assertions.assertThat;
 
 import dagger.Component;
 import io.github.mikewacker.drift.api.HttpOptional;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.data.crypto.Aes256Key;
 import org.example.age.data.crypto.AesGcmEncryptionPackage;

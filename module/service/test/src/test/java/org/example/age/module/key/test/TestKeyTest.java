@@ -3,8 +3,8 @@ package org.example.age.module.key.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
+import jakarta.inject.Singleton;
 import java.nio.charset.StandardCharsets;
-import javax.inject.Singleton;
 import org.example.age.data.crypto.DigitalSignature;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;

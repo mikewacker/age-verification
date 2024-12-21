@@ -3,7 +3,7 @@ package org.example.age.module.store.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.api.def.VerificationStatus;
 import org.example.age.service.store.VerificationStore;
 import org.junit.jupiter.api.Test;

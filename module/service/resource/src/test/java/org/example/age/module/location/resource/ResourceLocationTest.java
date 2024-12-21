@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dagger.Component;
+import jakarta.inject.Singleton;
 import java.util.NoSuchElementException;
-import javax.inject.Singleton;
 import org.example.age.module.internal.resource.TestAvsResourceModule;
 import org.example.age.module.internal.resource.TestSiteResourceModule;
 import org.example.age.service.location.Location;

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import dagger.Component;
 import io.github.mikewacker.drift.api.HttpOptional;
 import io.undertow.server.HttpServerExchange;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.api.def.AuthMatchData;
 import org.example.age.api.extractor.AuthMatchDataExtractor;
 import org.junit.jupiter.api.BeforeAll;

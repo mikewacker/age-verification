@@ -3,8 +3,8 @@ package org.example.age.module.location.resource;
 import dagger.Binds;
 import dagger.BindsOptionalOf;
 import dagger.Module;
+import jakarta.inject.Named;
 import java.nio.file.Path;
-import javax.inject.Named;
 import org.example.age.module.internal.resource.ResourceLoaderModule;
 import org.example.age.service.location.RefreshableSiteLocationProvider;
 

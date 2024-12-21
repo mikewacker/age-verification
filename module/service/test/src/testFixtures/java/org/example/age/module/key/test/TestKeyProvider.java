@@ -1,12 +1,12 @@
 package org.example.age.module.key.test;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.data.crypto.SecureId;
 import org.example.age.data.crypto.SigningKeys;
 import org.example.age.service.key.RefreshablePrivateSigningKeyProvider;

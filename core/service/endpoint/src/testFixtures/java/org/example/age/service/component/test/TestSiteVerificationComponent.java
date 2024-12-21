@@ -1,7 +1,7 @@
 package org.example.age.service.component.test;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.service.verification.internal.SiteVerificationManager;
 
 /** Component that creates a test {@link SiteVerificationManager}. */

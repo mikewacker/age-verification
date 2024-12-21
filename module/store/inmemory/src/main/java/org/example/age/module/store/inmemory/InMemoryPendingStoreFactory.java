@@ -1,11 +1,11 @@
 package org.example.age.module.store.inmemory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.service.store.PendingStore;
 import org.example.age.service.store.PendingStoreFactory;
 

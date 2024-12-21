@@ -8,7 +8,7 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
 
     api(libs.dagger.dagger)
-    api(libs.javaxInject.inject)
+    api(libs.jakartaInject.api)
     api(libs.undertow.core)
 
     // test
@@ -19,7 +19,7 @@ dependencies {
     testImplementation(libs.drift.drift)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.jackson.core)
-    testImplementation(libs.javaxInject.inject)
-    testImplementation(libs.okhttp3.okhttp)
+    testImplementation(libs.jakartaInject.api)
+    testImplementation(libs.okhttp.okhttp)
     testImplementation(libs.undertow.core)
 }

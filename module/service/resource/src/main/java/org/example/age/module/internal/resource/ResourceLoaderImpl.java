@@ -2,15 +2,15 @@ package org.example.age.module.internal.resource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.mikewacker.drift.json.JsonValues;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import org.bouncycastle.openssl.PEMParser;
 
 @Singleton

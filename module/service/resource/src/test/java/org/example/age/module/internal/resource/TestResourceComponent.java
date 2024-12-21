@@ -1,7 +1,7 @@
 package org.example.age.module.internal.resource;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /** Dagger component that provides a {@link ResourceLoader}. */
 @Component(modules = {ResourceLoaderModule.class, TestSiteResourceModule.class}) // Either Site or Avs works.

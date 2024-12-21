@@ -16,7 +16,7 @@ dependencies {
     api(libs.immutables.annotations)
     api(libs.jackson.annotations)
     api(libs.jackson.databind)
-    api(libs.javaxInject.inject)
+    api(libs.jakartaInject.api)
     api(libs.undertow.core)
 
     // test
@@ -28,7 +28,7 @@ dependencies {
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
     testImplementation(libs.jackson.core)
-    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.jakartaInject.api)
     testImplementation(libs.mockito.core)
     testImplementation(libs.undertow.core)
 }

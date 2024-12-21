@@ -1,8 +1,8 @@
 package org.example.age.module.config.test;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.time.Duration;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.service.config.RefreshableSiteConfigProvider;
 import org.example.age.service.config.SiteConfig;
 

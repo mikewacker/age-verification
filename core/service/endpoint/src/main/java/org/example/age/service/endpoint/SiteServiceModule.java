@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.github.mikewacker.drift.backend.BackendDispatcher;
 import io.undertow.server.HttpHandler;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.api.def.SiteApi;
 import org.example.age.api.endpoint.SiteApiModule;
 import org.example.age.api.extractor.AccountIdExtractor;

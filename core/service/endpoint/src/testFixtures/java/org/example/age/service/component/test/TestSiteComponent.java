@@ -2,8 +2,8 @@ package org.example.age.service.component.test;
 
 import dagger.Component;
 import io.undertow.server.HttpHandler;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /** Component that creates a test API {@link HttpHandler} for a site. */
 public final class TestSiteComponent {

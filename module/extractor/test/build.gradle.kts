@@ -9,7 +9,7 @@ dependencies {
 
     testFixturesApi(project(":core:api:extractors"))
     testFixturesApi(libs.dagger.dagger)
-    testFixturesApi(libs.javaxInject.inject)
+    testFixturesApi(libs.jakartaInject.api)
 
     testFixturesImplementation(libs.drift.api)
     testFixturesImplementation(libs.undertow.core)
@@ -21,7 +21,7 @@ dependencies {
     testImplementation(libs.dagger.dagger)
     testImplementation(libs.drift.api)
     testImplementation(libs.drift.testlib)
-    testImplementation(libs.javaxInject.inject)
+    testImplementation(libs.jakartaInject.api)
     testImplementation(libs.mockito.core)
     testImplementation(libs.undertow.core)
 }

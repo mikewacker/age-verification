@@ -3,7 +3,7 @@ package org.example.age.module.config.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.example.age.module.internal.resource.TestAvsResourceModule;
 import org.example.age.service.config.AvsConfig;
 import org.example.age.service.config.RefreshableAvsConfigProvider;

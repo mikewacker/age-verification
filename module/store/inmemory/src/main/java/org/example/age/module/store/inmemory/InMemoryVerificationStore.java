@@ -1,8 +1,8 @@
 package org.example.age.module.store.inmemory;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.example.age.api.def.VerificationState;
 import org.example.age.api.def.VerificationStatus;
 import org.example.age.data.crypto.SecureId;
