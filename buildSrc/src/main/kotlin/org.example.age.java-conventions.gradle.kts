@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
 }
 
-val libs = the<LibrariesForLibs>() // version catalog workaround for convention plugins
+val libs = the<LibrariesForLibs>() // version catalog workaround for buildSrc
 
 dependencies {
     errorprone(libs.errorprone.core)
