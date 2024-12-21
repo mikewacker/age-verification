@@ -20,6 +20,7 @@ dependencies {
     testImplementation(libs.junitJupiter.api)
 
     testRuntimeOnly(libs.junitJupiter.engine)
+    testRuntimeOnly(libs.junitPlatform.launcher)
 }
 
 java {
@@ -36,7 +37,7 @@ spotless {
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-Xlint:all,-processing,-serial", "-Werror"))
-    options.errorprone.disableWarningsInGeneratedCode.set(true)
+    options.errorprone.disableWarningsInGeneratedCode = true
 }
 
 tasks.named<Test>("test") {
