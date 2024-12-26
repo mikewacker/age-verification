@@ -11,11 +11,13 @@ interface OpenApiJavaExtension {
     val inputSpec: RegularFileProperty
     val inputSpecPath: Provider<String>
         get() = inputSpec.map { it.asFile.absolutePath }
+    val schemaMappings: MapProperty<String, String>
 }
 
 val extension = extensions.create<OpenApiJavaExtension>("openApiJava")
 extension.packageName.convention("")
 extension.inputSpec.convention(layout.projectDirectory.file("src/main/resources/api.yaml"))
+extension.schemaMappings.convention(mapOf())
 
 afterEvaluate {
     if (extension.packageName.get().isEmpty()) {
@@ -44,14 +46,13 @@ val commonGenerateConfigOptions = mapOf(
     "useJakartaEe" to "true",
 )
 
-tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiJavaGenerateServer") {
-    group = "OpenAPI Java"
-    description = "Generates JAX-RS server interfaces from the OpenAPI YAML."
+tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiJavaGenerateServerTmp") {
     logging.captureStandardOutput(LogLevel.INFO)
 
     generatorName = "jaxrs-spec"
     inputSpec = extension.inputSpecPath
-    outputDir = buildDirPath("generated/sources/openApiServer/java/main")
+    schemaMappings = extension.schemaMappings
+    outputDir = buildDirPath("tmp/openApiServer")
 
     // Generate async interfaces for the apis.
     configOptions = commonGenerateConfigOptions + mapOf(
@@ -71,6 +72,15 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     )
 }
 
+tasks.register<Copy>("openApiJavaGenerateServer") {
+    group = "OpenAPI Java"
+    description = "Generates JAX-RS server interfaces from the OpenAPI YAML."
+
+    from(tasks.named("openApiJavaGenerateServerTmp"))
+    into(layout.buildDirectory.dir("generated/sources/openApiServer/java/main"))
+    filter { it.replace("<@Valid ", "<") } // see: https://github.com/OpenAPITools/openapi-generator/issues/20377
+}
+
 // Create a task to generate Retrofit clients from the Open API YAML.
 fun createOpenApiGeneratorIgnore(outputDirPath: String, vararg lines: String) {
     val ignoreFile = layout.buildDirectory.file("$outputDirPath/.openapi-generator-ignore").get().asFile
@@ -86,6 +96,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     val outputDirPath = "generated/sources/openApiClient/java/main"
     generatorName = "java"
     inputSpec = extension.inputSpecPath
+    schemaMappings = extension.schemaMappings
     outputDir = buildDirPath(outputDirPath)
 
     // Generate Retrofit clients using Jackson.
