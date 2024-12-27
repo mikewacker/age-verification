@@ -1,0 +1,89 @@
+components:
+  schemas:
+    SignedAgeCertificate:
+      description: Age certificate that is digitally signed.
+      type: object
+      properties:
+        ageCertificate:
+          description: Age certificate that verifies an account on a site.
+          $ref: '#/components/schemas/AgeCertificate'
+        signature:
+          description: Signature used to verify the age certificate.
+          $ref: '#/components/schemas/DigitalSignature'
+      required: [ageCertificate, signature]
+
+    AgeCertificate:
+      description: Age certificate that verifies an account on a site.
+      type: object
+      properties:
+        request:
+          description: Request to verify an account on a site.
+          $ref: '#/components/schemas/VerificationRequest'
+        user:
+          description: Verified user to associate with this account.
+          $ref: '#/components/schemas/VerifiedUser'
+      required: [request, user]
+
+    VerificationRequest:
+      description: Request to verify an account. The site internally associates this request with the account to verify.
+      type: object
+      properties:
+        id:
+          description: ID of the request.
+          $ref: '#/components/schemas/SecureId'
+        siteId:
+          description: ID of the site where an account will be verified.
+          type: string
+        expiration:
+          description: Time at which the request expires.
+          type: string
+          format: date-time
+      required: [id, siteId, expiration]
+
+    VerifiedUser:
+      description: Pseudonymous verified user.
+      type: object
+      properties:
+        pseudonym:
+          description: Unique pseudonym for the user.
+          $ref: '#/components/schemas/SecureId'
+        ageRange:
+          description: Verified age range of the user.
+          $ref: '#/components/schemas/AgeRange'
+        guardianPseudonyms:
+          description: Pseudonyms of the user's guardians, if applicable.
+          type: array
+          items:
+            $ref: '#/components/schemas/SecureId'
+      required: [pseudonym, ageRange, guardianPseudonyms]
+
+    AgeRange:
+      description: Age range.
+      type: object
+      properties:
+        min:
+          description: Minimum age (inclusive).
+          type: integer
+        max:
+          description: Maximum age (inclusive).
+          type: integer
+
+    DigitalSignature:
+      description: Digital signature where the message format is compact JSON.
+      type: object
+      properties:
+        algorithm:
+          description: Algorithm used to generate the signature.
+          type: string
+        data:
+          description: Signature data.
+          $ref: '#/components/schemas/SignatureData'
+      required: [algorithm, data]
+
+    SecureId:
+      description: Securely generated ID. Can also be used as a key.
+      type: string # can be replaced with a schema mapping
+
+    SignatureData:
+      description: Signature data encoded in a URL-friendly base64 format.
+      type: string # can be replaced with a schema mapping
