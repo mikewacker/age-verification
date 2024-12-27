@@ -3,6 +3,7 @@ rootProject.name = "age-verification"
 include(
         // new
         "crypto",
+        "api",
 
         // legacy
         "crypto:data",
