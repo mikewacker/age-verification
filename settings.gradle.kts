@@ -4,6 +4,8 @@ include(
         // new
         "crypto",
         "api",
+        "service",
+        "app",
 
         // legacy
         "crypto:data",
