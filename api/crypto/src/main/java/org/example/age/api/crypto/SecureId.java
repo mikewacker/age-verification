@@ -1,4 +1,4 @@
-package org.example.age.crypto;
+package org.example.age.api.crypto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.security.InvalidKeyException;
