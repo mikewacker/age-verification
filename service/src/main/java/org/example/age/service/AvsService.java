@@ -7,7 +7,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.VerificationRequest;
-import org.example.age.crypto.SecureId;
+import org.example.age.api.crypto.SecureId;
 
 public final class AvsService implements AvsApi {
 

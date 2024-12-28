@@ -106,7 +106,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     )
 
     // Generate only the sources for main (except OAuth). Don't generate test.
-    val clientPackageName = extension.packageName.map { "$it.client" }
+    val clientPackageName = extension.packageName.map { "$it.api.client" }
     apiPackage = clientPackageName
     modelPackage = clientPackageName
     invokerPackage = clientPackageName.map { "$it.retrofit" }

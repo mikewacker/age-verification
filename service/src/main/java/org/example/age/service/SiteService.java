@@ -9,7 +9,7 @@ import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
-import org.example.age.crypto.SecureId;
+import org.example.age.api.crypto.SecureId;
 
 public final class SiteService implements SiteApi {
 
