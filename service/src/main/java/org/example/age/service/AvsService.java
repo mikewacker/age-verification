@@ -12,7 +12,8 @@ import org.example.age.crypto.SecureId;
 public final class AvsService implements AvsApi {
 
     @Override
-    public CompletionStage<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
+    public CompletionStage<VerificationRequest> createVerificationRequestForSite(
+            String siteId, AuthMatchData authMatchData) {
         VerificationRequest request = VerificationRequest.builder()
                 .id(SecureId.generate())
                 .siteId("site")

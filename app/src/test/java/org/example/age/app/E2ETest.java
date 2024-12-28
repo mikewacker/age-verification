@@ -62,22 +62,28 @@ public final class E2ETest {
         assertThat(request).isNotNull();
 
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
-        Response<Void> certificateResponse = siteClient.processAgeCertificate(signedAgeCertificate).execute();
+        Response<Void> certificateResponse =
+                siteClient.processAgeCertificate(signedAgeCertificate).execute();
         assertThat(certificateResponse.isSuccessful()).isTrue();
     }
 
     @Test
     public void verifyAvsStub() throws IOException {
         AuthMatchData authMatchData = AuthMatchData.builder().name("").data("").build();
-        Response<VerificationRequest> requestResponse = avsClient.createVerificationRequestForSite("site", authMatchData).execute();
+        Response<VerificationRequest> requestResponse = avsClient
+                .createVerificationRequestForSite("site", authMatchData)
+                .execute();
         assertThat(requestResponse.isSuccessful()).isTrue();
         VerificationRequest request = requestResponse.body();
         assertThat(request).isNotNull();
 
-        Response<Void> linkResponse = avsClient.linkVerificationRequestToUser(request.getId()).execute();
+        Response<Void> linkResponse =
+                avsClient.linkVerificationRequestToUser(request.getId()).execute();
         assertThat(linkResponse.isSuccessful()).isTrue();
 
-        Response<Void> certificateResponse = avsClient.sendAgeCertificateForVerificationRequest(request.getId()).execute();
+        Response<Void> certificateResponse = avsClient
+                .sendAgeCertificateForVerificationRequest(request.getId())
+                .execute();
         assertThat(certificateResponse.isSuccessful()).isTrue();
     }
 
@@ -92,6 +98,9 @@ public final class E2ETest {
                 .algorithm("algorithm")
                 .data(SignatureData.fromString("data"))
                 .build();
-        return SignedAgeCertificate.builder().ageCertificate(ageCertificate).signature(signature).build();
+        return SignedAgeCertificate.builder()
+                .ageCertificate(ageCertificate)
+                .signature(signature)
+                .build();
     }
 }
