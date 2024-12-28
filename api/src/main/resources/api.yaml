@@ -72,6 +72,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AuthMatchData'
+        required: true # some generators don't support a null body
       responses:
         '200':
           description: Verification request.
@@ -90,7 +91,7 @@ paths:
           description: ID of the verification request.
           in: path
           schema:
-            type: string
+            $ref: './age-certificate.yaml#/components/schemas/SecureId'
           required: true
       responses:
         '200':
@@ -106,7 +107,7 @@ paths:
           description: ID of the verification request.
           in: path
           schema:
-            type: string
+            $ref: './age-certificate.yaml#/components/schemas/SecureId'
           required: true
       responses:
         '200':
@@ -141,7 +142,7 @@ components:
       description: Data used to check that the same person is using the site and the age verification service.
       properties:
         name:
-          description: Name that determines how the freeform data is processed.
+          description: Name that determines how the freeform data is processed, or empty to ignore this data.
           type: string
         data:
           description: Freeform data.

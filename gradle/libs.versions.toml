@@ -3,6 +3,7 @@
 bouncycastle = "1.79"
 dagger = "2.53.1"
 drift = "0.2.0"
+dropwizard = "4.0.11"
 errorprone = "2.36.0"
 guava = "33.4.0-jre"
 immutables = "2.10.1"
@@ -38,6 +39,7 @@ bouncycastle-prov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = 
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 drift-api = { module = "io.github.mikewacker.drift:drift-api", version.ref = "drift" }
 drift-drift = { module = "io.github.mikewacker.drift:drift", version.ref = "drift" }
+dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
 errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 guava-guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -59,6 +61,7 @@ retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = 
 # test
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 drift-testlib = { module = "io.github.mikewacker.drift:drift-testlib", version.ref = "drift" }
+dropwizard-testing = { module = "io.dropwizard:dropwizard-testing", version.ref = "dropwizard" }
 guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
