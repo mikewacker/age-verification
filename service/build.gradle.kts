@@ -5,4 +5,5 @@ plugins {
 
 dependencies {
     api(project(":api"))
+    implementation(libs.jaxRs.api)
 }
