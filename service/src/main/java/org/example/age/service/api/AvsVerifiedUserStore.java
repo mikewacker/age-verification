@@ -2,7 +2,7 @@ package org.example.age.service.api;
 
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.client.VerifiedUser;
+import org.example.age.api.VerifiedUser;
 
 /** Persistent store that retrieves the pseudonymous verified user linked to each person. */
 public interface AvsVerifiedUserStore {
