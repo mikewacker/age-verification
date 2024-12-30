@@ -11,12 +11,14 @@ interface OpenApiJavaExtension {
     val inputSpec: RegularFileProperty
     val inputSpecPath: Provider<String>
         get() = inputSpec.map { it.asFile.absolutePath }
+    val dedupSchemas: ListProperty<String>
     val schemaMappings: MapProperty<String, String>
 }
 
 val extension = extensions.create<OpenApiJavaExtension>("openApiJava")
 extension.packageName.convention("")
 extension.inputSpec.convention(layout.projectDirectory.file("src/main/resources/api.yaml"))
+extension.dedupSchemas.convention(listOf())
 extension.schemaMappings.convention(mapOf())
 
 afterEvaluate {
@@ -96,7 +98,10 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     val outputDirPath = "generated/sources/openApiClient/java/main"
     generatorName = "java"
     inputSpec = extension.inputSpecPath
-    schemaMappings = extension.schemaMappings
+    schemaMappings = provider {
+        val packageName = extension.packageName.get()
+        extension.dedupSchemas.get().associateWith { "$packageName.api.$it" } + extension.schemaMappings.get()
+    }
     outputDir = buildDirPath(outputDirPath)
 
     // Generate Retrofit clients using Jackson.
