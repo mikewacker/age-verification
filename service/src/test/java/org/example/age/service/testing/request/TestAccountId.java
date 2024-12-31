@@ -1,4 +1,4 @@
-package org.example.age.service.testing;
+package org.example.age.service.testing.request;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -1,4 +1,4 @@
-package org.example.age.service.testing;
+package org.example.age.service.testing.store;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
-import org.example.age.service.api.SiteVerificationStore;
+import org.example.age.service.api.store.SiteVerificationStore;
 
 /**
  * Fake, in-memory implementation of {@link SiteVerificationStore}.

@@ -1,4 +1,4 @@
-package org.example.age.service.api;
+package org.example.age.service.api.store;
 
 /** Repository of ephemeral key-value stores. */
 @FunctionalInterface

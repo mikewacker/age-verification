@@ -1,4 +1,4 @@
-package org.example.age.service.testing;
+package org.example.age.service.testing.crypto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
@@ -16,8 +16,8 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.service.api.AgeCertificateSigner;
-import org.example.age.service.api.AgeCertificateVerifier;
+import org.example.age.service.api.crypto.AgeCertificateSigner;
+import org.example.age.service.api.crypto.AgeCertificateVerifier;
 
 /** Fake implementation of {@link AgeCertificateSigner} and {@link AgeCertificateVerifier}. */
 @Singleton

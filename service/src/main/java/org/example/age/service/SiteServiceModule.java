@@ -5,11 +5,11 @@ import dagger.Module;
 import jakarta.inject.Named;
 import org.example.age.api.SiteApi;
 import org.example.age.api.client.AvsApi;
-import org.example.age.service.api.AccountIdExtractor;
-import org.example.age.service.api.AgeCertificateVerifier;
-import org.example.age.service.api.PendingStoreRepository;
-import org.example.age.service.api.SiteLocalizationKeyStore;
-import org.example.age.service.api.SiteVerificationStore;
+import org.example.age.service.api.crypto.AgeCertificateVerifier;
+import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.store.PendingStoreRepository;
+import org.example.age.service.api.store.SiteVerificationStore;
 
 /**
  * Dagger module that binds <code>@Named("service") {@link SiteApi}</code>.
@@ -21,7 +21,7 @@ import org.example.age.service.api.SiteVerificationStore;
  *     <li>{@link SiteVerificationStore}
  *     <li>{@link PendingStoreRepository}
  *     <li>{@link AgeCertificateVerifier}
- *     <li>{@link SiteLocalizationKeyStore}
+ *     <li>{@link SiteVerifiedUserLocalizer}
  *     <li>{@link SiteServiceConfig}
  * </ul>
  */

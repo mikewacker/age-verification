@@ -1,4 +1,4 @@
-package org.example.age.service.api;
+package org.example.age.service.api.store;
 
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
