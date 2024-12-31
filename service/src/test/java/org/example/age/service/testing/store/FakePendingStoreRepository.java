@@ -1,12 +1,12 @@
-package org.example.age.service.testing;
+package org.example.age.service.testing.store;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
-import org.example.age.service.api.PendingStore;
-import org.example.age.service.api.PendingStoreRepository;
+import org.example.age.service.api.store.PendingStore;
+import org.example.age.service.api.store.PendingStoreRepository;
 
 /** Fake, in-memory implementation of {@link PendingStoreRepository}. Key-value pairs do not expire. */
 @Singleton

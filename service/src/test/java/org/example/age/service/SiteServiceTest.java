@@ -28,9 +28,9 @@ import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.service.api.AgeCertificateSigner;
-import org.example.age.service.testing.TestAccountId;
-import org.example.age.service.testing.TestSiteServiceDependenciesModule;
+import org.example.age.service.api.crypto.AgeCertificateSigner;
+import org.example.age.service.testing.TestServiceDependenciesModule;
+import org.example.age.service.testing.request.TestAccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
@@ -194,7 +194,7 @@ public final class SiteServiceTest {
      *     <li>{@link AgeCertificateSigner}
      * </ul>
      */
-    @Component(modules = {SiteServiceModule.class, FakeAvsClientModule.class, TestSiteServiceDependenciesModule.class})
+    @Component(modules = {SiteServiceModule.class, FakeAvsClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestComponent {
 

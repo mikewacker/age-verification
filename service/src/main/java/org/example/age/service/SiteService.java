@@ -19,14 +19,13 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
-import org.example.age.service.api.AccountIdExtractor;
-import org.example.age.service.api.AgeCertificateVerifier;
-import org.example.age.service.api.PendingStore;
-import org.example.age.service.api.PendingStoreRepository;
-import org.example.age.service.api.SiteLocalizationKeyStore;
-import org.example.age.service.api.SiteVerificationStore;
+import org.example.age.service.api.crypto.AgeCertificateVerifier;
+import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.store.PendingStore;
+import org.example.age.service.api.store.PendingStoreRepository;
+import org.example.age.service.api.store.SiteVerificationStore;
 import org.example.age.service.util.AsyncCalls;
-import org.example.age.service.util.Localization;
 import retrofit2.Call;
 
 /** Service implementation of {@link SiteApi}. */
@@ -38,7 +37,7 @@ final class SiteService implements SiteApi {
     private final SiteVerificationStore verificationStore;
     private final PendingStore<String> pendingRequestStore;
     private final AgeCertificateVerifier ageCertificateVerifier;
-    private final SiteLocalizationKeyStore localizationKeyStore;
+    private final SiteVerifiedUserLocalizer userLocalizer;
     private final SiteServiceConfig config;
 
     @Inject
@@ -48,14 +47,14 @@ final class SiteService implements SiteApi {
             SiteVerificationStore verificationStore,
             PendingStoreRepository pendingStoreRepository,
             AgeCertificateVerifier ageCertificateVerifier,
-            SiteLocalizationKeyStore localizationKeyStore,
+            SiteVerifiedUserLocalizer userLocalizer,
             SiteServiceConfig config) {
         this.accountIdExtractor = accountIdExtractor;
         this.avsClient = avsClient;
         this.verificationStore = verificationStore;
         this.pendingRequestStore = pendingStoreRepository.get("request", String.class);
         this.ageCertificateVerifier = ageCertificateVerifier;
-        this.localizationKeyStore = localizationKeyStore;
+        this.userLocalizer = userLocalizer;
         this.config = config;
     }
 
@@ -78,9 +77,8 @@ final class SiteService implements SiteApi {
         CompletionStage<AgeCertificate> ageCertificateStage = validateSignedAgeCertificate(signedAgeCertificate);
         CompletionStage<String> accountStage =
                 ageCertificateStage.thenApply(AgeCertificate::getRequest).thenCompose(this::findAccountToVerify);
-        CompletionStage<VerifiedUser> localizedUserStage = ageCertificateStage
-                .thenApply(AgeCertificate::getUser)
-                .thenCombine(localizationKeyStore.get(), Localization::localize);
+        CompletionStage<VerifiedUser> localizedUserStage =
+                ageCertificateStage.thenApply(AgeCertificate::getUser).thenCompose(userLocalizer::localize);
         return accountStage
                 .thenCombine(localizedUserStage, this::tryVerifyAccount)
                 .thenCompose(Function.identity());

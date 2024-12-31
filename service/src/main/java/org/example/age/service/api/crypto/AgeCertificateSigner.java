@@ -1,4 +1,4 @@
-package org.example.age.service.api;
+package org.example.age.service.api.crypto;
 
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;

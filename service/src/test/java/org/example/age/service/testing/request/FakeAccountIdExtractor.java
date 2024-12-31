@@ -1,8 +1,8 @@
-package org.example.age.service.testing;
+package org.example.age.service.testing.request;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.example.age.service.api.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdExtractor;
 
 /** Fake implementation of {@link AccountIdExtractor}. The account ID must be set. */
 @Singleton
