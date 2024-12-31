@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(project(":api"))
+    api(libs.dagger.dagger)
     api(libs.jackson.databind)
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
