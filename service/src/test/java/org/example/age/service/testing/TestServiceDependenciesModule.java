@@ -17,11 +17,12 @@ import org.example.age.service.api.PendingStoreRepository;
  *     <li>{@link PendingStoreRepository}
  *     <li>{@link AgeCertificateSigner}
  *     <li>{@link AgeCertificateVerifier}
- *     <li>{@link TestAccountId}
  * </ul>
+ * <p>
+ * It also binds {@link TestAccountId}.
  */
 @Module
-public interface TestServiceDependenciesModule {
+interface TestServiceDependenciesModule {
 
     @Binds
     AccountIdExtractor bindAccountIdExtractor(FakeAccountIdExtractor impl);

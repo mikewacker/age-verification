@@ -2,7 +2,7 @@ package org.example.age.app;
 
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
-import org.example.age.service.SiteService;
+import org.example.age.service.StubSiteService;
 
 /** Application for a site. */
 public final class SiteApp extends NamedApp<Configuration> {
@@ -22,6 +22,6 @@ public final class SiteApp extends NamedApp<Configuration> {
 
     @Override
     public void run(Configuration configuration, Environment environment) {
-        environment.jersey().register(new SiteService());
+        environment.jersey().register(new StubSiteService());
     }
 }
