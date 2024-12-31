@@ -3,28 +3,25 @@ package org.example.age.service;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
-import org.example.age.api.SiteApi;
+import org.example.age.api.AvsApi;
 import org.immutables.value.Value;
 
-/** Configuration for the service implementation of {@link SiteApi}. */
+/** Configuration for the service implementation of {@link AvsApi}. */
 @Value.Immutable
 @JsonSerialize
-@JsonDeserialize(as = ImmutableSiteServiceConfig.class)
-public interface SiteServiceConfig {
+@JsonDeserialize(as = ImmutableAvsServiceConfig.class)
+public interface AvsServiceConfig {
 
     /** Creates a builder for the configuration. */
     static Builder builder() {
         return new Builder();
     }
 
-    /** ID of the site. */
-    String id();
-
-    /** Expiration for verified accounts. */
-    Duration verifiedAccountExpiresIn();
+    /** Expiration for verification requests. */
+    Duration verificationRequestExpiresIn();
 
     /** Builder for the configuration. */
-    final class Builder extends ImmutableSiteServiceConfig.Builder {
+    final class Builder extends ImmutableAvsServiceConfig.Builder {
 
         Builder() {}
     }
