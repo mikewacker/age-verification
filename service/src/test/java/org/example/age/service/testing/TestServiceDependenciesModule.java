@@ -39,6 +39,6 @@ interface TestServiceDependenciesModule {
     @Provides
     @Singleton
     static ObjectMapper provideObjectMapper() {
-        return TestObjectMapper.create();
+        return TestObjectMapper.get();
     }
 }
