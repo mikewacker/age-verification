@@ -2,7 +2,7 @@ package org.example.age.app;
 
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
-import org.example.age.service.AvsService;
+import org.example.age.service.StubAvsService;
 
 /** Application for the age verification service. */
 public class AvsApp extends NamedApp<Configuration> {
@@ -22,6 +22,6 @@ public class AvsApp extends NamedApp<Configuration> {
 
     @Override
     public void run(Configuration configuration, Environment environment) {
-        environment.jersey().register(new AvsService());
+        environment.jersey().register(new StubAvsService());
     }
 }
