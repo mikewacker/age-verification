@@ -39,7 +39,7 @@ final class AvsService implements AvsApi {
     private final AgeCertificateSigner ageCertificateSigner;
     private final AvsVerifiedUserLocalizer userLocalizer;
     private final AvsServiceConfig config;
-    
+
     @Inject
     public AvsService(
             AccountIdExtractor accountIdExtractor,
