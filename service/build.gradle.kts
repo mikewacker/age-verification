@@ -16,6 +16,7 @@ dependencies {
 
     testAnnotationProcessor(libs.dagger.compiler)
 
+    testImplementation(project(":testing"))
     testImplementation(libs.jackson.datatypeJsr310)
     testImplementation(libs.retrofit.mock)
 

@@ -19,6 +19,7 @@ import org.example.age.service.testing.crypto.TestCryptoModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.service.testing.request.TestRequestModule;
 import org.example.age.service.testing.store.TestStoreModule;
+import org.example.age.testing.TestObjectMapper;
 
 /**
  * Dagger module that binds...
