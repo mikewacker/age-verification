@@ -7,6 +7,8 @@ include(
         "service",
         "app",
 
+        "testing",
+
         // legacy
         "crypto:data",
 

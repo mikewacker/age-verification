@@ -1,4 +1,4 @@
-package org.example.age.service.testing;
+package org.example.age.testing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

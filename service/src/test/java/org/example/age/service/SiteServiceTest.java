@@ -2,7 +2,7 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.service.testing.Assertions.assertErrorCodeIs;
+import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
 
 import dagger.Binds;
 import dagger.Component;
@@ -90,7 +90,7 @@ public final class SiteServiceTest {
 
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertErrorCodeIs(certificateResponse, 409);
+        assertIsCompletedWithErrorCode(certificateResponse, 409);
     }
 
     @Test
@@ -100,7 +100,7 @@ public final class SiteServiceTest {
         VerificationRequest request = createVerificationRequest();
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertErrorCodeIs(certificateResponse, 404);
+        assertIsCompletedWithErrorCode(certificateResponse, 404);
     }
 
     @Test
@@ -110,7 +110,7 @@ public final class SiteServiceTest {
         VerificationRequest request = createVerificationRequest(Duration.ofMinutes(-1));
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertErrorCodeIs(certificateResponse, 410);
+        assertIsCompletedWithErrorCode(certificateResponse, 410);
     }
 
     @Test
@@ -121,7 +121,7 @@ public final class SiteServiceTest {
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         SignedAgeCertificate invalidAgeCertificate = createInvalidAgeCertificate(signedAgeCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(invalidAgeCertificate);
-        assertErrorCodeIs(certificateResponse, 401);
+        assertIsCompletedWithErrorCode(certificateResponse, 401);
     }
 
     private SignedAgeCertificate createSignedAgeCertificate(VerificationRequest request) throws Exception {
