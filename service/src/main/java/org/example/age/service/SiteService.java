@@ -32,6 +32,9 @@ import retrofit2.Call;
 @Singleton
 final class SiteService implements SiteApi {
 
+    private static final AuthMatchData EMPTY_DATA =
+            AuthMatchData.builder().name("").data("").build();
+
     private final AccountIdExtractor accountIdExtractor;
     private final AvsApi avsClient;
     private final SiteVerificationStore verificationStore;
@@ -67,25 +70,25 @@ final class SiteService implements SiteApi {
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequest() {
         String accountId = accountIdExtractor.getForRequest();
-        AuthMatchData authMatchData = AuthMatchData.builder().name("").data("").build(); // not implemented
-        Call<VerificationRequest> requestCall = avsClient.createVerificationRequestForSite(config.id(), authMatchData);
-        return AsyncCalls.make(requestCall).thenCompose(request -> linkRequestToAccount(request, accountId));
+        Call<VerificationRequest> requestCall = avsClient.createVerificationRequestForSite(config.id(), EMPTY_DATA);
+        return AsyncCalls.make(requestCall)
+                .thenCompose(request -> linkVerificationRequestToAccount(request, accountId));
     }
 
     @Override
     public CompletionStage<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
         CompletionStage<AgeCertificate> ageCertificateStage = validateSignedAgeCertificate(signedAgeCertificate);
-        CompletionStage<String> accountStage =
-                ageCertificateStage.thenApply(AgeCertificate::getRequest).thenCompose(this::findAccountToVerify);
+        CompletionStage<String> accountStage = ageCertificateStage
+                .thenApply(AgeCertificate::getRequest)
+                .thenCompose(this::findAccountForVerificationRequest);
         CompletionStage<VerifiedUser> localizedUserStage =
                 ageCertificateStage.thenApply(AgeCertificate::getUser).thenCompose(userLocalizer::localize);
-        return accountStage
-                .thenCombine(localizedUserStage, this::tryVerifyAccount)
-                .thenCompose(Function.identity());
+        return accountStage.thenCombine(localizedUserStage, this::verifyAccount).thenCompose(Function.identity());
     }
 
-    /** Links a {@link VerificationRequest} to an account before returning the request. */
-    private CompletionStage<VerificationRequest> linkRequestToAccount(VerificationRequest request, String accountId) {
+    /** Links the {@link VerificationRequest} to the account. */
+    private CompletionStage<VerificationRequest> linkVerificationRequestToAccount(
+            VerificationRequest request, String accountId) {
         return pendingRequestStore
                 .put(request.getId().toString(), accountId, request.getExpiration())
                 .thenApply(v -> request);
@@ -102,25 +105,25 @@ final class SiteService implements SiteApi {
         return ageCertificateVerifier.verify(signedAgeCertificate);
     }
 
-    /** Finds the account to verify for the {@link VerificationRequest}. */
-    private CompletionStage<String> findAccountToVerify(VerificationRequest request) {
+    /** Finds the account that is linked to the {@link VerificationRequest}. */
+    private CompletionStage<String> findAccountForVerificationRequest(VerificationRequest request) {
         return pendingRequestStore
                 .tryRemove(request.getId().toString())
                 .thenApply(maybeAccountId -> maybeAccountId.orElseThrow(NotFoundException::new));
     }
 
-    /** Tries to verify an account with a localized {@link VerifiedUser}. */
-    private CompletionStage<Void> tryVerifyAccount(String accountId, VerifiedUser localizedUser) {
+    /** Verifies the account with the localized {@link VerifiedUser}, unless a duplicate verification occurs. */
+    private CompletionStage<Void> verifyAccount(String accountId, VerifiedUser localizedUser) {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(config.verifiedAccountExpiresIn());
         VerificationState state = VerificationState.builder()
                 .status(VerificationStatus.VERIFIED)
                 .user(localizedUser)
                 .expiration(expiration)
                 .build();
-        return verificationStore.trySave(accountId, state).thenAccept(maybeDuplicateAccountId -> {
-            if (maybeDuplicateAccountId.isPresent()) {
-                throw new ClientErrorException(409);
-            }
-        });
+        return verificationStore
+                .trySave(accountId, state)
+                .thenAccept(maybeDuplicateAccountId -> maybeDuplicateAccountId.ifPresent(a -> {
+                    throw new ClientErrorException(409);
+                }));
     }
 }
