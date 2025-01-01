@@ -45,14 +45,14 @@ final class SiteService implements SiteApi {
             AccountIdExtractor accountIdExtractor,
             @Named("client") AvsApi avsClient,
             SiteVerificationStore verificationStore,
-            PendingStoreRepository pendingStoreRepository,
+            PendingStoreRepository pendingStores,
             AgeCertificateVerifier ageCertificateVerifier,
             SiteVerifiedUserLocalizer userLocalizer,
             SiteServiceConfig config) {
         this.accountIdExtractor = accountIdExtractor;
         this.avsClient = avsClient;
         this.verificationStore = verificationStore;
-        this.pendingRequestStore = pendingStoreRepository.get("request", String.class);
+        this.pendingRequestStore = pendingStores.get("request", String.class);
         this.ageCertificateVerifier = ageCertificateVerifier;
         this.userLocalizer = userLocalizer;
         this.config = config;

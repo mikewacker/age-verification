@@ -84,8 +84,8 @@ paths:
   /verification-request/{requestId}/link:
     post:
       tags: [avs]
-      description: Links the verification request to a user on the age verification service.
-      operationId: linkVerificationRequestToUser
+      description: Links the verification request to the person.
+      operationId: linkVerificationRequest
       parameters:
         - name: requestId
           description: ID of the verification request.
@@ -97,18 +97,11 @@ paths:
         '200':
           description: OK
 
-  /verification-request/{requestId}/age-certificate/send:
+  /age-certificate/send:
     post:
-      description: Sends an age certificate for the verification request.
+      description: Sends an age certificate for the person, using the linked verification request.
       tags: [avs]
-      operationId: sendAgeCertificateForVerificationRequest
-      parameters:
-        - name: requestId
-          description: ID of the verification request.
-          in: path
-          schema:
-            $ref: './age-certificate.yaml#/components/schemas/SecureId'
-          required: true
+      operationId: sendAgeCertificate
       responses:
         '200':
           description: OK
