@@ -176,12 +176,12 @@ public final class SiteServiceTest {
         }
 
         @Override
-        public Call<Void> linkVerificationRequestToUser(SecureId requestId) {
+        public Call<Void> linkVerificationRequest(SecureId requestId) {
             return Calls.failure(new UnsupportedOperationException());
         }
 
         @Override
-        public Call<Void> sendAgeCertificateForVerificationRequest(SecureId requestId) {
+        public Call<Void> sendAgeCertificate() {
             return Calls.failure(new UnsupportedOperationException());
         }
     }

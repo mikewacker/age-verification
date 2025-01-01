@@ -23,12 +23,12 @@ public final class AvsService implements AvsApi {
     }
 
     @Override
-    public CompletionStage<Void> linkVerificationRequestToUser(SecureId requestId) {
+    public CompletionStage<Void> linkVerificationRequest(SecureId requestId) {
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public CompletionStage<Void> sendAgeCertificateForVerificationRequest(SecureId requestId) {
+    public CompletionStage<Void> sendAgeCertificate() {
         return CompletableFuture.completedFuture(null);
     }
 }

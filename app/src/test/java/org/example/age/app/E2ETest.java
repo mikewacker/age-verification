@@ -78,12 +78,10 @@ public final class E2ETest {
         assertThat(request).isNotNull();
 
         Response<Void> linkResponse =
-                avsClient.linkVerificationRequestToUser(request.getId()).execute();
+                avsClient.linkVerificationRequest(request.getId()).execute();
         assertThat(linkResponse.isSuccessful()).isTrue();
 
-        Response<Void> certificateResponse = avsClient
-                .sendAgeCertificateForVerificationRequest(request.getId())
-                .execute();
+        Response<Void> certificateResponse = avsClient.sendAgeCertificate().execute();
         assertThat(certificateResponse.isSuccessful()).isTrue();
     }
 
