@@ -10,7 +10,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /** Adapts an asynchronous Retrofit call to a completion stage. */
-public class AsyncCalls {
+public final class AsyncCalls {
 
     /**
      * Makes an asynchronous {@link Call}, returning a {@link CompletionStage}
