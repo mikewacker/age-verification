@@ -3,7 +3,7 @@ package org.example.age.service.testing.request;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-/** Sets the account ID for testing. Tests will fail if the account ID is not set. */
+/** Sets the account ID for testing. */
 @Singleton
 public final class TestAccountId {
 

@@ -2,9 +2,12 @@ package org.example.age.service.testing.request;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.NotAuthorizedException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import org.example.age.service.api.request.AccountIdExtractor;
 
-/** Fake implementation of {@link AccountIdExtractor}. The account ID must be set. */
+/** Fake implementation of {@link AccountIdExtractor}. */
 @Singleton
 final class FakeAccountIdExtractor implements AccountIdExtractor {
 
@@ -14,12 +17,10 @@ final class FakeAccountIdExtractor implements AccountIdExtractor {
     public FakeAccountIdExtractor() {}
 
     @Override
-    public String getForRequest() {
-        if (accountId == null) {
-            throw new IllegalStateException("account ID not set");
-        }
-
-        return accountId;
+    public CompletionStage<String> getForRequest() {
+        return (accountId != null)
+                ? CompletableFuture.completedFuture(accountId)
+                : CompletableFuture.failedFuture(new NotAuthorizedException("failed to authenticate account"));
     }
 
     /** Sets the account ID. */
