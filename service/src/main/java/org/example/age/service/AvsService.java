@@ -69,17 +69,18 @@ final class AvsService implements AvsApi {
 
     @Override
     public CompletionStage<Void> linkVerificationRequest(SecureId requestId) {
-        String accountId = accountIdExtractor.getForRequest();
-        return loadVerifiedUser(accountId).thenCompose(user -> linkAccountToVerificationRequest(accountId, requestId));
+        return loadVerifiedAccount()
+                .thenApply(VerifiedAccount::id)
+                .thenCompose(accountId -> linkAccountToVerificationRequest(accountId, requestId));
     }
 
     @Override
     public CompletionStage<Void> sendAgeCertificate() {
-        String accountId = accountIdExtractor.getForRequest();
-        CompletionStage<VerifiedUser> userStage = loadVerifiedUser(accountId);
+        CompletionStage<VerifiedAccount> accountStage = loadVerifiedAccount();
         CompletionStage<VerificationRequest> requestStage =
-                userStage.thenCompose(user -> findVerificationRequestForAccount(accountId));
-        CompletionStage<VerifiedUser> localizedUserStage = userStage
+                accountStage.thenApply(VerifiedAccount::id).thenCompose(this::findVerificationRequestForAccount);
+        CompletionStage<VerifiedUser> localizedUserStage = accountStage
+                .thenApply(VerifiedAccount::user)
                 .thenCombine(requestStage.thenApply(VerificationRequest::getSiteId), userLocalizer::localize)
                 .thenCompose(Function.identity());
         return requestStage
@@ -101,9 +102,13 @@ final class AvsService implements AvsApi {
         }
     }
 
-    /** Loads the {@link VerifiedUser} for the account. */
-    private CompletionStage<VerifiedUser> loadVerifiedUser(String accountId) {
-        return userStore.tryLoad(accountId).thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new));
+    /** Loads a verified account. */
+    private CompletionStage<VerifiedAccount> loadVerifiedAccount() {
+        CompletionStage<String> accountStage = accountIdExtractor.getForRequest();
+        CompletionStage<VerifiedUser> userStage = accountStage
+                .thenCompose(userStore::tryLoad)
+                .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new));
+        return accountStage.thenCombine(userStage, VerifiedAccount::new);
     }
 
     /** Creates a {@link VerificationRequest} for the site. */
@@ -142,7 +147,10 @@ final class AvsService implements AvsApi {
     private CompletionStage<Void> sendSignedAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
         String siteId = signedAgeCertificate.getAgeCertificate().getRequest().getSiteId();
         SiteApi siteClient = siteClients.get(siteId);
-        Call<Void> certificateCall = siteClient.processAgeCertificate(signedAgeCertificate);
-        return AsyncCalls.make(certificateCall, errorCode -> (errorCode != 410) ? 500 : 404);
+        Call<Void> call = siteClient.processAgeCertificate(signedAgeCertificate);
+        return AsyncCalls.make(call, errorCode -> ((errorCode == 404) || (errorCode == 410)) ? 404 : 500);
     }
+
+    /** Account with a {@link VerifiedUser}. */
+    private record VerifiedAccount(String id, VerifiedUser user) {}
 }

@@ -53,7 +53,6 @@ public final class SiteServiceTest {
     @Test
     public void verify() throws Exception {
         accountId.set("username");
-
         CompletionStage<VerificationState> initStateResponse = siteService.getVerificationState();
         VerificationState expectedInitState = VerificationState.builder()
                 .status(VerificationStatus.UNVERIFIED)
@@ -82,7 +81,6 @@ public final class SiteServiceTest {
     @Test
     public void error_DuplicateVerification() throws Exception {
         accountId.set("duplicate");
-
         CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
         assertThat(requestResponse).isCompleted();
         VerificationRequest request = requestResponse.toCompletableFuture().get();
@@ -94,9 +92,17 @@ public final class SiteServiceTest {
     }
 
     @Test
+    public void error_Unauthenticated() {
+        CompletionStage<VerificationState> stateResponse = siteService.getVerificationState();
+        assertIsCompletedWithErrorCode(stateResponse, 401);
+
+        CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
+        assertIsCompletedWithErrorCode(requestResponse, 401);
+    }
+
+    @Test
     public void error_AccountNotFound() throws Exception {
         accountId.set("username");
-
         VerificationRequest request = createVerificationRequest();
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
@@ -106,7 +112,6 @@ public final class SiteServiceTest {
     @Test
     public void error_ExpiredAgeCertificate() throws Exception {
         accountId.set("username");
-
         VerificationRequest request = createVerificationRequest(Duration.ofMinutes(-1));
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
@@ -116,7 +121,6 @@ public final class SiteServiceTest {
     @Test
     public void error_InvalidSignature() throws Exception {
         accountId.set("username");
-
         VerificationRequest request = createVerificationRequest();
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         SignedAgeCertificate invalidAgeCertificate = createInvalidAgeCertificate(signedAgeCertificate);

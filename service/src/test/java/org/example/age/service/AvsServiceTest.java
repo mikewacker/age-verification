@@ -54,8 +54,6 @@ public final class AvsServiceTest {
 
     @Test
     public void verify() throws Exception {
-        accountId.set("person");
-
         CompletionStage<VerificationRequest> requestResponse1 =
                 avsService.createVerificationRequestForSite("site1", EMPTY_DATA);
         assertThat(requestResponse1).isCompleted();
@@ -65,6 +63,7 @@ public final class AvsServiceTest {
         assertThat(request1.getExpiration()).isCloseTo(expectedExpiration, within(1, ChronoUnit.SECONDS));
         SecureId requestId1 = request1.getId();
 
+        accountId.set("person");
         CompletionStage<Void> linkResponse1 = avsService.linkVerificationRequest(requestId1);
         assertThat(linkResponse1).isCompleted();
 
@@ -89,9 +88,17 @@ public final class AvsServiceTest {
     }
 
     @Test
+    public void error_Unauthenticated() {
+        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(SecureId.generate());
+        assertIsCompletedWithErrorCode(linkResponse, 401);
+
+        CompletionStage<Void> certificateResponse = avsService.sendAgeCertificate();
+        assertIsCompletedWithErrorCode(certificateResponse, 401);
+    }
+
+    @Test
     public void error_UnverifiedPerson() {
         accountId.set("unverified-person");
-
         CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(SecureId.generate());
         assertIsCompletedWithErrorCode(linkResponse, 403);
 
@@ -101,13 +108,12 @@ public final class AvsServiceTest {
 
     @Test
     public void error_LinkVerificationRequestTwice() throws Exception {
-        accountId.set("person");
-
         CompletionStage<VerificationRequest> requestResponse =
                 avsService.createVerificationRequestForSite("site1", EMPTY_DATA);
         assertThat(requestResponse).isCompleted();
         SecureId requestId = requestResponse.toCompletableFuture().get().getId();
 
+        accountId.set("person");
         CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(requestId);
         assertThat(linkResponse).isCompleted();
 
@@ -117,13 +123,12 @@ public final class AvsServiceTest {
 
     @Test
     public void error_SendAgeCertificateTwice() throws Exception {
-        accountId.set("person");
-
         CompletionStage<VerificationRequest> requestResponse =
                 avsService.createVerificationRequestForSite("site1", EMPTY_DATA);
         assertThat(requestResponse).isCompleted();
         SecureId requestId = requestResponse.toCompletableFuture().get().getId();
 
+        accountId.set("person");
         CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(requestId);
         assertThat(linkResponse).isCompleted();
 
@@ -137,7 +142,6 @@ public final class AvsServiceTest {
     @Test
     public void error_VerificationRequestNotFound() {
         accountId.set("person");
-
         CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(SecureId.generate());
         assertIsCompletedWithErrorCode(linkResponse, 404);
 
