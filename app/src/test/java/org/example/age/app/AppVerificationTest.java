@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import retrofit2.Response;
 
-public final class E2ETest {
+public final class AppVerificationTest {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> siteApp =
