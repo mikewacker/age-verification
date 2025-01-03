@@ -131,13 +131,7 @@ public final class ServiceVerificationTest {
         }
     }
 
-    /**
-     * Dagger component that provides...
-     * <ul>
-     *     <li>{@link SiteApi}
-     *     <li>{@link TestAccountId}
-     * </ul>
-     */
+    /** Dagger component for the site service. */
     @Component(modules = {SiteServiceModule.class, TestAvsClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestSiteComponent {
@@ -152,13 +146,7 @@ public final class ServiceVerificationTest {
         TestAccountId accountId();
     }
 
-    /**
-     * Dagger component that provides...
-     * <ul>
-     *     <li>{@link AvsApi}
-     *     <li>{@link TestAccountId}
-     * </ul>
-     */
+    /** Dagger component for the AVS service. */
     @Component(modules = {AvsServiceModule.class, TestSiteClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestAvsComponent {

@@ -2,10 +2,10 @@ package org.example.age.service.testing.request;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdContext;
 
 /**
- * Dagger modules that binds {@link AccountIdExtractor}.
+ * Dagger modules that binds {@link AccountIdContext}.
  * <p>
  * It also binds {@link TestAccountId}.
  */
@@ -13,5 +13,5 @@ import org.example.age.service.api.request.AccountIdExtractor;
 public interface TestRequestModule {
 
     @Binds
-    AccountIdExtractor bindAccountIdExtractor(FakeAccountIdExtractor impl);
+    AccountIdContext bindAccountIdContext(FakeAccountIdContext impl);
 }

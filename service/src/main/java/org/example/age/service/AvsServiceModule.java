@@ -7,7 +7,7 @@ import org.example.age.api.AvsApi;
 import org.example.age.service.api.client.SiteClientRepository;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
-import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.service.api.store.AvsVerifiedUserStore;
 import org.example.age.service.api.store.PendingStoreRepository;
 
@@ -16,7 +16,7 @@ import org.example.age.service.api.store.PendingStoreRepository;
  * <p>
  * Depends on an unbound...
  * <ul>
- *     <li>{@link AccountIdExtractor}
+ *     <li>{@link AccountIdContext}
  *     <li>{@link SiteClientRepository}
  *     <li>{@link AvsVerifiedUserStore}
  *     <li>{@link PendingStoreRepository}

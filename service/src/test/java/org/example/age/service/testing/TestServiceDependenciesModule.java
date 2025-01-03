@@ -11,7 +11,7 @@ import org.example.age.service.api.crypto.AgeCertificateSigner;
 import org.example.age.service.api.crypto.AgeCertificateVerifier;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
 import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
-import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.service.api.store.AvsVerifiedUserStore;
 import org.example.age.service.api.store.PendingStoreRepository;
 import org.example.age.service.api.store.SiteVerificationStore;
@@ -24,7 +24,7 @@ import org.example.age.testing.TestObjectMapper;
 /**
  * Dagger module that binds...
  * <ul>
- *     <li>{@link AccountIdExtractor}
+ *     <li>{@link AccountIdContext}
  *     <li>{@link SiteVerificationStore}
  *     <li>{@link AvsVerifiedUserStore}
  *     <li>{@link PendingStoreRepository}

@@ -190,14 +190,7 @@ public final class SiteServiceTest {
         }
     }
 
-    /**
-     * Dagger component that provides...
-     * <ul>
-     *     <li>{@link SiteApi}
-     *     <li>{@link TestAccountId}
-     *     <li>{@link AgeCertificateSigner}
-     * </ul>
-     */
+    /** Dagger component for the service. */
     @Component(modules = {SiteServiceModule.class, FakeAvsClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestComponent {

@@ -13,12 +13,13 @@ dependencies {
     api(libs.jackson.databind)
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
+    implementation(libs.retrofit.retrofit)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
-    testImplementation(libs.jackson.datatypeJsr310)
+    testImplementation(libs.dropwizard.core) // also provides RuntimeDelegate for JAX-RS Response
+    testImplementation(libs.dropwizard.testing)
+    testImplementation(libs.okhttp.okhttp)
     testImplementation(libs.retrofit.mock)
-
-    testRuntimeOnly(libs.dropwizard.core) // provides RuntimeDelegate for JAX-RS Response
 }

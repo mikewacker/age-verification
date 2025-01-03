@@ -7,15 +7,15 @@ import jakarta.inject.Singleton;
 @Singleton
 public final class TestAccountId {
 
-    private final FakeAccountIdExtractor accountIdExtractor;
+    private final FakeAccountIdContext accountIdContext;
 
     @Inject
-    TestAccountId(FakeAccountIdExtractor accountIdExtractor) {
-        this.accountIdExtractor = accountIdExtractor;
+    TestAccountId(FakeAccountIdContext accountIdContext) {
+        this.accountIdContext = accountIdContext;
     }
 
     /** Sets the account ID. */
     public void set(String accountId) {
-        accountIdExtractor.set(accountId);
+        accountIdContext.set(accountId);
     }
 }

@@ -21,7 +21,7 @@ import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.service.api.crypto.AgeCertificateVerifier;
 import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
-import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.service.api.store.PendingStore;
 import org.example.age.service.api.store.PendingStoreRepository;
 import org.example.age.service.api.store.SiteVerificationStore;
@@ -35,7 +35,7 @@ final class SiteService implements SiteApi {
     private static final AuthMatchData EMPTY_DATA =
             AuthMatchData.builder().name("").data("").build();
 
-    private final AccountIdExtractor accountIdExtractor;
+    private final AccountIdContext accountIdContext;
     private final AvsApi avsClient;
     private final SiteVerificationStore verificationStore;
     private final PendingStore<String> pendingRequestStore;
@@ -45,14 +45,14 @@ final class SiteService implements SiteApi {
 
     @Inject
     public SiteService(
-            AccountIdExtractor accountIdExtractor,
+            AccountIdContext accountIdContext,
             @Named("client") AvsApi avsClient,
             SiteVerificationStore verificationStore,
             PendingStoreRepository pendingStores,
             AgeCertificateVerifier ageCertificateVerifier,
             SiteVerifiedUserLocalizer userLocalizer,
             SiteServiceConfig config) {
-        this.accountIdExtractor = accountIdExtractor;
+        this.accountIdContext = accountIdContext;
         this.avsClient = avsClient;
         this.verificationStore = verificationStore;
         this.pendingRequestStore = pendingStores.get("request", String.class);
@@ -63,12 +63,12 @@ final class SiteService implements SiteApi {
 
     @Override
     public CompletionStage<VerificationState> getVerificationState() {
-        return accountIdExtractor.getForRequest().thenCompose(verificationStore::load);
+        return accountIdContext.getForRequest().thenCompose(verificationStore::load);
     }
 
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequest() {
-        CompletionStage<String> accountStage = accountIdExtractor.getForRequest();
+        CompletionStage<String> accountStage = accountIdContext.getForRequest();
         CompletionStage<VerificationRequest> requestStage = accountStage.thenCompose(accountId -> {
             Call<VerificationRequest> call = avsClient.createVerificationRequestForSite(config.id(), EMPTY_DATA);
             return AsyncCalls.make(call);

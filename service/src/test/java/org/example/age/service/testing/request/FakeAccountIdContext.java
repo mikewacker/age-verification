@@ -5,16 +5,16 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdContext;
 
-/** Fake implementation of {@link AccountIdExtractor}. */
+/** Fake implementation of {@link AccountIdContext}. */
 @Singleton
-final class FakeAccountIdExtractor implements AccountIdExtractor {
+final class FakeAccountIdContext implements AccountIdContext {
 
     private String accountId = null;
 
     @Inject
-    public FakeAccountIdExtractor() {}
+    public FakeAccountIdContext() {}
 
     @Override
     public CompletionStage<String> getForRequest() {
