@@ -5,6 +5,7 @@ include(
         "api",
         "api:crypto",
         "service",
+        "module:request-demo",
         "app",
 
         "testing",
