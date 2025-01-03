@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.module.request.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,44 +14,57 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.concurrent.CompletionStage;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.example.age.service.RequestContextProvider;
+import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.testing.TestClient;
 import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class RequestContextTest {
+public final class DemoAccountIdTest {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
 
     @Test
-    public void requestContext() throws IOException {
+    public void accountId() throws IOException {
         String url = String.format("http://localhost:%d/test", app.getLocalPort());
-        Request request = new Request.Builder().url(url).build();
+        Request request =
+                new Request.Builder().url(url).header("Account-Id", "username").build();
         try (Response response = TestClient.get().newCall(request).execute()) {
             assertThat(response.isSuccessful()).isTrue();
-            assertThat(response.body().string()).isEqualTo("GET");
+            assertThat(response.body().string()).isEqualTo("username");
         }
     }
 
-    /** Test service that responds with the HTTP method. */
+    @Test
+    public void noAccountId() throws IOException {
+        String url = String.format("http://localhost:%d/test", app.getLocalPort());
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = TestClient.get().newCall(request).execute()) {
+            assertThat(response.code()).isEqualTo(401);
+        }
+    }
+
+    /** Test service that responds with the account ID. */
     @Singleton
     @Path("/test")
     public static final class TestService {
 
-        private final RequestContextProvider requestContextProvider;
+        private final AccountIdContext accountIdContext;
 
         @Inject
-        public TestService(RequestContextProvider requestContextProvider) {
-            this.requestContextProvider = requestContextProvider;
+        public TestService(AccountIdContext accountIdContext) {
+            this.accountIdContext = accountIdContext;
         }
 
         @GET
         @Produces(MediaType.TEXT_PLAIN)
-        public String method() {
-            return requestContextProvider.get().getMethod();
+        public CompletionStage<String> accountId() {
+            return accountIdContext.getForRequest();
         }
     }
 
@@ -59,7 +72,7 @@ public final class RequestContextTest {
     public static final class TestApp extends Application<Configuration> {
 
         @Override
-        public void run(Configuration config, Environment env) {
+        public void run(Configuration config, Environment env) throws Exception {
             TestPort.set(config, 0);
             TestComponent component = TestComponent.create();
             env.jersey().register(component.service());
@@ -68,12 +81,12 @@ public final class RequestContextTest {
     }
 
     /** Dagger component for the application. */
-    @Component(modules = RequestContextModule.class)
+    @Component(modules = DemoAccountIdModule.class)
     @Singleton
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerRequestContextTest_TestComponent.create();
+            return DaggerDemoAccountIdTest_TestComponent.create();
         }
 
         TestService service();
