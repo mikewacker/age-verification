@@ -4,11 +4,12 @@ plugins {
 }
 
 dependencies {
+    api(libs.dropwizard.core)
     api(libs.jackson.databind)
-    api(libs.retrofit.mock)
+    api(libs.okhttp.okhttp)
+    api(libs.retrofit.retrofit)
     implementation(libs.assertj.core)
     implementation(libs.jackson.datatypeJsr310)
     implementation(libs.jaxRs.api)
-    implementation(libs.okhttp.okhttp)
     implementation(libs.retrofit.mock)
 }

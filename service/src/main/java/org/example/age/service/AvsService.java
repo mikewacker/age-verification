@@ -21,7 +21,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.service.api.client.SiteClientRepository;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
-import org.example.age.service.api.request.AccountIdExtractor;
+import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.service.api.store.AvsVerifiedUserStore;
 import org.example.age.service.api.store.PendingStore;
 import org.example.age.service.api.store.PendingStoreRepository;
@@ -31,7 +31,7 @@ import retrofit2.Call;
 @Singleton
 final class AvsService implements AvsApi {
 
-    private final AccountIdExtractor accountIdExtractor;
+    private final AccountIdContext accountIdContext;
     private final SiteClientRepository siteClients;
     private final AvsVerifiedUserStore userStore;
     private final PendingStore<VerificationRequest> pendingUnlinkedRequestStore;
@@ -42,14 +42,14 @@ final class AvsService implements AvsApi {
 
     @Inject
     public AvsService(
-            AccountIdExtractor accountIdExtractor,
+            AccountIdContext accountIdContext,
             SiteClientRepository siteClients,
             AvsVerifiedUserStore userStore,
             PendingStoreRepository pendingStores,
             AgeCertificateSigner ageCertificateSigner,
             AvsVerifiedUserLocalizer userLocalizer,
             AvsServiceConfig config) {
-        this.accountIdExtractor = accountIdExtractor;
+        this.accountIdContext = accountIdContext;
         this.siteClients = siteClients;
         this.userStore = userStore;
         this.pendingUnlinkedRequestStore = pendingStores.get("unlinked-request", VerificationRequest.class);
@@ -104,7 +104,7 @@ final class AvsService implements AvsApi {
 
     /** Loads a verified account. */
     private CompletionStage<VerifiedAccount> loadVerifiedAccount() {
-        CompletionStage<String> accountStage = accountIdExtractor.getForRequest();
+        CompletionStage<String> accountStage = accountIdContext.getForRequest();
         CompletionStage<VerifiedUser> userStage = accountStage
                 .thenCompose(userStore::tryLoad)
                 .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new));

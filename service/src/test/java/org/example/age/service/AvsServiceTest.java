@@ -209,13 +209,7 @@ public final class AvsServiceTest {
         }
     }
 
-    /**
-     * Dagger component that provides...
-     * <ul>
-     *     <li><code>@Named("service") {@link AvsApi}</code>
-     *     <li>{@link TestAccountId}
-     * </ul>
-     */
+    /** Dagger component for the service. */
     @Component(modules = {AvsServiceModule.class, FakeSiteClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestComponent {
