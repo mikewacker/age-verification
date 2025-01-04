@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link SiteApi}. */
 @Value.Immutable
+@ConfigStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableSiteServiceConfig.class)
 public interface SiteServiceConfig {

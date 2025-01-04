@@ -132,7 +132,7 @@ public final class ServiceVerificationTest {
     }
 
     /** Dagger component for the site service. */
-    @Component(modules = {SiteServiceModule.class, TestAvsClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {SiteServiceModule.class, TestSiteClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestSiteComponent {
 
@@ -147,7 +147,7 @@ public final class ServiceVerificationTest {
     }
 
     /** Dagger component for the AVS service. */
-    @Component(modules = {AvsServiceModule.class, TestSiteClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {AvsServiceModule.class, TestAvsClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestAvsComponent {
 
@@ -163,7 +163,7 @@ public final class ServiceVerificationTest {
 
     /** Dagger module that binds <code>@Named("client") {@link org.example.age.api.client.AvsApi}</code>. */
     @Module
-    interface TestAvsClientModule {
+    interface TestSiteClientModule {
 
         @Binds
         @Named("client")
@@ -172,7 +172,7 @@ public final class ServiceVerificationTest {
 
     /** Dagger module that binds {@link SiteClientRepository}. */
     @Module
-    interface TestSiteClientModule {
+    interface TestAvsClientModule {
 
         @Binds
         SiteClientRepository bindSiteClientRepository(FakeSiteClientRepository impl);

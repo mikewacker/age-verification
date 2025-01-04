@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link AvsApi}. */
 @Value.Immutable
+@ConfigStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableAvsServiceConfig.class)
 public interface AvsServiceConfig {
