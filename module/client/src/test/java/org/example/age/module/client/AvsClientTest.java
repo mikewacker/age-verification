@@ -1,6 +1,7 @@
 package org.example.age.module.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dagger.Component;
 import dagger.Module;
@@ -11,6 +12,7 @@ import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.NotAuthorizedException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -18,85 +20,94 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.example.age.api.AuthMatchData;
+import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.VerificationRequest;
-import org.example.age.api.client.AvsApi;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.api.VerificationState;
+import org.example.age.api.VerificationStatus;
+import org.example.age.api.client.SiteApi;
 import org.example.age.module.client.testing.LazyPort;
+import org.example.age.service.api.client.SiteClientRepository;
 import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import retrofit2.Response;
 
-public final class SiteClientTest {
+public final class AvsClientTest {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
 
     private static final LazyPort port = new LazyPort();
 
-    private static AvsApi avsClient;
+    private static SiteClientRepository siteClients;
 
     @BeforeAll
     public static void createClients() {
         TestComponent component = TestComponent.create();
-        avsClient = component.avsClient();
+        siteClients = component.siteClients();
     }
 
     @Test
-    public void avsClient() throws IOException {
-        Response<Void> response = avsClient.sendAgeCertificate().execute();
+    public void siteClient() throws IOException {
+        SiteApi siteClient = siteClients.get("site");
+        Response<VerificationState> response = siteClient.getVerificationState().execute();
         assertThat(response.isSuccessful()).isTrue();
     }
 
-    /** Stub service implementation of {@link org.example.age.api.AvsApi}. */
-    public static final class StubAvsService implements org.example.age.api.AvsApi {
+    @Test
+    public void error_UnregisteredSite() {
+        assertThatThrownBy(() -> siteClients.get("unregistered-site")).isInstanceOf(NotAuthorizedException.class);
+    }
+
+    /** Stub service implementation of {@link org.example.age.api.SiteApi}. */
+    public static final class StubSiteService implements org.example.age.api.SiteApi {
 
         @Override
-        public CompletionStage<VerificationRequest> createVerificationRequestForSite(
-                String siteId, AuthMatchData authMatchData) {
+        public CompletionStage<VerificationState> getVerificationState() {
+            VerificationState state = VerificationState.builder()
+                    .status(VerificationStatus.UNVERIFIED)
+                    .build();
+            return CompletableFuture.completedFuture(state);
+        }
+
+        @Override
+        public CompletionStage<VerificationRequest> createVerificationRequest() {
             return CompletableFuture.failedFuture(new UnsupportedOperationException());
         }
 
         @Override
-        public CompletionStage<Void> linkVerificationRequest(SecureId requestId) {
+        public CompletionStage<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
             return CompletableFuture.failedFuture(new UnsupportedOperationException());
-        }
-
-        @Override
-        public CompletionStage<Void> sendAgeCertificate() {
-            return CompletableFuture.completedFuture(null);
         }
     }
 
-    /** Test application that runs {@link StubAvsService}. */
+    /** Test application that runs {@link StubSiteService}. */
     public static final class TestApp extends Application<Configuration> {
 
         @Override
         public void run(Configuration config, Environment env) {
             TestPort.set(config, port.get());
-            env.jersey().register(new StubAvsService());
+            env.jersey().register(new StubSiteService());
         }
     }
 
     /** Dagger component for the clients. */
-    @Component(modules = {SiteClientModule.class, TestDependenciesModule.class})
+    @Component(modules = {AvsClientModule.class, TestDependenciesModule.class})
     @Singleton
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerSiteClientTest_TestComponent.create();
+            return DaggerAvsClientTest_TestComponent.create();
         }
 
-        @Named("client")
-        AvsApi avsClient();
+        SiteClientRepository siteClients();
     }
 
     /**
      * Dagger module that binds...
      * <ul>
-     *     <li>{@link SiteClientsConfig}
+     *     <li>{@link AvsClientsConfig}
      *     <li><code>@Named("worker") {@link ExecutorService}</code>
      * </ul>
      */
@@ -105,10 +116,10 @@ public final class SiteClientTest {
 
         @Provides
         @Singleton
-        static SiteClientsConfig provideSiteClientsConfig() {
+        static AvsClientsConfig provideAvsClientsConfig() {
             try {
                 URL url = new URI(String.format("http://localhost:%d", port.get())).toURL();
-                return SiteClientsConfig.builder().avsUrl(url).build();
+                return AvsClientsConfig.builder().putSiteUrls("site", url).build();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
