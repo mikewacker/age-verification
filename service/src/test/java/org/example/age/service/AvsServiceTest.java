@@ -210,7 +210,7 @@ public final class AvsServiceTest {
     }
 
     /** Dagger component for the service. */
-    @Component(modules = {AvsServiceModule.class, FakeSiteClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {AvsServiceModule.class, FakeClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestComponent {
 
@@ -226,7 +226,7 @@ public final class AvsServiceTest {
 
     /** Dagger module that binds {@link SiteClientRepository}. */
     @Module
-    interface FakeSiteClientModule {
+    interface FakeClientModule {
 
         @Binds
         SiteClientRepository bindSiteClientRepository(FakeSiteClientRepository impl);

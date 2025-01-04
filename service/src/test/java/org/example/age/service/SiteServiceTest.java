@@ -191,7 +191,7 @@ public final class SiteServiceTest {
     }
 
     /** Dagger component for the service. */
-    @Component(modules = {SiteServiceModule.class, FakeAvsClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {SiteServiceModule.class, FakeClientModule.class, TestServiceDependenciesModule.class})
     @Singleton
     interface TestComponent {
 
@@ -209,7 +209,7 @@ public final class SiteServiceTest {
 
     /** Dagger module that binds <code>@Named("client") {@link AvsApi}</code>. */
     @Module
-    interface FakeAvsClientModule {
+    interface FakeClientModule {
 
         @Binds
         @Named("client")
