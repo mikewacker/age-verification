@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import org.example.age.api.AvsApi;
+import org.example.age.service.api.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link AvsApi}. */

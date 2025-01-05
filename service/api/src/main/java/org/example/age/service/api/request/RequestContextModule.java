@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.service.api.request;
 
 import dagger.Binds;
 import dagger.Module;

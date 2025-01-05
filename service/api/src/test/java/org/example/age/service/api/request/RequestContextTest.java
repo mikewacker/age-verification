@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.service.api.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

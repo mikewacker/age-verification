@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor(libs.immutables.value)
 
     api(project(":api"))
+    api(project(":service:api"))
     api(libs.dagger.dagger)
     api(libs.immutables.annotations)
     api(libs.jackson.annotations)
@@ -19,8 +20,7 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
-    testImplementation(libs.dropwizard.core) // also provides RuntimeDelegate for JAX-RS Response
-    testImplementation(libs.dropwizard.testing)
-    testImplementation(libs.okhttp.okhttp)
     testImplementation(libs.retrofit.mock)
+
+    testRuntimeOnly(libs.dropwizard.core) // provides RuntimeDelegate for JAX-RS Response
 }

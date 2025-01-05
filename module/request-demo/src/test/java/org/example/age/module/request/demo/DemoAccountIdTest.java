@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.concurrent.CompletionStage;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.service.RequestContextProvider;
 import org.example.age.service.api.request.AccountIdContext;
+import org.example.age.service.api.request.RequestContextProvider;
 import org.example.age.testing.TestClient;
 import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.Test;
@@ -72,7 +72,7 @@ public final class DemoAccountIdTest {
     public static final class TestApp extends Application<Configuration> {
 
         @Override
-        public void run(Configuration config, Environment env) throws Exception {
+        public void run(Configuration config, Environment env) {
             TestPort.set(config, 0);
             TestComponent component = TestComponent.create();
             env.jersey().register(component.service());
