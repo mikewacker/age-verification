@@ -8,6 +8,7 @@ include(
         "service:api",
         "module:request-demo",
         "module:client",
+        "module:crypto-demo",
         "app",
 
         "testing",
