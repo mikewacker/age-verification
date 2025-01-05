@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.service.api.config;
 
 import org.immutables.value.Value;
 

@@ -6,15 +6,16 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(project(":service:api"))
+    api(project(":api"))
     api(libs.dagger.dagger)
+    api(libs.immutables.annotations)
+    api(libs.jaxRs.api)
     implementation(libs.jakartaInject.api)
-    implementation(libs.jaxRs.api)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
+    testImplementation(libs.okhttp.okhttp)
     testImplementation(libs.dropwizard.core)
     testImplementation(libs.dropwizard.testing)
-    testImplementation(libs.okhttp.okhttp)
 }
