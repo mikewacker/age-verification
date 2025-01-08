@@ -29,7 +29,7 @@ import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.crypto.SignatureData;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
-import org.example.age.service.testing.TestServiceDependenciesModule;
+import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -191,7 +191,7 @@ public final class SiteServiceTest {
     }
 
     /** Dagger component for the service. */
-    @Component(modules = {SiteServiceModule.class, FakeClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {SiteServiceModule.class, FakeClientModule.class, TestDependenciesModule.class})
     @Singleton
     interface TestComponent {
 

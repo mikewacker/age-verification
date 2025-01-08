@@ -19,7 +19,7 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.api.client.SiteClientRepository;
-import org.example.age.service.testing.TestServiceDependenciesModule;
+import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.testing.CompletionStageTesting;
 import org.junit.jupiter.api.BeforeEach;
@@ -132,7 +132,7 @@ public final class ServiceVerificationTest {
     }
 
     /** Dagger component for the site service. */
-    @Component(modules = {SiteServiceModule.class, TestSiteClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {SiteServiceModule.class, TestSiteClientModule.class, TestDependenciesModule.class})
     @Singleton
     interface TestSiteComponent {
 
@@ -147,7 +147,7 @@ public final class ServiceVerificationTest {
     }
 
     /** Dagger component for the AVS service. */
-    @Component(modules = {AvsServiceModule.class, TestAvsClientModule.class, TestServiceDependenciesModule.class})
+    @Component(modules = {AvsServiceModule.class, TestAvsClientModule.class, TestDependenciesModule.class})
     @Singleton
     interface TestAvsComponent {
 

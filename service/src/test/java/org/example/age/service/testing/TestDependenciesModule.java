@@ -39,7 +39,7 @@ import org.example.age.testing.TestObjectMapper;
  * It also binds {@link TestAccountId}.
  */
 @Module(includes = {TestRequestModule.class, TestStoreModule.class, TestCryptoModule.class})
-public interface TestServiceDependenciesModule {
+public interface TestDependenciesModule {
 
     @Provides
     @Singleton
