@@ -7,7 +7,7 @@ import jakarta.inject.Singleton;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.module.crypto.demo.AvsKeysConfig;
 import org.example.age.module.crypto.demo.SiteKeysConfig;
-import org.example.age.testing.TestObjectMapper;
+import org.example.age.testing.TestObjectMapperModule;
 
 /**
  * Dagger module that binds...
@@ -17,7 +17,7 @@ import org.example.age.testing.TestObjectMapper;
  *     <li>{@link ObjectMapper}
  * </ul>
  */
-@Module
+@Module(includes = TestObjectMapperModule.class)
 public interface TestDependenciesModule {
 
     @Provides
@@ -36,11 +36,5 @@ public interface TestDependenciesModule {
                 .signing(ConfigKeyPair.privateKey())
                 .putLocalization("site", SecureId.generate())
                 .build();
-    }
-
-    @Provides
-    @Singleton
-    static ObjectMapper provideObjectMapper() {
-        return TestObjectMapper.get();
     }
 }
