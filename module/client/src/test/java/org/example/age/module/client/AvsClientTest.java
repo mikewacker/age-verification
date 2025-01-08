@@ -3,29 +3,24 @@ package org.example.age.module.client;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import dagger.BindsInstance;
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.SiteApi;
 import org.example.age.module.client.testing.LazyPort;
+import org.example.age.module.client.testing.TestDependenciesModule;
 import org.example.age.service.api.client.SiteClientRepository;
 import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.BeforeAll;
@@ -98,38 +93,15 @@ public final class AvsClientTest {
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerAvsClientTest_TestComponent.create();
+            return DaggerAvsClientTest_TestComponent.factory().create(port);
         }
 
         SiteClientRepository siteClients();
-    }
 
-    /**
-     * Dagger module that binds...
-     * <ul>
-     *     <li>{@link AvsClientsConfig}
-     *     <li><code>@Named("worker") {@link ExecutorService}</code>
-     * </ul>
-     */
-    @Module
-    interface TestDependenciesModule {
+        @Component.Factory
+        interface Factory {
 
-        @Provides
-        @Singleton
-        static AvsClientsConfig provideAvsClientsConfig() {
-            try {
-                URL url = new URI(String.format("http://localhost:%d", port.get())).toURL();
-                return AvsClientsConfig.builder().putSiteUrls("site", url).build();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Provides
-        @Named("worker")
-        @Singleton
-        static ExecutorService providerWorker() {
-            return Executors.newFixedThreadPool(1);
+            TestComponent create(@BindsInstance LazyPort port);
         }
     }
 }

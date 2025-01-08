@@ -1,4 +1,4 @@
-package org.example.age.service.util;
+package org.example.age.service.api.crypto;
 
 import java.util.List;
 import org.example.age.api.VerifiedUser;

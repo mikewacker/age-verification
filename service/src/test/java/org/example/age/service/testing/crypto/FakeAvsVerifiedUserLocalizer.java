@@ -9,7 +9,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
-import org.example.age.service.util.Localization;
+import org.example.age.service.api.crypto.Localization;
 
 /** Fake implementation of {@link AvsVerifiedUserLocalizer}. */
 @Singleton
