@@ -1,6 +1,5 @@
 package org.example.age.service.testing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
@@ -19,7 +18,7 @@ import org.example.age.service.testing.crypto.TestCryptoModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.service.testing.request.TestRequestModule;
 import org.example.age.service.testing.store.TestStoreModule;
-import org.example.age.testing.TestObjectMapper;
+import org.example.age.testing.TestObjectMapperModule;
 
 /**
  * Dagger module that binds...
@@ -38,7 +37,9 @@ import org.example.age.testing.TestObjectMapper;
  * <p>
  * It also binds {@link TestAccountId}.
  */
-@Module(includes = {TestRequestModule.class, TestStoreModule.class, TestCryptoModule.class})
+@Module(
+        includes = {TestRequestModule.class, TestStoreModule.class, TestCryptoModule.class, TestObjectMapperModule.class
+        })
 public interface TestDependenciesModule {
 
     @Provides
@@ -56,11 +57,5 @@ public interface TestDependenciesModule {
         return AvsServiceConfig.builder()
                 .verificationRequestExpiresIn(Duration.ofMinutes(5))
                 .build();
-    }
-
-    @Provides
-    @Singleton
-    static ObjectMapper provideObjectMapper() {
-        return TestObjectMapper.get();
     }
 }
