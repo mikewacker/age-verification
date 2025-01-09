@@ -18,6 +18,8 @@ import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
  *     <li>{@link SiteKeysConfig}
  *     <li>{@link ObjectMapper}
  * </ul>
+ * <p>
+ * Loads keys from configuration; it suffices to say that a production application should NOT do this.
  */
 @Module
 public interface DemoSiteCryptoModule {

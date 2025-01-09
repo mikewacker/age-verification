@@ -18,6 +18,8 @@ import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
  *     <li>{@link AvsKeysConfig}
  *     <li>{@link ObjectMapper}
  * </ul>
+ * <p>
+ * Loads keys from configuration; it suffices to say that a production application should NOT do this.
  */
 @Module
 public interface DemoAvsCryptoModule {

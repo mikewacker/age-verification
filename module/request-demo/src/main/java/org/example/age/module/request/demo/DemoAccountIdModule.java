@@ -13,7 +13,7 @@ import org.example.age.service.api.request.RequestContextProvider;
  *     <li>{@link RequestContextProvider}
  * </ul>
  * <p>
- * Uses an {@code Account-Id} header.
+ * Uses an {@code Account-Id} header; it suffices to say that a production application should NOT do this.
  */
 @Module(includes = RequestContextModule.class)
 public interface DemoAccountIdModule {

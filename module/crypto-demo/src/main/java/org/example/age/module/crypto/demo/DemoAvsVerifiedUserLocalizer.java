@@ -10,7 +10,10 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
 import org.example.age.service.api.crypto.Localization;
 
-/** Implementation of {@link AvsVerifiedUserLocalizer}. */
+/**
+ * Implementation of {@link AvsVerifiedUserLocalizer}.
+ * Loads keys from configuration; it suffices to say that a production application should NOT do this.
+ */
 @Singleton
 final class DemoAvsVerifiedUserLocalizer implements AvsVerifiedUserLocalizer {
 
