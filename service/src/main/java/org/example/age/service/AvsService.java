@@ -3,8 +3,9 @@ package org.example.age.service;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
@@ -97,7 +98,7 @@ final class AvsService implements AvsApi {
         try {
             siteClients.get(siteId);
             return CompletableFuture.completedFuture(siteId);
-        } catch (NotAuthorizedException e) {
+        } catch (RuntimeException e) {
             return CompletableFuture.failedFuture(e);
         }
     }
@@ -148,7 +149,12 @@ final class AvsService implements AvsApi {
         String siteId = signedAgeCertificate.getAgeCertificate().getRequest().getSiteId();
         SiteApi siteClient = siteClients.get(siteId);
         Call<Void> call = siteClient.processAgeCertificate(signedAgeCertificate);
-        return AsyncCalls.make(call, errorCode -> ((errorCode == 404) || (errorCode == 410)) ? 404 : 500);
+        return AsyncCalls.make(call)
+                .exceptionallyCompose(t -> CompletableFuture.failedFuture(
+                        (!(t instanceof WebApplicationException e)
+                                        || (e.getResponse().getStatus() != 404))
+                                ? new InternalServerErrorException(t)
+                                : t));
     }
 
     /** Account with a {@link VerifiedUser}. */

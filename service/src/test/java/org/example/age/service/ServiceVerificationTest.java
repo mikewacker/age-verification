@@ -8,7 +8,7 @@ import dagger.Module;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.NotFoundException;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
@@ -101,7 +101,7 @@ public final class ServiceVerificationTest {
         @Override
         public org.example.age.api.client.SiteApi get(String siteId) {
             if (!siteId.equals("site")) {
-                throw new NotAuthorizedException("unregistered site");
+                throw new NotFoundException();
             }
 
             return siteClient;

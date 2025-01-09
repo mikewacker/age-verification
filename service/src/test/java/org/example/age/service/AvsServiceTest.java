@@ -10,7 +10,7 @@ import dagger.Module;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.NotFoundException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -153,7 +153,7 @@ public final class AvsServiceTest {
     public void error_UnregisteredSite() {
         CompletionStage<VerificationRequest> requestResponse =
                 avsService.createVerificationRequestForSite("unregistered-site", EMPTY_DATA);
-        assertIsCompletedWithErrorCode(requestResponse, 401);
+        assertIsCompletedWithErrorCode(requestResponse, 404);
     }
 
     /** Fake implementation of {@link SiteClientRepository}. */
@@ -172,7 +172,7 @@ public final class AvsServiceTest {
         @Override
         public SiteApi get(String siteId) {
             if (!SITE_IDS.contains(siteId)) {
-                throw new NotAuthorizedException("unregistered site");
+                throw new NotFoundException();
             }
 
             return siteClient;

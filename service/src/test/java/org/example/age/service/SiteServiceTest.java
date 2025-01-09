@@ -115,7 +115,7 @@ public final class SiteServiceTest {
         VerificationRequest request = createVerificationRequest(Duration.ofMinutes(-1));
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(certificateResponse, 410);
+        assertIsCompletedWithErrorCode(certificateResponse, 404);
     }
 
     @Test

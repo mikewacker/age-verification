@@ -10,7 +10,7 @@ import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -52,7 +52,7 @@ public final class AvsClientTest {
 
     @Test
     public void error_UnregisteredSite() {
-        assertThatThrownBy(() -> siteClients.get("unregistered-site")).isInstanceOf(NotAuthorizedException.class);
+        assertThatThrownBy(() -> siteClients.get("unregistered-site")).isInstanceOf(NotFoundException.class);
     }
 
     /** Stub service implementation of {@link org.example.age.api.SiteApi}. */

@@ -1,10 +1,12 @@
 package org.example.age.service.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
 
-import jakarta.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
@@ -24,16 +26,7 @@ public final class AsyncCallsTest {
     public void unsuccessfulResponse() {
         Call<Integer> call = Calls.response(Response.error(400, ResponseBody.create("", null)));
         CompletionStage<Integer> asyncValue = AsyncCalls.make(call);
-        assertThat(asyncValue).isCompletedExceptionally();
-        assertThat(asyncValue.exceptionally(AsyncCallsTest::getErrorCode)).isCompletedWithValue(500);
-    }
-
-    @Test
-    public void unsuccessfulResponse_MapErrorCode() {
-        Call<Integer> call = Calls.response(Response.error(401, ResponseBody.create("", null)));
-        CompletionStage<Integer> asyncValue = AsyncCalls.make(call, code -> code / 100 * 100);
-        assertThat(asyncValue).isCompletedExceptionally();
-        assertThat(asyncValue.exceptionally(AsyncCallsTest::getErrorCode)).isCompletedWithValue(400);
+        assertIsCompletedWithErrorCode(asyncValue, 400);
     }
 
     @Test
@@ -41,11 +34,8 @@ public final class AsyncCallsTest {
         Call<Integer> call = Calls.failure(new IOException());
         CompletionStage<Integer> asyncValue = AsyncCalls.make(call);
         assertThat(asyncValue).isCompletedExceptionally();
-        assertThat(asyncValue.exceptionally(AsyncCallsTest::getErrorCode)).isCompletedWithValue(500);
-    }
-
-    private static int getErrorCode(Throwable t) {
-        WebApplicationException e = (WebApplicationException) t;
-        return e.getResponse().getStatus();
+        assertThatThrownBy(() -> asyncValue.toCompletableFuture().get())
+                .isInstanceOf(ExecutionException.class)
+                .hasCauseInstanceOf(IOException.class);
     }
 }

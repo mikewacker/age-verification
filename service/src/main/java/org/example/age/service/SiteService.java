@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -69,10 +70,8 @@ final class SiteService implements SiteApi {
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequest() {
         CompletionStage<String> accountStage = accountIdContext.getForRequest();
-        CompletionStage<VerificationRequest> requestStage = accountStage.thenCompose(accountId -> {
-            Call<VerificationRequest> call = avsClient.createVerificationRequestForSite(config.id(), EMPTY_DATA);
-            return AsyncCalls.make(call);
-        });
+        CompletionStage<VerificationRequest> requestStage =
+                accountStage.thenCompose(accountId -> createVerificationRequestForThisSite());
         return requestStage
                 .thenCombine(accountStage, this::linkVerificationRequestToAccount)
                 .thenCompose(Function.identity());
@@ -89,6 +88,13 @@ final class SiteService implements SiteApi {
         return accountStage.thenCombine(localizedUserStage, this::verifyAccount).thenCompose(Function.identity());
     }
 
+    /** Creates a {@link VerificationRequest} for this site. */
+    private CompletionStage<VerificationRequest> createVerificationRequestForThisSite() {
+        Call<VerificationRequest> call = avsClient.createVerificationRequestForSite(config.id(), EMPTY_DATA);
+        return AsyncCalls.make(call)
+                .exceptionallyCompose(t -> CompletableFuture.failedFuture(new InternalServerErrorException(t)));
+    }
+
     /** Links the {@link VerificationRequest} to the account. */
     private CompletionStage<VerificationRequest> linkVerificationRequestToAccount(
             VerificationRequest request, String accountId) {
@@ -102,7 +108,7 @@ final class SiteService implements SiteApi {
         OffsetDateTime expiration =
                 signedAgeCertificate.getAgeCertificate().getRequest().getExpiration();
         if (expiration.isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
-            return CompletableFuture.failedFuture(new ClientErrorException(410));
+            return CompletableFuture.failedFuture(new NotFoundException());
         }
 
         return ageCertificateVerifier.verify(signedAgeCertificate);

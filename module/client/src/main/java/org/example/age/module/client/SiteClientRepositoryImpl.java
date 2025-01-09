@@ -2,7 +2,7 @@ package org.example.age.module.client;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +23,7 @@ final class SiteClientRepositoryImpl implements SiteClientRepository {
     @Override
     public SiteApi get(String siteId) {
         Optional<SiteApi> maybeClient = Optional.ofNullable(clients.get(siteId));
-        return maybeClient.orElseThrow(() -> new NotAuthorizedException("unregistered site"));
+        return maybeClient.orElseThrow(NotFoundException::new);
     }
 
     /** Creates the clients. */
