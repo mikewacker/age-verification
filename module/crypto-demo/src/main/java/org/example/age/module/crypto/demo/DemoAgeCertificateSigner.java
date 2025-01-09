@@ -13,7 +13,10 @@ import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
 
-/** Implementation of {@link AgeCertificateSigner}. */
+/**
+ * Implementation of {@link AgeCertificateSigner}.
+ * Loads keys from configuration; it suffices to say that a production application should NOT do this.
+ */
 @Singleton
 final class DemoAgeCertificateSigner implements AgeCertificateSigner {
 

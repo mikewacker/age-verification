@@ -8,7 +8,10 @@ import org.example.age.api.VerifiedUser;
 import org.example.age.service.api.crypto.Localization;
 import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
 
-/** Implementation of {@link SiteVerifiedUserLocalizer}. */
+/**
+ * Implementation of {@link SiteVerifiedUserLocalizer}.
+ * Loads keys from configuration; it suffices to say that a production application should NOT do this.
+ */
 @Singleton
 final class DemoSiteVerifiedUserLocalizer implements SiteVerifiedUserLocalizer {
 

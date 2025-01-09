@@ -8,7 +8,10 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.service.api.request.RequestContextProvider;
 
-/** Demo implementation of {@link AccountIdContext}. Uses an {@code Account-Id} header. */
+/**
+ * Implementation of {@link AccountIdContext}.
+ * Uses an {@code Account-Id} header; it suffices to say that a production application should NOT do this.
+ */
 @Singleton
 final class DemoAccountIdContext implements AccountIdContext {
 

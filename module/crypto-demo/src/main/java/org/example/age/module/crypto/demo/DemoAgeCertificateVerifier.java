@@ -14,7 +14,10 @@ import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
 import org.example.age.service.api.crypto.AgeCertificateVerifier;
 
-/** Implementation of {@link AgeCertificateVerifier}. */
+/**
+ * Implementation of {@link AgeCertificateVerifier}.
+ * Loads keys from configuration; it suffices to say that a production application should NOT do this.
+ */
 @Singleton
 final class DemoAgeCertificateVerifier implements AgeCertificateVerifier {
 

@@ -11,7 +11,7 @@ import org.immutables.value.Value;
 /**
  * Configuration for the keys used by the service implementation of {@link AvsApi}.
  * <p>
- * It suffices to say that a real-world application should NOT store keys in configuration.
+ * It suffices to say that a production application should NOT store keys in configuration.
  */
 @Value.Immutable
 @ConfigStyle
