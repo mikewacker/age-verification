@@ -6,6 +6,7 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
+    api(project(":api"))
     api(libs.dagger.dagger)
     api(libs.dropwizard.core)
     api(libs.jackson.databind)

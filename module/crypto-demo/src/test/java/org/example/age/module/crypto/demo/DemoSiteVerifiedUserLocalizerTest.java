@@ -6,9 +6,9 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
-import org.example.age.module.crypto.demo.testing.TestAgeCertificate;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public final class DemoSiteVerifiedUserLocalizerTest {
 
     @Test
     public void localize() throws Exception {
-        VerifiedUser user = TestAgeCertificate.get().getUser();
+        VerifiedUser user = TestModels.createVerifiedUser();
         CompletionStage<VerifiedUser> localizedUserStage = userLocalizer.localize(user);
         assertThat(localizedUserStage).isCompleted();
         VerifiedUser localizedUser = localizedUserStage.toCompletableFuture().get();
