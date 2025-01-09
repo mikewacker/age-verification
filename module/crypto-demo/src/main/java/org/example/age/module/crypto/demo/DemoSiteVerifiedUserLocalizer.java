@@ -8,6 +8,7 @@ import org.example.age.api.VerifiedUser;
 import org.example.age.service.api.crypto.Localization;
 import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
 
+/** Implementation of {@link SiteVerifiedUserLocalizer}. */
 @Singleton
 final class DemoSiteVerifiedUserLocalizer implements SiteVerifiedUserLocalizer {
 

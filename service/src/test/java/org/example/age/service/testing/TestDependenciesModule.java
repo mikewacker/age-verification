@@ -2,8 +2,6 @@ package org.example.age.service.testing;
 
 import dagger.Module;
 import dagger.Provides;
-import jakarta.inject.Singleton;
-import java.time.Duration;
 import org.example.age.service.AvsServiceConfig;
 import org.example.age.service.SiteServiceConfig;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
@@ -43,19 +41,12 @@ import org.example.age.testing.TestObjectMapperModule;
 public interface TestDependenciesModule {
 
     @Provides
-    @Singleton
     static SiteServiceConfig provideSiteServiceConfig() {
-        return SiteServiceConfig.builder()
-                .id("site")
-                .verifiedAccountExpiresIn(Duration.ofDays(30))
-                .build();
+        return TestConfig.site();
     }
 
     @Provides
-    @Singleton
     static AvsServiceConfig provideAvsServiceConfig() {
-        return AvsServiceConfig.builder()
-                .verificationRequestExpiresIn(Duration.ofMinutes(5))
-                .build();
+        return TestConfig.avs();
     }
 }
