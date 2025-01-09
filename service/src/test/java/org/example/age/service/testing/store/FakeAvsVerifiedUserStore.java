@@ -5,19 +5,15 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.AgeRange;
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.crypto.SecureId;
 import org.example.age.service.api.store.AvsVerifiedUserStore;
+import org.example.age.testing.TestModels;
 
 /** Fake, in-memory implementation of {@link AvsVerifiedUserStore}. Has one account with an ID of "person". */
 @Singleton
 final class FakeAvsVerifiedUserStore implements AvsVerifiedUserStore {
 
-    private final VerifiedUser user = VerifiedUser.builder()
-            .pseudonym(SecureId.generate())
-            .ageRange(AgeRange.builder().min(18).build())
-            .build();
+    private final VerifiedUser user = TestModels.createVerifiedUser();
 
     @Inject
     public FakeAvsVerifiedUserStore() {}

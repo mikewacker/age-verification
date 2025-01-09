@@ -10,10 +10,10 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.module.crypto.demo.testing.TestAgeCertificate;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
 import org.example.age.service.api.crypto.AgeCertificateVerifier;
+import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -32,32 +32,35 @@ public final class DemoAgeCertificateSignerVerifierTest {
 
     @Test
     public void signThenVerify() {
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate();
         CompletionStage<AgeCertificate> ageCertificateStage =
-                ageCertificateSigner.sign(TestAgeCertificate.get()).thenCompose(ageCertificateVerifier::verify);
-        assertThat(ageCertificateStage).isCompletedWithValue(TestAgeCertificate.get());
+                ageCertificateSigner.sign(ageCertificate).thenCompose(ageCertificateVerifier::verify);
+        assertThat(ageCertificateStage).isCompletedWithValue(ageCertificate);
     }
 
     @Test
     public void error_AlgorithmNotImplemented() {
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate("dne", "");
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate();
+        SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate, "dne");
         CompletionStage<AgeCertificate> ageCertificateStage = ageCertificateVerifier.verify(signedAgeCertificate);
         assertIsCompletedWithErrorCode(ageCertificateStage, 501);
     }
 
     @Test
     public void error_InvalidSignature() {
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate("secp256r1", "");
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate();
+        SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate, "secp256r1");
         CompletionStage<AgeCertificate> ageCertificateStage = ageCertificateVerifier.verify(signedAgeCertificate);
         assertIsCompletedWithErrorCode(ageCertificateStage, 401);
     }
 
-    private static SignedAgeCertificate createSignedAgeCertificate(String algorithm, String data) {
+    private static SignedAgeCertificate signInvalid(AgeCertificate ageCertificate, String algorithm) {
         DigitalSignature signature = DigitalSignature.builder()
                 .algorithm(algorithm)
-                .data(SignatureData.fromString(data))
+                .data(SignatureData.fromString(""))
                 .build();
         return SignedAgeCertificate.builder()
-                .ageCertificate(TestAgeCertificate.get())
+                .ageCertificate(ageCertificate)
                 .signature(signature)
                 .build();
     }

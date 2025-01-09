@@ -16,7 +16,6 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
-import org.example.age.api.AgeRange;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
@@ -24,13 +23,13 @@ import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
-import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.crypto.SignatureData;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.request.TestAccountId;
+import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
@@ -64,7 +63,8 @@ public final class SiteServiceTest {
         VerificationRequest request = requestResponse.toCompletableFuture().get();
         assertThat(request.getSiteId()).isEqualTo("site");
 
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
+        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
         assertThat(certificateResponse).isCompleted();
 
@@ -86,7 +86,8 @@ public final class SiteServiceTest {
         VerificationRequest request = requestResponse.toCompletableFuture().get();
         assertThat(request.getSiteId()).isEqualTo("site");
 
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
+        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
         assertIsCompletedWithErrorCode(certificateResponse, 409);
     }
@@ -102,62 +103,52 @@ public final class SiteServiceTest {
 
     @Test
     public void error_AccountNotFound() throws Exception {
-        accountId.set("username");
-        VerificationRequest request = createVerificationRequest();
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        VerificationRequest request = TestModels.createVerificationRequest("site");
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
+        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
         assertIsCompletedWithErrorCode(certificateResponse, 404);
     }
 
     @Test
     public void error_ExpiredAgeCertificate() throws Exception {
-        accountId.set("username");
-        VerificationRequest request = createVerificationRequest(Duration.ofMinutes(-1));
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        VerificationRequest request = createExpiredVerificationRequest();
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
+        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
         assertIsCompletedWithErrorCode(certificateResponse, 404);
     }
 
     @Test
-    public void error_InvalidSignature() throws Exception {
-        accountId.set("username");
-        VerificationRequest request = createVerificationRequest();
-        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
-        SignedAgeCertificate invalidAgeCertificate = createInvalidAgeCertificate(signedAgeCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(invalidAgeCertificate);
+    public void error_InvalidSignature() {
+        VerificationRequest request = TestModels.createVerificationRequest("site");
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
+        SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate);
+        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
         assertIsCompletedWithErrorCode(certificateResponse, 401);
     }
 
-    private SignedAgeCertificate createSignedAgeCertificate(VerificationRequest request) throws Exception {
-        VerifiedUser user = VerifiedUser.builder()
-                .pseudonym(SecureId.generate())
-                .ageRange(AgeRange.builder().min(18).build())
-                .build();
-        AgeCertificate ageCertificate =
-                AgeCertificate.builder().request(request).user(user).build();
+    private SignedAgeCertificate sign(AgeCertificate ageCertificate) throws Exception {
         return ageCertificateSigner.sign(ageCertificate).toCompletableFuture().get();
     }
 
-    private static VerificationRequest createVerificationRequest() {
-        return createVerificationRequest(Duration.ofMinutes(5));
-    }
-
-    private static VerificationRequest createVerificationRequest(Duration expiresIn) {
-        return VerificationRequest.builder()
-                .id(SecureId.generate())
-                .siteId("site")
-                .expiration(OffsetDateTime.now(ZoneOffset.UTC).plus(expiresIn))
-                .build();
-    }
-
-    private static SignedAgeCertificate createInvalidAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-        DigitalSignature invalidSignature = DigitalSignature.builder()
-                .algorithm("")
+    private static SignedAgeCertificate signInvalid(AgeCertificate ageCertificate) {
+        DigitalSignature signature = DigitalSignature.builder()
+                .algorithm("secp256r1")
                 .data(SignatureData.fromString(""))
                 .build();
         return SignedAgeCertificate.builder()
-                .ageCertificate(signedAgeCertificate.getAgeCertificate())
-                .signature(invalidSignature)
+                .ageCertificate(ageCertificate)
+                .signature(signature)
+                .build();
+    }
+
+    private static VerificationRequest createExpiredVerificationRequest() {
+        OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(-5));
+        return VerificationRequest.builder()
+                .id(SecureId.generate())
+                .siteId("site")
+                .expiration(expiration)
                 .build();
     }
 
@@ -170,12 +161,7 @@ public final class SiteServiceTest {
 
         @Override
         public Call<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
-            OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
-            VerificationRequest request = VerificationRequest.builder()
-                    .id(SecureId.generate())
-                    .siteId(siteId)
-                    .expiration(expiration)
-                    .build();
+            VerificationRequest request = TestModels.createVerificationRequest(siteId);
             return Calls.response(request);
         }
 
