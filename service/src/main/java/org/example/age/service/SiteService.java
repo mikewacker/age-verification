@@ -17,7 +17,6 @@ import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
-import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.service.api.crypto.AgeCertificateVerifier;
@@ -124,13 +123,8 @@ final class SiteService implements SiteApi {
     /** Verifies the account with the localized {@link VerifiedUser}, unless a duplicate verification occurs. */
     private CompletionStage<Void> verifyAccount(String accountId, VerifiedUser localizedUser) {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(config.verifiedAccountExpiresIn());
-        VerificationState state = VerificationState.builder()
-                .status(VerificationStatus.VERIFIED)
-                .user(localizedUser)
-                .expiration(expiration)
-                .build();
         return verificationStore
-                .trySave(accountId, state)
+                .trySave(accountId, localizedUser, expiration)
                 .thenAccept(maybeDuplicateAccountId -> maybeDuplicateAccountId.ifPresent(a -> {
                     throw new ClientErrorException(409);
                 }));

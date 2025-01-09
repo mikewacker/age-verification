@@ -1,8 +1,10 @@
 package org.example.age.service.api.store;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerificationState;
+import org.example.age.api.VerifiedUser;
 
 /** Persistent store that retrieves the verification state for each account on a site. */
 public interface SiteVerificationStore {
@@ -11,11 +13,9 @@ public interface SiteVerificationStore {
     CompletionStage<VerificationState> load(String accountId);
 
     /**
-     * Saves the {@link VerificationState} for the account, unless a duplicate verification occurs.
-     * Returns the account ID that is already verified if a duplicate verification occurs.
+     * Saves a verified {@link VerificationState} for the account,
+     * unless another account is verified with the same {@link VerifiedUser}.
+     * Returns the account ID that is already verified if a conflict occurs.
      */
-    CompletionStage<Optional<String>> trySave(String accountId, VerificationState state);
-
-    /** Deletes the {@link VerificationState} for the account, making it unverified. */
-    CompletionStage<Void> delete(String accountId);
+    CompletionStage<Optional<String>> trySave(String accountId, VerifiedUser user, OffsetDateTime expiration);
 }
