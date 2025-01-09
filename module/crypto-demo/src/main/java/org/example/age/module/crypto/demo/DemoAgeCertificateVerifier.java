@@ -14,6 +14,7 @@ import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
 import org.example.age.service.api.crypto.AgeCertificateVerifier;
 
+/** Implementation of {@link AgeCertificateVerifier}. */
 @Singleton
 final class DemoAgeCertificateVerifier implements AgeCertificateVerifier {
 

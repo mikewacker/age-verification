@@ -10,6 +10,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
 import org.example.age.service.api.crypto.Localization;
 
+/** Implementation of {@link AvsVerifiedUserLocalizer}. */
 @Singleton
 final class DemoAvsVerifiedUserLocalizer implements AvsVerifiedUserLocalizer {
 

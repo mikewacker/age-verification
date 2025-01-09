@@ -4,8 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.net.URI;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.example.age.module.client.AvsClientsConfig;
@@ -27,15 +25,13 @@ public interface TestDependenciesModule {
     @Provides
     @Singleton
     static SiteClientsConfig provideSiteClientsConfig(LazyPort port) {
-        URL url = createLocalhostUrl(port.get());
-        return SiteClientsConfig.builder().avsUrl(url).build();
+        return TestConfig.createSite(port.get());
     }
 
     @Provides
     @Singleton
     static AvsClientsConfig provideAvsClientsConfig(LazyPort port) {
-        URL url = createLocalhostUrl(port.get());
-        return AvsClientsConfig.builder().putSiteUrls("site", url).build();
+        return TestConfig.createAvs(port.get());
     }
 
     @Provides
@@ -43,14 +39,5 @@ public interface TestDependenciesModule {
     @Singleton
     static ExecutorService providerWorker() {
         return Executors.newFixedThreadPool(1);
-    }
-
-    /** Creates a URL for localhost from a port. */
-    private static URL createLocalhostUrl(int port) {
-        try {
-            return new URI(String.format("http://localhost:%d", port)).toURL();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
