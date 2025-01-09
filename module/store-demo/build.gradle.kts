@@ -13,6 +13,7 @@ dependencies {
     api(libs.immutables.annotations)
     api(libs.jackson.annotations)
     api(libs.jackson.databind)
+    implementation(libs.guava.guava)
     implementation(libs.jakartaInject.api)
 
     testAnnotationProcessor(libs.dagger.compiler)
