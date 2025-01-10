@@ -21,11 +21,17 @@ public final class LocalizationTest {
                 .ageRange(AgeRange.builder().min(13).max(17).build())
                 .guardianPseudonyms(List.of(parent.getPseudonym()))
                 .build();
+
         SecureId key = SecureId.generate();
         VerifiedUser localizedParent = Localization.localize(parent, key);
         VerifiedUser localizedChild = Localization.localize(child, key);
+
         assertThat(localizedParent.getPseudonym()).isNotEqualTo(parent.getPseudonym());
+        assertThat(localizedParent.getAgeRange()).isEqualTo(parent.getAgeRange());
+        assertThat(localizedParent.getGuardianPseudonyms()).isEmpty();
+
         assertThat(localizedChild.getPseudonym()).isNotEqualTo(child.getPseudonym());
+        assertThat(localizedChild.getAgeRange()).isEqualTo(child.getAgeRange());
         assertThat(localizedChild.getGuardianPseudonyms()).containsExactly(localizedParent.getPseudonym());
     }
 }
