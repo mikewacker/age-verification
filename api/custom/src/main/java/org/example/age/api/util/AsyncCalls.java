@@ -1,4 +1,4 @@
-package org.example.age.service.util;
+package org.example.age.api.util;
 
 import jakarta.ws.rs.WebApplicationException;
 import java.util.concurrent.CompletableFuture;
