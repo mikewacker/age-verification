@@ -5,7 +5,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.service.api.request.AccountIdContext;
+import org.example.age.service.module.request.AccountIdContext;
 
 /** Fake implementation of {@link AccountIdContext}. */
 @Singleton

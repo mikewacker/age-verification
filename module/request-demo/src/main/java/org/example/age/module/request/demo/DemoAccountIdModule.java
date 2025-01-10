@@ -2,9 +2,9 @@ package org.example.age.module.request.demo;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.api.request.AccountIdContext;
-import org.example.age.service.api.request.RequestContextModule;
-import org.example.age.service.api.request.RequestContextProvider;
+import org.example.age.service.module.request.AccountIdContext;
+import org.example.age.service.module.request.RequestContextModule;
+import org.example.age.service.module.request.RequestContextProvider;
 
 /**
  * Dagger module that binds...

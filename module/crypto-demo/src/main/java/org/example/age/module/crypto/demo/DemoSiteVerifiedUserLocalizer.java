@@ -5,8 +5,8 @@ import jakarta.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
-import org.example.age.service.api.crypto.Localization;
-import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.service.module.crypto.Localization;
+import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
 
 /**
  * Implementation of {@link SiteVerifiedUserLocalizer}.

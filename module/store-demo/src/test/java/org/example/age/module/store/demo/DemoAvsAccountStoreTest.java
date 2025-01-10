@@ -7,7 +7,7 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 import org.example.age.api.VerifiedUser;
 import org.example.age.module.store.demo.testing.TestDependenciesModule;
-import org.example.age.service.api.store.AvsVerifiedUserStore;
+import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

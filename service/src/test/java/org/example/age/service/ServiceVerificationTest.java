@@ -18,7 +18,7 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.service.api.client.SiteClientRepository;
+import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.testing.CompletionStageTesting;

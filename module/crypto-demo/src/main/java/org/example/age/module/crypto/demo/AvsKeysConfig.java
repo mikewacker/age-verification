@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Map;
 import org.example.age.api.AvsApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.service.api.config.ConfigStyle;
+import org.example.age.service.module.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /**

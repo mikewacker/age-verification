@@ -15,7 +15,7 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.service.api.store.SiteVerificationStore;
+import org.example.age.service.module.store.SiteVerificationStore;
 
 /** Implementation of {@link SiteVerificationStore}. Data is not persisted. */
 @Singleton

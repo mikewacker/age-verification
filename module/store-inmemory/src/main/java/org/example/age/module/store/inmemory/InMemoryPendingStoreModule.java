@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
 import java.util.concurrent.ScheduledExecutorService;
-import org.example.age.service.api.store.PendingStoreRepository;
+import org.example.age.service.module.store.PendingStoreRepository;
 
 /**
  * Dagger module that binds {@link PendingStoreRepository}.

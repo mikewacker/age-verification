@@ -6,7 +6,7 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(project(":service:api"))
+    api(project(":service:module"))
     api(libs.dagger.dagger)
     api(libs.jackson.databind)
     implementation(libs.guava.guava)

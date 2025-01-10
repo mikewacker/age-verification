@@ -10,8 +10,8 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 import org.example.age.module.store.inmemory.testing.FakeScheduledExecutorService;
 import org.example.age.module.store.inmemory.testing.TestDependenciesModule;
-import org.example.age.service.api.store.PendingStore;
-import org.example.age.service.api.store.PendingStoreRepository;
+import org.example.age.service.module.store.PendingStore;
+import org.example.age.service.module.store.PendingStoreRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

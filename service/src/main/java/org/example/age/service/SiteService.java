@@ -20,12 +20,12 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.util.AsyncCalls;
-import org.example.age.service.api.crypto.AgeCertificateVerifier;
-import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
-import org.example.age.service.api.request.AccountIdContext;
-import org.example.age.service.api.store.PendingStore;
-import org.example.age.service.api.store.PendingStoreRepository;
-import org.example.age.service.api.store.SiteVerificationStore;
+import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.service.module.request.AccountIdContext;
+import org.example.age.service.module.store.PendingStore;
+import org.example.age.service.module.store.PendingStoreRepository;
+import org.example.age.service.module.store.SiteVerificationStore;
 import retrofit2.Call;
 
 /** Service implementation of {@link SiteApi}. */

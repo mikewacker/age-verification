@@ -3,10 +3,10 @@ package org.example.age.service.testing.crypto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.api.crypto.AgeCertificateSigner;
-import org.example.age.service.api.crypto.AgeCertificateVerifier;
-import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
-import org.example.age.service.api.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.service.module.crypto.AgeCertificateSigner;
+import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
+import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
 
 /**
  * Dagger module that binds...

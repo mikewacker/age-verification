@@ -26,7 +26,7 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.service.api.crypto.AgeCertificateSigner;
+import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.testing.TestModels;

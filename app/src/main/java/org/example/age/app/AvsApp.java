@@ -15,7 +15,7 @@ import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.demo.DemoAvsAccountStoreModule;
 import org.example.age.module.store.inmemory.InMemoryPendingStoreModule;
 import org.example.age.service.AvsServiceModule;
-import org.example.age.service.api.request.RequestContextProvider;
+import org.example.age.service.module.request.RequestContextProvider;
 
 /** Application for the age verification service. */
 public class AvsApp extends NamedApp<AvsAppConfig> {

@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
-import org.example.age.service.api.store.SiteVerificationStore;
+import org.example.age.service.module.store.SiteVerificationStore;
 import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

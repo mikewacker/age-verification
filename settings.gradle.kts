@@ -4,7 +4,7 @@ include(
         "api",
         "api:custom",
         "service",
-        "service:api",
+        "service:module",
         "module:request-demo",
         "module:client",
         "module:store-inmemory",
