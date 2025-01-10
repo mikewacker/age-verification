@@ -1,8 +1,6 @@
 [versions]
 # main
-bouncycastle = "1.79"
-dagger = "2.53.1"
-drift = "0.2.0"
+dagger = "2.55"
 dropwizard = "4.0.11"
 errorprone = "2.36.0"
 guava = "33.4.0-jre"
@@ -14,38 +12,30 @@ jakartaValidation = "3.1.0"
 jaxRs = "4.0.0"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
-undertow = "2.3.18.Final"
 
 # test
-assertj = "3.26.3"
+assertj = "3.27.2"
 junitJupiter = "5.11.4"
 junitPlatform = "1.11.4"
-mockito = "5.14.2"
 
 # plugin
 plugin-errorprone = "4.1.0"
 plugin-openapi = "7.10.0"
-plugin-spotless = "6.25.0"
+plugin-spotless = "7.0.1"
 plugin-spotless-palantir = "2.50.0"
 
 [libraries]
 # main (annotation processor)
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
 
 # main
-bouncycastle-pkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
-bouncycastle-prov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
-drift-api = { module = "io.github.mikewacker.drift:drift-api", version.ref = "drift" }
-drift-drift = { module = "io.github.mikewacker.drift:drift", version.ref = "drift" }
 dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
-errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
-errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 guava-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
-jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jackson-datatypeJsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 jakartaAnnotation-api = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
@@ -53,21 +43,17 @@ jakartaInject-api = { module = "jakarta.inject:jakarta.inject-api", version.ref 
 jakartaValidation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidation" }
 jaxRs-api = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jaxRs" }
 okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-undertow-core = { module = "io.undertow:undertow-core", version.ref = "undertow" }
 retrofit-converterJackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "retrofit" }
 retrofit-converterScalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
 retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 # test
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-drift-testlib = { module = "io.github.mikewacker.drift:drift-testlib", version.ref = "drift" }
 dropwizard-testing = { module = "io.dropwizard:dropwizard-testing", version.ref = "dropwizard" }
 guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
 junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatform" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock", version.ref = "retrofit" }
 
 # plugin
