@@ -1,20 +1,24 @@
 package org.example.age.app;
 
-import io.dropwizard.core.Configuration;
+import dagger.BindsInstance;
+import dagger.Component;
 import io.dropwizard.core.setup.Environment;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import org.example.age.api.SignedAgeCertificate;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import org.example.age.api.SiteApi;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerificationStatus;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.app.config.SiteAppConfig;
+import org.example.age.app.config.SiteConfigModule;
+import org.example.age.app.env.EnvModule;
+import org.example.age.module.client.SiteClientModule;
+import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
+import org.example.age.module.request.demo.DemoAccountIdModule;
+import org.example.age.module.store.demo.DemoSiteAccountStoreModule;
+import org.example.age.module.store.inmemory.InMemoryPendingStoreModule;
+import org.example.age.service.SiteServiceModule;
+import org.example.age.service.api.request.RequestContextProvider;
 
 /** Application for a site. */
-public final class SiteApp extends NamedApp<Configuration> {
+public final class SiteApp extends NamedApp<SiteAppConfig> {
 
     /** Creates ands runs an application. */
     public static void run(String name, String appConfigPath) throws Exception {
@@ -27,37 +31,45 @@ public final class SiteApp extends NamedApp<Configuration> {
     }
 
     /** Creates an application with the default name. Provided for the purpose of testing. */
-    public SiteApp() {}
-
-    @Override
-    public void run(Configuration configuration, Environment environment) {
-        environment.jersey().register(new StubSiteService());
+    public SiteApp() {
+        this("site");
     }
 
-    /** Stub service implementation of {@link SiteApi}. */
-    private static final class StubSiteService implements SiteApi {
+    @Override
+    public void run(SiteAppConfig appConfig, Environment env) {
+        AppComponent component = AppComponent.create(appConfig, env);
+        env.jersey().register(component.service());
+        env.jersey().register(component.requestContextProvider());
+    }
 
-        @Override
-        public CompletionStage<VerificationState> getVerificationState() {
-            VerificationState state = VerificationState.builder()
-                    .status(VerificationStatus.UNVERIFIED)
-                    .build();
-            return CompletableFuture.completedFuture(state);
+    /** Dagger component for the application. */
+    @Component(
+            modules = {
+                SiteServiceModule.class,
+                DemoAccountIdModule.class,
+                SiteClientModule.class,
+                DemoSiteAccountStoreModule.class,
+                InMemoryPendingStoreModule.class,
+                DemoSiteCryptoModule.class,
+                SiteConfigModule.class,
+                EnvModule.class,
+            })
+    @Singleton
+    interface AppComponent {
+
+        static AppComponent create(SiteAppConfig appConfig, Environment env) {
+            return DaggerSiteApp_AppComponent.factory().create(appConfig, env);
         }
 
-        @Override
-        public CompletionStage<VerificationRequest> createVerificationRequest() {
-            VerificationRequest request = VerificationRequest.builder()
-                    .id(SecureId.generate())
-                    .siteId("site")
-                    .expiration(OffsetDateTime.now(ZoneOffset.UTC))
-                    .build();
-            return CompletableFuture.completedFuture(request);
-        }
+        @Named("service")
+        SiteApi service();
 
-        @Override
-        public CompletionStage<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-            return CompletableFuture.completedFuture(null);
+        RequestContextProvider requestContextProvider();
+
+        @Component.Factory
+        interface Factory {
+
+            AppComponent create(@BindsInstance SiteAppConfig appConfig, @BindsInstance Environment env);
         }
     }
 }

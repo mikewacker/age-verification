@@ -26,9 +26,4 @@ public abstract class NamedApp<C extends Configuration> extends Application<C> {
     protected NamedApp(String name) {
         this.name = name;
     }
-
-    /** Creates an application with the default name. Provided for the purpose of testing. */
-    protected NamedApp() {
-        name = getClass().getSimpleName();
-    }
 }

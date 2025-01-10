@@ -1,6 +1,7 @@
 package org.example.age.app.env;
 
 import io.dropwizard.core.setup.Environment;
+import io.dropwizard.util.Duration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,7 @@ final class ThreadPoolFactory {
                 .executorService("worker")
                 .maxThreads(size)
                 .minThreads(size)
+                .shutdownTime(Duration.milliseconds(1))
                 .build();
     }
 
@@ -35,6 +37,7 @@ final class ThreadPoolFactory {
         return env.lifecycle()
                 .scheduledExecutorService("scheduled")
                 .threads(size)
+                .shutdownTime(Duration.milliseconds(1))
                 .build();
     }
 
