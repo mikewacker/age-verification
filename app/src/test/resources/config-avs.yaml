@@ -1,7 +1,25 @@
+service:
+  verificationRequestExpiresIn: PT5M
+
+clients:
+  siteUrls:
+    site: http://localhost:8080
+
+stores:
+  verifiedAccounts:
+    person:
+      pseudonym: uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4
+      ageRange:
+        min: 18
+
+keys:
+  signing:
+    s: 87808632867103956881705523559918117434194472117688001288631494927155518459976
+  localization:
+    site: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
+
 server:
   applicationConnectors:
     - type: http
-      port: 8081
-  adminConnectors:
-    - type: http
-      port: 9091
+      port: 9090
+  adminConnectors: []

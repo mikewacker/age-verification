@@ -1,18 +1,24 @@
 package org.example.age.app;
 
-import io.dropwizard.core.Configuration;
+import dagger.BindsInstance;
+import dagger.Component;
 import io.dropwizard.core.setup.Environment;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import org.example.age.api.AuthMatchData;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import org.example.age.api.AvsApi;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.app.config.AvsAppConfig;
+import org.example.age.app.config.AvsConfigModule;
+import org.example.age.app.env.EnvModule;
+import org.example.age.module.client.AvsClientModule;
+import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
+import org.example.age.module.request.demo.DemoAccountIdModule;
+import org.example.age.module.store.demo.DemoAvsAccountStoreModule;
+import org.example.age.module.store.inmemory.InMemoryPendingStoreModule;
+import org.example.age.service.AvsServiceModule;
+import org.example.age.service.api.request.RequestContextProvider;
 
 /** Application for the age verification service. */
-public class AvsApp extends NamedApp<Configuration> {
+public class AvsApp extends NamedApp<AvsAppConfig> {
 
     /** Creates and runs an application. */
     public static void run(String name, String appConfigPath) throws Exception {
@@ -25,35 +31,45 @@ public class AvsApp extends NamedApp<Configuration> {
     }
 
     /** Creates an application with the default name. Provided for the purpose of testing. */
-    public AvsApp() {}
-
-    @Override
-    public void run(Configuration configuration, Environment environment) {
-        environment.jersey().register(new StubAvsService());
+    public AvsApp() {
+        this("avs");
     }
 
-    /** Sub service implementation of {@link AvsApi}. */
-    private static final class StubAvsService implements AvsApi {
+    @Override
+    public void run(AvsAppConfig appConfig, Environment env) {
+        AppComponent component = AppComponent.create(appConfig, env);
+        env.jersey().register(component.service());
+        env.jersey().register(component.requestContextProvider());
+    }
 
-        @Override
-        public CompletionStage<VerificationRequest> createVerificationRequestForSite(
-                String siteId, AuthMatchData authMatchData) {
-            VerificationRequest request = VerificationRequest.builder()
-                    .id(SecureId.generate())
-                    .siteId("site")
-                    .expiration(OffsetDateTime.now(ZoneOffset.UTC))
-                    .build();
-            return CompletableFuture.completedFuture(request);
+    /** Dagger component for the application. */
+    @Component(
+            modules = {
+                AvsServiceModule.class,
+                DemoAccountIdModule.class,
+                AvsClientModule.class,
+                DemoAvsAccountStoreModule.class,
+                InMemoryPendingStoreModule.class,
+                DemoAvsCryptoModule.class,
+                AvsConfigModule.class,
+                EnvModule.class,
+            })
+    @Singleton
+    interface AppComponent {
+
+        static AppComponent create(AvsAppConfig appConfig, Environment env) {
+            return DaggerAvsApp_AppComponent.factory().create(appConfig, env);
         }
 
-        @Override
-        public CompletionStage<Void> linkVerificationRequest(SecureId requestId) {
-            return CompletableFuture.completedFuture(null);
-        }
+        @Named("service")
+        AvsApi service();
 
-        @Override
-        public CompletionStage<Void> sendAgeCertificate() {
-            return CompletableFuture.completedFuture(null);
+        RequestContextProvider requestContextProvider();
+
+        @Component.Factory
+        interface Factory {
+
+            AppComponent create(@BindsInstance AvsAppConfig appConfig, @BindsInstance Environment env);
         }
     }
 }

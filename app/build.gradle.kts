@@ -21,5 +21,8 @@ dependencies {
     implementation(libs.jakartaInject.api)
     implementation(libs.jakartaValidation.api)
 
+    testImplementation(project(":testing"))
     testImplementation(libs.dropwizard.testing)
+    testImplementation(libs.okhttp.okhttp)
+    testImplementation(libs.retrofit.retrofit)
 }
