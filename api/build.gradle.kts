@@ -22,5 +22,5 @@ openApiJava {
 }
 
 dependencies {
-    api(project(":api:crypto"))
+    api(project(":api:custom"))
 }

@@ -19,6 +19,7 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
+import org.example.age.api.util.AsyncCalls;
 import org.example.age.service.api.client.SiteClientRepository;
 import org.example.age.service.api.crypto.AgeCertificateSigner;
 import org.example.age.service.api.crypto.AvsVerifiedUserLocalizer;
@@ -26,7 +27,6 @@ import org.example.age.service.api.request.AccountIdContext;
 import org.example.age.service.api.store.AvsVerifiedUserStore;
 import org.example.age.service.api.store.PendingStore;
 import org.example.age.service.api.store.PendingStoreRepository;
-import org.example.age.service.util.AsyncCalls;
 import retrofit2.Call;
 
 @Singleton
