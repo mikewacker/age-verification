@@ -15,7 +15,7 @@ import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.demo.DemoSiteAccountStoreModule;
 import org.example.age.module.store.inmemory.InMemoryPendingStoreModule;
 import org.example.age.service.SiteServiceModule;
-import org.example.age.service.api.request.RequestContextProvider;
+import org.example.age.service.module.request.RequestContextProvider;
 
 /** Application for a site. */
 public final class SiteApp extends NamedApp<SiteAppConfig> {

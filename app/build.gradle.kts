@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":module:store-demo"))
     implementation(project(":module:store-inmemory"))
     implementation(project(":service"))
-    implementation(project(":service:api"))
+    implementation(project(":service:module"))
     implementation(libs.dagger.dagger)
     implementation(libs.jackson.annotations)
     implementation(libs.jackson.databind)

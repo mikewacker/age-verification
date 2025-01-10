@@ -11,7 +11,7 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.service.api.crypto.AgeCertificateSigner;
+import org.example.age.service.module.crypto.AgeCertificateSigner;
 
 /**
  * Implementation of {@link AgeCertificateSigner}.

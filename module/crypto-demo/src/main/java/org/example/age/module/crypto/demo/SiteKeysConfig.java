@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.api.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.service.api.config.ConfigStyle;
+import org.example.age.service.module.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /**

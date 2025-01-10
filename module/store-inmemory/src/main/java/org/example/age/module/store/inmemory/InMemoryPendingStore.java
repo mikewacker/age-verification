@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.example.age.service.api.store.PendingStore;
+import org.example.age.service.module.store.PendingStore;
 
 /** Implementation of {@link PendingStore}. Requires sticky sessions to work in a distributed environment. */
 final class InMemoryPendingStore<V> implements PendingStore<V> {

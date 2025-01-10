@@ -5,8 +5,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
-import org.example.age.service.api.store.PendingStore;
-import org.example.age.service.api.store.PendingStoreRepository;
+import org.example.age.service.module.store.PendingStore;
+import org.example.age.service.module.store.PendingStoreRepository;
 
 /** Fake, in-memory implementation of {@link PendingStoreRepository}. Key-value pairs do not expire. */
 @Singleton

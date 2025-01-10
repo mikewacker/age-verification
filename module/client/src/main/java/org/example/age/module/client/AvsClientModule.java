@@ -3,7 +3,7 @@ package org.example.age.module.client;
 import dagger.Binds;
 import dagger.Module;
 import java.util.concurrent.ExecutorService;
-import org.example.age.service.api.client.SiteClientRepository;
+import org.example.age.service.module.client.SiteClientRepository;
 
 /**
  * Dagger module that binds {@link SiteClientRepository}.

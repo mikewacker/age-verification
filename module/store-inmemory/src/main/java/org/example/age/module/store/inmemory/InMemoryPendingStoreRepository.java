@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
-import org.example.age.service.api.store.PendingStore;
-import org.example.age.service.api.store.PendingStoreRepository;
+import org.example.age.service.module.store.PendingStore;
+import org.example.age.service.module.store.PendingStoreRepository;
 
 /** Implementation of {@link PendingStoreRepository}. Requires sticky sessions to work in a distributed environment. */
 @Singleton

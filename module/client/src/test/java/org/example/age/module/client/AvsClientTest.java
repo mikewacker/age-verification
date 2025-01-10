@@ -21,7 +21,7 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.SiteApi;
 import org.example.age.module.client.testing.LazyPort;
 import org.example.age.module.client.testing.TestDependenciesModule;
-import org.example.age.service.api.client.SiteClientRepository;
+import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

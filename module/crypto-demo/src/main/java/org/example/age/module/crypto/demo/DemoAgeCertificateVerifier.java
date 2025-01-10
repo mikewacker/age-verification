@@ -12,7 +12,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.service.api.crypto.AgeCertificateVerifier;
+import org.example.age.service.module.crypto.AgeCertificateVerifier;
 
 /**
  * Implementation of {@link AgeCertificateVerifier}.

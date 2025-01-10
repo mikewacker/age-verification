@@ -3,9 +3,9 @@ package org.example.age.service.testing.store;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.api.store.AvsVerifiedUserStore;
-import org.example.age.service.api.store.PendingStoreRepository;
-import org.example.age.service.api.store.SiteVerificationStore;
+import org.example.age.service.module.store.AvsVerifiedUserStore;
+import org.example.age.service.module.store.PendingStoreRepository;
+import org.example.age.service.module.store.SiteVerificationStore;
 
 /**
  * Dagger modules that binds...

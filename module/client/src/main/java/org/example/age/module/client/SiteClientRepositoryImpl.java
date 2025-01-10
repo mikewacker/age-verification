@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.example.age.api.client.SiteApi;
-import org.example.age.service.api.client.SiteClientRepository;
+import org.example.age.service.module.client.SiteClientRepository;
 
 /** Implementation of {@link SiteClientRepository}. */
 @Singleton

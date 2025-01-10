@@ -3,7 +3,7 @@ package org.example.age.module.crypto.demo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.math.BigInteger;
-import org.example.age.service.api.config.ConfigStyle;
+import org.example.age.service.module.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /** Private key for elliptic curve cryptography. Does not include the definition of the curve. */

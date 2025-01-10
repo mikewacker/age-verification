@@ -2,7 +2,7 @@ package org.example.age.module.store.demo;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.api.store.AvsVerifiedUserStore;
+import org.example.age.service.module.store.AvsVerifiedUserStore;
 
 /**
  * Dagger module that binds {@link AvsVerifiedUserStore}.

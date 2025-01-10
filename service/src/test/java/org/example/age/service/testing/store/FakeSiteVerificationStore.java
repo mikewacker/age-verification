@@ -11,7 +11,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
-import org.example.age.service.api.store.SiteVerificationStore;
+import org.example.age.service.module.store.SiteVerificationStore;
 
 /**
  * Fake, in-memory implementation of {@link SiteVerificationStore}.
