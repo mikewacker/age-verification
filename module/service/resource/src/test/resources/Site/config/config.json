@@ -1,5 +1,0 @@
-{
-    "id": "Site",
-    "verifiedAccountExpiresInMinutes": 43200,
-    "redirectPath": "/api/verification-state"
-}
