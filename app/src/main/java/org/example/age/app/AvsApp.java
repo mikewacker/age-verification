@@ -2,6 +2,7 @@ package org.example.age.app;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -18,21 +19,23 @@ import org.example.age.service.AvsServiceModule;
 import org.example.age.service.module.request.RequestContextProvider;
 
 /** Application for the age verification service. */
-public class AvsApp extends NamedApp<AvsAppConfig> {
+public class AvsApp extends Application<AvsAppConfig> {
 
-    /** Creates and runs an application. */
-    public static void run(String name, String appConfigPath) throws Exception {
-        new AvsApp(name).runServer(appConfigPath);
-    }
+    private final String name;
 
-    /** Creates a named application. */
+    /** Creates an application. */
     public AvsApp(String name) {
-        super(name);
+        this.name = name;
     }
 
-    /** Creates an application with the default name. Provided for the purpose of testing. */
+    /** Creates an application with the default name. */
     public AvsApp() {
         this("avs");
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
