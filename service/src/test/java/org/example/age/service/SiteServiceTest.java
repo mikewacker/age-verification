@@ -29,6 +29,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.api.crypto.SignatureData;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.testing.TestDependenciesModule;
+import org.example.age.service.testing.TestWrappedSiteService;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ public final class SiteServiceTest {
     @BeforeEach
     public void createSiteServiceEtAl() {
         TestComponent component = TestComponent.create();
-        siteService = component.siteService();
+        siteService = new TestWrappedSiteService(component.siteService());
         accountId = component.accountId();
         ageCertificateSigner = component.ageCertificateSigner();
     }

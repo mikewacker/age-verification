@@ -1,7 +1,6 @@
 package org.example.age.service.module.request;
 
 import jakarta.ws.rs.NotAuthorizedException;
-import java.util.concurrent.CompletionStage;
 
 /**
  * Gets the account ID for the HTTP request, or throws {@link NotAuthorizedException}.
@@ -10,5 +9,5 @@ import java.util.concurrent.CompletionStage;
 @FunctionalInterface
 public interface AccountIdContext {
 
-    CompletionStage<String> getForRequest();
+    String getForRequest();
 }

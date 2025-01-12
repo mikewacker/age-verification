@@ -63,17 +63,15 @@ final class SiteService implements SiteApi {
 
     @Override
     public CompletionStage<VerificationState> getVerificationState() {
-        return accountIdContext.getForRequest().thenCompose(verificationStore::load);
+        String accountId = accountIdContext.getForRequest();
+        return verificationStore.load(accountId);
     }
 
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequest() {
-        CompletionStage<String> accountStage = accountIdContext.getForRequest();
-        CompletionStage<VerificationRequest> requestStage =
-                accountStage.thenCompose(accountId -> createVerificationRequestForThisSite());
-        return requestStage
-                .thenCombine(accountStage, this::linkVerificationRequestToAccount)
-                .thenCompose(Function.identity());
+        String accountId = accountIdContext.getForRequest();
+        return createVerificationRequestForThisSite()
+                .thenCompose(request -> linkVerificationRequestToAccount(request, accountId));
     }
 
     @Override

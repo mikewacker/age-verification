@@ -14,7 +14,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.concurrent.CompletionStage;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.service.module.request.AccountIdContext;
@@ -63,7 +62,7 @@ public final class DemoAccountIdTest {
 
         @GET
         @Produces(MediaType.TEXT_PLAIN)
-        public CompletionStage<String> accountId() {
+        public String accountId() {
             return accountIdContext.getForRequest();
         }
     }
