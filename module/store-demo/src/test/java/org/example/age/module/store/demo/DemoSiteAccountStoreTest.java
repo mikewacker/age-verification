@@ -1,6 +1,7 @@
 package org.example.age.module.store.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.CompletionStageTesting.getCompleted;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -28,55 +29,47 @@ public final class DemoSiteAccountStoreTest {
     }
 
     @Test
-    public void saveThenLoad() throws Exception {
+    public void saveThenLoad() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId = store.trySave("username", user, expiresIn(5))
-                .toCompletableFuture()
-                .get();
+        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username", user, expiresIn(5)));
         assertThat(maybeConflictingAccountId).isEmpty();
 
-        VerificationState state = store.load("username").toCompletableFuture().get();
+        VerificationState state = getCompleted(store.load("username"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.getUser()).isEqualTo(user);
     }
 
     @Test
-    public void loadUnverified() throws Exception {
-        VerificationState state = store.load("username").toCompletableFuture().get();
+    public void loadUnverified() {
+        VerificationState state = getCompleted(store.load("username"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
         assertThat(state.getUser()).isNull();
     }
 
     @Test
-    public void loadExpired() throws Exception {
+    public void loadExpired() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId = store.trySave("username", user, expiresIn(-5))
-                .toCompletableFuture()
-                .get();
+        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username", user, expiresIn(-5)));
         assertThat(maybeConflictingAccountId).isEmpty();
 
-        VerificationState state = store.load("username").toCompletableFuture().get();
+        VerificationState state = getCompleted(store.load("username"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.EXPIRED);
         assertThat(state.getUser()).isNull();
     }
 
     @Test
-    public void error_DuplicateVerification() throws Exception {
+    public void error_DuplicateVerification() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId1 = store.trySave("username1", user, expiresIn(5))
-                .toCompletableFuture()
-                .get();
+        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username1", user, expiresIn(5)));
         assertThat(maybeConflictingAccountId1).isEmpty();
 
-        Optional<String> maybeConflictingAccountId2 = store.trySave("username2", user, expiresIn(5))
-                .toCompletableFuture()
-                .get();
+        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username2", user, expiresIn(5)));
         assertThat(maybeConflictingAccountId2).hasValue("username1");
 
-        VerificationState state1 = store.load("username1").toCompletableFuture().get();
+        VerificationState state1 = getCompleted(store.load("username1"));
         assertThat(state1.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
 
-        VerificationState state2 = store.load("username2").toCompletableFuture().get();
+        VerificationState state2 = getCompleted(store.load("username2"));
         assertThat(state2.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 

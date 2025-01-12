@@ -1,6 +1,7 @@
 package org.example.age.module.store.inmemory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.CompletionStageTesting.getCompleted;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -29,49 +30,45 @@ public final class InMemoryPendingStoreTest {
     }
 
     @Test
-    public void putThenRemove() throws Exception {
-        store.put("key", 1, expiresIn(5)).toCompletableFuture().get();
-        Optional<Integer> maybeValue1 =
-                store.tryRemove("key").toCompletableFuture().get();
+    public void putThenRemove() {
+        getCompleted(store.put("key", 1, expiresIn(5)));
+        Optional<Integer> maybeValue1 = getCompleted(store.tryRemove("key"));
         assertThat(maybeValue1).hasValue(1);
-        Optional<Integer> maybeValue2 =
-                store.tryGet("key").toCompletableFuture().get();
+        Optional<Integer> maybeValue2 = getCompleted(store.tryGet("key"));
         assertThat(maybeValue2).isEmpty();
     }
 
     @Test
-    public void expire() throws Exception {
-        store.put("key", 1, expiresIn(5)).toCompletableFuture().get();
+    public void expire() {
+        getCompleted(store.put("key", 1, expiresIn(5)));
         scheduledExecutor.runScheduledTask();
-        Optional<Integer> maybeValue = store.tryGet("key").toCompletableFuture().get();
+        Optional<Integer> maybeValue = getCompleted(store.tryGet("key"));
         assertThat(maybeValue).isEmpty();
     }
 
     @Test
-    public void putExpiredValue() throws Exception {
-        store.put("key", 1, expiresIn(-5)).toCompletableFuture().get();
-        Optional<Integer> maybeValue = store.tryGet("key").toCompletableFuture().get();
+    public void putExpiredValue() {
+        getCompleted(store.put("key", 1, expiresIn(-5)));
+        Optional<Integer> maybeValue = getCompleted(store.tryGet("key"));
         assertThat(maybeValue).isEmpty();
     }
 
     @Test
-    public void expireOldValue() throws Exception {
-        store.put("key", 1, expiresIn(5)).toCompletableFuture().get();
-        store.put("key", 1, expiresIn(5)).toCompletableFuture().get();
+    public void expireOldValue() {
+        getCompleted(store.put("key", 1, expiresIn(5)));
+        getCompleted(store.put("key", 1, expiresIn(5)));
         scheduledExecutor.runScheduledTask();
-        Optional<Integer> maybeValue = store.tryGet("key").toCompletableFuture().get();
+        Optional<Integer> maybeValue = getCompleted(store.tryGet("key"));
         assertThat(maybeValue).hasValue(1);
     }
 
     @Test
-    public void putSameValue() throws Exception {
-        store.put("key1", 1, expiresIn(5)).toCompletableFuture().get();
-        store.put("key2", 1, expiresIn(5)).toCompletableFuture().get();
-        Optional<Integer> maybeValue1 =
-                store.tryGet("key1").toCompletableFuture().get();
+    public void putSameValue() {
+        getCompleted(store.put("key1", 1, expiresIn(5)));
+        getCompleted(store.put("key2", 1, expiresIn(5)));
+        Optional<Integer> maybeValue1 = getCompleted(store.tryGet("key1"));
         assertThat(maybeValue1).hasValue(1);
-        Optional<Integer> maybeValue2 =
-                store.tryGet("key2").toCompletableFuture().get();
+        Optional<Integer> maybeValue2 = getCompleted(store.tryGet("key2"));
         assertThat(maybeValue2).hasValue(1);
     }
 

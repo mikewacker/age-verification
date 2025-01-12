@@ -1,6 +1,7 @@
 package org.example.age.module.store.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.CompletionStageTesting.getCompleted;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -22,16 +23,14 @@ public final class DemoAvsAccountStoreTest {
     }
 
     @Test
-    public void load() throws Exception {
-        Optional<VerifiedUser> maybeUser =
-                store.tryLoad("person").toCompletableFuture().get();
+    public void load() {
+        Optional<VerifiedUser> maybeUser = getCompleted(store.tryLoad("person"));
         assertThat(maybeUser).isPresent();
     }
 
     @Test
-    public void loadEmpty() throws Exception {
-        Optional<VerifiedUser> maybeUser =
-                store.tryLoad("unverified-person").toCompletableFuture().get();
+    public void loadEmpty() {
+        Optional<VerifiedUser> maybeUser = getCompleted(store.tryLoad("unverified-person"));
         assertThat(maybeUser).isEmpty();
     }
 

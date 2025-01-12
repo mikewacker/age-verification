@@ -1,6 +1,7 @@
 package org.example.age.module.crypto.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.CompletionStageTesting.getCompleted;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -23,11 +24,11 @@ public final class DemoSiteVerifiedUserLocalizerTest {
     }
 
     @Test
-    public void localize() throws Exception {
+    public void localize() {
         VerifiedUser user = TestModels.createVerifiedUser();
         CompletionStage<VerifiedUser> localizedUserStage = userLocalizer.localize(user);
         assertThat(localizedUserStage).isCompleted();
-        VerifiedUser localizedUser = localizedUserStage.toCompletableFuture().get();
+        VerifiedUser localizedUser = getCompleted(localizedUserStage);
         assertThat(localizedUser).isNotEqualTo(user);
     }
 

@@ -1,6 +1,7 @@
 package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.age.testing.CompletionStageTesting.getCompleted;
 
 import dagger.Binds;
 import dagger.Component;
@@ -45,11 +46,11 @@ public final class ServiceVerificationTest {
     }
 
     @Test
-    public void verify() throws Exception {
+    public void verify() {
         siteAccountId.set("username");
         CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
         assertThat(requestResponse).isCompleted();
-        SecureId requestId = requestResponse.toCompletableFuture().get().getId();
+        SecureId requestId = getCompleted(requestResponse).getId();
 
         avsAccountId.set("person");
         CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(requestId);
@@ -60,7 +61,7 @@ public final class ServiceVerificationTest {
 
         CompletionStage<VerificationState> stateResponse = siteService.getVerificationState();
         assertThat(stateResponse).isCompleted();
-        VerificationStatus status = stateResponse.toCompletableFuture().get().getStatus();
+        VerificationStatus status = getCompleted(stateResponse).getStatus();
         assertThat(status).isEqualTo(VerificationStatus.VERIFIED);
     }
 

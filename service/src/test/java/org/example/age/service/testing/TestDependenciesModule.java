@@ -16,7 +16,7 @@ import org.example.age.service.testing.crypto.TestCryptoModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.service.testing.request.TestRequestModule;
 import org.example.age.service.testing.store.TestStoreModule;
-import org.example.age.testing.TestObjectMapperModule;
+import org.example.age.testing.TestObjectMapper;
 
 /**
  * Dagger module that binds...
@@ -36,7 +36,11 @@ import org.example.age.testing.TestObjectMapperModule;
  * It also binds {@link TestAccountId}.
  */
 @Module(
-        includes = {TestRequestModule.class, TestStoreModule.class, TestCryptoModule.class, TestObjectMapperModule.class
+        includes = {
+            TestRequestModule.class,
+            TestStoreModule.class,
+            TestCryptoModule.class,
+            TestObjectMapper.Module.class
         })
 public interface TestDependenciesModule {
 
