@@ -21,6 +21,8 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.testing.TestDependenciesModule;
+import org.example.age.service.testing.TestWrappedAvsService;
+import org.example.age.service.testing.TestWrappedSiteService;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.testing.CompletionStageTesting;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,10 +40,10 @@ public final class ServiceVerificationTest {
     @BeforeEach
     public void createServicesEtAl() {
         TestSiteComponent siteComponent = TestSiteComponent.create();
-        siteService = siteComponent.service();
+        siteService = new TestWrappedSiteService(siteComponent.service());
         siteAccountId = siteComponent.accountId();
         TestAvsComponent avsComponent = TestAvsComponent.create();
-        avsService = avsComponent.service();
+        avsService = new TestWrappedAvsService(avsComponent.service());
         avsAccountId = avsComponent.accountId();
     }
 

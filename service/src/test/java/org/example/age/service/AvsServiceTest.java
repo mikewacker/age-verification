@@ -29,6 +29,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.testing.TestDependenciesModule;
+import org.example.age.service.testing.TestWrappedAvsService;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.testing.CompletionStageTesting;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +49,7 @@ public final class AvsServiceTest {
     @BeforeEach
     public void createAvsServiceEtAl() {
         TestComponent component = TestComponent.create();
-        avsService = component.avsService();
+        avsService = new TestWrappedAvsService(component.avsService());
         accountId = component.accountId();
         ageCertificate = null;
     }

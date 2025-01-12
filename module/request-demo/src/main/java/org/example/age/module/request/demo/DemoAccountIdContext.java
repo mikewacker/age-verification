@@ -3,8 +3,8 @@ package org.example.age.module.request.demo;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import java.util.Optional;
 import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.request.RequestContextProvider;
 
@@ -23,10 +23,9 @@ final class DemoAccountIdContext implements AccountIdContext {
     }
 
     @Override
-    public CompletionStage<String> getForRequest() {
-        String accountId = requestContextProvider.get().getHeaderString("Account-Id");
-        return (accountId != null)
-                ? CompletableFuture.completedFuture(accountId)
-                : CompletableFuture.failedFuture(new NotAuthorizedException("failed to authenticate account"));
+    public String getForRequest() {
+        ContainerRequestContext requestContext = requestContextProvider.get();
+        return Optional.ofNullable(requestContext.getHeaderString("Account-Id"))
+                .orElseThrow(() -> new NotAuthorizedException("failed to authenticate account"));
     }
 }

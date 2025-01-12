@@ -63,9 +63,9 @@ final class AvsService implements AvsApi {
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequestForSite(
             String siteId, AuthMatchData authMatchData) {
-        return validateSite(siteId)
-                .thenApply(this::createVerificationRequestForSite)
-                .thenCompose(this::storeUnlinkedVerificationRequest);
+        siteClients.get(siteId); // check that the site is registered
+        VerificationRequest request = createVerificationRequestForSite(siteId);
+        return storeUnlinkedVerificationRequest(request);
     }
 
     @Override
@@ -93,23 +93,13 @@ final class AvsService implements AvsApi {
                 .thenCompose(this::sendSignedAgeCertificate);
     }
 
-    /** Validates the site. */
-    private CompletableFuture<String> validateSite(String siteId) {
-        try {
-            siteClients.get(siteId);
-            return CompletableFuture.completedFuture(siteId);
-        } catch (RuntimeException e) {
-            return CompletableFuture.failedFuture(e);
-        }
-    }
-
     /** Loads a verified account. */
     private CompletionStage<VerifiedAccount> loadVerifiedAccount() {
-        CompletionStage<String> accountStage = accountIdContext.getForRequest();
-        CompletionStage<VerifiedUser> userStage = accountStage
-                .thenCompose(userStore::tryLoad)
-                .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new));
-        return accountStage.thenCombine(userStage, VerifiedAccount::new);
+        String accountId = accountIdContext.getForRequest();
+        return userStore
+                .tryLoad(accountId)
+                .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new))
+                .thenApply(user -> new VerifiedAccount(accountId, user));
     }
 
     /** Creates a {@link VerificationRequest} for the site. */
