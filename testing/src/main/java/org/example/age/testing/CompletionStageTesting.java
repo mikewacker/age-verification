@@ -32,6 +32,18 @@ public final class CompletionStageTesting {
         }
     }
 
+    /**
+     * Syntactic sugar for {@code stage.toCompletableFuture().get()}.
+     * Assumes that the stage has completed successfully (e.g., {@code assertThat(stage).isCompleted()}).
+     */
+    public static <V> V getCompleted(CompletionStage<V> stage) {
+        try {
+            return stage.toCompletableFuture().get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /** Converts a {@link CompletionStage} to a {@link Call}. */
     public static <V> Call<V> toCall(CompletionStage<V> stage) {
         return Calls.defer(() -> completeAsCall(stage));

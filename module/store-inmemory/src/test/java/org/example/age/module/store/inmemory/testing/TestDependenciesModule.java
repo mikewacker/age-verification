@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
 import java.util.concurrent.ScheduledExecutorService;
-import org.example.age.testing.TestObjectMapperModule;
+import org.example.age.testing.TestObjectMapper;
 
 /**
  * Dagger module that binds...
@@ -13,7 +13,7 @@ import org.example.age.testing.TestObjectMapperModule;
  *     <li>{@link ScheduledExecutorService} (with {@link FakeScheduledExecutorService})
  * </ul>
  */
-@Module(includes = TestObjectMapperModule.class)
+@Module(includes = TestObjectMapper.Module.class)
 public interface TestDependenciesModule {
 
     @Binds

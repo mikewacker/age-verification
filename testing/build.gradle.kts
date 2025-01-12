@@ -13,7 +13,6 @@ dependencies {
     api(libs.okhttp.okhttp)
     api(libs.retrofit.retrofit)
     implementation(libs.assertj.core)
-    implementation(libs.jackson.datatypeJsr310)
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
     implementation(libs.retrofit.mock)
