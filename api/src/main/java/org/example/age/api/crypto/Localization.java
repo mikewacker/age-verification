@@ -1,8 +1,7 @@
-package org.example.age.service.module.crypto;
+package org.example.age.api.crypto;
 
 import java.util.List;
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.crypto.SecureId;
 
 /** Localizes verified users using a localization key. */
 public final class Localization {
