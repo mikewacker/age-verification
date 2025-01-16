@@ -17,21 +17,21 @@ import org.example.age.module.client.SiteClientsConfig;
  *     <li><code>@Named("worker") {@link ExecutorService}</code>
  * </ul>
  * <p>
- * Depends on an unbound {@link LazyPort}.
+ * Depends on an unbound <code>@Named("port") int</code>.
  */
 @Module
 public interface TestDependenciesModule {
 
     @Provides
     @Singleton
-    static SiteClientsConfig provideSiteClientsConfig(LazyPort port) {
-        return TestConfig.createSite(port.get());
+    static SiteClientsConfig provideSiteClientsConfig(@Named("port") int port) {
+        return TestConfig.createSite(port);
     }
 
     @Provides
     @Singleton
-    static AvsClientsConfig provideAvsClientsConfig(LazyPort port) {
-        return TestConfig.createAvs(port.get());
+    static AvsClientsConfig provideAvsClientsConfig(@Named("port") int port) {
+        return TestConfig.createAvs(port);
     }
 
     @Provides
