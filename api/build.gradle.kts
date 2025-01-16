@@ -1,5 +1,8 @@
+import net.ltgt.gradle.errorprone.errorprone
+
 plugins {
     id("openapi-java")
+    id("org.example.age.java-conventions")
 }
 
 openApiJava {
@@ -22,5 +25,20 @@ openApiJava {
 }
 
 dependencies {
-    api(project(":api:custom"))
+    testImplementation(libs.guava.testlib)
+    testImplementation(libs.retrofit.mock)
+
+    testRuntimeOnly(libs.dropwizard.core) // provides RuntimeDelegate for JAX-RS Response
+}
+
+// Make a best effort to apply conventions.
+spotless {
+    java {
+        targetExclude("build/generated/sources/**/*.java")
+    }
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:-rawtypes,-this-escape")
+    options.errorprone.excludedPaths = ".*/build/generated/sources/.*[.]java"
 }
