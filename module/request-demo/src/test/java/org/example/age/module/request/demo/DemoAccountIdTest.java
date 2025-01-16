@@ -6,6 +6,7 @@ import dagger.Component;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
+import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -19,14 +20,14 @@ import okhttp3.Response;
 import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.request.RequestContextProvider;
 import org.example.age.testing.TestClient;
-import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class DemoAccountIdTest {
 
     @RegisterExtension
-    private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
+    private static final DropwizardAppExtension<Configuration> app =
+            new DropwizardAppExtension<>(TestApp.class, null, ConfigOverride.randomPorts());
 
     @Test
     public void accountId() throws IOException {
@@ -72,7 +73,6 @@ public final class DemoAccountIdTest {
 
         @Override
         public void run(Configuration config, Environment env) {
-            TestPort.set(config, 0);
             TestComponent component = TestComponent.create();
             env.jersey().register(component.service());
             env.jersey().register(component.requestContextProvider());

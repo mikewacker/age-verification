@@ -70,10 +70,7 @@ This tech stack scores very well here:
 - Retrofit comes with a test library that can easily create fake `Call` objects.
 - Dropwizard has a great, easy-to-use testing library; it's used both for end-to-end testing and for testing the configuration.
 
-In terms of additional test infrastructure, the two main pieces of custom infrastructure are pretty lightweight:
-
-- Utility methods for `CompletionStage`, and its integrations with JAX-RS and Retrofit. See: [`CompletionStageTesting`](/testing/src/main/java/org/example/age/testing/CompletionStageTesting.java)
-- A utility method to set the port for a test app (usually 0 for any available port). See: [`TestPort`](/testing/src/main/java/org/example/age/testing/TestPort.java)
+Beyond that, custom utility methods were added for testing with `CompletionStage`. See: [`CompletionStageTesting`](/testing/src/main/java/org/example/age/testing/CompletionStageTesting.java)
 
 ### Alternatives Considered
 

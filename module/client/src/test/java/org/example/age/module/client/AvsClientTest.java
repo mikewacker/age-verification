@@ -8,7 +8,9 @@ import dagger.Component;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
+import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotFoundException;
 import java.io.IOException;
@@ -19,10 +21,8 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.SiteApi;
-import org.example.age.module.client.testing.LazyPort;
 import org.example.age.module.client.testing.TestDependenciesModule;
 import org.example.age.service.module.client.SiteClientRepository;
-import org.example.age.testing.TestPort;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -31,15 +31,14 @@ import retrofit2.Response;
 public final class AvsClientTest {
 
     @RegisterExtension
-    private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
-
-    private static final LazyPort port = new LazyPort();
+    private static final DropwizardAppExtension<Configuration> app =
+            new DropwizardAppExtension<>(TestApp.class, null, ConfigOverride.randomPorts());
 
     private static SiteClientRepository siteClients;
 
     @BeforeAll
     public static void createClients() {
-        TestComponent component = TestComponent.create();
+        TestComponent component = TestComponent.create(app.getLocalPort());
         siteClients = component.siteClients();
     }
 
@@ -82,7 +81,6 @@ public final class AvsClientTest {
 
         @Override
         public void run(Configuration config, Environment env) {
-            TestPort.set(config, port.get());
             env.jersey().register(new StubSiteService());
         }
     }
@@ -92,7 +90,7 @@ public final class AvsClientTest {
     @Singleton
     interface TestComponent {
 
-        static TestComponent create() {
+        static TestComponent create(int port) {
             return DaggerAvsClientTest_TestComponent.factory().create(port);
         }
 
@@ -101,7 +99,7 @@ public final class AvsClientTest {
         @Component.Factory
         interface Factory {
 
-            TestComponent create(@BindsInstance LazyPort port);
+            TestComponent create(@BindsInstance @Named("port") int port);
         }
     }
 }
