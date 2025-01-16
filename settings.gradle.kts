@@ -2,7 +2,6 @@ rootProject.name = "age-verification"
 
 include(
         "api",
-        "api:custom",
         "service",
         "service:module",
         "module:request-demo",
