@@ -1,11 +1,10 @@
-package org.example.age.service.module.crypto;
+package org.example.age.api.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.example.age.api.AgeRange;
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.crypto.SecureId;
 import org.junit.jupiter.api.Test;
 
 public final class LocalizationTest {

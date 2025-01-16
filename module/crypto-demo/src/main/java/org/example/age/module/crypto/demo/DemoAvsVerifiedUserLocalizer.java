@@ -6,9 +6,9 @@ import jakarta.ws.rs.NotFoundException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
+import org.example.age.api.crypto.Localization;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
-import org.example.age.service.module.crypto.Localization;
 
 /**
  * Implementation of {@link AvsVerifiedUserLocalizer}.
