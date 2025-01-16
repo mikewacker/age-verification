@@ -24,6 +24,13 @@ openApiJava {
     )
 }
 
+dependencies {
+    testImplementation(libs.guava.testlib)
+    testImplementation(libs.retrofit.mock)
+
+    testRuntimeOnly(libs.dropwizard.core) // provides RuntimeDelegate for JAX-RS Response
+}
+
 // Make a best effort to apply conventions.
 spotless {
     java {
