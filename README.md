@@ -16,9 +16,9 @@ Here is the setup:
     - John Smith is Billy Smith's father.
 - John and Billy Smith need to anonymously verify their accounts on Crackle: "publius" and "publius-jr".
 
-*(Note: The demo doesn't have a user interface; text will narrate what happens as we communicate with these sites.)*
+Let's start by verifying John Smith's account, "publius":
 
-Let's start with Billy Smith:
+*(Note: This demo doesn't have a user interface; text will narrate what happens as we communicate with these sites.)*
 
 ```text
 John Smith uses CheckMyAge to verify his account on Crackle, "publius".
@@ -49,7 +49,7 @@ Let's summarize what happened:
 - Crackle never learned the real name of "publius".
 - CheckMyAge never learned which account it was verifying on Crackle.
 
-Next, let's verify Billy Smith:
+Next, let's verify Billy Smith's account, "publius-jr":
 
 ```text
 Billy Smith uses CheckMyAge to verify his account on Crackle, "publius-jr".
