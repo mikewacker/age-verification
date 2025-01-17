@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
+import org.example.age.api.AgeRange;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
@@ -87,6 +88,8 @@ public final class AvsServiceTest {
         assertThat(sendResponse2).isCompleted();
         SecureId pseudonym2 = ageCertificate.getUser().getPseudonym();
         assertThat(pseudonym2).isNotEqualTo(pseudonym1);
+        AgeRange ageRange = ageCertificate.getUser().getAgeRange();
+        assertThat(ageRange.getMax()).isEqualTo(null);
     }
 
     @Test

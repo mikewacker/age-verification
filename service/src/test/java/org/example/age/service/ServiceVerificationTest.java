@@ -103,7 +103,7 @@ public final class ServiceVerificationTest {
 
         @Override
         public org.example.age.api.client.SiteApi get(String siteId) {
-            if (!siteId.equals("site")) {
+            if (!siteId.equals("site1")) {
                 throw new NotFoundException();
             }
 

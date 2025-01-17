@@ -3,6 +3,8 @@ package org.example.age.service;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
+import java.util.Map;
+import org.example.age.api.AgeThresholds;
 import org.example.age.api.ApiStyle;
 import org.example.age.api.AvsApi;
 import org.immutables.value.Value;
@@ -21,6 +23,9 @@ public interface AvsServiceConfig {
 
     /** Expiration for verification requests. */
     Duration verificationRequestExpiresIn();
+
+    /** Age thresholds for each site, keyed by site ID. */
+    Map<String, AgeThresholds> ageThresholds();
 
     /** Builder for the configuration. */
     final class Builder extends ImmutableAvsServiceConfig.Builder {

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import java.io.IOException;
+import org.example.age.api.AgeRange;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
@@ -56,5 +57,7 @@ public final class AppVerificationTest {
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.getUser().getPseudonym())
                 .isEqualTo(SecureId.fromString("wqhgWlb9wYtzTDYbGeYFJJvS4xjmQsp3cf3ntbcBuNI"));
+        assertThat(state.getUser().getAgeRange())
+                .isEqualTo(AgeRange.builder().min(18).build());
     }
 }

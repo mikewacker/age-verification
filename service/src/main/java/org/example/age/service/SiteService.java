@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
 import java.time.OffsetDateTime;
@@ -102,9 +103,12 @@ final class SiteService implements SiteApi {
 
     /** Validates a {@link SignedAgeCertificate}. */
     private CompletionStage<AgeCertificate> validateSignedAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-        OffsetDateTime expiration =
-                signedAgeCertificate.getAgeCertificate().getRequest().getExpiration();
-        if (expiration.isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
+        VerificationRequest request = signedAgeCertificate.getAgeCertificate().getRequest();
+        if (!request.getSiteId().equals(config.id())) {
+            return CompletableFuture.failedFuture(new ForbiddenException());
+        }
+
+        if (request.getExpiration().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
             return CompletableFuture.failedFuture(new NotFoundException());
         }
 

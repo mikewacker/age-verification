@@ -63,7 +63,7 @@ public final class SiteServiceTest {
         CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
         assertThat(requestResponse).isCompleted();
         VerificationRequest request = getCompleted(requestResponse);
-        assertThat(request.getSiteId()).isEqualTo("site");
+        assertThat(request.getSiteId()).isEqualTo("site1");
 
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
         SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
@@ -86,7 +86,7 @@ public final class SiteServiceTest {
         CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
         assertThat(requestResponse).isCompleted();
         VerificationRequest request = getCompleted(requestResponse);
-        assertThat(request.getSiteId()).isEqualTo("site");
+        assertThat(request.getSiteId()).isEqualTo("site1");
 
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
         SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
@@ -105,11 +105,20 @@ public final class SiteServiceTest {
 
     @Test
     public void error_AccountNotFound() {
-        VerificationRequest request = TestModels.createVerificationRequest("site");
+        VerificationRequest request = TestModels.createVerificationRequest("site1");
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
         SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
         assertIsCompletedWithErrorCode(certificateResponse, 404);
+    }
+
+    @Test
+    public void error_WrongSite() {
+        VerificationRequest request = TestModels.createVerificationRequest("site2");
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
+        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
+        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
+        assertIsCompletedWithErrorCode(certificateResponse, 403);
     }
 
     @Test
@@ -123,7 +132,7 @@ public final class SiteServiceTest {
 
     @Test
     public void error_InvalidSignature() {
-        VerificationRequest request = TestModels.createVerificationRequest("site");
+        VerificationRequest request = TestModels.createVerificationRequest("site1");
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
         SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate);
         CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
@@ -149,7 +158,7 @@ public final class SiteServiceTest {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(-5));
         return VerificationRequest.builder()
                 .id(SecureId.generate())
-                .siteId("site")
+                .siteId("site1")
                 .expiration(expiration)
                 .build();
     }
