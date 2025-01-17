@@ -1,6 +1,8 @@
 package org.example.age.demo;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.dropwizard.core.Application;
+import io.dropwizard.jackson.Jackson;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,6 +14,8 @@ import org.example.age.api.client.retrofit.ApiClient;
 public final class DemoInfra {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
+    private static final ObjectWriter objectWriter =
+            Jackson.newObjectMapper().writer().withDefaultPrettyPrinter();
 
     /** Starts an application. */
     public static void startServer(Application<?> app, String configPath) throws Exception {
@@ -28,6 +32,11 @@ public final class DemoInfra {
         String baseUrl = String.format("http://localhost:%d", port);
         apiClient.getAdapterBuilder().baseUrl(baseUrl);
         return apiClient.createService(serviceClass);
+    }
+
+    /** Gets an {@link ObjectWriter} that pretty-prints JSON. */
+    public static ObjectWriter getObjectWriter() {
+        return objectWriter;
     }
 
     /** Get the absolute path of a resource file. */
