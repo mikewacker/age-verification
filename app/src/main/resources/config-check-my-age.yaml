@@ -1,25 +1,34 @@
 service:
   verificationRequestExpiresIn: PT5M
   ageThresholds:
-    site: [13, 18]
+    crackle: [13, 18]
+    pop: [13, 18]
 
 clients:
   siteUrls:
-    site: http://localhost:8080
+    crackle: http://localhost:8080
+    pop: http://localhost:8081
 
 stores:
   verifiedAccounts:
-    person:
+    John Smith:
       pseudonym: uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4
       ageRange:
         min: 40
         max: 40
+    Billy Smith:
+      pseudonym: KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4
+      ageRange:
+        min: 13
+        max: 13
+      guardianPseudonyms: [uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4]
 
 keys:
   signing:
     s: 87808632867103956881705523559918117434194472117688001288631494927155518459976
   localization:
-    site: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
+    crackle: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
+    pop: W1zah29NMWEOEsd8VNFX6E3Vo8Z-HLNQ5cDH3-9KyVg
 
 server:
   applicationConnectors:

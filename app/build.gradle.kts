@@ -1,12 +1,11 @@
 plugins {
-    `java-library`
+    application
     id("org.example.age.java-conventions")
 }
 
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(libs.dropwizard.core)
     implementation(project(":api"))
     implementation(project(":module:client"))
     implementation(project(":module:crypto-demo"))
@@ -16,13 +15,18 @@ dependencies {
     implementation(project(":service"))
     implementation(project(":service:module"))
     implementation(libs.dagger.dagger)
+    implementation(libs.dropwizard.core)
     implementation(libs.jackson.annotations)
     implementation(libs.jackson.databind)
     implementation(libs.jakartaInject.api)
     implementation(libs.jakartaValidation.api)
+    implementation(libs.okhttp.okhttp)
+    implementation(libs.retrofit.retrofit)
 
     testImplementation(project(":testing"))
     testImplementation(libs.dropwizard.testing)
-    testImplementation(libs.okhttp.okhttp)
-    testImplementation(libs.retrofit.retrofit)
+}
+
+application {
+    mainClass = "org.example.age.demo.Demo"
 }
