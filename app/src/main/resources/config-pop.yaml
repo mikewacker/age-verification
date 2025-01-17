@@ -16,3 +16,13 @@ server:
     - type: http
       port: 8081
   adminConnectors: []
+  requestLog:
+    appenders:
+      - type: file
+        currentLogFilename: /dev/null
+        archive: false
+
+logging:
+  appenders:
+    - type: console
+      threshold: off
