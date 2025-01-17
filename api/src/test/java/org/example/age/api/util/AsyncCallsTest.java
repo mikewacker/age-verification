@@ -2,8 +2,8 @@ package org.example.age.api.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
 
-import jakarta.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -26,9 +26,7 @@ public final class AsyncCallsTest {
     public void unsuccessfulResponse() {
         Call<Integer> call = Calls.response(Response.error(400, ResponseBody.create("", null)));
         CompletionStage<Integer> asyncValue = AsyncCalls.make(call);
-        assertThatThrownBy(() -> asyncValue.toCompletableFuture().get())
-                .isInstanceOf(ExecutionException.class)
-                .hasCauseInstanceOf(WebApplicationException.class);
+        assertIsCompletedWithErrorCode(asyncValue, 400);
     }
 
     @Test

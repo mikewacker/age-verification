@@ -1,9 +1,9 @@
-package org.example.age.service.module.config;
+package org.example.age.api;
 
 import org.immutables.value.Generated;
 import org.immutables.value.Value;
 
-/** Style annotation for configuration interfaces. */
+/** Style annotation for value types. */
 @Value.Style(
         visibility = Value.Style.ImplementationVisibility.PACKAGE,
         overshadowImplementation = true,
@@ -11,4 +11,4 @@ import org.immutables.value.Value;
         allowedClasspathAnnotations = {Generated.class, javax.annotation.processing.Generated.class},
         defaults = @Value.Immutable(copy = false),
         from = "")
-public @interface ConfigStyle {}
+public @interface ApiStyle {}

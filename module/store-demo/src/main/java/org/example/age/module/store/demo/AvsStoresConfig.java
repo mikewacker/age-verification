@@ -3,14 +3,14 @@ package org.example.age.module.store.demo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Map;
+import org.example.age.api.ApiStyle;
 import org.example.age.api.AvsApi;
 import org.example.age.api.VerifiedUser;
-import org.example.age.service.module.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the stores used by the service implementation of {@link AvsApi}. */
 @Value.Immutable
-@ConfigStyle
+@ApiStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableAvsStoresConfig.class)
 public interface AvsStoresConfig {

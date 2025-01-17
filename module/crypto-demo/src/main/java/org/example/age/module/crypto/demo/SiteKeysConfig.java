@@ -2,9 +2,9 @@ package org.example.age.module.crypto.demo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.example.age.api.ApiStyle;
 import org.example.age.api.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.service.module.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /**
@@ -13,7 +13,7 @@ import org.immutables.value.Value;
  * It suffices to say that a production application should NOT store keys in configuration.
  */
 @Value.Immutable
-@ConfigStyle
+@ApiStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableSiteKeysConfig.class)
 public interface SiteKeysConfig {

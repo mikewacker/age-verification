@@ -3,13 +3,13 @@ package org.example.age.service;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
+import org.example.age.api.ApiStyle;
 import org.example.age.api.SiteApi;
-import org.example.age.service.module.config.ConfigStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link SiteApi}. */
 @Value.Immutable
-@ConfigStyle
+@ApiStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableSiteServiceConfig.class)
 public interface SiteServiceConfig {
