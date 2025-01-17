@@ -8,10 +8,12 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import org.example.age.api.AgeCertificate;
+import org.example.age.api.AgeThresholds;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
@@ -82,7 +84,7 @@ final class AvsService implements AvsApi {
                 accountStage.thenApply(VerifiedAccount::id).thenCompose(this::findVerificationRequestForAccount);
         CompletionStage<VerifiedUser> localizedUserStage = accountStage
                 .thenApply(VerifiedAccount::user)
-                .thenCombine(requestStage.thenApply(VerificationRequest::getSiteId), userLocalizer::localize)
+                .thenCombine(requestStage.thenApply(VerificationRequest::getSiteId), this::localize)
                 .thenCompose(Function.identity());
         return requestStage
                 .thenCombine(localizedUserStage, (request, localizedUser) -> AgeCertificate.builder()
@@ -100,6 +102,13 @@ final class AvsService implements AvsApi {
                 .tryLoad(accountId)
                 .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new))
                 .thenApply(user -> new VerifiedAccount(accountId, user));
+    }
+
+    /** Localizes a {@link VerifiedUser} for the site. */
+    private CompletionStage<VerifiedUser> localize(VerifiedUser user, String siteId) {
+        AgeThresholds ageThresholds =
+                Optional.ofNullable(config.ageThresholds().get(siteId)).orElseThrow(NotFoundException::new);
+        return userLocalizer.localize(ageThresholds.anonymize(user), siteId);
     }
 
     /** Creates a {@link VerificationRequest} for the site. */

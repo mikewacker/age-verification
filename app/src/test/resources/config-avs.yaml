@@ -1,5 +1,7 @@
 service:
   verificationRequestExpiresIn: PT5M
+  ageThresholds:
+    site: [13, 18]
 
 clients:
   siteUrls:

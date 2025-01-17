@@ -38,7 +38,7 @@ public final class TestModels {
     public static VerifiedUser createVerifiedUser() {
         return VerifiedUser.builder()
                 .pseudonym(SecureId.generate())
-                .ageRange(AgeRange.builder().min(18).build())
+                .ageRange(AgeRange.builder().min(18).max(18).build())
                 .build();
     }
 

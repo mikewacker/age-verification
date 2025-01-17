@@ -23,6 +23,16 @@ public interface AgeThresholds {
         return ImmutableAgeThresholds.builder().values(values).build();
     }
 
+    /** Expands the user's age range so that it aligns with the closest age thresholds. */
+    default VerifiedUser anonymize(VerifiedUser user) {
+        AgeRange newAgeRange = anonymize(user.getAgeRange());
+        return VerifiedUser.builder()
+                .pseudonym(user.getPseudonym())
+                .ageRange(newAgeRange)
+                .guardianPseudonyms(user.getGuardianPseudonyms())
+                .build();
+    }
+
     /** Expands an age range so that it aligns with the closest age thresholds. */
     default AgeRange anonymize(AgeRange ageRange) {
         Integer newMin = alignMinWithThreshold(ageRange.getMin());

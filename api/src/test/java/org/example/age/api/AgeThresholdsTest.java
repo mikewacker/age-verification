@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
+import java.util.List;
+import org.example.age.api.crypto.SecureId;
 import org.example.age.testing.JsonTesting;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +40,25 @@ public final class AgeThresholdsTest {
         AgeRange anonymizedAgeRange = ageThresholds.anonymize(ageRange);
         AgeRange expectedAgeRange = AgeRange.builder().min(18).build();
         assertThat(anonymizedAgeRange).isEqualTo(expectedAgeRange);
+    }
+
+    @Test
+    public void anonymize_User() {
+        AgeThresholds ageThresholds = AgeThresholds.of(18);
+        SecureId pseudonym1 = SecureId.generate();
+        SecureId psuedonym2 = SecureId.generate();
+        VerifiedUser user = VerifiedUser.builder()
+                .pseudonym(pseudonym1)
+                .ageRange(AgeRange.builder().min(18).max(18).build())
+                .guardianPseudonyms(List.of(psuedonym2))
+                .build();
+        VerifiedUser anonymizedUser = ageThresholds.anonymize(user);
+        VerifiedUser expectedUser = VerifiedUser.builder()
+                .pseudonym(pseudonym1)
+                .ageRange(AgeRange.builder().min(18).build())
+                .guardianPseudonyms(List.of(psuedonym2))
+                .build();
+        assertThat(anonymizedUser).isEqualTo(expectedUser);
     }
 
     @Test
