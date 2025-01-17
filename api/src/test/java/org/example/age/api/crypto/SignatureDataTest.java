@@ -9,6 +9,7 @@ import java.security.KeyPairGenerator;
 import java.security.Signature;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
+import org.example.age.testing.JsonTesting;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,12 +40,10 @@ public final class SignatureDataTest {
     }
 
     @Test
-    public void signThenSerializeThenDeserializeThenVerify() throws IOException {
+    public void signThenThenVerify() {
         String text = "Hello, world!";
         SignatureData signature = SignatureData.sign(text, mapper, signer);
-        String json = mapper.writeValueAsString(signature);
-        SignatureData rtSignature = mapper.readValue(json, SignatureData.class);
-        rtSignature.verify(text, mapper, verifier);
+        signature.verify(text, mapper, verifier);
     }
 
     @Test
@@ -53,5 +52,12 @@ public final class SignatureDataTest {
         assertThatThrownBy(() -> signature.verify("test", mapper, verifier))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("signature verification failed");
+    }
+
+    @Test
+    public void serializeThenDeserialize() throws IOException {
+        String text = "Hello, world!";
+        SignatureData signature = SignatureData.sign(text, mapper, signer);
+        JsonTesting.serializeThenDeserialize(signature, SignatureData.class);
     }
 }

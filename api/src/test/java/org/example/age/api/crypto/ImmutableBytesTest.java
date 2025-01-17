@@ -3,22 +3,19 @@ package org.example.age.api.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.testing.EqualsTester;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import org.example.age.testing.JsonTesting;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
         TestBytes o = TestBytes.of("Hello, world!".getBytes(StandardCharsets.UTF_8));
-        String json = mapper.writeValueAsString(o);
-        TestBytes rtO = mapper.readValue(json, TestBytes.class);
-        assertThat(rtO).isEqualTo(o);
+        JsonTesting.serializeThenDeserialize(o, TestBytes.class);
     }
 
     @Test

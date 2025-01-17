@@ -3,8 +3,8 @@ package org.example.age.api.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import org.example.age.testing.JsonTesting;
 import org.junit.jupiter.api.Test;
 
 public final class SecureIdTest {
@@ -26,11 +26,7 @@ public final class SecureIdTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        SecureId id = SecureId.generate();
-        String json = mapper.writeValueAsString(id);
-        SecureId rtId = mapper.readValue(json, SecureId.class);
-        assertThat(rtId).isEqualTo(id);
+        JsonTesting.serializeThenDeserialize(SecureId.generate(), SecureId.class);
     }
 
     @Test
