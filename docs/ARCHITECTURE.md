@@ -8,6 +8,7 @@
 
 - The core code for the web services can be found in [`SiteService`](/service/src/main/java/org/example/age/service/SiteService.java)/[`AvsService`](/service/src/main/java/org/example/age/service/AvsService.java).
 - If you want to understand how the web applications are built end-to-end, start with [`SiteApp`](/app/src/main/java/org/example/age/app/SiteApp.java)/[`AvsApp`](/app/src/main/java/org/example/age/app/AvsApp.java).
+- The code that runs the demo can be found in [`Demo`](/app/src/main/java/org/example/age/demo/Demo.java).
 
 ### Tech Stack
 
