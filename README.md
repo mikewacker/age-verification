@@ -35,8 +35,7 @@ John Smith uses CheckMyAge to verify his account on Crackle, "publius".
 {
   "pseudonym" : "wqhgWlb9wYtzTDYbGeYFJJvS4xjmQsp3cf3ntbcBuNI",
   "ageRange" : {
-    "min" : 18,
-    "max" : null
+    "min" : 18
   },
   "guardianPseudonyms" : [ ]
 }
@@ -81,8 +80,7 @@ John Smith uses CheckMyAge to verify his account on Pop, "JohnS".
 {
   "pseudonym" : "Uum6yHO7tgND6ffCHsidSpghQz8Eq7PlkmWHzkVL2DE",
   "ageRange" : {
-    "min" : 18,
-    "max" : null
+    "min" : 18
   },
   "guardianPseudonyms" : [ ]
 }

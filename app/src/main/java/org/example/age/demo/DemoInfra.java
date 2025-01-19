@@ -1,5 +1,6 @@
 package org.example.age.demo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.dropwizard.core.Application;
 import io.dropwizard.jackson.Jackson;
@@ -14,8 +15,9 @@ import org.example.age.api.client.retrofit.ApiClient;
 public final class DemoInfra {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
-    private static final ObjectWriter objectWriter =
-            Jackson.newObjectMapper().writer().withDefaultPrettyPrinter();
+    private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .writerWithDefaultPrettyPrinter();
 
     /** Starts an application. */
     public static void startServer(Application<?> app, String configPath) throws Exception {
