@@ -213,7 +213,133 @@ A social media site will store the pseudonym that is linked to each account.
 
 ### Workflow
 
-TODO
+**Requirements**
+
+To make strong guarantees of anonymity, the protocol will have these requirements:
+
+- The social media site can never learn the real name of the person who is verifying an account.
+- The age verification service can never learn which account it is verifying for a social media site.
+
+The `request > id` will play a crucial role in fulfilling both requirements.
+
+**Protocol: Walkthrough**
+
+Let's walk through how Billy Smith verifies his account on Crackle, "publius-jr":
+
+I. After logging in to Crackle, Billy Smith starts the process to verify "publius-jr".
+
+1. Crackle asks CheckMyAge to create a verification request.
+2. CheckMyAge creates a verification request with a random ID (e.g., `Ukjls20z...`).
+    - The expiration will be, e.g., five minutes from now.
+
+```json
+{
+  "id" : "Ukjls20zalMKr1qqWfdSeX4SOL053vJClscCvuzYLjQ",
+  "siteId" : "crackle",
+  "expiration" : 1737240263
+}
+```
+
+3. CheckMyAge stores this verification request.
+4. CheckMyAge sends this verification request to Crackle.
+5. Crackle links the request ID (`Ukjls20z...`) to "publius-jr".
+6. Crackle redirects the user to CheckMyAge; the URL will contain the request ID (`Ukjls20z...`).
+
+II. Billy Smith logs in to CheckMyAge (if needed) after being redirected there.
+
+1. CheckMyAge gets the request ID (`Ukjls20z...`) from the URL.
+2. CheckMyAge loads the verification request with this ID.
+    - In step I.3., CheckMyAge stored this verification request.
+
+```json
+{
+  "id" : "Ukjls20zalMKr1qqWfdSeX4SOL053vJClscCvuzYLjQ",
+  "siteId" : "crackle",
+  "expiration" : 1737240263
+}
+```
+
+3. CheckMyAge links this verification request to Billy Smith.
+
+III. Billy Smith confirms with CheckMyAge that he wants to send an age certificate to Crackle.
+
+1. CheckMyAge loads the verification request that is linked to Billy Smith:
+    - In step II.3., CheckMyAge linked this verification request to Billy Smith.
+
+```json
+{
+  "id" : "Ukjls20zalMKr1qqWfdSeX4SOL053vJClscCvuzYLjQ",
+  "siteId" : "crackle",
+  "expiration" : 1737240263
+}
+```
+
+2. CheckMyAge loads the (anonymized) user data for Billy Smith.
+
+```json
+{
+  "pseudonym" : "KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4",
+  "ageRange" : {
+    "min" : 13,
+    "max" : 13
+  }, 
+  "guardianPseudonyms" : [ "uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4" ]
+}
+```
+
+3. CheckMyAge "localizes" the user data. (The next section will explain the "localization" process.)
+
+```json
+{
+  "pseudonym" : "LIQz7hWocXgp1uACRjljzWlD2FTcgSK307Io8l3qvJA",
+  "ageRange" : {
+    "min" : 13,
+    "max" : 17
+  }, 
+  "guardianPseudonyms" : [ "keXeY3kiQDgOhenFw9GMFv3zUFSCSsqrcsmwf3DvpdA" ]
+}
+```
+
+4. CheckMyAge combines the verification request and the user data to create an age certificate.
+
+```json
+{
+  "request" : {
+    "id" : "Ukjls20zalMKr1qqWfdSeX4SOL053vJClscCvuzYLjQ",
+    "siteId" : "crackle",
+    "expiration" : 1737240263
+  },
+  "user" : {
+    "pseudonym" : "LIQz7hWocXgp1uACRjljzWlD2FTcgSK307Io8l3qvJA",
+    "ageRange" : {
+      "min" : 13,
+      "max" : 17
+    },
+    "guardianPseudonyms" : [ "keXeY3kiQDgOhenFw9GMFv3zUFSCSsqrcsmwf3DvpdA" ]
+  }
+}
+```
+
+5. CheckMyAge digitally signs the age certificate and sends it to Crackle.
+6. Crackle validates the age certificate it received (e.g., signature is valid, age certificate is not expired, etc.).
+7. Crackle uses the request ID (`Ukjls20za...`) on the age certificate to determine that it is for "publius-jr".
+    - In step I.5., Crackle linked this request ID to "publius-jr".
+8. Crackle "localizes" the user data on the age certificate.
+
+```json
+{
+  "pseudonym" : "vT47RJUVsiagXQvHACvJKjliGLM97QcBrFRk9PfmAxE",
+  "ageRange" : {
+    "min" : 13,
+    "max" : 17
+  },
+  "guardianPseudonyms" : [ "wqhgWlb9wYtzTDYbGeYFJJvS4xjmQsp3cf3ntbcBuNI" ]
+}
+```
+
+9. Crackle stores this user data for "publius-jr"; the age range and guardians of "publius-jr" are now verified.
+
+(There's a few thing that could be done to improve the protocol, but that's the basic idea.)
 
 ### "Localizing" Pseudonyms
 
