@@ -40,6 +40,16 @@ public final class DemoSiteAccountStoreTest {
     }
 
     @Test
+    public void saveTwiceForSameAccount() {
+        VerifiedUser user = TestModels.createVerifiedUser();
+        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username", user, expiresIn(5)));
+        assertThat(maybeConflictingAccountId1).isEmpty();
+
+        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username", user, expiresIn(10)));
+        assertThat(maybeConflictingAccountId2).isEmpty();
+    }
+
+    @Test
     public void loadUnverified() {
         VerificationState state = getCompleted(store.load("username"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
