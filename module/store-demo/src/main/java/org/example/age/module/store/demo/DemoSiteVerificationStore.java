@@ -45,9 +45,11 @@ final class DemoSiteVerificationStore implements SiteVerificationStore {
             Optional<String> maybeConflictingAccountId = Optional.ofNullable(verifiedAccounts.get(user.getPseudonym()));
             if (maybeConflictingAccountId.isPresent()) {
                 String conflictingAccountId = maybeConflictingAccountId.get();
-                VerificationState conflictingState = loadAndUpdate(conflictingAccountId);
-                if (conflictingState.getStatus() == VerificationStatus.VERIFIED) {
-                    return CompletableFuture.completedFuture(Optional.of(conflictingAccountId));
+                if (!conflictingAccountId.equals(accountId)) {
+                    VerificationState conflictingState = loadAndUpdate(conflictingAccountId);
+                    if (conflictingState.getStatus() == VerificationStatus.VERIFIED) {
+                        return CompletableFuture.completedFuture(Optional.of(conflictingAccountId));
+                    }
                 }
             }
 
