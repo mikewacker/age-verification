@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.module.crypto.demo.AvsKeysConfig;
 import org.example.age.module.crypto.demo.SiteKeysConfig;
-import org.example.age.testing.TestObjectMapper;
+import org.example.age.testing.TestEnvModule;
 
 /**
  * Dagger module that binds...
@@ -15,7 +15,7 @@ import org.example.age.testing.TestObjectMapper;
  *     <li>{@link ObjectMapper}
  * </ul>
  */
-@Module(includes = TestObjectMapper.Module.class)
+@Module(includes = TestEnvModule.class)
 public interface TestDependenciesModule {
 
     @Provides

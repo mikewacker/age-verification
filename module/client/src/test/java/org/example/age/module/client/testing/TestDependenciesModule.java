@@ -5,9 +5,9 @@ import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.client.SiteClientsConfig;
+import org.example.age.testing.TestEnvModule;
 
 /**
  * Dagger module that binds...
@@ -19,7 +19,7 @@ import org.example.age.module.client.SiteClientsConfig;
  * <p>
  * Depends on an unbound <code>@Named("port") int</code>.
  */
-@Module
+@Module(includes = TestEnvModule.class)
 public interface TestDependenciesModule {
 
     @Provides
@@ -32,12 +32,5 @@ public interface TestDependenciesModule {
     @Singleton
     static AvsClientsConfig provideAvsClientsConfig(@Named("port") int port) {
         return TestConfig.createAvs(port);
-    }
-
-    @Provides
-    @Named("worker")
-    @Singleton
-    static ExecutorService providerWorker() {
-        return Executors.newFixedThreadPool(1);
     }
 }
