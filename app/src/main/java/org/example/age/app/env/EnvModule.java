@@ -7,14 +7,12 @@ import io.dropwizard.core.setup.Environment;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Dagger modules that binds...
+ * Dagger module that binds...
  * <ul>
  *     <li>{@link ObjectMapper}
- *     <li><code>@named("worker") {@link ExecutorService}</code>
- *     <li>{@link ScheduledExecutorService}
+ *     <li><code>@Named("worker") {@link ExecutorService}</code>
  * </ul>
  * <p>
  * Depends on an unbound {@link Environment}.
@@ -32,11 +30,5 @@ public interface EnvModule {
     @Singleton
     static ExecutorService provideWorkerThreadPool(ThreadPoolFactory threadPoolFactory) {
         return threadPoolFactory.createWorker();
-    }
-
-    @Provides
-    @Singleton
-    static ScheduledExecutorService provideScheduledThreadPool(ThreadPoolFactory threadPoolFactory) {
-        return threadPoolFactory.createScheduled();
     }
 }

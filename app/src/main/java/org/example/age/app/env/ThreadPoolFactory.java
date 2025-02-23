@@ -5,7 +5,6 @@ import io.dropwizard.util.Duration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
 
 /** Factory for thread pools. */
 @Singleton
@@ -27,16 +26,6 @@ final class ThreadPoolFactory {
                 .executorService("worker")
                 .maxThreads(size)
                 .minThreads(size)
-                .shutdownTime(Duration.milliseconds(1))
-                .build();
-    }
-
-    /** Creates the thread pool for scheduled tasks. */
-    public ScheduledExecutorService createScheduled() {
-        int size = numProcessors;
-        return env.lifecycle()
-                .scheduledExecutorService("scheduled")
-                .threads(size)
                 .shutdownTime(Duration.milliseconds(1))
                 .build();
     }
