@@ -1,13 +1,10 @@
 package org.example.age.module.store.redis;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import redis.clients.jedis.JedisPooled;
@@ -17,17 +14,14 @@ import redis.clients.jedis.JedisPooled;
 final class RedisPendingStoreRepository implements PendingStoreRepository {
 
     private final JedisPooled client;
-    private final ObjectMapper mapper;
-    private final ExecutorService worker;
+    private final RedisUtils utils;
 
     private final Map<String, PendingStore<?>> stores = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    public RedisPendingStoreRepository(
-            JedisPooled client, ObjectMapper mapper, @Named("worker") ExecutorService worker) {
+    public RedisPendingStoreRepository(JedisPooled client, RedisUtils utils) {
         this.client = client;
-        this.mapper = mapper;
-        this.worker = worker;
+        this.utils = utils;
     }
 
     @SuppressWarnings("unchecked")
@@ -38,6 +32,6 @@ final class RedisPendingStoreRepository implements PendingStoreRepository {
 
     /** Creates a pending store. */
     private <V> PendingStore<V> create(String name, Class<V> valueType) {
-        return new RedisPendingStore<>(client, name, valueType, mapper, worker);
+        return new RedisPendingStore<>(client, utils, name, valueType);
     }
 }
