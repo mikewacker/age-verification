@@ -16,7 +16,7 @@ import redis.embedded.RedisServer;
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
 
-    private static RedisServer redis ;
+    private static RedisServer redis;
 
     private static final OkHttpClient httpClient = new OkHttpClient();
     private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
