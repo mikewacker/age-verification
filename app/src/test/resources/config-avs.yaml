@@ -7,6 +7,9 @@ clients:
   siteUrls:
     site: http://localhost:8080
 
+redis:
+  url: http://localhost:6379
+
 stores:
   verifiedAccounts:
     person:

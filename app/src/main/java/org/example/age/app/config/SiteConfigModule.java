@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.SiteKeysConfig;
+import org.example.age.module.store.redis.RedisConfig;
 import org.example.age.service.SiteServiceConfig;
 
 /**
@@ -11,6 +12,7 @@ import org.example.age.service.SiteServiceConfig;
  * <ul>
  *     <li>{@link SiteServiceConfig}
  *     <li>{@link SiteClientsConfig}
+ *     <li>{@link RedisConfig}
  *     <li>{@link SiteKeysConfig}
  * </ul>
  * <p>
@@ -27,6 +29,11 @@ public interface SiteConfigModule {
     @Provides
     static SiteClientsConfig provieSiteClientsConfig(SiteAppConfig appConfig) {
         return appConfig.getClients();
+    }
+
+    @Provides
+    static RedisConfig provideRedisConfig(SiteAppConfig appConfig) {
+        return appConfig.getRedis();
     }
 
     @Provides

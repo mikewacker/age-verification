@@ -9,6 +9,9 @@ clients:
     crackle: http://localhost:8080
     pop: http://localhost:8081
 
+redis:
+  url: http://localhost:6379
+
 stores:
   verifiedAccounts:
     John Smith:

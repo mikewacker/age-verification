@@ -7,7 +7,6 @@ include(
         "module:request-demo",
         "module:client",
         "module:store-redis",
-        "module:store-inmemory",
         "module:store-demo",
         "module:crypto-demo",
         "app",
