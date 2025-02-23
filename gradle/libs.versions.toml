@@ -10,6 +10,7 @@ jakartaAnnotation = "3.0.0"
 jakartaInject = "2.0.1"
 jakartaValidation = "3.1.0"
 jaxRs = "4.0.0"
+jedis = "5.2.0"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 
@@ -17,6 +18,7 @@ retrofit = "2.11.0"
 assertj = "3.27.2"
 junitJupiter = "5.11.4"
 junitPlatform = "1.11.4"
+redisEmbedded = "1.4.3"
 
 # plugin
 plugin-errorprone = "4.1.0"
@@ -33,6 +35,7 @@ immutables-value = { module = "org.immutables:value", version.ref = "immutables"
 # main
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
+jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 guava-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
@@ -54,6 +57,7 @@ guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guav
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
 junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatform" }
+redisEmbedded-redis = { module = "com.github.codemonstur:embedded-redis", version.ref = "redisEmbedded" }
 retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock", version.ref = "retrofit" }
 
 # plugin
