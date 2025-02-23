@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.SiteKeysConfig;
+import org.example.age.module.store.redis.RedisConfig;
 import org.example.age.service.SiteServiceConfig;
 
 /** Configuration for the application. */
@@ -18,6 +19,10 @@ public final class SiteAppConfig extends Configuration {
     @Valid
     @NotNull
     private SiteClientsConfig clients;
+
+    @Valid
+    @NotNull
+    private RedisConfig redis;
 
     @Valid
     @NotNull
@@ -41,6 +46,16 @@ public final class SiteAppConfig extends Configuration {
     @JsonProperty
     public void setClients(SiteClientsConfig clients) {
         this.clients = clients;
+    }
+
+    @JsonProperty
+    public RedisConfig getRedis() {
+        return redis;
+    }
+
+    @JsonProperty
+    public void setRedis(RedisConfig redis) {
+        this.redis = redis;
     }
 
     @JsonProperty

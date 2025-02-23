@@ -5,6 +5,9 @@ service:
 clients:
   avsUrl: http://localhost:9090
 
+redis:
+  url: http://localhost:6379
+
 keys:
   signing:
     wX: 61340499596180719707288738669477306360190613239883629564918816825111167687915

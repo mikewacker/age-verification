@@ -5,19 +5,29 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.dropwizard.core.Application;
 import io.dropwizard.jackson.Jackson;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.example.age.api.client.retrofit.ApiClient;
+import redis.embedded.RedisServer;
 
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
+
+    private static RedisServer redis ;
 
     private static final OkHttpClient httpClient = new OkHttpClient();
     private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .writerWithDefaultPrettyPrinter();
+
+    /** Starts Redis. */
+    public static void startRedis() throws IOException {
+        redis = new RedisServer(6379);
+        redis.start();
+    }
 
     /** Starts an application. */
     public static void startServer(Application<?> app, String configPath) throws Exception {
@@ -39,6 +49,12 @@ public final class DemoInfra {
     /** Gets an {@link ObjectWriter} that pretty-prints JSON. */
     public static ObjectWriter getObjectWriter() {
         return objectWriter;
+    }
+
+    /** Stops everything (and terminates the application). */
+    public static void stop() throws IOException {
+        redis.stop();
+        System.exit(0);
     }
 
     /** Get the absolute path of a resource file. */

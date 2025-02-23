@@ -28,8 +28,9 @@ public final class Demo {
 
     /** Main method. */
     @SuppressWarnings("CatchAndPrintStackTrace")
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         try {
+            DemoInfra.startRedis();
             DemoInfra.startServer(checkMyAge, "config-check-my-age.yaml");
             DemoInfra.startServer(crackle, "config-crackle.yaml");
             DemoInfra.startServer(pop, "config-pop.yaml");
@@ -41,7 +42,7 @@ public final class Demo {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            System.exit(0);
+            DemoInfra.stop();
         }
     }
 

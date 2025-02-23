@@ -15,6 +15,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.testing.TestServiceClient;
+import org.example.age.testing.RedisExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import retrofit2.Response;
@@ -28,6 +29,9 @@ public final class AppVerificationTest {
     @RegisterExtension
     private static final DropwizardAppExtension<AvsAppConfig> avsApp =
             new DropwizardAppExtension<>(AvsApp.class, ResourceHelpers.resourceFilePath("config-avs.yaml"));
+
+    @RegisterExtension
+    private static final RedisExtension redis = new RedisExtension(6379);
 
     @RegisterExtension
     private static final TestServiceClient<SiteApi> siteClient =
