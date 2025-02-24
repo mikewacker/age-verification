@@ -5,10 +5,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
@@ -35,13 +31,6 @@ final class RedisUtils {
     /** Gets a Redis key. */
     public String getRedisKey(String prefix, String key) {
         return String.format("%s:%s", prefix, key);
-    }
-
-    /** Converts an expiration to a duration in seconds, rounding up. */
-    public long toExpiresInSeconds(OffsetDateTime expiration) {
-        Duration expiresIn = Duration.between(OffsetDateTime.now(ZoneOffset.UTC), expiration);
-        expiresIn = expiresIn.plusSeconds(1).minusNanos(1).truncatedTo(ChronoUnit.SECONDS);
-        return expiresIn.toSeconds();
     }
 
     /** Serializes a value to JSON. */

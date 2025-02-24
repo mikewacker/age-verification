@@ -7,6 +7,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -34,14 +35,14 @@ public final class RedisPendingStoreTest {
 
     @Test
     public void putThenGet() {
-        getCompleted(store.put("key1", 1, expiresIn(300)));
+        getCompleted(store.put("key1", 1, expiresIn(300000)));
         Optional<Integer> maybeValue = getCompleted(store.tryGet("key1"));
         assertThat(maybeValue).hasValue(1);
     }
 
     @Test
     public void putThenRemoveThenGet() {
-        getCompleted(store.put("key2", 1, expiresIn(300)));
+        getCompleted(store.put("key2", 1, expiresIn(300000)));
         Optional<Integer> maybeValue1 = getCompleted(store.tryRemove("key2"));
         assertThat(maybeValue1).hasValue(1);
         Optional<Integer> maybeValue2 = getCompleted(store.tryGet("key2"));
@@ -50,28 +51,28 @@ public final class RedisPendingStoreTest {
 
     @Test
     public void putThenExpireThenGet() throws InterruptedException {
-        getCompleted(store.put("key3", 1, expiresIn(1)));
-        Thread.sleep(1100);
+        getCompleted(store.put("key3", 1, expiresIn(2)));
+        Thread.sleep(4);
         Optional<Integer> maybeValue = getCompleted(store.tryRemove("key3"));
         assertThat(maybeValue).isEmpty();
     }
 
     @Test
     public void putExpiredThenGet() {
-        getCompleted(store.put("key4", 1, expiresIn(-300)));
-        Optional<Integer> maybeValue = getCompleted(store.tryRemove("key"));
+        getCompleted(store.put("key4", 1, expiresIn(-1000)));
+        Optional<Integer> maybeValue = getCompleted(store.tryRemove("key4"));
         assertThat(maybeValue).isEmpty();
     }
 
     @Test
     public void putThenGetFromRedis() {
-        getCompleted(store.put("key5", 1, expiresIn(300)));
+        getCompleted(store.put("key5", 1, expiresIn(300000)));
         String value = redis.client().get("age:pending:name:key5");
         assertThat(value).isEqualTo("1");
     }
 
-    private static OffsetDateTime expiresIn(int seconds) {
-        return OffsetDateTime.now(ZoneOffset.UTC).plusSeconds(seconds);
+    private static OffsetDateTime expiresIn(int ms) {
+        return OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMillis(ms));
     }
 
     /** Dagger component for the stores. */

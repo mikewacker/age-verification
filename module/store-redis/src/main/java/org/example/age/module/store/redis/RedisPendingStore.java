@@ -40,14 +40,10 @@ final class RedisPendingStore<V> implements PendingStore<V> {
     }
 
     private Void putSync(String key, V value, OffsetDateTime expiration) {
-        long expiresInS = utils.toExpiresInSeconds(expiration);
-        if (expiresInS <= 0) {
-            return null;
-        }
-
         String redisKey = utils.getRedisKey(redisKeyPrefix, key);
         String json = utils.serialize(value);
-        client.set(redisKey, json, new SetParams().ex(expiresInS));
+        long pxAt = expiration.toInstant().toEpochMilli();
+        client.set(redisKey, json, new SetParams().pxAt(pxAt));
         return null;
     }
 
