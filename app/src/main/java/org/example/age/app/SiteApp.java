@@ -13,8 +13,8 @@ import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.SiteClientModule;
 import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
-import org.example.age.module.store.demo.DemoSiteAccountStoreModule;
 import org.example.age.module.store.redis.RedisPendingStoreModule;
+import org.example.age.module.store.redis.RedisSiteAccountStoreModule;
 import org.example.age.service.SiteServiceModule;
 import org.example.age.service.module.request.RequestContextProvider;
 
@@ -51,7 +51,7 @@ public final class SiteApp extends Application<SiteAppConfig> {
                 SiteServiceModule.class,
                 DemoAccountIdModule.class,
                 SiteClientModule.class,
-                DemoSiteAccountStoreModule.class,
+                RedisSiteAccountStoreModule.class,
                 RedisPendingStoreModule.class,
                 DemoSiteCryptoModule.class,
                 SiteConfigModule.class,

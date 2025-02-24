@@ -11,13 +11,12 @@ import java.net.URISyntaxException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.example.age.api.client.retrofit.ApiClient;
-import redis.embedded.RedisServer;
+import org.example.age.testing.RedisExtension;
 
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
 
-    private static RedisServer redis;
-
+    private static final RedisExtension redis = new RedisExtension(6379);
     private static final OkHttpClient httpClient = new OkHttpClient();
     private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
@@ -25,8 +24,7 @@ public final class DemoInfra {
 
     /** Starts Redis. */
     public static void startRedis() throws IOException {
-        redis = new RedisServer(6379);
-        redis.start();
+        redis.beforeAll(null);
     }
 
     /** Starts an application. */
@@ -53,7 +51,7 @@ public final class DemoInfra {
 
     /** Stops everything (and terminates the application). */
     public static void stop() throws IOException {
-        redis.stop();
+        redis.afterAll(null);
         System.exit(0);
     }
 
