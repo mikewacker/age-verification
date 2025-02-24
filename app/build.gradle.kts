@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":module:store-redis"))
     implementation(project(":service"))
     implementation(project(":service:module"))
+    implementation(project(":testing")) // for demo
     implementation(libs.dagger.dagger)
     implementation(libs.dropwizard.core)
     implementation(libs.jackson.annotations)
@@ -22,10 +23,8 @@ dependencies {
     implementation(libs.jakartaValidation.api)
     implementation(libs.jedis.jedis) // for Dagger
     implementation(libs.okhttp.okhttp)
-    implementation(libs.redisEmbedded.redis) // for demo
     implementation(libs.retrofit.retrofit)
 
-    testImplementation(project(":testing"))
     testImplementation(libs.dropwizard.testing)
 }
 
