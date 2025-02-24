@@ -1,7 +1,13 @@
 package org.example.age.testing;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -13,6 +19,7 @@ public final class RedisExtension implements BeforeAllCallback, AfterAllCallback
 
     private int port;
 
+    private Path redisDir;
     private RedisServer server;
     private JedisPooled client;
 
@@ -47,18 +54,25 @@ public final class RedisExtension implements BeforeAllCallback, AfterAllCallback
     @Override
     public void beforeAll(ExtensionContext context) throws IOException {
         port = (port != 0) ? port : findAvailablePort();
-        server = new RedisServer(port);
+        redisDir = Files.createTempDirectory("redis");
+        File redisBinary = copyRedisBinaryFromResources(redisDir);
+        server = new RedisServer(port, redisBinary);
         server.start();
         client = new JedisPooled("localhost", port);
     }
 
     @Override
     public void afterAll(ExtensionContext context) throws IOException {
+        if (client != null) {
+            client.close();
+        }
         if (server != null) {
             server.stop();
         }
-        if (client != null) {
-            client.close();
+        if (redisDir != null) {
+            try (Stream<Path> paths = Files.walk(redisDir)) {
+                paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+            }
         }
     }
 
@@ -67,6 +81,18 @@ public final class RedisExtension implements BeforeAllCallback, AfterAllCallback
         try (ServerSocket socket = new ServerSocket(0)) {
             return socket.getLocalPort();
         }
+    }
+
+    /** Copies the Redis binary from resources to a file, returning the file. */
+    private static File copyRedisBinaryFromResources(Path redisDir) throws IOException {
+        Path redisBinaryPath = redisDir.resolve("redis-server");
+        ClassLoader classLoader = RedisExtension.class.getClassLoader();
+        try (InputStream resourceStream = classLoader.getResourceAsStream("redis-server")) {
+            Files.copy(resourceStream, redisBinaryPath);
+        }
+        File redisBinary = redisBinaryPath.toFile();
+        redisBinary.setExecutable(true);
+        return redisBinary;
     }
 
     /** Checks that Redis is initialized. */
