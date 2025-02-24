@@ -13,7 +13,7 @@ import org.example.age.service.module.store.PendingStoreRepository;
  * <ul>
  *     <li>{@link RedisConfig}
  *     <li>{@link ObjectMapper}
- *     <li><code>@Named {@link ExecutorService}</code>
+ *     <li><code>@Named("worker") {@link ExecutorService}</code>
  * </ul>
  */
 @Module(includes = RedisClientModule.class)
