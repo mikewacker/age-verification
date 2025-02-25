@@ -10,14 +10,6 @@ clients:
 redis:
   url: http://localhost:6379
 
-stores:
-  verifiedAccounts:
-    person:
-      pseudonym: uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4
-      ageRange:
-        min: 40
-        max: 40
-
 keys:
   signing:
     s: 87808632867103956881705523559918117434194472117688001288631494927155518459976

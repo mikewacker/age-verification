@@ -30,11 +30,7 @@ public final class Demo {
     @SuppressWarnings("CatchAndPrintStackTrace")
     public static void main(String[] args) throws IOException {
         try {
-            DemoInfra.startRedis();
-            DemoInfra.startServer(checkMyAge, "config-check-my-age.yaml");
-            DemoInfra.startServer(crackle, "config-crackle.yaml");
-            DemoInfra.startServer(pop, "config-pop.yaml");
-
+            startServers();
             verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith", true);
             verifyAge(childCrackleClient, childAvsClient, "Crackle", "publius-jr", "Billy Smith", false);
             verifyAge(parentPopClient, parentAvsClient, "Pop", "JohnS", "John Smith", false);
@@ -44,6 +40,15 @@ public final class Demo {
         } finally {
             DemoInfra.stop();
         }
+    }
+
+    /** Starts all servers. */
+    private static void startServers() throws Exception {
+        DemoInfra.startRedis();
+        DemoInfra.populateRedis();
+        DemoInfra.startServer(checkMyAge, "config-check-my-age.yaml");
+        DemoInfra.startServer(crackle, "config-crackle.yaml");
+        DemoInfra.startServer(pop, "config-pop.yaml");
     }
 
     /** Verifies a single account. */

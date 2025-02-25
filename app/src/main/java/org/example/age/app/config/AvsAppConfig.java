@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.crypto.demo.AvsKeysConfig;
-import org.example.age.module.store.demo.AvsStoresConfig;
 import org.example.age.module.store.redis.RedisConfig;
 import org.example.age.service.AvsServiceConfig;
 
@@ -24,10 +23,6 @@ public final class AvsAppConfig extends Configuration {
     @Valid
     @NotNull
     private RedisConfig redis;
-
-    @Valid
-    @NotNull
-    private AvsStoresConfig stores;
 
     @Valid
     @NotNull
@@ -61,16 +56,6 @@ public final class AvsAppConfig extends Configuration {
     @JsonProperty
     public void setRedis(RedisConfig redis) {
         this.redis = redis;
-    }
-
-    @JsonProperty
-    public AvsStoresConfig getStores() {
-        return stores;
-    }
-
-    @JsonProperty
-    public void setStores(AvsStoresConfig stores) {
-        this.stores = stores;
     }
 
     @JsonProperty

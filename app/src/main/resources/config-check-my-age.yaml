@@ -12,20 +12,6 @@ clients:
 redis:
   url: http://localhost:6379
 
-stores:
-  verifiedAccounts:
-    John Smith:
-      pseudonym: uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4
-      ageRange:
-        min: 40
-        max: 40
-    Billy Smith:
-      pseudonym: KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4
-      ageRange:
-        min: 13
-        max: 13
-      guardianPseudonyms: [uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4]
-
 keys:
   signing:
     s: 87808632867103956881705523559918117434194472117688001288631494927155518459976

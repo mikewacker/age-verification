@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.crypto.demo.AvsKeysConfig;
-import org.example.age.module.store.demo.AvsStoresConfig;
 import org.example.age.module.store.redis.RedisConfig;
 import org.example.age.service.AvsServiceConfig;
 
@@ -14,7 +13,6 @@ import org.example.age.service.AvsServiceConfig;
  *     <li>{@link AvsServiceConfig}
  *     <li>{@link AvsClientsConfig}
  *     <li>{@link RedisConfig}
- *     <li>{@link AvsStoresConfig}
  *     <li>{@link AvsKeysConfig}
  * </ul>
  * <p>
@@ -36,11 +34,6 @@ public interface AvsConfigModule {
     @Provides
     static RedisConfig provideRedisConfig(AvsAppConfig appConfig) {
         return appConfig.getRedis();
-    }
-
-    @Provides
-    static AvsStoresConfig provideAvsStoresConfig(AvsAppConfig appConfig) {
-        return appConfig.getStores();
     }
 
     @Provides

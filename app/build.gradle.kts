@@ -10,7 +10,6 @@ dependencies {
     implementation(project(":module:client"))
     implementation(project(":module:crypto-demo"))
     implementation(project(":module:request-demo"))
-    implementation(project(":module:store-demo"))
     implementation(project(":module:store-redis"))
     implementation(project(":service"))
     implementation(project(":service:module"))
@@ -21,7 +20,6 @@ dependencies {
     implementation(libs.jackson.databind)
     implementation(libs.jakartaInject.api)
     implementation(libs.jakartaValidation.api)
-    implementation(libs.jedis.jedis) // for Dagger
     implementation(libs.okhttp.okhttp)
     implementation(libs.retrofit.retrofit)
 

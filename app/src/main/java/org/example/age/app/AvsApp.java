@@ -13,7 +13,7 @@ import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.AvsClientModule;
 import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
-import org.example.age.module.store.demo.DemoAvsAccountStoreModule;
+import org.example.age.module.store.redis.RedisAvsAccountStoreModule;
 import org.example.age.module.store.redis.RedisPendingStoreModule;
 import org.example.age.service.AvsServiceModule;
 import org.example.age.service.module.request.RequestContextProvider;
@@ -51,7 +51,7 @@ public class AvsApp extends Application<AvsAppConfig> {
                 AvsServiceModule.class,
                 DemoAccountIdModule.class,
                 AvsClientModule.class,
-                DemoAvsAccountStoreModule.class,
+                RedisAvsAccountStoreModule.class,
                 RedisPendingStoreModule.class,
                 DemoAvsCryptoModule.class,
                 AvsConfigModule.class,

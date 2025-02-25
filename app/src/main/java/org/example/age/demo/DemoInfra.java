@@ -8,15 +8,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.example.age.api.AgeRange;
+import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.retrofit.ApiClient;
+import org.example.age.api.crypto.SecureId;
 import org.example.age.testing.RedisExtension;
+import org.example.age.testing.TestObjectMapper;
 
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
 
-    private static final RedisExtension redis = new RedisExtension(6379);
+    private static final RedisExtension redis = new RedisExtension(6379); // can safely share between apps
     private static final OkHttpClient httpClient = new OkHttpClient();
     private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
@@ -25,6 +30,25 @@ public final class DemoInfra {
     /** Starts Redis. */
     public static void startRedis() throws IOException {
         redis.beforeAll(null);
+    }
+
+    /** Populates Redis with verified persons. */
+    public static void populateRedis() throws IOException {
+        SecureId parentPseudonym = SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4");
+        SecureId childPseudonym = SecureId.fromString("KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4");
+        VerifiedUser parent = VerifiedUser.builder()
+                .pseudonym(parentPseudonym)
+                .ageRange(AgeRange.builder().min(40).max(40).build())
+                .build();
+        VerifiedUser child = VerifiedUser.builder()
+                .pseudonym(childPseudonym)
+                .ageRange(AgeRange.builder().min(13).max(13).build())
+                .guardianPseudonyms(List.of(parentPseudonym))
+                .build();
+        String parentJson = TestObjectMapper.get().writeValueAsString(parent);
+        redis.client().set("age:user:John Smith", parentJson);
+        String childJson = TestObjectMapper.get().writeValueAsString(child);
+        redis.client().set("age:user:Billy Smith", childJson);
     }
 
     /** Starts an application. */
