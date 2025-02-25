@@ -14,12 +14,18 @@
 
 **Goal:** Implementing/using a web service is as easy as implementing/using a POJO (plain old Java object) interface.
 
-- **[OpenAPI](https://www.openapis.org/):** Language-agnostic framework used to define the web APIs.
+Here are the key components of the tech stack:
+
+- **[OpenAPI](https://www.openapis.org/):** Defines web APIs using a language-agnostic framework.
     - JAX-RS and Retrofit code is generated from the OpenAPI YAML file.
+- **[Redis](https://redis.io/):** Key-value database.
+- **[Dropwizard](https://www.dropwizard.io/):** Web application framework. (Uses Jetty and Jersey behind the scenes.)
 - **[JAX-RS](https://jakarta.ee/specifications/restful-ws/4.0/):** Turns POJO interfaces into web APIs with a few annotations.
 - **[Retrofit](https://square.github.io/retrofit/):** Turns POJO interfaces into web clients with a few annotations. Similar but not identical to JAX-RS.
+
+These libraries are also used:
+
 - **[Jackson](https://github.com/FasterXML/jackson):** JSON library.
-- **[Dropwizard](https://www.dropwizard.io/):** Web application framework. (Uses Jetty and Jersey behind the scenes.)
 - **[Dagger](https://dagger.dev/):** Dependency injection framework. Dependency injection is done at compile-time; mistakes are compilation errors.
 - **[Immutables](https://immutables.github.io/):** Create a value type as an interface, and let Immutables generate the implementation. Used for configuration.
 
@@ -31,7 +37,7 @@ Production-quality proof of concept is an oxymoron. Here's what it means in prac
 
 - Would you write tests for production code? Yes. Will you write similar tests for this code? Yes.
 - Web services are mostly written as if they are production services.
-- Web services have a modular design; components such as stores are abstracted away as interfaces.
+- Web services have a modular design; components such as stores are abstracted away as interfaces (e.g., DAOs).
 - Modules only need to provide "demo" implementations of these interfaces. (But, even "demo" modules still have tests.)
 - Since a proof-of-concept is not deployed to production, ops features are excluded: health checks, metrics, logging, etc.
 
@@ -45,12 +51,12 @@ Gradle is the build system. The code is split into multiple Gradle modules (e.g.
     - A custom Gradle plugin ([`openapi-java.gradle.kts`](/buildSrc/src/main/kotlin/openapi-java.gradle.kts)) generates JAX-RS and Retrofit code from this YAML file.
     - If the YAML file changes, running `./gradlew :api:build` will update the generated code and compile said code.
 - The implementation of the JAX-RS interfaces can be found in `:service`.
-- Components such as stores are abstracted away as interfaces; these interfaces can be found in `:service:module`.
+- Components such as stores are abstracted away as interfaces (e.g., DAOs); these interfaces can be found in `:service:module`.
     - To unit-test a service, these interfaces are implemented with very lightweight, in-memory fakes.
-- Implementations of these interfaces can be found in `:module:*` (e.g., `module:store-demo`).
-    - Since this is a proof of concept, URLs, keys, prepopulated users, etc. are all provided via configuration.
-        - *Obviously, a production app would not, e.g., store keys in configuration.*
-    - Some modules may depend on a thread pool and/or a JSON `ObjectMapper`.
+- Implementations of these interfaces can be found in `:module:*` (e.g., `module:store-redis`).
+    - Some modules depend on configuration.
+    - Some modules depend on a thread pool and/or a JSON `ObjectMapper`.
+    - *Keys are stored in configuration; obviously, a production app would not do that.*
 - The app can be found in `:app`.
     - A Dropwizard app only needs to implement one method: `void run(T configuration, Environment environment)`.
     - The configuration class (`T extends Configuration`) is a container for all the module-specific configuration.
@@ -67,10 +73,11 @@ In evaluating the tech stack, testability if a key consideration.
 
 This tech stack scores very well here:
 
-- Retrofit comes with a test library that can easily create fake `Call` objects.
 - Dropwizard has a great, easy-to-use testing library; it's used both for end-to-end testing and for testing the configuration.
+- An embedded Redis server is available for testing (though that project isn't owned by Redis).
+- Retrofit comes with a test library that can easily create fake `Call` objects.
 
-Beyond that, custom utility methods were added for testing with `CompletionStage`. See: [`CompletionStageTesting`](/testing/src/main/java/org/example/age/testing/CompletionStageTesting.java)
+A `:testing` module exists, but it's fairly lightweight (e.g., [`CompletionStageTesting`](/testing/src/main/java/org/example/age/testing/CompletionStageTesting.java)).
 
 ### Alternatives Considered
 
