@@ -9,6 +9,7 @@ import org.example.age.api.AgeRange;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
+import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
@@ -16,6 +17,8 @@ import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.testing.TestServiceClient;
 import org.example.age.testing.RedisExtension;
+import org.example.age.testing.TestObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import retrofit2.Response;
@@ -31,7 +34,7 @@ public final class AppVerificationTest {
             new DropwizardAppExtension<>(AvsApp.class, ResourceHelpers.resourceFilePath("config-avs.yaml"));
 
     @RegisterExtension
-    private static final RedisExtension redis = new RedisExtension(6379);
+    private static final RedisExtension redis = new RedisExtension(6379); // can safely share between apps
 
     @RegisterExtension
     private static final TestServiceClient<SiteApi> siteClient =
@@ -39,6 +42,16 @@ public final class AppVerificationTest {
 
     @RegisterExtension
     private static final TestServiceClient<AvsApi> avsClient = new TestServiceClient<>(9090, "person", AvsApi.class);
+
+    @BeforeAll
+    public static void populateData() throws IOException {
+        VerifiedUser user = VerifiedUser.builder()
+                .pseudonym(SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4"))
+                .ageRange(AgeRange.builder().min(40).max(40).build())
+                .build();
+        String json = TestObjectMapper.get().writeValueAsString(user);
+        redis.client().set("age:user:person", json);
+    }
 
     @Test
     public void verify() throws IOException {
