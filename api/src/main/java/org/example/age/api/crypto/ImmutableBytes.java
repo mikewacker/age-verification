@@ -32,8 +32,9 @@ public abstract class ImmutableBytes {
 
     @Override
     public final boolean equals(Object o) {
-        ImmutableBytes other = (o instanceof ImmutableBytes) ? (ImmutableBytes) o : null;
-        return (other != null) && getClass().equals(other.getClass()) && Arrays.equals(bytes, other.bytes);
+        return (o instanceof ImmutableBytes other)
+                && getClass().equals(other.getClass())
+                && Arrays.equals(bytes, other.bytes);
     }
 
     @Override
