@@ -12,8 +12,8 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.module.store.SiteVerificationStore;
+import redis.clients.jedis.AbstractTransaction;
 import redis.clients.jedis.JedisPooled;
-import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.params.SetParams;
 
@@ -50,10 +50,10 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         String redisExpirationKey = getRedisExpirationKey(accountId);
         Response<String> userJsonResponse;
         Response<String> rawExpirationResponse;
-        try (Pipeline pipeline = client.pipelined()) {
-            userJsonResponse = pipeline.get(redisUserKey);
-            rawExpirationResponse = pipeline.get(redisExpirationKey);
-            pipeline.sync();
+        try (AbstractTransaction transaction = client.transaction(true)) {
+            userJsonResponse = transaction.get(redisUserKey);
+            rawExpirationResponse = transaction.get(redisExpirationKey);
+            transaction.exec();
         }
 
         // Process the responses.
@@ -80,7 +80,8 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
     }
 
     private Optional<String> trySaveSync(String accountId, VerifiedUser user, OffsetDateTime expiration) {
-        // Link the pseudonym to the account, checking for a conflict.
+        // Link the pseudonym to the account, checking for a conflict:
+        // SET age:verification:pseudonym:[pseudonym] [accountId] NX PXAT [expiration] GET
         String redisPseudonymKey = getPseudonymKey(user.getPseudonym());
         long pxAt = expiration.toInstant().toEpochMilli();
         String conflictingAccountId =
@@ -89,14 +90,17 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
             return Optional.of(conflictingAccountId);
         }
 
-        // Save the verified account.
+        // Save the verified account:
+        // SET age:verification:account:[accountId]:user [userJson] PXAT [expiration]
+        // SET age:verification:account:[accountId]:expiration [expiration]
+        // (HSET is not used because we can only expire the entire key, not individual fields.)
         String redisUserKey = getRedisUserKey(accountId);
         String userJson = utils.serialize(user);
         String redisExpirationKey = getRedisExpirationKey(accountId);
-        try (Pipeline pipeline = client.pipelined()) {
-            pipeline.set(redisUserKey, userJson, new SetParams().pxAt(pxAt));
-            pipeline.set(redisExpirationKey, Long.toString(pxAt)); // set last by design
-            pipeline.sync();
+        try (AbstractTransaction transaction = client.transaction(true)) {
+            transaction.set(redisUserKey, userJson, new SetParams().pxAt(pxAt));
+            transaction.set(redisExpirationKey, Long.toString(pxAt));
+            transaction.exec();
         }
         return Optional.empty();
     }
