@@ -50,7 +50,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         String redisExpirationKey = getRedisExpirationKey(accountId);
         Response<String> userJsonResponse;
         Response<String> rawExpirationResponse;
-        try (AbstractTransaction transaction = client.transaction(true)) {
+        try (AbstractTransaction transaction = client.multi()) {
             userJsonResponse = transaction.get(redisUserKey);
             rawExpirationResponse = transaction.get(redisExpirationKey);
             transaction.exec();
@@ -97,7 +97,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         String redisUserKey = getRedisUserKey(accountId);
         String userJson = utils.serialize(user);
         String redisExpirationKey = getRedisExpirationKey(accountId);
-        try (AbstractTransaction transaction = client.transaction(true)) {
+        try (AbstractTransaction transaction = client.multi()) {
             transaction.set(redisUserKey, userJson, new SetParams().pxAt(pxAt));
             transaction.set(redisExpirationKey, Long.toString(pxAt));
             transaction.exec();
