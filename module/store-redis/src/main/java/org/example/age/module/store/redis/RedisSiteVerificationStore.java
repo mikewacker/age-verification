@@ -12,10 +12,8 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.module.store.SiteVerificationStore;
-import redis.clients.jedis.CommandArguments;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Protocol;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.params.SetParams;
 
@@ -86,7 +84,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         String redisPseudonymKey = getPseudonymKey(user.getPseudonym());
         long pxAt = expiration.toInstant().toEpochMilli();
         String conflictingAccountId =
-                client.set(redisPseudonymKey, accountId, new GetSetParams().nx().pxAt(pxAt));
+                client.setGet(redisPseudonymKey, accountId, new SetParams().nx().pxAt(pxAt));
         if (conflictingAccountId != null) {
             return Optional.of(conflictingAccountId);
         }
@@ -125,15 +123,5 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
     private static OffsetDateTime parseTime(String rawTimestamp) {
         long timestamp = Long.parseLong(rawTimestamp);
         return Instant.ofEpochMilli(timestamp).atOffset(ZoneOffset.UTC);
-    }
-
-    /** SET options with a GET option added. */
-    private static final class GetSetParams extends SetParams {
-
-        @Override
-        public void addParams(CommandArguments args) {
-            super.addParams(args);
-            args.add(Protocol.Keyword.GET);
-        }
     }
 }
