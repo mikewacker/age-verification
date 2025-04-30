@@ -113,9 +113,9 @@ public final class RedisSiteAccountStoreTest {
         Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username9", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId).isEmpty();
 
-        String userValue = redis.client().get("age:verification:account:username9:user");
+        String userValue = redis.client().get("{age:verification:account:username9}:user");
         assertThat(userValue).isNotNull();
-        String expirationValue = redis.client().get("age:verification:account:username9:expiration");
+        String expirationValue = redis.client().get("{age:verification:account:username9}:expiration");
         assertThat(expirationValue).isNotNull();
         String pseudonymKey = String.format("age:verification:pseudonym:%s", user.getPseudonym());
         String pseudonymValue = redis.client().get(pseudonymKey);

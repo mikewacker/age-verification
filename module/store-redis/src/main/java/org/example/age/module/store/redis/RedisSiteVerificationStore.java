@@ -46,8 +46,8 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
 
     private VerificationState loadSync(String accountId) {
         // Run the Redis commands.
-        String redisUserKey = getRedisUserKey(accountId);
-        String redisExpirationKey = getRedisExpirationKey(accountId);
+        String redisUserKey = getRedisAccountUserKey(accountId);
+        String redisExpirationKey = getRedisAccountExpirationKey(accountId);
         Response<String> userJsonResponse;
         Response<String> rawExpirationResponse;
         try (AbstractTransaction transaction = client.multi()) {
@@ -91,12 +91,12 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         }
 
         // Save the verified account:
-        // SET age:verification:account:[accountId]:user [userJson] PXAT [expiration]
-        // SET age:verification:account:[accountId]:expiration [expiration]
+        // SET {age:verification:account:[accountId]}:user [userJson] PXAT [expiration]
+        // SET {age:verification:account:[accountId]}:expiration [expiration]
         // (HSET is not used because we can only expire the entire key, not individual fields.)
-        String redisUserKey = getRedisUserKey(accountId);
+        String redisUserKey = getRedisAccountUserKey(accountId);
         String userJson = utils.serialize(user);
-        String redisExpirationKey = getRedisExpirationKey(accountId);
+        String redisExpirationKey = getRedisAccountExpirationKey(accountId);
         try (AbstractTransaction transaction = client.multi()) {
             transaction.set(redisUserKey, userJson, new SetParams().pxAt(pxAt));
             transaction.set(redisExpirationKey, Long.toString(pxAt));
@@ -106,15 +106,15 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
     }
 
     /** Gets the Redis key for an account's user. */
-    private String getRedisUserKey(String accountId) {
-        String userKey = String.format("account:%s:user", accountId);
-        return utils.getRedisKey(REDIS_KEY_PREFIX, userKey);
+    private String getRedisAccountUserKey(String accountId) {
+        String accountKey = String.format("account:%s", accountId);
+        return utils.getTaggedRedisKey(REDIS_KEY_PREFIX, accountKey, "user");
     }
 
     /** Gets the Redis key for an account's expiration. */
-    private String getRedisExpirationKey(String accountId) {
-        String expirationKey = String.format("account:%s:expiration", accountId);
-        return utils.getRedisKey(REDIS_KEY_PREFIX, expirationKey);
+    private String getRedisAccountExpirationKey(String accountId) {
+        String accountKey = String.format("account:%s", accountId);
+        return utils.getTaggedRedisKey(REDIS_KEY_PREFIX, accountKey, "expiration");
     }
 
     /** Gets the Redis key for a pseudonym. */
