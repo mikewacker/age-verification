@@ -33,6 +33,11 @@ final class RedisUtils {
         return String.format("%s:%s", prefix, key);
     }
 
+    /** Gets a Redis key that uses a hash tag. */
+    public String getTaggedRedisKey(String prefix, String taggedKey, String untaggedKey) {
+        return String.format("{%s:%s}:%s", prefix, taggedKey, untaggedKey);
+    }
+
     /** Serializes a value to JSON. */
     public <V> String serialize(V value) {
         try {
