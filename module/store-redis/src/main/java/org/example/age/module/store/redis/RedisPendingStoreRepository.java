@@ -5,6 +5,7 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.example.age.service.module.env.EnvUtils;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import redis.clients.jedis.JedisPooled;
@@ -14,12 +15,12 @@ import redis.clients.jedis.JedisPooled;
 final class RedisPendingStoreRepository implements PendingStoreRepository {
 
     private final JedisPooled client;
-    private final RedisUtils utils;
+    private final EnvUtils utils;
 
     private final Map<String, PendingStore<?>> stores = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    public RedisPendingStoreRepository(JedisPooled client, RedisUtils utils) {
+    public RedisPendingStoreRepository(JedisPooled client, EnvUtils utils) {
         this.client = client;
         this.utils = utils;
     }
@@ -32,6 +33,6 @@ final class RedisPendingStoreRepository implements PendingStoreRepository {
 
     /** Creates a pending store. */
     private <V> PendingStore<V> create(String name, Class<V> valueType) {
-        return new RedisPendingStore<>(client, utils, name, valueType);
+        return new RedisPendingStore<>(client, name, valueType, utils);
     }
 }

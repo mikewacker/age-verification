@@ -11,6 +11,7 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
+import org.example.age.service.module.env.EnvUtils;
 import org.example.age.service.module.store.SiteVerificationStore;
 import redis.clients.jedis.AbstractTransaction;
 import redis.clients.jedis.JedisPooled;
@@ -26,10 +27,10 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
             VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final JedisPooled client;
-    private final RedisUtils utils;
+    private final EnvUtils utils;
 
     @Inject
-    public RedisSiteVerificationStore(JedisPooled client, RedisUtils utils) {
+    public RedisSiteVerificationStore(JedisPooled client, EnvUtils utils) {
         this.client = client;
         this.utils = utils;
     }
@@ -107,20 +108,17 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
 
     /** Gets the Redis key for an account's user. */
     private String getRedisAccountUserKey(String accountId) {
-        String accountKey = String.format("account:%s", accountId);
-        return utils.getTaggedRedisKey(REDIS_KEY_PREFIX, accountKey, "user");
+        return String.format("{%s:account:%s}:user", REDIS_KEY_PREFIX, accountId);
     }
 
     /** Gets the Redis key for an account's expiration. */
     private String getRedisAccountExpirationKey(String accountId) {
-        String accountKey = String.format("account:%s", accountId);
-        return utils.getTaggedRedisKey(REDIS_KEY_PREFIX, accountKey, "expiration");
+        return String.format("{%s:account:%s}:expiration", REDIS_KEY_PREFIX, accountId);
     }
 
     /** Gets the Redis key for a pseudonym. */
     private String getPseudonymKey(SecureId pseudonym) {
-        String pseudonymKey = String.format("pseudonym:%s", pseudonym);
-        return utils.getRedisKey(REDIS_KEY_PREFIX, pseudonymKey);
+        return String.format("%s:pseudonym:%s", REDIS_KEY_PREFIX, pseudonym);
     }
 
     /** Parses a time from a raw timestamp. */

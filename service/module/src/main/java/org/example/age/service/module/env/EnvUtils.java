@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.service.module.env;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
@@ -10,32 +10,17 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
-/** Utilities for working with Redis. */
+/** Utilities that depend on the environment. */
 @Singleton
-final class RedisUtils {
+public final class EnvUtils {
 
     private final ObjectMapper mapper;
     private final ExecutorService worker;
 
     @Inject
-    public RedisUtils(ObjectMapper mapper, @Named("worker") ExecutorService worker) {
+    public EnvUtils(ObjectMapper mapper, @Named("worker") ExecutorService worker) {
         this.mapper = mapper;
         this.worker = worker;
-    }
-
-    /** Runs a task (that issues Redis commands) asynchronously on a worker thread. */
-    public <V> CompletionStage<V> runAsync(Supplier<V> task) {
-        return CompletableFuture.supplyAsync(task, worker);
-    }
-
-    /** Gets a Redis key. */
-    public String getRedisKey(String prefix, String key) {
-        return String.format("%s:%s", prefix, key);
-    }
-
-    /** Gets a Redis key that uses a hash tag. */
-    public String getTaggedRedisKey(String prefix, String taggedKey, String untaggedKey) {
-        return String.format("{%s:%s}:%s", prefix, taggedKey, untaggedKey);
     }
 
     /** Serializes a value to JSON. */
@@ -54,5 +39,10 @@ final class RedisUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Runs a task asynchronously on a worker thread. */
+    public <V> CompletionStage<V> runAsync(Supplier<V> task) {
+        return CompletableFuture.supplyAsync(task, worker);
     }
 }
