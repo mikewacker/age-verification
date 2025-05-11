@@ -28,7 +28,7 @@ public final class Demo {
 
     /** Main method. */
     @SuppressWarnings("CatchAndPrintStackTrace")
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         try {
             startServers();
             verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith", true);
