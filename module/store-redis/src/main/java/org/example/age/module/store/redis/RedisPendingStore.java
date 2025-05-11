@@ -3,6 +3,7 @@ package org.example.age.module.store.redis;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+import org.example.age.service.module.env.EnvUtils;
 import org.example.age.service.module.store.PendingStore;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Pipeline;
@@ -12,16 +13,18 @@ import redis.clients.jedis.params.SetParams;
 /** Implementation of {@link PendingStore} that is backed by Redis. */
 final class RedisPendingStore<V> implements PendingStore<V> {
 
-    private final JedisPooled client;
-    private final RedisUtils utils;
-    private final String redisKeyPrefix;
-    private final Class<V> valueType;
+    private static final String REDIS_KEY_PREFIX = "age:pending";
 
-    public RedisPendingStore(JedisPooled client, RedisUtils utils, String name, Class<V> valueType) {
+    private final JedisPooled client;
+    private final String name;
+    private final Class<V> valueType;
+    private final EnvUtils utils;
+
+    public RedisPendingStore(JedisPooled client, String name, Class<V> valueType, EnvUtils utils) {
         this.client = client;
-        this.utils = utils;
-        this.redisKeyPrefix = String.format("age:pending:%s", name);
+        this.name = name;
         this.valueType = valueType;
+        this.utils = utils;
     }
 
     @Override
@@ -40,7 +43,7 @@ final class RedisPendingStore<V> implements PendingStore<V> {
     }
 
     private Void putSync(String key, V value, OffsetDateTime expiration) {
-        String redisKey = utils.getRedisKey(redisKeyPrefix, key);
+        String redisKey = getRedisKey(key);
         String json = utils.serialize(value);
         long pxAt = expiration.toInstant().toEpochMilli();
         client.set(redisKey, json, new SetParams().pxAt(pxAt));
@@ -48,15 +51,20 @@ final class RedisPendingStore<V> implements PendingStore<V> {
     }
 
     private Optional<V> tryGetSync(String key) {
-        String redisKey = utils.getRedisKey(redisKeyPrefix, key);
+        String redisKey = getRedisKey(key);
         String json = client.get(redisKey);
         return (json != null) ? Optional.of(utils.deserialize(json, valueType)) : Optional.empty();
     }
 
     private Optional<V> tryRemoveSync(String key) {
-        String redisKey = utils.getRedisKey(redisKeyPrefix, key);
+        String redisKey = getRedisKey(key);
         String json = del(redisKey);
         return (json != null) ? Optional.of(utils.deserialize(json, valueType)) : Optional.empty();
+    }
+
+    /** Gets the Redis key for a key. */
+    private String getRedisKey(String key) {
+        return String.format("%s:%s:%s", REDIS_KEY_PREFIX, name, key);
     }
 
     /** Deletes a key from Redis, returning the value. */
