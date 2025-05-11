@@ -28,7 +28,7 @@ public final class DemoInfra {
             .writerWithDefaultPrettyPrinter();
 
     /** Starts Redis. */
-    public static void startRedis() throws IOException {
+    public static void startRedis() throws Exception {
         redis.beforeAll(null);
     }
 
@@ -74,7 +74,7 @@ public final class DemoInfra {
     }
 
     /** Stops everything (and terminates the application). */
-    public static void stop() throws IOException {
+    public static void stop() throws Exception {
         redis.afterAll(null);
         System.exit(0);
     }
