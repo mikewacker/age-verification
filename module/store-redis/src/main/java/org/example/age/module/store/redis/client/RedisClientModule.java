@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.module.store.redis.client;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPooled;
  * Depends on an unbound {@link RedisConfig}.
  */
 @Module
-interface RedisClientModule {
+public interface RedisClientModule {
 
     @Provides
     @Singleton

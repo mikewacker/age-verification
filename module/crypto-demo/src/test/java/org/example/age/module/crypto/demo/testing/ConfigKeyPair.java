@@ -1,8 +1,8 @@
 package org.example.age.module.crypto.demo.testing;
 
 import java.math.BigInteger;
-import org.example.age.module.crypto.demo.EccPrivateKey;
-import org.example.age.module.crypto.demo.EccPublicKey;
+import org.example.age.module.crypto.demo.keys.EccPrivateKey;
+import org.example.age.module.crypto.demo.keys.EccPublicKey;
 
 /** Key pair from configuration for testing. */
 public final class ConfigKeyPair {

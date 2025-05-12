@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.Localization;
+import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
 
 /**

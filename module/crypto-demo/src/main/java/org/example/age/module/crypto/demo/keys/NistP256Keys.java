@@ -1,4 +1,4 @@
-package org.example.age.module.crypto.demo;
+package org.example.age.module.crypto.demo.keys;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;

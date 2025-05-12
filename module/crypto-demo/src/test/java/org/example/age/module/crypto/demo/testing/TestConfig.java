@@ -1,8 +1,8 @@
 package org.example.age.module.crypto.demo.testing;
 
 import org.example.age.api.crypto.SecureId;
-import org.example.age.module.crypto.demo.AvsKeysConfig;
-import org.example.age.module.crypto.demo.SiteKeysConfig;
+import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
+import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 
 /** Configuration for testing. */
 public final class TestConfig {

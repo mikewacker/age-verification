@@ -5,8 +5,8 @@ import io.dropwizard.core.Configuration;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.age.module.client.AvsClientsConfig;
-import org.example.age.module.crypto.demo.AvsKeysConfig;
-import org.example.age.module.store.redis.RedisConfig;
+import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
+import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.AvsServiceConfig;
 
 /** Configuration for the application. */

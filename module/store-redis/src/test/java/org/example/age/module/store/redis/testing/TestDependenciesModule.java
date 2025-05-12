@@ -6,7 +6,7 @@ import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
-import org.example.age.module.store.redis.RedisConfig;
+import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.testing.TestEnvModule;
 
 /**

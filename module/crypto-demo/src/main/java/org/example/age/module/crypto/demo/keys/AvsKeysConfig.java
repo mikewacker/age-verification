@@ -1,7 +1,9 @@
-package org.example.age.module.crypto.demo;
+package org.example.age.module.crypto.demo.keys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.security.PrivateKey;
 import java.util.Map;
 import org.example.age.api.ApiStyle;
 import org.example.age.api.AvsApi;
@@ -29,6 +31,13 @@ public interface AvsKeysConfig {
 
     /** Private key used to sign age certificates. */
     EccPrivateKey signing();
+
+    /** Private key used to sign age certificates. */
+    @Value.Derived
+    @JsonIgnore
+    default PrivateKey signingJca() {
+        return NistP256Keys.toPrivateKey(signing());
+    }
 
     /** Builder for the configuration. */
     final class Builder extends ImmutableAvsKeysConfig.Builder {

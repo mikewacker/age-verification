@@ -1,4 +1,4 @@
-package org.example.age.module.crypto.demo;
+package org.example.age.module.crypto.demo.keys;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

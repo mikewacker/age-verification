@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.module.store.redis.client;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
