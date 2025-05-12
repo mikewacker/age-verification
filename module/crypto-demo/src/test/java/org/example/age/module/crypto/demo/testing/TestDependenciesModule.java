@@ -3,8 +3,8 @@ package org.example.age.module.crypto.demo.testing;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.module.crypto.demo.AvsKeysConfig;
-import org.example.age.module.crypto.demo.SiteKeysConfig;
+import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
+import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.testing.TestEnvModule;
 
 /**

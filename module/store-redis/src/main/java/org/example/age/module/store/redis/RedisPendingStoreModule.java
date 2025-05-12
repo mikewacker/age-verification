@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
 import java.util.concurrent.ExecutorService;
+import org.example.age.module.store.redis.client.RedisClientModule;
+import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.module.store.PendingStoreRepository;
 
 /**

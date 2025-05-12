@@ -5,13 +5,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.ServerErrorException;
-import java.security.PublicKey;
 import java.security.Signature;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
+import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 
 /**
@@ -52,8 +52,7 @@ final class DemoAgeCertificateVerifier implements AgeCertificateVerifier {
     private Signature createVerifier() {
         try {
             Signature verifier = Signature.getInstance("SHA256withECDSA");
-            PublicKey publicKey = NistP256Keys.toPublicKey(config.signing());
-            verifier.initVerify(publicKey);
+            verifier.initVerify(config.signingJca());
             return verifier;
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -2,7 +2,7 @@ package org.example.age.module.store.redis.testing;
 
 import java.net.URI;
 import java.net.URL;
-import org.example.age.module.store.redis.RedisConfig;
+import org.example.age.module.store.redis.client.RedisConfig;
 
 /** Configuration for testing. */
 public final class TestConfig {

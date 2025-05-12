@@ -1,7 +1,9 @@
-package org.example.age.module.crypto.demo;
+package org.example.age.module.crypto.demo.keys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.security.PublicKey;
 import org.example.age.api.ApiStyle;
 import org.example.age.api.SiteApi;
 import org.example.age.api.crypto.SecureId;
@@ -28,6 +30,13 @@ public interface SiteKeysConfig {
 
     /** Public key used to verify the signature for an age certificate. */
     EccPublicKey signing();
+
+    /** Public key used to verify the signature for an age certificate. */
+    @Value.Derived
+    @JsonIgnore
+    default PublicKey signingJca() {
+        return NistP256Keys.toPublicKey(signing());
+    }
 
     /** Builder for the configuration. */
     final class Builder extends ImmutableSiteKeysConfig.Builder {

@@ -3,7 +3,6 @@ package org.example.age.module.crypto.demo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.security.PrivateKey;
 import java.security.Signature;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -11,6 +10,7 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
+import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 
 /**
@@ -46,8 +46,7 @@ final class DemoAgeCertificateSigner implements AgeCertificateSigner {
     private Signature createSigner() {
         try {
             Signature signing = Signature.getInstance("SHA256withECDSA");
-            PrivateKey privateKey = NistP256Keys.toPrivateKey(config.signing());
-            signing.initSign(privateKey);
+            signing.initSign(config.signingJca());
             return signing;
         } catch (Exception e) {
             throw new RuntimeException(e);

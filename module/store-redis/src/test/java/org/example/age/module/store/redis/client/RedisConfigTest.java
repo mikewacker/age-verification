@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.module.store.redis.client;
 
 import java.io.IOException;
 import org.example.age.module.store.redis.testing.TestConfig;
