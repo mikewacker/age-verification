@@ -1,7 +1,7 @@
 [versions]
 # main
 dagger = "2.56.2"
-dropwizard = "4.0.13"
+dropwizard = "5.0.0-rc.2"
 immutables = "2.10.1"
 jackson = "2.19.0"
 jakartaAnnotation = "3.0.0"
