@@ -7,6 +7,7 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
 
     api(project(":api"))
+    api(libs.awsSdk.dynamoDb)
     api(libs.dagger.dagger)
     api(libs.dropwizard.core)
     api(libs.jackson.databind)
@@ -16,6 +17,7 @@ dependencies {
     api(libs.redisEmbedded.redis)
     api(libs.retrofit.retrofit)
     implementation(libs.assertj.core)
+    implementation(libs.aws.dynamoDbLocal)
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
     implementation(libs.retrofit.mock)

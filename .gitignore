@@ -4,3 +4,6 @@ build
 
 # IntelliJ IDEA
 .idea
+
+# DynamoDB Local
+dynamodb-local-metadata.json

@@ -1,5 +1,7 @@
 [versions]
 # main
+aws = "2.6.0"
+awsSdk = "2.31.45"
 dagger = "2.56.2"
 dropwizard = "5.0.0-rc.2"
 immutables = "2.10.1"
@@ -35,6 +37,7 @@ errorprone-core = { module = "com.google.errorprone:error_prone_core", version.r
 immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
 
 # main
+awsSdk-dynamoDb = { module = "software.amazon.awssdk:dynamodb", version.ref = "awsSdk" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
 jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
@@ -53,6 +56,7 @@ retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = 
 
 # test
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+aws-dynamoDbLocal = { module = "com.amazonaws:DynamoDBLocal", version.ref = "aws" }
 dropwizard-testing = { module = "io.dropwizard:dropwizard-testing", version.ref = "dropwizard" }
 guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
