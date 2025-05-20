@@ -7,6 +7,7 @@ include(
         "module:request-demo",
         "module:client",
         "module:store-redis",
+        "module:store-dynamodb",
         "module:crypto-demo",
         "app",
         "testing",
