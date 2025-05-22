@@ -9,7 +9,7 @@ import org.example.age.testing.DynamoDbExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
 import software.amazon.awssdk.services.dynamodb.model.BillingMode;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
@@ -22,12 +22,12 @@ public final class DynamoDbClientTest {
     @RegisterExtension
     private static final DynamoDbExtension dynamoDb = new DynamoDbExtension();
 
-    private static DynamoDbAsyncClient client;
+    private static DynamoDbClient client;
 
     @BeforeAll
     public static void createClient() {
         TestComponent component = TestComponent.create(dynamoDb.port());
-        client = component.dynamoDbAsyncClient();
+        client = component.dynamoDbClient();
     }
 
     @Test
@@ -44,10 +44,8 @@ public final class DynamoDbClientTest {
                         .build())
                 .billingMode(BillingMode.PAY_PER_REQUEST)
                 .build();
-        client.createTable(tableRequest).get();
-        client.waiter()
-                .waitUntilTableExists(builder -> builder.tableName("table"))
-                .get();
+        client.createTable(tableRequest);
+        client.waiter().waitUntilTableExists(builder -> builder.tableName("table"));
     }
 
     /** Dagger component for the client. */
@@ -59,7 +57,7 @@ public final class DynamoDbClientTest {
             return DaggerDynamoDbClientTest_TestComponent.factory().create(port);
         }
 
-        DynamoDbAsyncClient dynamoDbAsyncClient();
+        DynamoDbClient dynamoDbClient();
 
         @Component.Factory
         interface Factory {
