@@ -81,17 +81,12 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
     }
 
     private Optional<String> trySaveSync(String accountId, VerifiedUser user, OffsetDateTime expiration) {
-        // Link the pseudonym to the account, checking for a conflict:
-        // SET age:verification:pseudonym:[pseudonym] [accountId] NX PXAT [expiration] GET
-        String redisPseudonymKey = getPseudonymKey(user.getPseudonym());
         long pxAt = expiration.toInstant().toEpochMilli();
-        String conflictingAccountId =
-                client.setGet(redisPseudonymKey, accountId, new SetParams().nx().pxAt(pxAt));
-        if (conflictingAccountId != null) {
-            return Optional.of(conflictingAccountId);
+        Optional<String> maybeConflictingAccountId = tryReservePseudonym(accountId, user, pxAt);
+        if (maybeConflictingAccountId.isPresent()) {
+            return maybeConflictingAccountId;
         }
 
-        // Save the verified account:
         // SET {age:verification:account:[accountId]}:user [userJson] PXAT [expiration]
         // SET {age:verification:account:[accountId]}:expiration [expiration]
         // (HSET is not used because we can only expire the entire key, not individual fields.)
@@ -104,6 +99,25 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
             transaction.exec();
         }
         return Optional.empty();
+    }
+
+    /** Tries to reserve a pseudonym, returning empty or the account ID that has already reserved this pseudonym. */
+    private Optional<String> tryReservePseudonym(String accountId, VerifiedUser user, long pxAt) {
+        // SET age:verification:pseudonym:[pseudonym] [accountId] NX PXAT [expiration] GET
+        String redisPseudonymKey = getPseudonymKey(user.getPseudonym());
+        String conflictingAccountId =
+                client.setGet(redisPseudonymKey, accountId, new SetParams().nx().pxAt(pxAt));
+        if (conflictingAccountId == null) {
+            return Optional.empty();
+        }
+
+        if (conflictingAccountId.equals(accountId)) {
+            // PEXPIREAT age:verification:pseudonym:[pseudonym] [expiration]
+            client.pexpireAt(redisPseudonymKey, pxAt);
+            return Optional.empty();
+        }
+
+        return Optional.of(conflictingAccountId);
     }
 
     /** Gets the Redis key for an account's user. */

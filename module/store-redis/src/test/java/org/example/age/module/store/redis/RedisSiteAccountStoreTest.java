@@ -1,7 +1,6 @@
 package org.example.age.module.store.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
 import static org.example.age.testing.CompletionStageTesting.getCompleted;
 
 import dagger.BindsInstance;
@@ -11,6 +10,7 @@ import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
@@ -39,14 +39,14 @@ public final class RedisSiteAccountStoreTest {
     @Test
     public void saveThenLoad() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username1", user, expiresIn(300000)));
+        OffsetDateTime expiration = expiresIn(300000);
+        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username1", user, expiration));
         assertThat(maybeConflictingAccountId).isEmpty();
 
         VerificationState state = getCompleted(store.load("username1"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.getUser()).isEqualTo(user);
-        OffsetDateTime expectedExpiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
-        assertThat(state.getExpiration()).isCloseTo(expectedExpiration, within(Duration.ofSeconds(1)));
+        assertThat(state.getExpiration()).isEqualTo(expiration);
     }
 
     @Test
@@ -54,18 +54,17 @@ public final class RedisSiteAccountStoreTest {
         VerificationState state = getCompleted(store.load("username2"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
         assertThat(state.getUser()).isNull();
+        assertThat(state.getExpiration()).isNull();
     }
 
     @Test
-    public void saveThenExpireThenLoad() throws InterruptedException {
+    public void saveTwice() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username3", user, expiresIn(2)));
-        assertThat(maybeConflictingAccountId).isEmpty();
+        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username3", user, expiresIn(300000)));
+        assertThat(maybeConflictingAccountId1).isEmpty();
 
-        Thread.sleep(4);
-        VerificationState state = getCompleted(store.load("username3"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.EXPIRED);
-        assertThat(state.getUser()).isNull();
+        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username3", user, expiresIn(300000)));
+        assertThat(maybeConflictingAccountId2).isEmpty();
     }
 
     @Test
@@ -77,34 +76,39 @@ public final class RedisSiteAccountStoreTest {
         Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username5", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId2).hasValue("username4");
 
-        VerificationState state = getCompleted(store.load("username5"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
+        VerificationState state1 = getCompleted(store.load("username4"));
+        assertThat(state1.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
+
+        VerificationState state2 = getCompleted(store.load("username5"));
+        assertThat(state2.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 
     @Test
-    public void saveThenExpireThenSaveThenLoad() throws InterruptedException {
+    public void saveThenExpireThenLoad() throws InterruptedException {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username6", user, expiresIn(2)));
+        OffsetDateTime expiration = expiresIn(2);
+        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username6", user, expiration));
+        assertThat(maybeConflictingAccountId).isEmpty();
+
+        Thread.sleep(4);
+        VerificationState state = getCompleted(store.load("username6"));
+        assertThat(state.getStatus()).isEqualTo(VerificationStatus.EXPIRED);
+        assertThat(state.getUser()).isNull();
+        assertThat(state.getExpiration()).isEqualTo(expiration);
+    }
+
+    @Test
+    public void save_ExpiredConflict() throws InterruptedException {
+        VerifiedUser user = TestModels.createVerifiedUser();
+        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username7", user, expiresIn(2)));
         assertThat(maybeConflictingAccountId1).isEmpty();
 
         Thread.sleep(4);
-        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username7", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username8", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId2).isEmpty();
 
-        VerificationState state = getCompleted(store.load("username7"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
-        assertThat(state.getUser()).isEqualTo(user);
-    }
-
-    @Test
-    public void saveExpiredThenLoad() {
-        VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username8", user, expiresIn(-1000)));
-        assertThat(maybeConflictingAccountId).isEmpty();
-
         VerificationState state = getCompleted(store.load("username8"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.EXPIRED);
-        assertThat(state.getUser()).isNull();
+        assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
@@ -123,7 +127,7 @@ public final class RedisSiteAccountStoreTest {
     }
 
     private static OffsetDateTime expiresIn(int ms) {
-        return OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMillis(ms));
+        return OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMillis(ms)).truncatedTo(ChronoUnit.MILLIS);
     }
 
     /** Dagger component for the stores. */
