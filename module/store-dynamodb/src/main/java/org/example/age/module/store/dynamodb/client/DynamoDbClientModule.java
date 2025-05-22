@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 /**
  * Dagger module that binds {@link DynamoDbAsyncClient}.
@@ -15,7 +16,7 @@ public interface DynamoDbClientModule {
 
     @Provides
     @Singleton
-    static DynamoDbAsyncClient bindDynamoDbAsyncClient(DynamoDbConfig config) {
+    static DynamoDbClient bindDynamoDbClient(DynamoDbConfig config) {
         return DynamoDbClientFactory.create(config);
     }
 }
