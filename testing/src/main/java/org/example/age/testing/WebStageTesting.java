@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.fail;
 
 import jakarta.ws.rs.WebApplicationException;
 import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -72,6 +74,15 @@ public final class WebStageTesting {
     /** Converts an asynchronous stage to an asynchronous Retrofit call. */
     public static <V> Call<V> toCall(CompletionStage<V> stage, Duration timeout) {
         return Calls.defer(() -> completeAsCall(stage, timeout));
+    }
+
+    /** Wraps an asynchronous API, converting uncaught exceptions to a failed stage. */
+    public static <V> CompletionStage<V> wrapExceptions(Supplier<CompletionStage<V>> api) {
+        try {
+            return api.get();
+        } catch (RuntimeException e) {
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
     /** Completes the asynchronous stage, converting the result to a Retrofit call. */

@@ -122,6 +122,14 @@ public final class WebStageTestingTest {
         assertThatThrownBy(call::execute).isInstanceOf(TimeoutException.class);
     }
 
+    @Test
+    public void wrapExceptions() {
+        CompletionStage<?> stage = WebStageTesting.wrapExceptions(() -> {
+            throw new NotFoundException();
+        });
+        awaitErrorCode(stage, 404);
+    }
+
     private static Void sleep() {
         try {
             Thread.sleep(3);
