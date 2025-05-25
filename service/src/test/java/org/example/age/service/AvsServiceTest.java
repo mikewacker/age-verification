@@ -2,8 +2,8 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
-import static org.example.age.testing.CompletionStageTesting.getCompleted;
+import static org.example.age.testing.WebStageTesting.await;
+import static org.example.age.testing.WebStageTesting.awaitErrorCode;
 
 import dagger.Binds;
 import dagger.Component;
@@ -32,7 +32,7 @@ import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.TestWrappedAvsService;
 import org.example.age.service.testing.request.TestAccountId;
-import org.example.age.testing.CompletionStageTesting;
+import org.example.age.testing.WebStageTesting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
@@ -45,6 +45,7 @@ public final class AvsServiceTest {
 
     private AvsApi avsService;
     private TestAccountId accountId;
+
     private static AgeCertificate ageCertificate;
 
     @BeforeEach
@@ -57,108 +58,68 @@ public final class AvsServiceTest {
 
     @Test
     public void verify() {
-        CompletionStage<VerificationRequest> requestResponse1 =
-                avsService.createVerificationRequestForSite("site1", EMPTY_DATA);
-        assertThat(requestResponse1).isCompleted();
-        VerificationRequest request1 = getCompleted(requestResponse1);
+        accountId.set("person");
+        VerificationRequest request1 = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
         assertThat(request1.getSiteId()).isEqualTo("site1");
         OffsetDateTime expectedExpiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
         assertThat(request1.getExpiration()).isCloseTo(expectedExpiration, within(1, ChronoUnit.SECONDS));
-        SecureId requestId1 = request1.getId();
 
-        accountId.set("person");
-        CompletionStage<Void> linkResponse1 = avsService.linkVerificationRequest(requestId1);
-        assertThat(linkResponse1).isCompleted();
-
-        CompletionStage<Void> sendResponse1 = avsService.sendAgeCertificate();
-        assertThat(sendResponse1).isCompleted();
+        await(avsService.linkVerificationRequest(request1.getId()));
+        await(avsService.sendAgeCertificate());
         assertThat(ageCertificate.getRequest()).isEqualTo(request1);
         SecureId pseudonym1 = ageCertificate.getUser().getPseudonym();
+        assertThat(ageCertificate.getUser().getAgeRange())
+                .isEqualTo(AgeRange.builder().min(18).build());
+
         ageCertificate = null;
-
-        CompletionStage<VerificationRequest> requestResponse2 =
-                avsService.createVerificationRequestForSite("site2", EMPTY_DATA);
-        assertThat(requestResponse2).isCompleted();
-        SecureId requestId2 = getCompleted(requestResponse2).getId();
-
-        CompletionStage<Void> linkResponse2 = avsService.linkVerificationRequest(requestId2);
-        assertThat(linkResponse2).isCompleted();
-
-        CompletionStage<Void> sendResponse2 = avsService.sendAgeCertificate();
-        assertThat(sendResponse2).isCompleted();
+        VerificationRequest request2 = await(avsService.createVerificationRequestForSite("site2", EMPTY_DATA));
+        await(avsService.linkVerificationRequest(request2.getId()));
+        await(avsService.sendAgeCertificate());
         SecureId pseudonym2 = ageCertificate.getUser().getPseudonym();
         assertThat(pseudonym2).isNotEqualTo(pseudonym1);
-        AgeRange ageRange = ageCertificate.getUser().getAgeRange();
-        assertThat(ageRange.getMax()).isEqualTo(null);
     }
 
     @Test
     public void error_Unauthenticated() {
-        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(SecureId.generate());
-        assertIsCompletedWithErrorCode(linkResponse, 401);
-
-        CompletionStage<Void> certificateResponse = avsService.sendAgeCertificate();
-        assertIsCompletedWithErrorCode(certificateResponse, 401);
+        awaitErrorCode(avsService.linkVerificationRequest(SecureId.generate()), 401);
+        awaitErrorCode(avsService.sendAgeCertificate(), 401);
     }
 
     @Test
     public void error_UnverifiedPerson() {
         accountId.set("unverified-person");
-        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(SecureId.generate());
-        assertIsCompletedWithErrorCode(linkResponse, 403);
-
-        CompletionStage<Void> certificateResponse = avsService.sendAgeCertificate();
-        assertIsCompletedWithErrorCode(certificateResponse, 403);
+        awaitErrorCode(avsService.linkVerificationRequest(SecureId.generate()), 403);
+        awaitErrorCode(avsService.sendAgeCertificate(), 403);
     }
 
     @Test
     public void error_LinkVerificationRequestTwice() {
-        CompletionStage<VerificationRequest> requestResponse =
-                avsService.createVerificationRequestForSite("site1", EMPTY_DATA);
-        assertThat(requestResponse).isCompleted();
-        SecureId requestId = getCompleted(requestResponse).getId();
-
         accountId.set("person");
-        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(requestId);
-        assertThat(linkResponse).isCompleted();
-
-        CompletionStage<Void> doubleLinkResponse = avsService.linkVerificationRequest(requestId);
-        assertIsCompletedWithErrorCode(doubleLinkResponse, 404);
+        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
+        await(avsService.linkVerificationRequest(request.getId()));
+        awaitErrorCode(avsService.linkVerificationRequest(request.getId()), 404);
     }
 
     @Test
     public void error_SendAgeCertificateTwice() {
-        CompletionStage<VerificationRequest> requestResponse =
-                avsService.createVerificationRequestForSite("site1", EMPTY_DATA);
-        assertThat(requestResponse).isCompleted();
-        SecureId requestId = getCompleted(requestResponse).getId();
-
         accountId.set("person");
-        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(requestId);
-        assertThat(linkResponse).isCompleted();
-
-        CompletionStage<Void> sendResponse = avsService.sendAgeCertificate();
-        assertThat(sendResponse).isCompleted();
-
-        CompletionStage<Void> doubleSendResponse = avsService.sendAgeCertificate();
-        assertIsCompletedWithErrorCode(doubleSendResponse, 404);
+        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
+        await(avsService.linkVerificationRequest(request.getId()));
+        await(avsService.sendAgeCertificate());
+        awaitErrorCode(avsService.sendAgeCertificate(), 404);
     }
 
     @Test
     public void error_VerificationRequestNotFound() {
         accountId.set("person");
-        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(SecureId.generate());
-        assertIsCompletedWithErrorCode(linkResponse, 404);
-
-        CompletionStage<Void> sendResponse = avsService.sendAgeCertificate();
-        assertIsCompletedWithErrorCode(sendResponse, 404);
+        awaitErrorCode(avsService.linkVerificationRequest(SecureId.generate()), 404);
+        awaitErrorCode(avsService.sendAgeCertificate(), 404);
     }
 
     @Test
     public void error_UnregisteredSite() {
-        CompletionStage<VerificationRequest> requestResponse =
-                avsService.createVerificationRequestForSite("unregistered-site", EMPTY_DATA);
-        assertIsCompletedWithErrorCode(requestResponse, 404);
+        accountId.set("person");
+        awaitErrorCode(avsService.createVerificationRequestForSite("unregistered-site", EMPTY_DATA), 404);
     }
 
     /** Fake implementation of {@link SiteClientRepository}. */
@@ -210,7 +171,7 @@ public final class AvsServiceTest {
             CompletionStage<Void> response = ageCertificateVerifier
                     .verify(signedAgeCertificate)
                     .thenAccept(ageCertificate -> AvsServiceTest.ageCertificate = ageCertificate);
-            return CompletionStageTesting.toCall(response);
+            return WebStageTesting.toCall(response);
         }
     }
 

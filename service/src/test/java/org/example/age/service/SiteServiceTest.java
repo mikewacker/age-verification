@@ -2,8 +2,8 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
-import static org.example.age.testing.CompletionStageTesting.getCompleted;
+import static org.example.age.testing.WebStageTesting.await;
+import static org.example.age.testing.WebStageTesting.awaitErrorCode;
 
 import dagger.Binds;
 import dagger.Component;
@@ -15,7 +15,6 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.DigitalSignature;
@@ -41,6 +40,7 @@ public final class SiteServiceTest {
 
     private SiteApi siteService;
     private TestAccountId accountId;
+
     private AgeCertificateSigner ageCertificateSigner;
 
     @BeforeEach
@@ -54,25 +54,15 @@ public final class SiteServiceTest {
     @Test
     public void verify() {
         accountId.set("username");
-        CompletionStage<VerificationState> initStateResponse = siteService.getVerificationState();
-        VerificationState expectedInitState = VerificationState.builder()
-                .status(VerificationStatus.UNVERIFIED)
-                .build();
-        assertThat(initStateResponse).isCompletedWithValue(expectedInitState);
+        VerificationState initState = await(siteService.getVerificationState());
+        assertThat(initState.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
 
-        CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
-        assertThat(requestResponse).isCompleted();
-        VerificationRequest request = getCompleted(requestResponse);
+        VerificationRequest request = await(siteService.createVerificationRequest());
         assertThat(request.getSiteId()).isEqualTo("site1");
 
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertThat(certificateResponse).isCompleted();
-
-        CompletionStage<VerificationState> stateResponse = siteService.getVerificationState();
-        assertThat(stateResponse).isCompleted();
-        VerificationState state = getCompleted(stateResponse);
+        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        await(siteService.processAgeCertificate(signedAgeCertificate));
+        VerificationState state = await(siteService.getVerificationState());
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.getUser().getPseudonym())
                 .isNotEqualTo(signedAgeCertificate.getAgeCertificate().getUser().getPseudonym());
@@ -83,67 +73,52 @@ public final class SiteServiceTest {
     @Test
     public void error_DuplicateVerification() {
         accountId.set("duplicate");
-        CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
-        assertThat(requestResponse).isCompleted();
-        VerificationRequest request = getCompleted(requestResponse);
-        assertThat(request.getSiteId()).isEqualTo("site1");
-
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(certificateResponse, 409);
+        VerificationRequest request = await(siteService.createVerificationRequest());
+        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 409);
     }
 
     @Test
     public void error_Unauthenticated() {
-        CompletionStage<VerificationState> stateResponse = siteService.getVerificationState();
-        assertIsCompletedWithErrorCode(stateResponse, 401);
-
-        CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
-        assertIsCompletedWithErrorCode(requestResponse, 401);
+        awaitErrorCode(siteService.getVerificationState(), 401);
+        awaitErrorCode(siteService.createVerificationRequest(), 401);
     }
 
     @Test
     public void error_AccountNotFound() {
         VerificationRequest request = TestModels.createVerificationRequest("site1");
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(certificateResponse, 404);
+        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 404);
     }
 
     @Test
     public void error_WrongSite() {
         VerificationRequest request = TestModels.createVerificationRequest("site2");
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(certificateResponse, 403);
+        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 403);
     }
 
     @Test
     public void error_ExpiredAgeCertificate() {
         VerificationRequest request = createExpiredVerificationRequest();
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        SignedAgeCertificate signedAgeCertificate = sign(ageCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(certificateResponse, 404);
+        SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
+        awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 404);
     }
 
     @Test
     public void error_InvalidSignature() {
         VerificationRequest request = TestModels.createVerificationRequest("site1");
+        SignedAgeCertificate signedAgeCertificate = createInvalidSignedAgeCertificate(request);
+        awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 401);
+    }
+
+    private SignedAgeCertificate createSignedAgeCertificate(VerificationRequest request) {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate);
-        CompletionStage<Void> certificateResponse = siteService.processAgeCertificate(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(certificateResponse, 401);
+        return await(ageCertificateSigner.sign(ageCertificate));
     }
 
-    private SignedAgeCertificate sign(AgeCertificate ageCertificate) {
-        return getCompleted(ageCertificateSigner.sign(ageCertificate));
-    }
-
-    private static SignedAgeCertificate signInvalid(AgeCertificate ageCertificate) {
+    private static SignedAgeCertificate createInvalidSignedAgeCertificate(VerificationRequest request) {
+        AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
         DigitalSignature signature = DigitalSignature.builder()
                 .algorithm("secp256r1")
                 .data(SignatureData.fromString(""))

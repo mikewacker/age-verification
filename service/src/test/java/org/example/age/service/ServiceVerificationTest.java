@@ -1,7 +1,7 @@
 package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.CompletionStageTesting.getCompleted;
+import static org.example.age.testing.WebStageTesting.await;
 
 import dagger.Binds;
 import dagger.Component;
@@ -10,7 +10,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotFoundException;
-import java.util.concurrent.CompletionStage;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
@@ -24,7 +23,7 @@ import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.TestWrappedAvsService;
 import org.example.age.service.testing.TestWrappedSiteService;
 import org.example.age.service.testing.request.TestAccountId;
-import org.example.age.testing.CompletionStageTesting;
+import org.example.age.testing.WebStageTesting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
@@ -50,21 +49,12 @@ public final class ServiceVerificationTest {
     @Test
     public void verify() {
         siteAccountId.set("username");
-        CompletionStage<VerificationRequest> requestResponse = siteService.createVerificationRequest();
-        assertThat(requestResponse).isCompleted();
-        SecureId requestId = getCompleted(requestResponse).getId();
-
         avsAccountId.set("person");
-        CompletionStage<Void> linkResponse = avsService.linkVerificationRequest(requestId);
-        assertThat(linkResponse).isCompleted();
-
-        CompletionStage<Void> sendResponse = avsService.sendAgeCertificate();
-        assertThat(sendResponse).isCompleted();
-
-        CompletionStage<VerificationState> stateResponse = siteService.getVerificationState();
-        assertThat(stateResponse).isCompleted();
-        VerificationStatus status = getCompleted(stateResponse).getStatus();
-        assertThat(status).isEqualTo(VerificationStatus.VERIFIED);
+        VerificationRequest request = await(siteService.createVerificationRequest());
+        await(avsService.linkVerificationRequest(request.getId()));
+        await(avsService.sendAgeCertificate());
+        VerificationState state = await(siteService.getVerificationState());
+        assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     /** Adapts {@link AvsApi} to the corresponding client interface. */
@@ -76,17 +66,17 @@ public final class ServiceVerificationTest {
 
         @Override
         public Call<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
-            return CompletionStageTesting.toCall(avsService.createVerificationRequestForSite(siteId, authMatchData));
+            return WebStageTesting.toCall(avsService.createVerificationRequestForSite(siteId, authMatchData));
         }
 
         @Override
         public Call<Void> linkVerificationRequest(SecureId requestId) {
-            return CompletionStageTesting.toCall(avsService.linkVerificationRequest(requestId));
+            return WebStageTesting.toCall(avsService.linkVerificationRequest(requestId));
         }
 
         @Override
         public Call<Void> sendAgeCertificate() {
-            return CompletionStageTesting.toCall(avsService.sendAgeCertificate());
+            return WebStageTesting.toCall(avsService.sendAgeCertificate());
         }
     }
 
@@ -120,17 +110,17 @@ public final class ServiceVerificationTest {
 
         @Override
         public Call<VerificationState> getVerificationState() {
-            return CompletionStageTesting.toCall(siteService.getVerificationState());
+            return WebStageTesting.toCall(siteService.getVerificationState());
         }
 
         @Override
         public Call<VerificationRequest> createVerificationRequest() {
-            return CompletionStageTesting.toCall(siteService.createVerificationRequest());
+            return WebStageTesting.toCall(siteService.createVerificationRequest());
         }
 
         @Override
         public Call<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-            return CompletionStageTesting.toCall(siteService.processAgeCertificate(signedAgeCertificate));
+            return WebStageTesting.toCall(siteService.processAgeCertificate(signedAgeCertificate));
         }
     }
 
