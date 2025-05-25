@@ -11,4 +11,5 @@ include(
         "module:crypto-demo",
         "app",
         "testing",
+        "test-containers",
 )
