@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.okhttp.okhttp)
     implementation(libs.retrofit.retrofit)
 
+    testImplementation(project(":test-containers"))
     testImplementation(libs.dropwizard.testing)
 }
 

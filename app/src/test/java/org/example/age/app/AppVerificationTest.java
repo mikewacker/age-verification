@@ -16,8 +16,8 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.testing.TestServiceClient;
-import org.example.age.testing.RedisExtension;
 import org.example.age.testing.TestObjectMapper;
+import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -34,7 +34,7 @@ public final class AppVerificationTest {
             new DropwizardAppExtension<>(AvsApp.class, ResourceHelpers.resourceFilePath("config-avs.yaml"));
 
     @RegisterExtension
-    private static final RedisExtension redis = new RedisExtension(6379); // can safely share between apps
+    private static final TestContainers containers = new TestContainers();
 
     @RegisterExtension
     private static final TestServiceClient<SiteApi> siteClient =
@@ -50,7 +50,7 @@ public final class AppVerificationTest {
                 .ageRange(AgeRange.builder().min(40).max(40).build())
                 .build();
         String json = TestObjectMapper.get().writeValueAsString(user);
-        redis.client().set("age:user:person", json);
+        containers.redisClient().set("age:user:person", json);
     }
 
     @Test
