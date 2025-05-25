@@ -1,7 +1,7 @@
 package org.example.age.module.store.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.CompletionStageTesting.getCompleted;
+import static org.example.age.testing.WebStageTesting.await;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -40,13 +40,13 @@ public final class RedisAvsAccountStoreTest {
 
     @Test
     public void load() {
-        Optional<VerifiedUser> maybeUser = getCompleted(store.tryLoad("person"));
+        Optional<VerifiedUser> maybeUser = await(store.tryLoad("person"));
         assertThat(maybeUser).isPresent();
     }
 
     @Test
     public void loadEmpty() {
-        Optional<VerifiedUser> maybeUser = getCompleted(store.tryLoad("unverified-person"));
+        Optional<VerifiedUser> maybeUser = await(store.tryLoad("unverified-person"));
         assertThat(maybeUser).isEmpty();
     }
 

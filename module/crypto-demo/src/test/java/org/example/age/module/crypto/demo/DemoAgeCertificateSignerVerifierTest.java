@@ -1,11 +1,11 @@
 package org.example.age.module.crypto.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
+import static org.example.age.testing.WebStageTesting.await;
+import static org.example.age.testing.WebStageTesting.awaitErrorCode;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
@@ -33,25 +33,23 @@ public final class DemoAgeCertificateSignerVerifierTest {
     @Test
     public void signThenVerify() {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate();
-        CompletionStage<AgeCertificate> ageCertificateStage =
-                ageCertificateSigner.sign(ageCertificate).thenCompose(ageCertificateVerifier::verify);
-        assertThat(ageCertificateStage).isCompletedWithValue(ageCertificate);
+        AgeCertificate rtAgeCertificate =
+                await(ageCertificateSigner.sign(ageCertificate).thenCompose(ageCertificateVerifier::verify));
+        assertThat(rtAgeCertificate).isEqualTo(ageCertificate);
     }
 
     @Test
     public void error_AlgorithmNotImplemented() {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate();
         SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate, "dne");
-        CompletionStage<AgeCertificate> ageCertificateStage = ageCertificateVerifier.verify(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(ageCertificateStage, 501);
+        awaitErrorCode(ageCertificateVerifier.verify(signedAgeCertificate), 501);
     }
 
     @Test
     public void error_InvalidSignature() {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate();
         SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate, "secp256r1");
-        CompletionStage<AgeCertificate> ageCertificateStage = ageCertificateVerifier.verify(signedAgeCertificate);
-        assertIsCompletedWithErrorCode(ageCertificateStage, 401);
+        awaitErrorCode(ageCertificateVerifier.verify(signedAgeCertificate), 401);
     }
 
     private static SignedAgeCertificate signInvalid(AgeCertificate ageCertificate, String algorithm) {

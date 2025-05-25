@@ -1,7 +1,7 @@
 package org.example.age.module.store.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.CompletionStageTesting.getCompleted;
+import static org.example.age.testing.WebStageTesting.await;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -40,10 +40,10 @@ public final class RedisSiteAccountStoreTest {
     public void saveThenLoad() {
         VerifiedUser user = TestModels.createVerifiedUser();
         OffsetDateTime expiration = expiresIn(300000);
-        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username1", user, expiration));
+        Optional<String> maybeConflictingAccountId = await(store.trySave("username1", user, expiration));
         assertThat(maybeConflictingAccountId).isEmpty();
 
-        VerificationState state = getCompleted(store.load("username1"));
+        VerificationState state = await(store.load("username1"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
         assertThat(state.getUser()).isEqualTo(user);
         assertThat(state.getExpiration()).isEqualTo(expiration);
@@ -51,7 +51,7 @@ public final class RedisSiteAccountStoreTest {
 
     @Test
     public void load() {
-        VerificationState state = getCompleted(store.load("username2"));
+        VerificationState state = await(store.load("username2"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
         assertThat(state.getUser()).isNull();
         assertThat(state.getExpiration()).isNull();
@@ -60,26 +60,26 @@ public final class RedisSiteAccountStoreTest {
     @Test
     public void saveTwice() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username3", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId1 = await(store.trySave("username3", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId1).isEmpty();
 
-        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username3", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId2 = await(store.trySave("username3", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId2).isEmpty();
     }
 
     @Test
     public void saveFails_Conflict() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username4", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId1 = await(store.trySave("username4", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId1).isEmpty();
 
-        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username5", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId2 = await(store.trySave("username5", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId2).hasValue("username4");
 
-        VerificationState state1 = getCompleted(store.load("username4"));
+        VerificationState state1 = await(store.load("username4"));
         assertThat(state1.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
 
-        VerificationState state2 = getCompleted(store.load("username5"));
+        VerificationState state2 = await(store.load("username5"));
         assertThat(state2.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
     }
 
@@ -87,11 +87,11 @@ public final class RedisSiteAccountStoreTest {
     public void saveThenExpireThenLoad() throws InterruptedException {
         VerifiedUser user = TestModels.createVerifiedUser();
         OffsetDateTime expiration = expiresIn(2);
-        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username6", user, expiration));
+        Optional<String> maybeConflictingAccountId = await(store.trySave("username6", user, expiration));
         assertThat(maybeConflictingAccountId).isEmpty();
 
         Thread.sleep(4);
-        VerificationState state = getCompleted(store.load("username6"));
+        VerificationState state = await(store.load("username6"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.EXPIRED);
         assertThat(state.getUser()).isNull();
         assertThat(state.getExpiration()).isEqualTo(expiration);
@@ -100,21 +100,21 @@ public final class RedisSiteAccountStoreTest {
     @Test
     public void save_ExpiredConflict() throws InterruptedException {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId1 = getCompleted(store.trySave("username7", user, expiresIn(2)));
+        Optional<String> maybeConflictingAccountId1 = await(store.trySave("username7", user, expiresIn(2)));
         assertThat(maybeConflictingAccountId1).isEmpty();
 
         Thread.sleep(4);
-        Optional<String> maybeConflictingAccountId2 = getCompleted(store.trySave("username8", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId2 = await(store.trySave("username8", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId2).isEmpty();
 
-        VerificationState state = getCompleted(store.load("username8"));
+        VerificationState state = await(store.load("username8"));
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
     @Test
     public void saveThenGetFromRedis() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        Optional<String> maybeConflictingAccountId = getCompleted(store.trySave("username9", user, expiresIn(300000)));
+        Optional<String> maybeConflictingAccountId = await(store.trySave("username9", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId).isEmpty();
 
         String userValue = redis.client().get("{age:verification:account:username9}:user");

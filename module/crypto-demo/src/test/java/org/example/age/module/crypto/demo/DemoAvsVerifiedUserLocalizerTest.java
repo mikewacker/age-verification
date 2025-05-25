@@ -1,12 +1,11 @@
 package org.example.age.module.crypto.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.CompletionStageTesting.assertIsCompletedWithErrorCode;
-import static org.example.age.testing.CompletionStageTesting.getCompleted;
+import static org.example.age.testing.WebStageTesting.await;
+import static org.example.age.testing.WebStageTesting.awaitErrorCode;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
@@ -27,17 +26,14 @@ public final class DemoAvsVerifiedUserLocalizerTest {
     @Test
     public void localize() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        CompletionStage<VerifiedUser> localizedUserStage = userLocalizer.localize(user, "site");
-        assertThat(localizedUserStage).isCompleted();
-        VerifiedUser localizedUser = getCompleted(localizedUserStage);
+        VerifiedUser localizedUser = await(userLocalizer.localize(user, "site"));
         assertThat(localizedUser).isNotEqualTo(user);
     }
 
     @Test
     public void error_UnregisteredSite() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        CompletionStage<VerifiedUser> localizedUserStage = userLocalizer.localize(user, "unregistered-site");
-        assertIsCompletedWithErrorCode(localizedUserStage, 404);
+        awaitErrorCode(userLocalizer.localize(user, "unregistered-site"), 404);
     }
 
     /** Dagger component for crypto. */
