@@ -3,9 +3,7 @@ package org.example.age.module.store.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.WebStageTesting.await;
 
-import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.OffsetDateTime;
