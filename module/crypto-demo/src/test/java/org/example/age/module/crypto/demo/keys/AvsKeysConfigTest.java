@@ -9,6 +9,6 @@ public final class AvsKeysConfigTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        JsonTesting.serializeThenDeserialize(TestConfig.avs(), AvsKeysConfig.class);
+        JsonTesting.serializeThenDeserialize(TestConfig.avsKeys(), AvsKeysConfig.class);
     }
 }

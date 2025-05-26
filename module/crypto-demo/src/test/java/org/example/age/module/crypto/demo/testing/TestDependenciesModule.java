@@ -20,11 +20,11 @@ public interface TestDependenciesModule {
 
     @Provides
     static SiteKeysConfig provideSiteKeysConfig() {
-        return TestConfig.site();
+        return TestConfig.siteKeys();
     }
 
     @Provides
     static AvsKeysConfig provideAvsKeyConfig() {
-        return TestConfig.avs();
+        return TestConfig.avsKeys();
     }
 }

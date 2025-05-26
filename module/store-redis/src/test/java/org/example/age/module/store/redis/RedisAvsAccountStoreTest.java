@@ -12,9 +12,9 @@ import java.util.Optional;
 import org.example.age.api.VerifiedUser;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
+import org.example.age.testing.JsonTesting;
 import org.example.age.testing.RedisExtension;
 import org.example.age.testing.TestModels;
-import org.example.age.testing.TestObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -34,8 +34,7 @@ public final class RedisAvsAccountStoreTest {
 
         // Populate.
         VerifiedUser user = TestModels.createVerifiedUser();
-        String json = TestObjectMapper.get().writeValueAsString(user);
-        redis.client().set("age:user:person", json);
+        redis.client().set("age:user:person", JsonTesting.serialize(user));
     }
 
     @Test

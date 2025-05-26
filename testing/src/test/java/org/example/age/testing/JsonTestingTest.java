@@ -1,5 +1,6 @@
 package org.example.age.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -19,6 +20,13 @@ public final class JsonTestingTest {
     public void serializeThenDeserialize_BadValue() {
         assertThatThrownBy(() -> JsonTesting.serializeThenDeserialize(BadValue.fromString("value"), BadValue.class))
                 .isInstanceOf(AssertionError.class);
+    }
+
+    @Test
+    public void serializeThenDeserialize_TestUtils() {
+        String json = JsonTesting.serialize(TestModels.createAgeCertificate());
+        AgeCertificate ageCertificate = JsonTesting.deserialize(json, AgeCertificate.class);
+        assertThat(ageCertificate).isNotNull();
     }
 
     /** Value type that serializes incorrectly. */

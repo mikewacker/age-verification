@@ -9,6 +9,6 @@ public final class SiteKeysConfigTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        JsonTesting.serializeThenDeserialize(TestConfig.site(), SiteKeysConfig.class);
+        JsonTesting.serializeThenDeserialize(TestConfig.siteKeys(), SiteKeysConfig.class);
     }
 }

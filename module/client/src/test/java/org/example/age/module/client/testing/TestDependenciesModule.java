@@ -25,12 +25,12 @@ public interface TestDependenciesModule {
     @Provides
     @Singleton
     static SiteClientsConfig provideSiteClientsConfig(@Named("port") int port) {
-        return TestConfig.createSite(port);
+        return TestConfig.createSiteClients(port);
     }
 
     @Provides
     @Singleton
     static AvsClientsConfig provideAvsClientsConfig(@Named("port") int port) {
-        return TestConfig.createAvs(port);
+        return TestConfig.createAvsClients(port);
     }
 }

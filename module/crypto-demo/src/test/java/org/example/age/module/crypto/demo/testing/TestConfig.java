@@ -7,25 +7,24 @@ import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 /** Configuration for testing. */
 public final class TestConfig {
 
-    private static final SiteKeysConfig siteConfig = SiteKeysConfig.builder()
+    private static final SiteKeysConfig siteKeys = SiteKeysConfig.builder()
             .localization(SecureId.generate())
             .signing(ConfigKeyPair.publicKey())
             .build();
-    private static final AvsKeysConfig avsConfig = AvsKeysConfig.builder()
+    private static final AvsKeysConfig avsKeys = AvsKeysConfig.builder()
             .putLocalization("site", SecureId.generate())
             .signing(ConfigKeyPair.privateKey())
             .build();
 
-    /** Gets the {@link SiteKeysConfig}. */
-    public static SiteKeysConfig site() {
-        return siteConfig;
+    /** Gets the configuration for keys on the site. */
+    public static SiteKeysConfig siteKeys() {
+        return siteKeys;
     }
 
-    /** Gets the {@link AvsKeysConfig}. */
-    public static AvsKeysConfig avs() {
-        return avsConfig;
+    /** Gets the configuration for keys on the age verification service. */
+    public static AvsKeysConfig avsKeys() {
+        return avsKeys;
     }
 
-    // static class
-    private TestConfig() {}
+    private TestConfig() {} // static class
 }
