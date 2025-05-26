@@ -12,19 +12,19 @@ import org.example.age.api.crypto.SecureId;
 /** Creates model objects for testing. */
 public final class TestModels {
 
-    /** Creates an {@link AgeCertificate}. */
+    /** Creates an age certificate. */
     public static AgeCertificate createAgeCertificate() {
         VerificationRequest request = createVerificationRequest("site");
         return createAgeCertificate(request);
     }
 
-    /** Creates an {@link AgeCertificate} for the {@link VerificationRequest}. */
+    /** Creates an age certificate for the verification request. */
     public static AgeCertificate createAgeCertificate(VerificationRequest request) {
         VerifiedUser user = createVerifiedUser();
         return AgeCertificate.builder().request(request).user(user).build();
     }
 
-    /** Creates a {@link VerificationRequest} for the site. */
+    /** Creates a verification request for the site. */
     public static VerificationRequest createVerificationRequest(String siteId) {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
         return VerificationRequest.builder()
@@ -34,7 +34,7 @@ public final class TestModels {
                 .build();
     }
 
-    /** Creates a {@link VerifiedUser}. */
+    /** Creates a verified user. */
     public static VerifiedUser createVerifiedUser() {
         return VerifiedUser.builder()
                 .pseudonym(SecureId.generate())
@@ -42,6 +42,5 @@ public final class TestModels {
                 .build();
     }
 
-    // static class
-    private TestModels() {}
+    private TestModels() {} // static class
 }

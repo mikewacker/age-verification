@@ -14,6 +14,5 @@ public final class JsonTesting {
         assertThat(rtValue).isEqualTo(value);
     }
 
-    // static class
-    private JsonTesting() {}
+    private JsonTesting() {} // static class
 }

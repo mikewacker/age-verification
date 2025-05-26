@@ -21,4 +21,7 @@ dependencies {
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
     implementation(libs.retrofit.mock)
+
+    testAnnotationProcessor(libs.dagger.compiler)
+    testImplementation(libs.jackson.annotations)
 }
