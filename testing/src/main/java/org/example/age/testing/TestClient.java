@@ -18,11 +18,15 @@ public final class TestClient {
     /** Creates a URL for localhost. */
     public static URL createLocalhostUrl(int port) {
         try {
-            String url = String.format("http://localhost:%d", port);
-            return URI.create(url).toURL();
+            return createLocalhostUri(port).toURL();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Creates a URI for localhost. */
+    public static URI createLocalhostUri(int port) {
+        return URI.create(String.format("http://localhost:%d", port));
     }
 
     private TestClient() {} // static class
