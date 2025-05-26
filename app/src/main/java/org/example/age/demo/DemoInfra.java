@@ -15,8 +15,8 @@ import org.example.age.api.AgeRange;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.retrofit.ApiClient;
 import org.example.age.api.crypto.SecureId;
+import org.example.age.testing.JsonTesting;
 import org.example.age.testing.RedisExtension;
-import org.example.age.testing.TestObjectMapper;
 
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
@@ -45,10 +45,8 @@ public final class DemoInfra {
                 .ageRange(AgeRange.builder().min(13).max(13).build())
                 .guardianPseudonyms(List.of(parentPseudonym))
                 .build();
-        String parentJson = TestObjectMapper.get().writeValueAsString(parent);
-        redis.client().set("age:user:John Smith", parentJson);
-        String childJson = TestObjectMapper.get().writeValueAsString(child);
-        redis.client().set("age:user:Billy Smith", childJson);
+        redis.client().set("age:user:John Smith", JsonTesting.serialize(parent));
+        redis.client().set("age:user:Billy Smith", JsonTesting.serialize(child));
     }
 
     /** Starts an application. */

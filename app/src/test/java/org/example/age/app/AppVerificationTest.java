@@ -16,7 +16,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.testing.TestServiceClient;
-import org.example.age.testing.TestObjectMapper;
+import org.example.age.testing.JsonTesting;
 import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -49,8 +49,7 @@ public final class AppVerificationTest {
                 .pseudonym(SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4"))
                 .ageRange(AgeRange.builder().min(40).max(40).build())
                 .build();
-        String json = TestObjectMapper.get().writeValueAsString(user);
-        containers.redisClient().set("age:user:person", json);
+        containers.redisClient().set("age:user:person", JsonTesting.serialize(user));
     }
 
     @Test

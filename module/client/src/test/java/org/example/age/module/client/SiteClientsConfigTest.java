@@ -8,6 +8,6 @@ public final class SiteClientsConfigTest {
 
     @Test
     public void serializeThenDeserialize() throws Exception {
-        JsonTesting.serializeThenDeserialize(TestConfig.createSite(8080), SiteClientsConfig.class);
+        JsonTesting.serializeThenDeserialize(TestConfig.createSiteClients(8080), SiteClientsConfig.class);
     }
 }
