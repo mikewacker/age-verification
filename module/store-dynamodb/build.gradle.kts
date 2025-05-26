@@ -18,4 +18,5 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
+    testImplementation(project(":test-containers"))
 }

@@ -3,9 +3,7 @@ package org.example.age.module.store.dynamodb;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.WebStageTesting.await;
 
-import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -17,62 +15,29 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;
-import org.example.age.testing.DynamoDbExtension;
 import org.example.age.testing.TestModels;
+import org.example.age.testing.containers.DynamoDbTestUtils;
+import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
-import software.amazon.awssdk.services.dynamodb.model.BillingMode;
-import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
-import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
-import software.amazon.awssdk.services.dynamodb.model.KeyType;
-import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 
 public final class DynamoDbSiteAccountStoreTest {
 
     @RegisterExtension
-    private static final DynamoDbExtension dynamoDb = new DynamoDbExtension();
+    private static final TestContainers containers = new TestContainers();
 
     private static SiteVerificationStore store;
 
     @BeforeAll
     public static void createSiteVerificationStore() {
-        TestComponent component = TestComponent.create(dynamoDb.port());
+        TestComponent component = TestComponent.create();
         store = component.siteVerificationStore();
     }
 
     @BeforeAll
-    public static void createDynamoDbTables() {
-        CreateTableRequest accountTableRequest = CreateTableRequest.builder()
-                .tableName("Age.Verification.Account")
-                .attributeDefinitions(AttributeDefinition.builder()
-                        .attributeName("AccountId")
-                        .attributeType(ScalarAttributeType.S)
-                        .build())
-                .keySchema(KeySchemaElement.builder()
-                        .attributeName("AccountId")
-                        .keyType(KeyType.HASH)
-                        .build())
-                .billingMode(BillingMode.PAY_PER_REQUEST)
-                .build();
-        dynamoDb.client().createTable(accountTableRequest);
-        dynamoDb.client().waiter().waitUntilTableExists(builder -> builder.tableName("Age.Verification.Account"));
-
-        CreateTableRequest pseudonymTableRequest = CreateTableRequest.builder()
-                .tableName("Age.Verification.Pseudonym")
-                .attributeDefinitions(AttributeDefinition.builder()
-                        .attributeName("Pseudonym")
-                        .attributeType(ScalarAttributeType.S)
-                        .build())
-                .keySchema(KeySchemaElement.builder()
-                        .attributeName("Pseudonym")
-                        .keyType(KeyType.HASH)
-                        .build())
-                .billingMode(BillingMode.PAY_PER_REQUEST)
-                .build();
-        dynamoDb.client().createTable(pseudonymTableRequest);
-        dynamoDb.client().waiter().waitUntilTableExists(builder -> builder.tableName("Age.Verification.Pseudonym"));
+    public static void createTables() {
+        DynamoDbTestUtils.createSiteAccountStoreTables(containers.dynamoDbClient());
     }
 
     @Test
@@ -159,16 +124,10 @@ public final class DynamoDbSiteAccountStoreTest {
     @Singleton
     interface TestComponent {
 
-        static TestComponent create(int port) {
-            return DaggerDynamoDbSiteAccountStoreTest_TestComponent.factory().create(port);
+        static TestComponent create() {
+            return DaggerDynamoDbSiteAccountStoreTest_TestComponent.create();
         }
 
         SiteVerificationStore siteVerificationStore();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
     }
 }

@@ -1,11 +1,9 @@
 package org.example.age.module.store.dynamodb.client;
 
-import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
-import org.example.age.testing.DynamoDbExtension;
+import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -20,13 +18,13 @@ import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 public final class DynamoDbClientTest {
 
     @RegisterExtension
-    private static final DynamoDbExtension dynamoDb = new DynamoDbExtension();
+    private static final TestContainers containers = new TestContainers();
 
     private static DynamoDbClient client;
 
     @BeforeAll
     public static void createClient() {
-        TestComponent component = TestComponent.create(dynamoDb.port());
+        TestComponent component = TestComponent.create();
         client = component.dynamoDbClient();
     }
 
@@ -53,16 +51,10 @@ public final class DynamoDbClientTest {
     @Singleton
     interface TestComponent {
 
-        static TestComponent create(int port) {
-            return DaggerDynamoDbClientTest_TestComponent.factory().create(port);
+        static TestComponent create() {
+            return DaggerDynamoDbClientTest_TestComponent.create();
         }
 
         DynamoDbClient dynamoDbClient();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
     }
 }
