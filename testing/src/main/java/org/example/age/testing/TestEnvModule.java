@@ -15,13 +15,12 @@ import java.util.concurrent.Executors;
  *     <li><code>@Named("worker") {@link ExecutorService}</code>
  * </ul>
  * <p>
- * Thread pools have a single thread.
+ * The worker has a single thread.
  */
 @Module
 public interface TestEnvModule {
 
     @Provides
-    @Singleton
     static ObjectMapper provideObjectMapper() {
         return TestObjectMapper.get();
     }
