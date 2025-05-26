@@ -8,4 +8,5 @@ dependencies {
     api(libs.awsSdk.dynamoDb)
     api(libs.jedis.jedis)
     api(libs.junitJupiter.api)
+    implementation(project(":testing"))
 }

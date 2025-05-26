@@ -9,6 +9,6 @@ public final class RedisConfigTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        JsonTesting.serializeThenDeserialize(TestConfig.createRedis(8080), RedisConfig.class);
+        JsonTesting.serializeThenDeserialize(TestConfig.redis(), RedisConfig.class);
     }
 }
