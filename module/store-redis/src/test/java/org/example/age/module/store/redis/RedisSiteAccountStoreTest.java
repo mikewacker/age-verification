@@ -3,9 +3,7 @@ package org.example.age.module.store.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.WebStageTesting.await;
 
-import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -17,22 +15,23 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;
-import org.example.age.testing.RedisExtension;
 import org.example.age.testing.TestModels;
+import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import redis.clients.jedis.JedisPooled;
 
 public final class RedisSiteAccountStoreTest {
 
     @RegisterExtension
-    private static final RedisExtension redis = new RedisExtension();
+    private static final TestContainers containers = new TestContainers();
 
     private static SiteVerificationStore store;
 
     @BeforeAll
     public static void createSiteVerificationStore() {
-        TestComponent component = TestComponent.create(redis.port());
+        TestComponent component = TestComponent.create();
         store = component.siteVerificationStore();
     }
 
@@ -117,12 +116,13 @@ public final class RedisSiteAccountStoreTest {
         Optional<String> maybeConflictingAccountId = await(store.trySave("username9", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId).isEmpty();
 
-        String userValue = redis.client().get("{age:verification:account:username9}:user");
+        JedisPooled client = containers.redisClient();
+        String userValue = client.get("{age:verification:account:username9}:user");
         assertThat(userValue).isNotNull();
-        String expirationValue = redis.client().get("{age:verification:account:username9}:expiration");
+        String expirationValue = client.get("{age:verification:account:username9}:expiration");
         assertThat(expirationValue).isNotNull();
         String pseudonymKey = String.format("age:verification:pseudonym:%s", user.getPseudonym());
-        String pseudonymValue = redis.client().get(pseudonymKey);
+        String pseudonymValue = client.get(pseudonymKey);
         assertThat(pseudonymValue).isEqualTo("username9");
     }
 
@@ -135,16 +135,10 @@ public final class RedisSiteAccountStoreTest {
     @Singleton
     interface TestComponent {
 
-        static TestComponent create(int port) {
-            return DaggerRedisSiteAccountStoreTest_TestComponent.factory().create(port);
+        static TestComponent create() {
+            return DaggerRedisSiteAccountStoreTest_TestComponent.create();
         }
 
         SiteVerificationStore siteVerificationStore();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
     }
 }

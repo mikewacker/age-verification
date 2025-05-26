@@ -17,5 +17,5 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
-    testImplementation(libs.redisEmbedded.redis)
+    testImplementation(project(":test-containers"))
 }

@@ -3,9 +3,7 @@ package org.example.age.module.store.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.WebStageTesting.await;
 
-import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -14,21 +12,22 @@ import java.util.Optional;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
-import org.example.age.testing.RedisExtension;
+import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import redis.clients.jedis.JedisPooled;
 
 public final class RedisPendingStoreTest {
 
     @RegisterExtension
-    private static final RedisExtension redis = new RedisExtension();
+    private static final TestContainers containers = new TestContainers();
 
     private static PendingStore<Integer> store;
 
     @BeforeAll
     public static void createPendingStore() {
-        TestComponent component = TestComponent.create(redis.port());
+        TestComponent component = TestComponent.create();
         PendingStoreRepository stores = component.pendingStoreRepository();
         store = stores.get("name", Integer.class);
     }
@@ -67,7 +66,9 @@ public final class RedisPendingStoreTest {
     @Test
     public void putThenGetFromRedis() {
         await(store.put("key5", 1, expiresIn(300000)));
-        String value = redis.client().get("age:pending:name:key5");
+
+        JedisPooled client = containers.redisClient();
+        String value = client.get("age:pending:name:key5");
         assertThat(value).isEqualTo("1");
     }
 
@@ -80,16 +81,10 @@ public final class RedisPendingStoreTest {
     @Singleton
     interface TestComponent {
 
-        static TestComponent create(int port) {
-            return DaggerRedisPendingStoreTest_TestComponent.factory().create(port);
+        static TestComponent create() {
+            return DaggerRedisPendingStoreTest_TestComponent.create();
         }
 
         PendingStoreRepository pendingStoreRepository();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
-        }
     }
 }
