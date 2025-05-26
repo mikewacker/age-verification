@@ -10,7 +10,7 @@ public final class DynamoDbConfigTest {
 
     @Test
     public void serializeThenDeserialize() throws IOException {
-        JsonTesting.serializeThenDeserialize(TestConfig.createDynamoDb(8080), DynamoDbConfig.class);
+        JsonTesting.serializeThenDeserialize(TestConfig.dynamoDb(), DynamoDbConfig.class);
     }
 
     @Test
