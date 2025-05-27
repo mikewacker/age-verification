@@ -11,10 +11,10 @@ dependencies {
     api(project(":service:module"))
     api(libs.dagger.dagger)
     api(libs.immutables.annotations)
-    api(libs.jackson.annotations)
     api(libs.jackson.databind)
     implementation(libs.jakartaInject.api)
     implementation(libs.okhttp.okhttp)
+    implementation(libs.retrofit.converterJackson)
     implementation(libs.retrofit.retrofit)
 
     testAnnotationProcessor(libs.dagger.compiler)

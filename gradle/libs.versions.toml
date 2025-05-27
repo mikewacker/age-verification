@@ -42,14 +42,12 @@ jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
-jackson-datatypeJsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 jakartaAnnotation-api = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakartaInject-api = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInject" }
 jakartaValidation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidation" }
 jaxRs-api = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jaxRs" }
 okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit-converterJackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "retrofit" }
-retrofit-converterScalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
 retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 # test
