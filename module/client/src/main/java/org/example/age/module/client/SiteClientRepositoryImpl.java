@@ -16,7 +16,7 @@ final class SiteClientRepositoryImpl implements SiteClientRepository {
     private final Map<String, SiteApi> clients;
 
     @Inject
-    public SiteClientRepositoryImpl(ServiceClientFactory clientFactory, AvsClientsConfig clientsConfig) {
+    public SiteClientRepositoryImpl(ApiClientFactory clientFactory, AvsClientsConfig clientsConfig) {
         clients = createClients(clientFactory, clientsConfig);
     }
 
@@ -27,8 +27,7 @@ final class SiteClientRepositoryImpl implements SiteClientRepository {
     }
 
     /** Creates the clients. */
-    private static Map<String, SiteApi> createClients(
-            ServiceClientFactory clientFactory, AvsClientsConfig clientsConfig) {
+    private static Map<String, SiteApi> createClients(ApiClientFactory clientFactory, AvsClientsConfig clientsConfig) {
         return clientsConfig.siteUrls().entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey, entry -> clientFactory.create(entry.getValue(), SiteApi.class)));

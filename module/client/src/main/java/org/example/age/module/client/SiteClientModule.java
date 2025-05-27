@@ -1,5 +1,6 @@
 package org.example.age.module.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
@@ -13,6 +14,7 @@ import org.example.age.api.client.AvsApi;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link SiteClientsConfig}
+ *     <li>{@link ObjectMapper}
  *     <li><code>@Named("worker") {@link ExecutorService}</code>
  * </ul>
  */
@@ -22,7 +24,7 @@ public interface SiteClientModule {
     @Provides
     @Named("client")
     @Singleton
-    static AvsApi provideAvsClient(ServiceClientFactory clientFactory, SiteClientsConfig clientsConfig) {
+    static AvsApi provideAvsClient(ApiClientFactory clientFactory, SiteClientsConfig clientsConfig) {
         return clientFactory.create(clientsConfig.avsUrl(), AvsApi.class);
     }
 }

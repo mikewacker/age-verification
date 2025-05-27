@@ -110,11 +110,11 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
         "serializationLibrary" to "jackson",
     )
 
-    // Generate only the sources for main (except OAuth). Don't generate test.
+    // Generate only the apis and models (and a few invoker sources that are referenced). Don't generate test.
     val clientPackageName = extension.packageName.map { "$it.api.client" }
     apiPackage = clientPackageName
     modelPackage = clientPackageName
-    invokerPackage = clientPackageName.map { "$it.retrofit" }
+    invokerPackage = clientPackageName.map { "$it.util" }
     globalProperties = mapOf(
         "apiTests" to "false",
         "modelTests" to "false",
@@ -126,9 +126,8 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
         createOpenApiGeneratorIgnore(outputDirPath,
             "**",
             "!$clientPackagePath/*.java",
-            "!$clientPackagePath/retrofit/*.java",
-            "!$clientPackagePath/retrofit/auth/Api*.java",
-            "!$clientPackagePath/retrofit/auth/Http*.java",
+            "!$clientPackagePath/util/CollectionFormats.java",
+            "!$clientPackagePath/util/StringUtil.java",
         )
     }
 }
@@ -157,7 +156,4 @@ dependencies {
     api(libs.jaxRs.api)
     api(libs.okhttp.okhttp)
     api(libs.retrofit.retrofit)
-    implementation(libs.jackson.datatypeJsr310)
-    implementation(libs.retrofit.converterJackson)
-    implementation(libs.retrofit.converterScalars)
 }
