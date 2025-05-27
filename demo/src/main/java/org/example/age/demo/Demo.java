@@ -44,7 +44,6 @@ public final class Demo {
 
     /** Starts all servers. */
     private static void startServers() throws Exception {
-        DemoInfra.startRedis();
         DemoInfra.populateRedis();
         DemoInfra.startServer(checkMyAge, "config-check-my-age.yaml");
         DemoInfra.startServer(crackle, "config-crackle.yaml");

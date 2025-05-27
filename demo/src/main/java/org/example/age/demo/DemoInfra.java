@@ -13,24 +13,20 @@ import org.example.age.api.AgeRange;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.testing.JsonTesting;
-import org.example.age.testing.RedisExtension;
 import org.example.age.testing.TestClient;
+import org.example.age.testing.containers.TestContainers;
 
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
 
-    private static final RedisExtension redis = new RedisExtension(6379); // can safely share between apps
+    private static final TestContainers containers = new TestContainers();
     private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .writerWithDefaultPrettyPrinter();
 
-    /** Starts Redis. */
-    public static void startRedis() throws Exception {
-        redis.beforeAll(null);
-    }
-
     /** Populates Redis with verified persons. */
     public static void populateRedis() throws IOException {
+        containers.beforeAll(null);
         SecureId parentPseudonym = SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4");
         SecureId childPseudonym = SecureId.fromString("KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4");
         VerifiedUser parent = VerifiedUser.builder()
@@ -42,8 +38,8 @@ public final class DemoInfra {
                 .ageRange(AgeRange.builder().min(13).max(13).build())
                 .guardianPseudonyms(List.of(parentPseudonym))
                 .build();
-        redis.client().set("age:user:John Smith", JsonTesting.serialize(parent));
-        redis.client().set("age:user:Billy Smith", JsonTesting.serialize(child));
+        containers.redisClient().set("age:user:John Smith", JsonTesting.serialize(parent));
+        containers.redisClient().set("age:user:Billy Smith", JsonTesting.serialize(child));
     }
 
     /** Starts an application. */
@@ -64,7 +60,7 @@ public final class DemoInfra {
 
     /** Stops everything (and terminates the application). */
     public static void stop() throws Exception {
-        redis.afterAll(null);
+        containers.afterAll(null);
         System.exit(0);
     }
 
