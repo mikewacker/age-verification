@@ -31,7 +31,7 @@ public final class RequestContextTest {
     public void requestContext() throws IOException {
         String url = String.format("http://localhost:%d/test", app.getLocalPort());
         Request request = new Request.Builder().url(url).build();
-        try (Response response = TestClient.get().newCall(request).execute()) {
+        try (Response response = TestClient.getHttp().newCall(request).execute()) {
             assertThat(response.isSuccessful()).isTrue();
             assertThat(response.body().string()).isEqualTo("GET");
         }
@@ -39,7 +39,8 @@ public final class RequestContextTest {
 
     /** Test service that responds with the HTTP method. */
     @Singleton
-    @Path("/test")
+    @Path("test")
+    @Produces(MediaType.TEXT_PLAIN)
     public static final class TestService {
 
         private final RequestContextProvider requestContextProvider;
@@ -50,7 +51,6 @@ public final class RequestContextTest {
         }
 
         @GET
-        @Produces(MediaType.TEXT_PLAIN)
         public String method() {
             return requestContextProvider.get().getMethod();
         }
@@ -61,7 +61,6 @@ public final class RequestContextTest {
 
         @Override
         public void run(Configuration config, Environment env) {
-            // TestPort.set(config, 0);
             TestComponent component = TestComponent.create();
             env.jersey().register(component.service());
             env.jersey().register(component.requestContextProvider());

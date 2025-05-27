@@ -9,20 +9,17 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import org.example.age.api.AgeRange;
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.client.retrofit.ApiClient;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.testing.JsonTesting;
 import org.example.age.testing.RedisExtension;
+import org.example.age.testing.TestClient;
 
 /** Client/server infrastructure for the demo. */
 public final class DemoInfra {
 
     private static final RedisExtension redis = new RedisExtension(6379); // can safely share between apps
-    private static final OkHttpClient httpClient = new OkHttpClient();
     private static final ObjectWriter objectWriter = Jackson.newObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .writerWithDefaultPrettyPrinter();
@@ -56,14 +53,8 @@ public final class DemoInfra {
 
     /** Creates a client for an account. */
     public static <S> S createClient(int port, String accountId, Class<S> serviceClass) {
-        OkHttpClient accountHttpClient = httpClient
-                .newBuilder()
-                .addInterceptor(chain -> chain.proceed(addAccountId(chain.request(), accountId)))
-                .build();
-        ApiClient apiClient = new ApiClient(accountHttpClient);
-        String baseUrl = String.format("http://localhost:%d", port);
-        apiClient.getAdapterBuilder().baseUrl(baseUrl);
-        return apiClient.createService(serviceClass);
+        return TestClient.createApi(
+                port, requestBuilder -> requestBuilder.addHeader("Account-Id", accountId), serviceClass);
     }
 
     /** Gets an {@link ObjectWriter} that pretty-prints JSON. */
@@ -82,11 +73,6 @@ public final class DemoInfra {
         ClassLoader classLoader = DemoInfra.class.getClassLoader();
         URI fileUri = classLoader.getResource(relativePath).toURI();
         return new File(fileUri).getAbsolutePath();
-    }
-
-    /** Adds the account ID to the request. */
-    private static Request addAccountId(Request request, String accountId) {
-        return request.newBuilder().header("Account-Id", accountId).build();
     }
 
     // static class

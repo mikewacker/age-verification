@@ -8,7 +8,6 @@ dependencies {
 
     api(project(":api"))
     api(libs.dagger.dagger)
-    api(libs.dropwizard.core)
     api(libs.jackson.databind)
     api(libs.jedis.jedis)
     api(libs.junitJupiter.api)
@@ -16,11 +15,14 @@ dependencies {
     api(libs.redisEmbedded.redis)
     api(libs.retrofit.retrofit)
     implementation(libs.assertj.core)
+    implementation(libs.dropwizard.core)
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
+    implementation(libs.retrofit.converterJackson)
     implementation(libs.retrofit.mock)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
+    testImplementation(libs.dropwizard.testing)
     testImplementation(libs.jackson.annotations)
 }
