@@ -34,7 +34,7 @@ public final class DemoAccountIdTest {
         String url = String.format("http://localhost:%d/test", app.getLocalPort());
         Request request =
                 new Request.Builder().url(url).header("Account-Id", "username").build();
-        try (Response response = TestClient.get().newCall(request).execute()) {
+        try (Response response = TestClient.getHttp().newCall(request).execute()) {
             assertThat(response.isSuccessful()).isTrue();
             assertThat(response.body().string()).isEqualTo("username");
         }
@@ -44,14 +44,15 @@ public final class DemoAccountIdTest {
     public void noAccountId() throws IOException {
         String url = String.format("http://localhost:%d/test", app.getLocalPort());
         Request request = new Request.Builder().url(url).build();
-        try (Response response = TestClient.get().newCall(request).execute()) {
+        try (Response response = TestClient.getHttp().newCall(request).execute()) {
             assertThat(response.code()).isEqualTo(401);
         }
     }
 
     /** Test service that responds with the account ID. */
     @Singleton
-    @Path("/test")
+    @Path("test")
+    @Produces(MediaType.TEXT_PLAIN)
     public static final class TestService {
 
         private final AccountIdContext accountIdContext;
@@ -62,7 +63,6 @@ public final class DemoAccountIdTest {
         }
 
         @GET
-        @Produces(MediaType.TEXT_PLAIN)
         public String accountId() {
             return accountIdContext.getForRequest();
         }

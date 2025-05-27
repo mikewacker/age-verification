@@ -15,8 +15,8 @@ import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
-import org.example.age.app.testing.TestServiceClient;
 import org.example.age.testing.JsonTesting;
+import org.example.age.testing.TestClient;
 import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,12 +36,14 @@ public final class AppVerificationTest {
     @RegisterExtension
     private static final TestContainers containers = new TestContainers();
 
-    @RegisterExtension
-    private static final TestServiceClient<SiteApi> siteClient =
-            new TestServiceClient<>(8080, "username", SiteApi.class);
+    private static SiteApi siteClient;
+    private static AvsApi avsClient;
 
-    @RegisterExtension
-    private static final TestServiceClient<AvsApi> avsClient = new TestServiceClient<>(9090, "person", AvsApi.class);
+    @BeforeAll
+    public static void createClients() {
+        siteClient = createClient(8080, "username", SiteApi.class);
+        avsClient = createClient(9090, "person", AvsApi.class);
+    }
 
     @BeforeAll
     public static void populateData() throws IOException {
@@ -55,19 +57,19 @@ public final class AppVerificationTest {
     @Test
     public void verify() throws IOException {
         Response<VerificationRequest> requestResponse =
-                siteClient.get().createVerificationRequest().execute();
+                siteClient.createVerificationRequest().execute();
         assertThat(requestResponse.isSuccessful()).isTrue();
         SecureId requestId = requestResponse.body().getId();
 
         Response<Void> linkResponse =
-                avsClient.get().linkVerificationRequest(requestId).execute();
+                avsClient.linkVerificationRequest(requestId).execute();
         assertThat(linkResponse.isSuccessful()).isTrue();
 
-        Response<Void> sendResponse = avsClient.get().sendAgeCertificate().execute();
+        Response<Void> sendResponse = avsClient.sendAgeCertificate().execute();
         assertThat(sendResponse.isSuccessful()).isTrue();
 
         Response<VerificationState> stateResponse =
-                siteClient.get().getVerificationState().execute();
+                siteClient.getVerificationState().execute();
         assertThat(stateResponse.isSuccessful()).isTrue();
         VerificationState state = stateResponse.body();
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
@@ -75,5 +77,9 @@ public final class AppVerificationTest {
                 .isEqualTo(SecureId.fromString("wqhgWlb9wYtzTDYbGeYFJJvS4xjmQsp3cf3ntbcBuNI"));
         assertThat(state.getUser().getAgeRange())
                 .isEqualTo(AgeRange.builder().min(18).build());
+    }
+
+    private static <A> A createClient(int port, String accountId, Class<A> apiType) {
+        return TestClient.createApi(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
     }
 }
