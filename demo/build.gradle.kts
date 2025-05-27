@@ -7,6 +7,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":app"))
     implementation(project(":testing"))
+    implementation(project(":test-containers"))
     implementation(libs.dropwizard.core)
     implementation(libs.jackson.annotations)
     implementation(libs.jackson.databind)
