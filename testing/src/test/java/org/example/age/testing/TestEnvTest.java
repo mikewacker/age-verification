@@ -1,7 +1,7 @@
 package org.example.age.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.WebStageTesting.await;
+import static org.example.age.common.testing.WebStageTesting.await;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Component;

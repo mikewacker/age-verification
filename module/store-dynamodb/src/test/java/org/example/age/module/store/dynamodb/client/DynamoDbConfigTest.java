@@ -1,8 +1,8 @@
 package org.example.age.module.store.dynamodb.client;
 
 import java.io.IOException;
+import org.example.age.common.testing.JsonTesting;
 import org.example.age.module.store.dynamodb.testing.TestConfig;
-import org.example.age.testing.JsonTesting;
 import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.regions.Region;
 

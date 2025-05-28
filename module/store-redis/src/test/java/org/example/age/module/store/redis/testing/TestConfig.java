@@ -1,7 +1,7 @@
 package org.example.age.module.store.redis.testing;
 
+import org.example.age.common.testing.TestClient;
 import org.example.age.module.store.redis.client.RedisConfig;
-import org.example.age.testing.TestClient;
 import org.example.age.testing.containers.TestContainers;
 
 /** Configuration for testing. */

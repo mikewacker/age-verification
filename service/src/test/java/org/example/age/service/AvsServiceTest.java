@@ -2,8 +2,8 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.testing.WebStageTesting.await;
-import static org.example.age.testing.WebStageTesting.awaitErrorCode;
+import static org.example.age.common.testing.WebStageTesting.await;
+import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
 
 import dagger.Binds;
 import dagger.Component;
@@ -27,12 +27,12 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
+import org.example.age.common.testing.WebStageTesting;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.TestWrappedAvsService;
 import org.example.age.service.testing.request.TestAccountId;
-import org.example.age.testing.WebStageTesting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;

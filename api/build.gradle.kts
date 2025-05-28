@@ -30,11 +30,8 @@ dependencies {
     api(project(":common"))
     api(libs.immutables.annotations)
 
-    testImplementation(project(":testing"))
+    testImplementation(testFixtures(project(":common")))
     testImplementation(libs.guava.testlib)
-    testImplementation(libs.retrofit.mock)
-
-    testRuntimeOnly(libs.dropwizard.core) // provides RuntimeDelegate for JAX-RS Response
 }
 
 // Make a best effort to apply conventions.

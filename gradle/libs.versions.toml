@@ -52,6 +52,8 @@ retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = 
 
 # test
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+dropwizard-jackson = { module = "io.dropwizard:dropwizard-jackson", version.ref = "dropwizard" }
+dropwizard-jersey = { module = "io.dropwizard:dropwizard-jersey", version.ref = "dropwizard" }
 dropwizard-testing = { module = "io.dropwizard:dropwizard-testing", version.ref = "dropwizard" }
 guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }

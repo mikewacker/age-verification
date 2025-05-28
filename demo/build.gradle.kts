@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation(project(":api"))
     implementation(project(":app"))
+    implementation(testFixtures(project(":common")))
     implementation(project(":testing"))
     implementation(project(":test-containers"))
     implementation(libs.dropwizard.core)
