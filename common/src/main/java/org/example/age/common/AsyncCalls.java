@@ -1,4 +1,4 @@
-package org.example.age.api.util;
+package org.example.age.common;
 
 import jakarta.ws.rs.WebApplicationException;
 import java.util.concurrent.CompletableFuture;
@@ -10,17 +10,16 @@ import retrofit2.Response;
 /** Adapts an asynchronous Retrofit call to a completion stage. */
 public final class AsyncCalls {
 
-    /**  Makes an asynchronous {@link Call}, returning a corresponding {@link CompletionStage}. */
+    /**  Makes an asynchronous call, returning a corresponding stage. */
     public static <T> CompletionStage<T> make(Call<T> call) {
         CompletableFuture<T> future = new CompletableFuture<>();
         call.enqueue(new FutureCallback<>(future));
         return future;
     }
 
-    // static class
-    private AsyncCalls() {}
+    private AsyncCalls() {} // static class
 
-    /** Callback that completes a {@link CompletableFuture}. */
+    /** Callback that completes a future. */
     private record FutureCallback<T>(CompletableFuture<T> future) implements Callback<T> {
 
         @Override

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URL;
 import java.util.Map;
-import org.example.age.api.ApiStyle;
 import org.example.age.api.AvsApi;
 import org.example.age.api.client.SiteApi;
+import org.example.age.common.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the clients used by the service implementation of {@link AvsApi}. */
 @Value.Immutable
-@ApiStyle
+@ValueStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableAvsClientsConfig.class)
 public interface AvsClientsConfig {

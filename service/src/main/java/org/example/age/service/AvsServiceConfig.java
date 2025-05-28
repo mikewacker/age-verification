@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import java.util.Map;
 import org.example.age.api.AgeThresholds;
-import org.example.age.api.ApiStyle;
 import org.example.age.api.AvsApi;
+import org.example.age.common.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link AvsApi}. */
 @Value.Immutable
-@ApiStyle
+@ValueStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableAvsServiceConfig.class)
 public interface AvsServiceConfig {

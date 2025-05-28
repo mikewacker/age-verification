@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PublicKey;
-import org.example.age.api.ApiStyle;
 import org.example.age.api.SiteApi;
 import org.example.age.api.crypto.SecureId;
+import org.example.age.common.ValueStyle;
 import org.immutables.value.Value;
 
 /**
@@ -15,7 +15,7 @@ import org.immutables.value.Value;
  * It suffices to say that a production application should NOT store keys in configuration.
  */
 @Value.Immutable
-@ApiStyle
+@ValueStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableSiteKeysConfig.class)
 public interface SiteKeysConfig {

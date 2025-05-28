@@ -20,7 +20,7 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
-import org.example.age.api.util.AsyncCalls;
+import org.example.age.common.AsyncCalls;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
 import org.example.age.service.module.request.AccountIdContext;

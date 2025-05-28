@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 import java.net.URI;
-import org.example.age.api.ApiStyle;
+import org.example.age.common.ValueStyle;
 import org.immutables.value.Value;
 import software.amazon.awssdk.regions.Region;
 
 /** Configuration for DynamoDB. */
 @Value.Immutable
-@ApiStyle
+@ValueStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableDynamoDbConfig.class)
 public interface DynamoDbConfig {

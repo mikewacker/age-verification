@@ -3,12 +3,12 @@ package org.example.age.module.store.redis.client;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URL;
-import org.example.age.api.ApiStyle;
+import org.example.age.common.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for Redis. */
 @Value.Immutable
-@ApiStyle
+@ValueStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableRedisConfig.class)
 public interface RedisConfig {

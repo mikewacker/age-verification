@@ -27,6 +27,7 @@ openApiJava {
 dependencies {
     annotationProcessor(libs.immutables.value)
 
+    api(project(":common"))
     api(libs.immutables.annotations)
 
     testImplementation(project(":testing"))
