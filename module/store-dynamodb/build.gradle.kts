@@ -7,6 +7,7 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
     annotationProcessor(libs.immutables.value)
 
+    api(project(":common"))
     api(project(":service:module"))
     api(libs.dagger.dagger)
     api(libs.immutables.annotations)

@@ -1,4 +1,4 @@
-package org.example.age.api.util;
+package org.example.age.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.WebStageTesting.await;

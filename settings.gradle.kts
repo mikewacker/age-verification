@@ -1,6 +1,8 @@
 rootProject.name = "age-verification"
 
 include(
+        "common",
+
         // interfaces
         "api",
         "service:module",

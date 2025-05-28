@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.math.BigInteger;
 import java.security.spec.ECPoint;
-import org.example.age.api.ApiStyle;
+import org.example.age.common.ValueStyle;
 import org.immutables.value.Value;
 
 /** Public key for elliptic curve cryptography. Does not include the definition of the curve. */
 @Value.Immutable
-@ApiStyle
+@ValueStyle
 @JsonSerialize
 @JsonDeserialize(as = ImmutableEccPublicKey.class)
 public interface EccPublicKey {

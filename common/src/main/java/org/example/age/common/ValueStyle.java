@@ -1,4 +1,4 @@
-package org.example.age.api;
+package org.example.age.common;
 
 import org.immutables.value.Generated;
 import org.immutables.value.Value;
@@ -11,4 +11,4 @@ import org.immutables.value.Value;
         allowedClasspathAnnotations = {Generated.class, javax.annotation.processing.Generated.class},
         defaults = @Value.Immutable(copy = false),
         from = "")
-public @interface ApiStyle {}
+public @interface ValueStyle {}

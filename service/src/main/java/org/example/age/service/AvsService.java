@@ -21,7 +21,7 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.api.util.AsyncCalls;
+import org.example.age.common.AsyncCalls;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
