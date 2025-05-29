@@ -9,6 +9,7 @@ include(
 
         // implementations
         "service",
+        "module:common",
         "module:request-demo",
         "module:client",
         "module:store-redis",
