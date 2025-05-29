@@ -17,7 +17,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
-import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AgeRange;
 import org.example.age.api.AuthMatchData;
@@ -27,15 +26,15 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.testing.WebStageTesting;
+import org.example.age.api.testing.TestSignatures;
 import org.example.age.service.module.client.SiteClientRepository;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.TestWrappedAvsService;
 import org.example.age.service.testing.request.TestAccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.mock.Calls;
 
 public final class AvsServiceTest {
@@ -149,12 +148,8 @@ public final class AvsServiceTest {
     @Singleton
     static final class FakeSiteClient implements SiteApi {
 
-        private final AgeCertificateVerifier ageCertificateVerifier;
-
         @Inject
-        public FakeSiteClient(AgeCertificateVerifier ageCertificateVerifier) {
-            this.ageCertificateVerifier = ageCertificateVerifier;
-        }
+        public FakeSiteClient() {}
 
         @Override
         public Call<VerificationState> getVerificationState() {
@@ -168,10 +163,8 @@ public final class AvsServiceTest {
 
         @Override
         public Call<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-            CompletionStage<Void> response = ageCertificateVerifier
-                    .verify(signedAgeCertificate)
-                    .thenAccept(ageCertificate -> AvsServiceTest.ageCertificate = ageCertificate);
-            return WebStageTesting.toCall(response);
+            ageCertificate = TestSignatures.verify(signedAgeCertificate);
+            return Calls.response(Response.success(null));
         }
     }
 

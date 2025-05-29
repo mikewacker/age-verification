@@ -17,7 +17,6 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AuthMatchData;
-import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
@@ -25,9 +24,8 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.api.crypto.SignatureData;
+import org.example.age.api.testing.TestSignatures;
 import org.example.age.api.testing.TestModels;
-import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.testing.TestDependenciesModule;
 import org.example.age.service.testing.TestWrappedSiteService;
 import org.example.age.service.testing.request.TestAccountId;
@@ -41,14 +39,11 @@ public final class SiteServiceTest {
     private SiteApi siteService;
     private TestAccountId accountId;
 
-    private AgeCertificateSigner ageCertificateSigner;
-
     @BeforeEach
     public void createSiteServiceEtAl() {
         TestComponent component = TestComponent.create();
         siteService = new TestWrappedSiteService(component.siteService());
         accountId = component.accountId();
-        ageCertificateSigner = component.ageCertificateSigner();
     }
 
     @Test
@@ -114,19 +109,12 @@ public final class SiteServiceTest {
 
     private SignedAgeCertificate createSignedAgeCertificate(VerificationRequest request) {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        return await(ageCertificateSigner.sign(ageCertificate));
+        return TestSignatures.sign(ageCertificate);
     }
 
     private static SignedAgeCertificate createInvalidSignedAgeCertificate(VerificationRequest request) {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate(request);
-        DigitalSignature signature = DigitalSignature.builder()
-                .algorithm("secp256r1")
-                .data(SignatureData.fromString(""))
-                .build();
-        return SignedAgeCertificate.builder()
-                .ageCertificate(ageCertificate)
-                .signature(signature)
-                .build();
+        return TestSignatures.signInvalid(ageCertificate, "secp256r1");
     }
 
     private static VerificationRequest createExpiredVerificationRequest() {
@@ -175,8 +163,6 @@ public final class SiteServiceTest {
         SiteApi siteService();
 
         TestAccountId accountId();
-
-        AgeCertificateSigner ageCertificateSigner();
     }
 
     /** Dagger module that binds <code>@Named("client") {@link AvsApi}</code>. */

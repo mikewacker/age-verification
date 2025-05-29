@@ -7,9 +7,8 @@ import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import org.example.age.api.AgeCertificate;
-import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.crypto.SignatureData;
+import org.example.age.api.testing.TestSignatures;
 import org.example.age.api.testing.TestModels;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
@@ -41,26 +40,15 @@ public final class DemoAgeCertificateSignerVerifierTest {
     @Test
     public void error_AlgorithmNotImplemented() {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate();
-        SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate, "dne");
+        SignedAgeCertificate signedAgeCertificate = TestSignatures.signInvalid(ageCertificate, "dne");
         awaitErrorCode(ageCertificateVerifier.verify(signedAgeCertificate), 501);
     }
 
     @Test
     public void error_InvalidSignature() {
         AgeCertificate ageCertificate = TestModels.createAgeCertificate();
-        SignedAgeCertificate signedAgeCertificate = signInvalid(ageCertificate, "secp256r1");
+        SignedAgeCertificate signedAgeCertificate = TestSignatures.signInvalid(ageCertificate, "secp256r1");
         awaitErrorCode(ageCertificateVerifier.verify(signedAgeCertificate), 401);
-    }
-
-    private static SignedAgeCertificate signInvalid(AgeCertificate ageCertificate, String algorithm) {
-        DigitalSignature signature = DigitalSignature.builder()
-                .algorithm(algorithm)
-                .data(SignatureData.fromString(""))
-                .build();
-        return SignedAgeCertificate.builder()
-                .ageCertificate(ageCertificate)
-                .signature(signature)
-                .build();
     }
 
     /** Dagger component for crypto. */
