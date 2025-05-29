@@ -8,14 +8,11 @@ dependencies {
     annotationProcessor(libs.immutables.value)
 
     api(project(":common"))
-    api(project(":api"))
     api(project(":service:module"))
-    api(libs.dagger.dagger)
-    api(libs.immutables.annotations)
-    api(libs.jackson.annotations)
-    api(libs.jackson.databind)
-    implementation(libs.jakartaInject.api)
-    implementation(libs.jaxRs.api)
+    api(libs.bundles.dagger)
+    api(libs.bundles.json)
+    implementation(project(":api"))
+    implementation(libs.bundles.jaxRs)
 
     testAnnotationProcessor(libs.dagger.compiler)
 

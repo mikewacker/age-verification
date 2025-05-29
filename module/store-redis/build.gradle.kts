@@ -9,11 +9,10 @@ dependencies {
 
     api(project(":common"))
     api(project(":service:module"))
-    api(libs.dagger.dagger)
-    api(libs.immutables.annotations)
-    api(libs.jackson.databind)
-    implementation(libs.jakartaInject.api)
-    implementation(libs.jedis.jedis)
+    api(libs.bundles.dagger)
+    api(libs.bundles.json)
+    implementation(project(":api"))
+    implementation(libs.bundles.redis)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
