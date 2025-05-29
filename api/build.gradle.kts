@@ -31,6 +31,8 @@ dependencies {
     api(project(":common"))
     api(libs.immutables.annotations)
 
+    testFixturesImplementation(testFixtures(project(":common")))
+
     testImplementation(testFixtures(project(":common")))
     testImplementation(libs.guava.testlib)
 }
