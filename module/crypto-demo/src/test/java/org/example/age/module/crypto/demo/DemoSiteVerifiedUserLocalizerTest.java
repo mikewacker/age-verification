@@ -6,9 +6,9 @@ import static org.example.age.common.testing.WebStageTesting.await;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import org.example.age.api.VerifiedUser;
+import org.example.age.api.testing.TestModels;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
-import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

@@ -18,6 +18,8 @@ dependencies {
     testFixturesImplementation(libs.retrofit.mock)
     testFixturesImplementation(libs.retrofit.converterJackson)
 
+    testFixturesRuntimeOnly(libs.dropwizard.jersey) // provides RuntimeDelegate for JAX-RS response
+
     testImplementation(libs.dropwizard.testing)
     testImplementation(libs.retrofit.mock)
 }

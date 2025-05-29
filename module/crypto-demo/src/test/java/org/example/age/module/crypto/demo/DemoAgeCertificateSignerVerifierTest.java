@@ -10,10 +10,10 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
+import org.example.age.api.testing.TestModels;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
-import org.example.age.testing.TestModels;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

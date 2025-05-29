@@ -20,5 +20,6 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
+    testImplementation(testFixtures(project(":api")))
     testImplementation(project(":testing"))
 }

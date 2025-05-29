@@ -11,7 +11,6 @@ dependencies {
     api(project(":service:module"))
     api(libs.dagger.dagger)
     api(libs.immutables.annotations)
-    api(libs.jackson.annotations)
     api(libs.jackson.databind)
     implementation(libs.jakartaInject.api)
     implementation(libs.jaxRs.api)
@@ -20,6 +19,6 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
-    testImplementation(project(":testing"))
+    testImplementation(testFixtures(project(":api")))
     testImplementation(libs.retrofit.mock)
 }
