@@ -5,18 +5,16 @@ plugins {
 }
 
 dependencies {
-    api(libs.immutables.annotations)
-    api(libs.retrofit.retrofit)
-    implementation(libs.jaxRs.api)
+    api(libs.bundles.json)
+    api(libs.bundles.retrofit)
+    implementation(libs.bundles.jaxRs)
 
-    testFixturesApi(libs.jackson.databind)
-    testFixturesApi(libs.okhttp.okhttp)
-    testFixturesApi(libs.retrofit.retrofit)
+    testFixturesApi(libs.bundles.json)
+    testFixturesApi(libs.bundles.retrofit)
+    testFixturesImplementation(libs.bundles.jaxRs)
     testFixturesImplementation(libs.assertj.core)
     testFixturesImplementation(libs.dropwizard.jackson)
-    testFixturesImplementation(libs.jaxRs.api)
     testFixturesImplementation(libs.retrofit.mock)
-    testFixturesImplementation(libs.retrofit.converterJackson)
 
     testFixturesRuntimeOnly(libs.dropwizard.jersey) // provides RuntimeDelegate for JAX-RS response
 

@@ -9,12 +9,10 @@ dependencies {
 
     api(project(":common"))
     api(project(":service:module"))
-    api(libs.dagger.dagger)
-    api(libs.immutables.annotations)
-    api(libs.jackson.databind)
-    api(libs.jakartaAnnotation.api)
-    implementation(libs.awsSdk.dynamoDb)
-    implementation(libs.jakartaInject.api)
+    api(libs.bundles.dagger)
+    api(libs.bundles.json)
+    implementation(project(":api"))
+    implementation(libs.bundles.dynamoDb)
 
     testAnnotationProcessor(libs.dagger.compiler)
 

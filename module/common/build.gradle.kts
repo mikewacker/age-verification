@@ -7,22 +7,20 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(libs.dagger.dagger)
-    api(libs.jackson.databind)
-    api(libs.jakartaInject.api)
-    api(libs.jaxRs.api)
+    api(libs.bundles.dagger)
+    api(libs.bundles.jaxRs)
+    api(libs.bundles.json)
 
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
-    testFixturesApi(libs.dagger.dagger)
-    testFixturesApi(libs.jackson.databind)
-    testFixturesApi(libs.jakartaInject.api)
+    testFixturesApi(libs.bundles.dagger)
+    testFixturesApi(libs.bundles.json)
     testFixturesImplementation(testFixtures(project(":common")))
 
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
-    testImplementation(libs.okhttp.okhttp)
-    testImplementation(libs.dropwizard.core)
+    testImplementation(libs.bundles.dropwizard)
+    testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)
 }

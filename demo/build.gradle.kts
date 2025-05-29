@@ -9,13 +9,13 @@ dependencies {
     implementation(testFixtures(project(":common")))
     implementation(project(":testing"))
     implementation(project(":test-containers"))
-    implementation(libs.dropwizard.core)
-    implementation(libs.jackson.annotations)
-    implementation(libs.jackson.databind)
-    implementation(libs.okhttp.okhttp)
-    implementation(libs.retrofit.retrofit)
+    implementation(libs.bundles.dropwizard)
+    implementation(libs.bundles.json)
+    implementation(libs.bundles.retrofit)
 }
 
 application {
     mainClass = "org.example.age.demo.Demo"
 }
+
+tasks.matching { it.group == "distribution" }.configureEach { enabled = false }
