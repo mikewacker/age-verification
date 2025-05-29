@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
-import org.example.age.module.common.testing.TestEnvModule;
+import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ public final class EnvUtilsTest {
     }
 
     /** Dagger component for the environment. */
-    @Component(modules = {CommonModule.class, TestEnvModule.class})
+    @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
     @Singleton
     interface TestComponent {
 

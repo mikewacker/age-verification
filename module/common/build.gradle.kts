@@ -14,8 +14,8 @@ dependencies {
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(libs.bundles.dagger)
-    testFixturesApi(libs.bundles.json)
     testFixturesImplementation(testFixtures(project(":common")))
+    testFixturesImplementation(libs.bundles.json)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
