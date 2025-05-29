@@ -1,8 +1,8 @@
 package org.example.age.module.crypto.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.WebStageTesting.await;
-import static org.example.age.testing.WebStageTesting.awaitErrorCode;
+import static org.example.age.common.testing.WebStageTesting.await;
+import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
 
 import dagger.Component;
 import jakarta.inject.Singleton;

@@ -12,8 +12,8 @@ import java.util.List;
 import org.example.age.api.AgeRange;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.testing.JsonTesting;
-import org.example.age.testing.TestClient;
+import org.example.age.common.testing.JsonTesting;
+import org.example.age.common.testing.TestClient;
 import org.example.age.testing.containers.TestContainers;
 
 /** Client/server infrastructure for the demo. */

@@ -8,5 +8,6 @@ dependencies {
     api(libs.awsSdk.dynamoDb)
     api(libs.jedis.jedis)
     api(libs.junitJupiter.api)
+    implementation(testFixtures(project(":common")))
     implementation(project(":testing"))
 }

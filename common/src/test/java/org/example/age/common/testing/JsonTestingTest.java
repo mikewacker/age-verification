@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.common.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,14 +6,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.IOException;
-import org.example.age.api.AgeCertificate;
 import org.junit.jupiter.api.Test;
 
 public final class JsonTestingTest {
 
     @Test
-    public void serializeThenDeserialize_AgeCertificate() throws IOException {
-        JsonTesting.serializeThenDeserialize(TestModels.createAgeCertificate(), AgeCertificate.class);
+    public void serializeThenDeserialize_String() throws IOException {
+        JsonTesting.serializeThenDeserialize("test", String.class);
     }
 
     @Test
@@ -24,9 +23,9 @@ public final class JsonTestingTest {
 
     @Test
     public void serializeThenDeserialize_TestUtils() {
-        String json = JsonTesting.serialize(TestModels.createAgeCertificate());
-        AgeCertificate ageCertificate = JsonTesting.deserialize(json, AgeCertificate.class);
-        assertThat(ageCertificate).isNotNull();
+        String json = JsonTesting.serialize("test");
+        String value = JsonTesting.deserialize(json, String.class);
+        assertThat(value).isEqualTo("test");
     }
 
     /** Value type that serializes incorrectly. */

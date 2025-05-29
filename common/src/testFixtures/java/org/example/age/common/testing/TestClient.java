@@ -1,4 +1,4 @@
-package org.example.age.testing;
+package org.example.age.common.testing;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

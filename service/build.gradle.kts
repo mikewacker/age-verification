@@ -19,8 +19,7 @@ dependencies {
 
     testAnnotationProcessor(libs.dagger.compiler)
 
+    testImplementation(testFixtures(project(":common")))
     testImplementation(project(":testing"))
     testImplementation(libs.retrofit.mock)
-
-    testRuntimeOnly(libs.dropwizard.core) // provides RuntimeDelegate for JAX-RS Response
 }

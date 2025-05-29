@@ -1,7 +1,7 @@
 package org.example.age.module.store.dynamodb.testing;
 
+import org.example.age.common.testing.TestClient;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
-import org.example.age.testing.TestClient;
 import org.example.age.testing.containers.TestContainers;
 import software.amazon.awssdk.regions.Region;
 

@@ -1,7 +1,7 @@
 package org.example.age.testing.containers;
 
 import org.example.age.api.VerifiedUser;
-import org.example.age.testing.JsonTesting;
+import org.example.age.common.testing.JsonTesting;
 import redis.clients.jedis.JedisPooled;
 
 /** Test utilities for Redis. */

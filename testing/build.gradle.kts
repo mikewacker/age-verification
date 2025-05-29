@@ -11,6 +11,7 @@ dependencies {
     api(libs.jackson.databind)
     api(libs.okhttp.okhttp)
     api(libs.retrofit.retrofit)
+    implementation(testFixtures(project(":common")))
     implementation(libs.assertj.core)
     implementation(libs.dropwizard.core)
     implementation(libs.jakartaInject.api)

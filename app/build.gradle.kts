@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.jakartaValidation.api)
     implementation(libs.jedis.jedis) // for Dagger
 
+    testImplementation(testFixtures(project(":common")))
     testImplementation(project(":testing"))
     testImplementation(project(":test-containers"))
     testImplementation(libs.dropwizard.testing)

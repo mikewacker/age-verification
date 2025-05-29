@@ -5,7 +5,7 @@ import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
-import org.example.age.testing.WebStageTesting;
+import org.example.age.common.testing.WebStageTesting;
 
 /** Wrapper that converts uncaught exceptions to a failed stage. */
 public record TestWrappedSiteService(SiteApi delegate) implements SiteApi {
