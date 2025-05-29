@@ -1,9 +1,7 @@
 package org.example.age.module.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Dagger module that binds...
@@ -12,11 +10,7 @@ import java.util.concurrent.ExecutorService;
  *     <li>{@link EnvUtils}
  * </ul>
  * <p>
- * Depends on an unbound...
- * <ul>
- *     <li>{@link ObjectMapper}
- *     <li><code>@Named("worker") {@link ExecutorService}</code>
- * </ul>
+ * Depends on an unbound {@link LiteEnv}.
  */
 @Module
 public interface CommonModule {

@@ -18,7 +18,7 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.testing.TestClient;
-import org.example.age.module.common.testing.TestEnvModule;
+import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -69,7 +69,7 @@ public class RequestContextTest {
     }
 
     /** Dagger component for the application. */
-    @Component(modules = {CommonModule.class, TestEnvModule.class})
+    @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
     @Singleton
     interface TestComponent {
 
