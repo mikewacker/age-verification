@@ -16,6 +16,7 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
+    testImplementation(testFixtures(project(":api")))
     testImplementation(project(":testing"))
     testImplementation(libs.okhttp.okhttp)
     testImplementation(libs.dropwizard.core)

@@ -2,6 +2,7 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     id("openapi-java")
+    `java-test-fixtures`
     id("org.example.age.java-conventions")
 }
 

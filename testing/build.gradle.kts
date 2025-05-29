@@ -6,7 +6,6 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(project(":api"))
     api(libs.dagger.dagger)
     api(libs.jackson.databind)
     api(libs.okhttp.okhttp)
