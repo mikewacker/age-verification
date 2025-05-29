@@ -1,9 +1,9 @@
 package org.example.age.module.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import java.util.concurrent.ExecutorService;
+import org.example.age.module.common.CommonModule;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.service.module.client.SiteClientRepository;
 
 /**
@@ -12,11 +12,10 @@ import org.example.age.service.module.client.SiteClientRepository;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link AvsClientsConfig}
- *     <li>{@link ObjectMapper}
- *     <li><code>@Named("worker") {@link ExecutorService}</code>
+ *     <li>{@link LiteEnv}</code>
  * </ul>
  */
-@Module
+@Module(includes = CommonModule.class)
 public interface AvsClientModule {
 
     @Binds

@@ -11,12 +11,12 @@ import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.AvsConfigModule;
 import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.AvsClientModule;
+import org.example.age.module.common.RequestContextProvider;
 import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.redis.RedisAvsAccountStoreModule;
 import org.example.age.module.store.redis.RedisPendingStoreModule;
 import org.example.age.service.AvsServiceModule;
-import org.example.age.service.module.request.RequestContextProvider;
 
 /** Application for the age verification service. */
 public class AvsApp extends Application<AvsAppConfig> {

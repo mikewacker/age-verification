@@ -10,6 +10,7 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 
@@ -24,9 +25,9 @@ final class DemoAgeCertificateSigner implements AgeCertificateSigner {
     private final ObjectMapper mapper;
 
     @Inject
-    public DemoAgeCertificateSigner(AvsKeysConfig config, ObjectMapper mapper) {
+    public DemoAgeCertificateSigner(AvsKeysConfig config, LiteEnv liteEnv) {
         this.config = config;
-        this.mapper = mapper;
+        this.mapper = liteEnv.jsonMapper();
     }
 
     @Override

@@ -9,5 +9,4 @@ dependencies {
     api(libs.jedis.jedis)
     api(libs.junitJupiter.api)
     implementation(testFixtures(project(":common")))
-    implementation(project(":testing"))
 }

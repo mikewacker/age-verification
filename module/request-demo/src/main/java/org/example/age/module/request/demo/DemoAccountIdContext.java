@@ -5,8 +5,8 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import java.util.Optional;
+import org.example.age.module.common.RequestContextProvider;
 import org.example.age.service.module.request.AccountIdContext;
-import org.example.age.service.module.request.RequestContextProvider;
 
 /**
  * Implementation of {@link AccountIdContext}.

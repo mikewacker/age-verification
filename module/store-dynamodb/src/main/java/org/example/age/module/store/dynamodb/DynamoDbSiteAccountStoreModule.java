@@ -1,9 +1,9 @@
 package org.example.age.module.store.dynamodb;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import java.util.concurrent.ExecutorService;
+import org.example.age.module.common.CommonModule;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.store.dynamodb.client.DynamoDbClientModule;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.service.module.store.SiteVerificationStore;
@@ -14,11 +14,10 @@ import org.example.age.service.module.store.SiteVerificationStore;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link DynamoDbConfig}
- *     <li>{@link ObjectMapper}
- *     <li><code>@Named("worker") {@link ExecutorService}</code>
+ *     <li>{@link LiteEnv}
  * </ul>
  */
-@Module(includes = DynamoDbClientModule.class)
+@Module(includes = {DynamoDbClientModule.class, CommonModule.class})
 public interface DynamoDbSiteAccountStoreModule {
 
     @Binds

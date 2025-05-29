@@ -1,12 +1,12 @@
 package org.example.age.module.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.util.concurrent.ExecutorService;
 import org.example.age.api.client.AvsApi;
+import org.example.age.module.common.CommonModule;
+import org.example.age.module.common.LiteEnv;
 
 /**
  * Dagger module that binds <code>@Named("client") {@link AvsApi}</code>.
@@ -14,11 +14,10 @@ import org.example.age.api.client.AvsApi;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link SiteClientsConfig}
- *     <li>{@link ObjectMapper}
- *     <li><code>@Named("worker") {@link ExecutorService}</code>
+ *     <li>{@link LiteEnv}.
  * </ul>
  */
-@Module
+@Module(includes = CommonModule.class)
 public interface SiteClientModule {
 
     @Provides

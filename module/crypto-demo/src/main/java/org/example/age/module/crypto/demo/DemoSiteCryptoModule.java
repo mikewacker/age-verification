@@ -1,8 +1,8 @@
 package org.example.age.module.crypto.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
@@ -17,7 +17,7 @@ import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link SiteKeysConfig}
- *     <li>{@link ObjectMapper}
+ *     <li>{@link LiteEnv}
  * </ul>
  * <p>
  * Loads keys from configuration; it suffices to say that a production application should NOT do this.

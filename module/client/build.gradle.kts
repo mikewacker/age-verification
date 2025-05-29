@@ -10,6 +10,7 @@ dependencies {
     api(project(":common"))
     api(project(":api"))
     api(project(":service:module"))
+    api(project(":module:common"))
     api(libs.bundles.dagger)
     api(libs.bundles.json)
     implementation(libs.bundles.jaxRs)
@@ -18,7 +19,7 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
-    testImplementation(project(":testing"))
+    testImplementation(testFixtures(project(":module:common")))
     testImplementation(libs.bundles.dropwizard)
     testImplementation(libs.dropwizard.testing)
 }

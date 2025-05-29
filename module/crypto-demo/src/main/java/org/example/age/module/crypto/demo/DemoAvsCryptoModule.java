@@ -1,8 +1,9 @@
 package org.example.age.module.crypto.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.module.common.CommonModule;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
@@ -17,12 +18,12 @@ import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link AvsKeysConfig}
- *     <li>{@link ObjectMapper}
+ *     <li>{@link LiteEnv}
  * </ul>
  * <p>
  * Loads keys from configuration; it suffices to say that a production application should NOT do this.
  */
-@Module
+@Module(includes = CommonModule.class)
 public interface DemoAvsCryptoModule {
 
     @Binds

@@ -20,7 +20,6 @@ dependencies {
     implementation(libs.bundles.redis) // for Dagger
 
     testImplementation(testFixtures(project(":common")))
-    testImplementation(project(":testing"))
     testImplementation(project(":test-containers"))
     testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)

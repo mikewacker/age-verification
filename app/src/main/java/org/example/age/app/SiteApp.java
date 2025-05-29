@@ -11,12 +11,12 @@ import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.config.SiteConfigModule;
 import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.SiteClientModule;
+import org.example.age.module.common.RequestContextProvider;
 import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.redis.RedisPendingStoreModule;
 import org.example.age.module.store.redis.RedisSiteAccountStoreModule;
 import org.example.age.service.SiteServiceModule;
-import org.example.age.service.module.request.RequestContextProvider;
 
 /** Application for a site. */
 public final class SiteApp extends Application<SiteAppConfig> {

@@ -5,7 +5,7 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerifiedUser;
-import org.example.age.service.module.env.EnvUtils;
+import org.example.age.module.common.EnvUtils;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
 import redis.clients.jedis.JedisPooled;
 

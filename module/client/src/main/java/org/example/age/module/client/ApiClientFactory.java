@@ -1,13 +1,12 @@
 package org.example.age.module.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
+import org.example.age.module.common.LiteEnv;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -20,9 +19,9 @@ final class ApiClientFactory {
     private final Converter.Factory jsonConverterFactory;
 
     @Inject
-    public ApiClientFactory(ObjectMapper mapper, @Named("worker") ExecutorService worker) {
-        httpClient = createApiClient(worker);
-        jsonConverterFactory = JacksonConverterFactory.create(mapper);
+    public ApiClientFactory(LiteEnv env) {
+        httpClient = createApiClient(env.worker());
+        jsonConverterFactory = JacksonConverterFactory.create(env.jsonMapper());
     }
 
     /** Creates an API client. */

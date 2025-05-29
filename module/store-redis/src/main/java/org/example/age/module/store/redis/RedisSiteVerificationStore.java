@@ -11,7 +11,7 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.service.module.env.EnvUtils;
+import org.example.age.module.common.EnvUtils;
 import org.example.age.service.module.store.SiteVerificationStore;
 import redis.clients.jedis.AbstractTransaction;
 import redis.clients.jedis.JedisPooled;
