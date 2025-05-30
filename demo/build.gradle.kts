@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":app"))
     implementation(testFixtures(project(":common")))
     implementation(testFixtures(project(":module:store-redis")))
+    implementation(testFixtures(project(":module:store-dynamodb")))
     implementation(libs.bundles.json)
     implementation(libs.bundles.retrofit)
 }
