@@ -1,7 +1,10 @@
 package org.example.age.module.store.dynamodb.testing;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import org.example.age.api.VerifiedUser;
+import org.example.age.common.testing.JsonTesting;
 import org.example.age.common.testing.TestClient;
 import org.example.age.module.common.testing.BaseTestContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -9,10 +12,12 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.BillingMode;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
 import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
 import software.amazon.awssdk.services.dynamodb.model.KeyType;
+import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 
 /** Test container for DynamoDB that has been cleaned. */
@@ -20,7 +25,7 @@ public final class DynamoDbTestContainer extends BaseTestContainer<DynamoDbClien
 
     public static final int PORT = 8000;
 
-    /** Creates the tables for the site account store. */
+    /** Creates the tables for the account store on the site. */
     public void createSiteAccountStoreTables() {
         createTable("Age.Verification.Account", builder -> builder.attributeDefinitions(AttributeDefinition.builder()
                         .attributeName("AccountId")
@@ -38,6 +43,29 @@ public final class DynamoDbTestContainer extends BaseTestContainer<DynamoDbClien
                         .attributeName("Pseudonym")
                         .keyType(KeyType.HASH)
                         .build()));
+    }
+
+    /** Creates the tables for the account store on the age verification service. */
+    public void createAvsAccountStoreTables() {
+        createTable("Age.User", builder -> builder.attributeDefinitions(AttributeDefinition.builder()
+                        .attributeName("AccountId")
+                        .attributeType(ScalarAttributeType.S)
+                        .build())
+                .keySchema(KeySchemaElement.builder()
+                        .attributeName("AccountId")
+                        .keyType(KeyType.HASH)
+                        .build()));
+    }
+
+    /** Creates an account on the age verification service. */
+    public void createAvsAccount(String accountId, VerifiedUser user) {
+        AttributeValue accountIdS = AttributeValue.fromS(accountId);
+        AttributeValue userS = AttributeValue.fromS(JsonTesting.serialize(user));
+        PutItemRequest userRequest = PutItemRequest.builder()
+                .tableName("Age.User")
+                .item(Map.of("AccountId", accountIdS, "User", userS))
+                .build();
+        getClient().putItem(userRequest);
     }
 
     @Override

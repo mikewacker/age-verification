@@ -20,6 +20,7 @@ dependencies {
     testFixturesApi(libs.bundles.dynamoDb)
     testFixturesApi(libs.junitJupiter.api)
     testFixturesImplementation(testFixtures(project(":common")))
+    testFixturesImplementation(testFixtures(project(":api")))
 
     testAnnotationProcessor(libs.dagger.compiler)
 
