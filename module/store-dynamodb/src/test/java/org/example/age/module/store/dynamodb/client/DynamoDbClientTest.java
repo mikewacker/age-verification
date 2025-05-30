@@ -2,8 +2,8 @@ package org.example.age.module.store.dynamodb.client;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
-import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -18,7 +18,7 @@ import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 public final class DynamoDbClientTest {
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 
     private static DynamoDbClient client;
 
@@ -29,7 +29,7 @@ public final class DynamoDbClientTest {
     }
 
     @Test
-    public void useClient() throws Exception {
+    public void useClient() {
         CreateTableRequest tableRequest = CreateTableRequest.builder()
                 .tableName("table")
                 .attributeDefinitions(AttributeDefinition.builder()
