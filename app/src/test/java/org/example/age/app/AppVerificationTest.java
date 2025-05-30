@@ -15,9 +15,8 @@ import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
-import org.example.age.common.testing.JsonTesting;
 import org.example.age.common.testing.TestClient;
-import org.example.age.testing.containers.TestContainers;
+import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -34,7 +33,7 @@ public final class AppVerificationTest {
             new DropwizardAppExtension<>(AvsApp.class, ResourceHelpers.resourceFilePath("config-avs.yaml"));
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final RedisTestContainer redis = new RedisTestContainer();
 
     private static SiteApi siteClient;
     private static AvsApi avsClient;
@@ -46,12 +45,12 @@ public final class AppVerificationTest {
     }
 
     @BeforeAll
-    public static void populateData() throws IOException {
+    public static void setUpContainers() throws IOException {
         VerifiedUser user = VerifiedUser.builder()
                 .pseudonym(SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4"))
                 .ageRange(AgeRange.builder().min(40).max(40).build())
                 .build();
-        containers.redisClient().set("age:user:person", JsonTesting.serialize(user));
+        redis.createAvsAccount("person", user);
     }
 
     @Test

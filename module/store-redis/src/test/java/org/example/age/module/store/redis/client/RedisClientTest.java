@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
-import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPooled;
 public final class RedisClientTest {
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final RedisTestContainer redis = new RedisTestContainer();
 
     private static JedisPooled client;
 

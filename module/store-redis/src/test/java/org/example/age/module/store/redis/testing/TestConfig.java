@@ -2,13 +2,12 @@ package org.example.age.module.store.redis.testing;
 
 import org.example.age.common.testing.TestClient;
 import org.example.age.module.store.redis.client.RedisConfig;
-import org.example.age.testing.containers.TestContainers;
 
 /** Configuration for testing. */
 public final class TestConfig {
 
     private static final RedisConfig redis = RedisConfig.builder()
-            .url(TestClient.createLocalhostUrl(TestContainers.REDIS_PORT))
+            .url(TestClient.createLocalhostUrl(RedisTestContainer.PORT))
             .build();
 
     /** Gets the configuration for Redis. */

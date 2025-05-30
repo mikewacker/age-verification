@@ -12,7 +12,6 @@ dependencies {
     api(project(":module:crypto-demo"))
     api(libs.bundles.dropwizard)
     api(libs.bundles.json)
-
     implementation(project(":api"))
     implementation(project(":service:module"))
     implementation(project(":module:common"))
@@ -20,7 +19,7 @@ dependencies {
     implementation(libs.bundles.redis) // for Dagger
 
     testImplementation(testFixtures(project(":common")))
-    testImplementation(project(":test-containers"))
+    testImplementation(testFixtures(project(":module:store-redis")))
     testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)
 }

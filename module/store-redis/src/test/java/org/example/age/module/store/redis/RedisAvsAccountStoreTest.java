@@ -8,10 +8,9 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.testing.TestModels;
+import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
-import org.example.age.testing.containers.RedisTestUtils;
-import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -19,7 +18,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class RedisAvsAccountStoreTest {
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final RedisTestContainer redis = new RedisTestContainer();
 
     private static AvsVerifiedUserStore store;
 
@@ -30,8 +29,8 @@ public final class RedisAvsAccountStoreTest {
     }
 
     @BeforeAll
-    public static void createAvsAccount() {
-        RedisTestUtils.createAvsAccount(containers.redisClient(), "person", TestModels.createVerifiedUser());
+    public static void setUpContainer() {
+        redis.createAvsAccount("person", TestModels.createVerifiedUser());
     }
 
     @Test
