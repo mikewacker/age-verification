@@ -7,8 +7,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":app"))
     implementation(testFixtures(project(":common")))
-    implementation(project(":test-containers"))
-    implementation(libs.bundles.dropwizard)
+    implementation(testFixtures(project(":module:store-redis")))
     implementation(libs.bundles.json)
     implementation(libs.bundles.retrofit)
 }

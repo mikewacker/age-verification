@@ -19,7 +19,4 @@ include(
         // app
         "app",
         "demo",
-
-        // test
-        "test-containers",
 )
