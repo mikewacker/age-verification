@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `java-test-fixtures`
     id("org.example.age.java-conventions")
 }
 
@@ -15,10 +16,14 @@ dependencies {
     implementation(project(":api"))
     implementation(libs.bundles.dynamoDb)
 
+    testFixturesApi(testFixtures(project(":module:common")))
+    testFixturesApi(libs.bundles.dynamoDb)
+    testFixturesApi(libs.junitJupiter.api)
+    testFixturesImplementation(testFixtures(project(":common")))
+
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":module:common")))
-    testImplementation(project(":test-containers"))
 }

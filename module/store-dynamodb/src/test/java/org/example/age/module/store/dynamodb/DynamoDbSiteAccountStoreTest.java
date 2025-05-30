@@ -14,10 +14,9 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.testing.TestModels;
+import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;
-import org.example.age.testing.containers.DynamoDbTestUtils;
-import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -25,7 +24,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class DynamoDbSiteAccountStoreTest {
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 
     private static SiteVerificationStore store;
 
@@ -36,8 +35,8 @@ public final class DynamoDbSiteAccountStoreTest {
     }
 
     @BeforeAll
-    public static void createTables() {
-        DynamoDbTestUtils.createSiteAccountStoreTables(containers.dynamoDbClient());
+    public static void setUpContainer() {
+        dynamoDb.createSiteAccountStoreTables();
     }
 
     @Test
