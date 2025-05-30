@@ -4,9 +4,9 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.util.concurrent.ExecutorService;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.client.SiteClientsConfig;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.common.testing.TestLiteEnvModule;
 
 /**
@@ -14,7 +14,7 @@ import org.example.age.module.common.testing.TestLiteEnvModule;
  * <ul>
  *     <li>{@link SiteClientsConfig}
  *     <li>{@link AvsClientsConfig}
- *     <li><code>@Named("worker") {@link ExecutorService}</code>
+ *     <li>{@link LiteEnv}
  * </ul>
  * <p>
  * Depends on an unbound <code>@Named("port") int</code>.

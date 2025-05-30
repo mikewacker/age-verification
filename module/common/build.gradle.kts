@@ -14,6 +14,7 @@ dependencies {
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(libs.bundles.dagger)
+    testFixturesApi(libs.junitJupiter.api)
     testFixturesImplementation(testFixtures(project(":common")))
     testFixturesImplementation(libs.bundles.json)
 
