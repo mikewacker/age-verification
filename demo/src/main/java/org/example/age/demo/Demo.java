@@ -1,13 +1,17 @@
 package org.example.age.demo;
 
-import com.google.errorprone.annotations.FormatMethod;
-import java.io.IOException;
+import java.util.List;
+import org.example.age.api.AgeRange;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
+import org.example.age.api.VerifiedUser;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.client.SiteApi;
+import org.example.age.api.crypto.SecureId;
 import org.example.age.app.AvsApp;
 import org.example.age.app.SiteApp;
+import org.example.age.common.testing.TestClient;
+import org.example.age.module.store.redis.testing.RedisTestContainer;
 import retrofit2.Response;
 
 /** Runs the demo. */
@@ -16,64 +20,59 @@ public final class Demo {
     private static final AvsApp checkMyAge = new AvsApp("check-my-age");
     private static final SiteApp crackle = new SiteApp("crackle");
     private static final SiteApp pop = new SiteApp("pop");
+    private static final RedisTestContainer redis = new RedisTestContainer();
 
-    private static final AvsApi parentAvsClient = DemoInfra.createClient(9090, "John Smith", AvsApi.class);
-    private static final AvsApi childAvsClient = DemoInfra.createClient(9090, "Billy Smith", AvsApi.class);
-    private static final SiteApi parentCrackleClient = DemoInfra.createClient(8080, "publius", SiteApi.class);
-    private static final SiteApi childCrackleClient = DemoInfra.createClient(8080, "publius-jr", SiteApi.class);
-    private static final SiteApi parentPopClient = DemoInfra.createClient(8081, "JohnS", SiteApi.class);
-    private static final SiteApi childPopClient = DemoInfra.createClient(8081, "BillyS", SiteApi.class);
+    private static final AvsApi parentAvsClient = createClient(9090, "John Smith", AvsApi.class);
+    private static final AvsApi childAvsClient = createClient(9090, "Billy Smith", AvsApi.class);
+    private static final SiteApi parentCrackleClient = createClient(8080, "publius", SiteApi.class);
+    private static final SiteApi childCrackleClient = createClient(8080, "publius-jr", SiteApi.class);
+    private static final SiteApi parentPopClient = createClient(8081, "JohnS", SiteApi.class);
+    private static final SiteApi childPopClient = createClient(8081, "BillyS", SiteApi.class);
 
     private static final String AVS_NAME = "CheckMyAge";
 
     /** Main method. */
     @SuppressWarnings("CatchAndPrintStackTrace")
     public static void main(String[] args) throws Exception {
+        setUp();
         try {
-            startServers();
-            verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith", true);
-            verifyAge(childCrackleClient, childAvsClient, "Crackle", "publius-jr", "Billy Smith", false);
-            verifyAge(parentPopClient, parentAvsClient, "Pop", "JohnS", "John Smith", false);
-            verifyAge(childPopClient, childAvsClient, "Pop", "BillyS", "Billy Smith", false);
+            Logger.setVerbose(true);
+            verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith");
+            Logger.setVerbose(false);
+            verifyAge(childCrackleClient, childAvsClient, "Crackle", "publius-jr", "Billy Smith");
+            verifyAge(parentPopClient, parentAvsClient, "Pop", "JohnS", "John Smith");
+            verifyAge(childPopClient, childAvsClient, "Pop", "BillyS", "Billy Smith");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DemoInfra.stop();
+            tearDown();
         }
-    }
-
-    /** Starts all servers. */
-    private static void startServers() throws Exception {
-        DemoInfra.populateRedis();
-        DemoInfra.startServer(checkMyAge, "config-check-my-age.yaml");
-        DemoInfra.startServer(crackle, "config-crackle.yaml");
-        DemoInfra.startServer(pop, "config-pop.yaml");
     }
 
     /** Verifies a single account. */
     private static void verifyAge(
-            SiteApi siteClient, AvsApi avsClient, String siteName, String accountName, String realName, boolean verbose)
-            throws IOException {
-        log(true, "\n================================================================\n");
-        log(true, "%s uses %s to verify his account on %s, \"%s\".", realName, AVS_NAME, siteName, accountName);
+            SiteApi siteClient, AvsApi avsClient, String siteName, String accountName, String realName)
+            throws Exception {
+        Logger.info("\n================================================================\n");
+        Logger.info("%s uses %s to verify his account on %s, \"%s\".", realName, AVS_NAME, siteName, accountName);
 
         VerificationRequest request = get(siteClient.createVerificationRequest().execute());
-        log(verbose, "- On %s, %s begins the process to verify \"%s\".", siteName, realName, accountName);
-        log(verbose, "- (Behind the scenes, %s contacts %s.)", siteName, AVS_NAME);
-        log(verbose, "    - %s does NOT share the account name, \"%s\", with %s.", siteName, accountName, AVS_NAME);
-        log(verbose, "- %s redirects %s to %s.", siteName, realName, AVS_NAME);
+        Logger.verbose("- On %s, %s begins the process to verify \"%s\".", siteName, realName, accountName);
+        Logger.verbose("- (Behind the scenes, %s contacts %s.)", siteName, AVS_NAME);
+        Logger.verbose("    - %s does NOT share the account name, \"%s\", with %s.", siteName, accountName, AVS_NAME);
+        Logger.verbose("- %s redirects %s to %s.", siteName, realName, AVS_NAME);
 
         get(avsClient.linkVerificationRequest(request.getId()).execute());
         get(avsClient.sendAgeCertificate().execute());
-        log(verbose, "- %s confirms with %s that he wants to verify an account on %s.", realName, AVS_NAME, siteName);
-        log(verbose, "    - %s does NOT know which account on %s is being verified.", AVS_NAME, siteName);
-        log(verbose, "- (Behind the scenes, %s sends an age certificate to %s.)", AVS_NAME, siteName);
-        log(verbose, "    - %s does NOT share %s's real name with %s.", AVS_NAME, realName, siteName);
-        log(verbose, "- %s redirects %s to %s.", AVS_NAME, realName, siteName);
+        Logger.verbose("- %s confirms with %s that he wants to verify an account on %s.", realName, AVS_NAME, siteName);
+        Logger.verbose("    - %s does NOT know which account on %s is being verified.", AVS_NAME, siteName);
+        Logger.verbose("- (Behind the scenes, %s sends an age certificate to %s.)", AVS_NAME, siteName);
+        Logger.verbose("    - %s does NOT share %s's real name with %s.", AVS_NAME, realName, siteName);
+        Logger.verbose("- %s redirects %s to %s.", AVS_NAME, realName, siteName);
 
         VerificationState state = get(siteClient.getVerificationState().execute());
-        log(true, "\"%s\" is verified on %s:", accountName, siteName);
-        logJson(state.getUser());
+        Logger.info("\"%s\" is verified on %s:", accountName, siteName);
+        Logger.json(state.getUser());
     }
 
     /** Gets the result of a successful response. */
@@ -86,23 +85,40 @@ public final class Demo {
         return response.body();
     }
 
-    /** Logs a message to the console. */
-    @FormatMethod
-    private static void log(boolean show, String format, Object... args) {
-        if (!show) {
-            return;
-        }
-
-        String msg = String.format(format, args);
-        System.out.println(msg);
+    /** Creates a client for an account. */
+    private static <A> A createClient(int port, String accountId, Class<A> apiType) {
+        return TestClient.createApi(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
     }
 
-    /** Logs a value as JSON to the console. */
-    private static void logJson(Object value) throws IOException {
-        String json = DemoInfra.getObjectWriter().writeValueAsString(value);
-        System.out.println(json);
+    /** Sets up the demo. */
+    private static void setUp() throws Exception {
+        // Set up containers.
+        redis.beforeAll(null);
+        SecureId parentPseudonym = SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4");
+        VerifiedUser parent = VerifiedUser.builder()
+                .pseudonym(parentPseudonym)
+                .ageRange(AgeRange.builder().min(40).max(40).build())
+                .build();
+        redis.createAvsAccount("John Smith", parent);
+        SecureId childPseudonym = SecureId.fromString("KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4");
+        VerifiedUser child = VerifiedUser.builder()
+                .pseudonym(childPseudonym)
+                .ageRange(AgeRange.builder().min(13).max(13).build())
+                .guardianPseudonyms(List.of(parentPseudonym))
+                .build();
+        redis.createAvsAccount("Billy Smith", child);
+
+        // Start servers.
+        checkMyAge.run("server", Resources.get("config-check-my-age.yaml"));
+        crackle.run("server", Resources.get("config-crackle.yaml"));
+        pop.run("server", Resources.get("config-pop.yaml"));
     }
 
-    // static class
-    private Demo() {}
+    /** Tears down the demo. */
+    private static void tearDown() throws Exception {
+        redis.afterAll(null);
+        System.exit(0);
+    }
+
+    private Demo() {} // static class
 }
