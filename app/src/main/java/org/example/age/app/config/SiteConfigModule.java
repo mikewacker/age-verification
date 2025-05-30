@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
+import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.SiteServiceConfig;
 
@@ -13,6 +14,7 @@ import org.example.age.service.SiteServiceConfig;
  *     <li>{@link SiteServiceConfig}
  *     <li>{@link SiteClientsConfig}
  *     <li>{@link RedisConfig}
+ *     <li>{@link DynamoDbConfig}
  *     <li>{@link SiteKeysConfig}
  * </ul>
  * <p>
@@ -34,6 +36,11 @@ public interface SiteConfigModule {
     @Provides
     static RedisConfig provideRedisConfig(SiteAppConfig appConfig) {
         return appConfig.getRedis();
+    }
+
+    @Provides
+    static DynamoDbConfig provideDynamoDbConfig(SiteAppConfig appConfig) {
+        return appConfig.getDynamoDb();
     }
 
     @Provides

@@ -16,6 +16,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.common.testing.TestClient;
+import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,9 @@ public final class AppVerificationTest {
     @RegisterExtension
     private static final RedisTestContainer redis = new RedisTestContainer();
 
+    @RegisterExtension
+    private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
+
     private static SiteApi siteClient;
     private static AvsApi avsClient;
 
@@ -45,12 +49,14 @@ public final class AppVerificationTest {
     }
 
     @BeforeAll
-    public static void setUpContainers() throws IOException {
+    public static void setUpContainers() {
+        dynamoDb.createSiteAccountStoreTables();
+        dynamoDb.createAvsAccountStoreTables();
         VerifiedUser user = VerifiedUser.builder()
                 .pseudonym(SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4"))
                 .ageRange(AgeRange.builder().min(40).max(40).build())
                 .build();
-        redis.createAvsAccount("person", user);
+        dynamoDb.createAvsAccount("person", user);
     }
 
     @Test

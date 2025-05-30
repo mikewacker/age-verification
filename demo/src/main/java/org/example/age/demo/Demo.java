@@ -11,6 +11,7 @@ import org.example.age.api.crypto.SecureId;
 import org.example.age.app.AvsApp;
 import org.example.age.app.SiteApp;
 import org.example.age.common.testing.TestClient;
+import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import retrofit2.Response;
 
@@ -21,6 +22,7 @@ public final class Demo {
     private static final SiteApp crackle = new SiteApp("crackle");
     private static final SiteApp pop = new SiteApp("pop");
     private static final RedisTestContainer redis = new RedisTestContainer();
+    private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 
     private static final AvsApi parentAvsClient = createClient(9090, "John Smith", AvsApi.class);
     private static final AvsApi childAvsClient = createClient(9090, "Billy Smith", AvsApi.class);
@@ -94,19 +96,22 @@ public final class Demo {
     private static void setUp() throws Exception {
         // Set up containers.
         redis.beforeAll(null);
+        dynamoDb.beforeAll(null);
+        dynamoDb.createSiteAccountStoreTables(); // can share since each site has a different pseudonym for a person
+        dynamoDb.createAvsAccountStoreTables();
         SecureId parentPseudonym = SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4");
         VerifiedUser parent = VerifiedUser.builder()
                 .pseudonym(parentPseudonym)
                 .ageRange(AgeRange.builder().min(40).max(40).build())
                 .build();
-        redis.createAvsAccount("John Smith", parent);
+        dynamoDb.createAvsAccount("John Smith", parent);
         SecureId childPseudonym = SecureId.fromString("KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4");
         VerifiedUser child = VerifiedUser.builder()
                 .pseudonym(childPseudonym)
                 .ageRange(AgeRange.builder().min(13).max(13).build())
                 .guardianPseudonyms(List.of(parentPseudonym))
                 .build();
-        redis.createAvsAccount("Billy Smith", child);
+        dynamoDb.createAvsAccount("Billy Smith", child);
 
         // Start servers.
         checkMyAge.run("server", Resources.get("config-check-my-age.yaml"));
@@ -117,6 +122,7 @@ public final class Demo {
     /** Tears down the demo. */
     private static void tearDown() throws Exception {
         redis.afterAll(null);
+        dynamoDb.afterAll(null);
         System.exit(0);
     }
 

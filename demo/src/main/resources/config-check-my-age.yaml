@@ -12,6 +12,10 @@ clients:
 redis:
   url: http://localhost:6379
 
+dynamoDb:
+  region: us-east-1
+  testEndpointOverride: http://localhost:8000
+
 keys:
   signing:
     s: 87808632867103956881705523559918117434194472117688001288631494927155518459976

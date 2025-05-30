@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
+import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.SiteServiceConfig;
 
@@ -23,6 +24,10 @@ public final class SiteAppConfig extends Configuration {
     @Valid
     @NotNull
     private RedisConfig redis;
+
+    @Valid
+    @NotNull
+    private DynamoDbConfig dynamoDb;
 
     @Valid
     @NotNull
@@ -56,6 +61,16 @@ public final class SiteAppConfig extends Configuration {
     @JsonProperty
     public void setRedis(RedisConfig redis) {
         this.redis = redis;
+    }
+
+    @JsonProperty
+    public DynamoDbConfig getDynamoDb() {
+        return dynamoDb;
+    }
+
+    @JsonProperty
+    public void setDynamoDb(DynamoDbConfig dynamoDb) {
+        this.dynamoDb = dynamoDb;
     }
 
     @JsonProperty

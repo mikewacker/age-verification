@@ -9,6 +9,7 @@ dependencies {
     api(project(":service"))
     api(project(":module:client"))
     api(project(":module:store-redis"))
+    api(project(":module:store-dynamodb"))
     api(project(":module:crypto-demo"))
     api(libs.bundles.dropwizard)
     api(libs.bundles.json)
@@ -16,10 +17,12 @@ dependencies {
     implementation(project(":service:module"))
     implementation(project(":module:common"))
     implementation(project(":module:request-demo"))
+    implementation(libs.bundles.dynamoDb) // for Dagger
     implementation(libs.bundles.redis) // for Dagger
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":module:store-redis")))
+    testImplementation(testFixtures(project(":module:store-dynamodb")))
     testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)
 }
