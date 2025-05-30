@@ -16,9 +16,9 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
-import software.amazon.awssdk.services.dynamodb.model.GetItemResponse;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
+/** Implementation of {@link SiteVerificationStore} that is backed by DynamoDB. */
 @Singleton
 final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
 
@@ -53,8 +53,7 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
                 .key(Map.of("AccountId", accountIdS))
                 .attributesToGet("State")
                 .build();
-        GetItemResponse accountResponse = client.getItem(accountRequest);
-        AttributeValue stateS = accountResponse.item().get("State");
+        AttributeValue stateS = client.getItem(accountRequest).item().get("State");
         if (stateS == null) {
             return UNVERIFIED;
         }
@@ -114,8 +113,8 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
                     .key(Map.of("Pseudonym", pseudonymS))
                     .attributesToGet("AccountId")
                     .build();
-            GetItemResponse getConflictResponse = client.getItem(getConflictRequest);
-            AttributeValue conflictingAccountId = getConflictResponse.item().get("AccountId");
+            AttributeValue conflictingAccountId =
+                    client.getItem(getConflictRequest).item().get("AccountId");
             return Optional.of((conflictingAccountId != null) ? conflictingAccountId.s() : "???");
         }
     }
