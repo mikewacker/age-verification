@@ -1,27 +1,39 @@
 package org.example.age.app.env;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.util.Duration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
+import org.example.age.module.common.LiteEnv;
 
-/** Factory for thread pools. */
+/** Implementation of {@link LiteEnv} for Dropwizard. */
 @Singleton
-final class ThreadPoolFactory {
+final class DropwizardLiteEnv implements LiteEnv {
 
-    private static final int numProcessors = availableProcessors();
-
-    private final Environment env;
+    private final ObjectMapper mapper;
+    private final ExecutorService worker;
 
     @Inject
-    public ThreadPoolFactory(Environment env) {
-        this.env = env;
+    public DropwizardLiteEnv(Environment env) {
+        mapper = env.getObjectMapper();
+        worker = createWorker(env);
+    }
+
+    @Override
+    public ObjectMapper jsonMapper() {
+        return mapper;
+    }
+
+    @Override
+    public ExecutorService worker() {
+        return worker;
     }
 
     /** Creates the thread pool for the worker. */
-    public ExecutorService createWorker() {
-        int size = numProcessors * 8;
+    public ExecutorService createWorker(Environment env) {
+        int size = availableProcessors() * 8;
         return env.lifecycle()
                 .executorService("worker")
                 .maxThreads(size)

@@ -11,6 +11,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 
@@ -25,9 +26,9 @@ final class DemoAgeCertificateVerifier implements AgeCertificateVerifier {
     private final ObjectMapper mapper;
 
     @Inject
-    public DemoAgeCertificateVerifier(SiteKeysConfig config, ObjectMapper mapper) {
+    public DemoAgeCertificateVerifier(SiteKeysConfig config, LiteEnv liteEnv) {
         this.config = config;
-        this.mapper = mapper;
+        this.mapper = liteEnv.jsonMapper();
     }
 
     @Override

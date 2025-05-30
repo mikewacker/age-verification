@@ -5,7 +5,7 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.example.age.service.module.env.EnvUtils;
+import org.example.age.module.common.EnvUtils;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import redis.clients.jedis.JedisPooled;

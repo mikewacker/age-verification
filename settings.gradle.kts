@@ -21,6 +21,5 @@ include(
         "demo",
 
         // test
-        "testing",
         "test-containers",
 )

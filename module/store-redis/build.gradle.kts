@@ -9,6 +9,7 @@ dependencies {
 
     api(project(":common"))
     api(project(":service:module"))
+    api(project(":module:common"))
     api(libs.bundles.dagger)
     api(libs.bundles.json)
     implementation(project(":api"))
@@ -18,6 +19,6 @@ dependencies {
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":api")))
-    testImplementation(project(":testing"))
+    testImplementation(testFixtures(project(":module:common")))
     testImplementation(project(":test-containers"))
 }

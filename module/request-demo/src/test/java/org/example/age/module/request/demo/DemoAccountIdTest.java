@@ -18,8 +18,9 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.testing.TestClient;
+import org.example.age.module.common.RequestContextProvider;
+import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.example.age.service.module.request.AccountIdContext;
-import org.example.age.service.module.request.RequestContextProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -80,7 +81,7 @@ public final class DemoAccountIdTest {
     }
 
     /** Dagger component for the application. */
-    @Component(modules = DemoAccountIdModule.class)
+    @Component(modules = {DemoAccountIdModule.class, TestLiteEnvModule.class})
     @Singleton
     interface TestComponent {
 

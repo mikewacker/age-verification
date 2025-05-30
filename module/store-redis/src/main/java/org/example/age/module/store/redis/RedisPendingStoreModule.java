@@ -1,9 +1,9 @@
 package org.example.age.module.store.redis;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Binds;
 import dagger.Module;
-import java.util.concurrent.ExecutorService;
+import org.example.age.module.common.CommonModule;
+import org.example.age.module.common.LiteEnv;
 import org.example.age.module.store.redis.client.RedisClientModule;
 import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.module.store.PendingStoreRepository;
@@ -14,11 +14,10 @@ import org.example.age.service.module.store.PendingStoreRepository;
  * Depends on an unbound...
  * <ul>
  *     <li>{@link RedisConfig}
- *     <li>{@link ObjectMapper}
- *     <li><code>@Named("worker") {@link ExecutorService}</code>
+ *     <li>{@link LiteEnv}
  * </ul>
  */
-@Module(includes = RedisClientModule.class)
+@Module(includes = {RedisClientModule.class, CommonModule.class})
 public interface RedisPendingStoreModule {
 
     @Binds

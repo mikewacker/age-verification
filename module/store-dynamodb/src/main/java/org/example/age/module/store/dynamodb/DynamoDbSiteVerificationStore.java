@@ -10,7 +10,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
-import org.example.age.service.module.env.EnvUtils;
+import org.example.age.module.common.EnvUtils;
 import org.example.age.service.module.store.SiteVerificationStore;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
