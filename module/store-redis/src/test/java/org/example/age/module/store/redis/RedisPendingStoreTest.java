@@ -9,10 +9,10 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
+import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
-import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -21,7 +21,7 @@ import redis.clients.jedis.JedisPooled;
 public final class RedisPendingStoreTest {
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final RedisTestContainer redis = new RedisTestContainer();
 
     private static PendingStore<Integer> store;
 
@@ -67,7 +67,7 @@ public final class RedisPendingStoreTest {
     public void putThenGetFromRedis() {
         await(store.put("key5", 1, expiresIn(300000)));
 
-        JedisPooled client = containers.redisClient();
+        JedisPooled client = redis.getClient();
         String value = client.get("age:pending:name:key5");
         assertThat(value).isEqualTo("1");
     }

@@ -14,9 +14,9 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.testing.TestModels;
+import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;
-import org.example.age.testing.containers.TestContainers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -25,7 +25,7 @@ import redis.clients.jedis.JedisPooled;
 public final class RedisSiteAccountStoreTest {
 
     @RegisterExtension
-    private static final TestContainers containers = new TestContainers();
+    private static final RedisTestContainer redis = new RedisTestContainer();
 
     private static SiteVerificationStore store;
 
@@ -116,7 +116,7 @@ public final class RedisSiteAccountStoreTest {
         Optional<String> maybeConflictingAccountId = await(store.trySave("username9", user, expiresIn(300000)));
         assertThat(maybeConflictingAccountId).isEmpty();
 
-        JedisPooled client = containers.redisClient();
+        JedisPooled client = redis.getClient();
         String userValue = client.get("{age:verification:account:username9}:user");
         assertThat(userValue).isNotNull();
         String expirationValue = client.get("{age:verification:account:username9}:expiration");

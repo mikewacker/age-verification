@@ -15,6 +15,7 @@ import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
 import software.amazon.awssdk.services.dynamodb.model.KeyType;
 import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 
+/** Test container for DynamoDB that has been cleaned. */
 public final class DynamoDbTestContainer extends BaseTestContainer<DynamoDbClient> {
 
     public static final int PORT = 8000;
