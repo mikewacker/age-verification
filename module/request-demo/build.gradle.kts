@@ -14,6 +14,7 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
+    testImplementation(testFixtures(project(":service:module")))
     testImplementation(testFixtures(project(":module:common")))
     testImplementation(libs.bundles.dropwizard)
     testImplementation(libs.bundles.retrofit)

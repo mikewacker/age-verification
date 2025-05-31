@@ -8,6 +8,8 @@ dependencies {
     api(project(":api"))
     implementation(libs.jaxRs.api)
 
+    testFixturesApi(libs.bundles.jaxRs)
+    testFixturesApi(libs.bundles.retrofit)
     testFixturesApi(libs.junitJupiter.api)
     testFixturesImplementation(testFixtures(project(":common")))
     testFixturesImplementation(project(":api"))
