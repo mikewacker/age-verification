@@ -19,8 +19,8 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.testing.TestClient;
-import org.example.age.module.common.testing.TestProviderRegistrar;
 import org.example.age.module.common.testing.TestLiteEnvModule;
+import org.example.age.module.common.testing.TestProviderRegistrar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

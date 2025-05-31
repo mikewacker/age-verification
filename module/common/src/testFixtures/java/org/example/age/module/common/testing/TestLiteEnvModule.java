@@ -3,7 +3,6 @@ package org.example.age.module.common.testing;
 import dagger.Binds;
 import dagger.BindsOptionalOf;
 import dagger.Module;
-import java.util.function.Consumer;
 import org.example.age.module.common.LiteEnv;
 
 /**
