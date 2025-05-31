@@ -26,5 +26,6 @@ dependencies {
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":service:module")))
     testImplementation(testFixtures(project(":module:common")))
 }

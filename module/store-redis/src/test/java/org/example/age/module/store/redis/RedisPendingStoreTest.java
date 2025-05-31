@@ -5,78 +5,44 @@ import static org.example.age.common.testing.WebStageTesting.await;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Optional;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
+import org.example.age.service.module.store.testing.PendingStoreTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;
 
-public final class RedisPendingStoreTest {
+public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
     @RegisterExtension
     private static final RedisTestContainer redis = new RedisTestContainer();
 
-    private static PendingStore<Integer> store;
+    private static PendingStoreRepository stores;
 
     @BeforeAll
-    public static void createPendingStore() {
+    public static void createPendingStoreRepository() {
         TestComponent component = TestComponent.create();
-        PendingStoreRepository stores = component.pendingStoreRepository();
-        store = stores.get("name", Integer.class);
+        stores = component.pendingStoreRepository();
     }
 
     @Test
-    public void putThenGet() {
-        await(store.put("key1", 1, expiresIn(300000)));
-        Optional<Integer> maybeValue = await(store.tryGet("key1"));
-        assertThat(maybeValue).hasValue(1);
-    }
-
-    @Test
-    public void putThenRemoveThenGet() {
-        await(store.put("key2", 1, expiresIn(300000)));
-        Optional<Integer> maybeValue1 = await(store.tryRemove("key2"));
-        assertThat(maybeValue1).hasValue(1);
-        Optional<Integer> maybeValue2 = await(store.tryGet("key2"));
-        assertThat(maybeValue2).isEmpty();
-    }
-
-    @Test
-    public void putThenExpireThenGet() throws InterruptedException {
-        await(store.put("key3", 1, expiresIn(2)));
-        Thread.sleep(4);
-        Optional<Integer> maybeValue = await(store.tryRemove("key3"));
-        assertThat(maybeValue).isEmpty();
-    }
-
-    @Test
-    public void putExpiredThenGet() {
-        await(store.put("key4", 1, expiresIn(-1000)));
-        Optional<Integer> maybeValue = await(store.tryRemove("key4"));
-        assertThat(maybeValue).isEmpty();
-    }
-
-    @Test
-    public void putThenGetFromRedis() {
-        await(store.put("key5", 1, expiresIn(300000)));
+    public void redisKeys() {
+        await(store().put("key-redis", 1, expiration()));
 
         JedisPooled client = redis.getClient();
-        String value = client.get("age:pending:name:key5");
+        String value = client.get("age:pending:name:key-redis");
         assertThat(value).isEqualTo("1");
     }
 
-    private static OffsetDateTime expiresIn(int ms) {
-        return OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMillis(ms));
+    @Override
+    protected PendingStore<Integer> store() {
+        return stores.get("name", Integer.class);
     }
 
-    /** Dagger component for the stores. */
+    /** Dagger component for the store. */
     @Component(modules = {RedisPendingStoreModule.class, TestDependenciesModule.class})
     @Singleton
     interface TestComponent {
