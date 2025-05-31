@@ -4,15 +4,10 @@ import dagger.Binds;
 import dagger.Module;
 import org.example.age.module.common.CommonModule;
 import org.example.age.module.common.LiteEnv;
-import org.example.age.module.common.RequestContextProvider;
 import org.example.age.service.module.request.AccountIdContext;
 
 /**
- * Dagger module that binds...
- * <ul>
- *     <li>{@link AccountIdContext}
- *     <li>{@link RequestContextProvider}
- * </ul>
+ * Dagger module that binds {@link AccountIdContext}.
  * <p>
  * Depends on an unbound {@link LiteEnv}.
  * <p>

@@ -2,6 +2,7 @@ package org.example.age.module.request.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dagger.BindsInstance;
 import dagger.Component;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
@@ -19,6 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.testing.TestClient;
 import org.example.age.module.common.RequestContextProvider;
+import org.example.age.module.common.testing.TestProviderRegistrar;
 import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.example.age.service.module.request.AccountIdContext;
 import org.junit.jupiter.api.Test;
@@ -74,9 +76,9 @@ public final class DemoAccountIdTest {
 
         @Override
         public void run(Configuration config, Environment env) {
-            TestComponent component = TestComponent.create();
+            TestComponent component =
+                    TestComponent.create(provider -> env.jersey().register(provider));
             env.jersey().register(component.service());
-            env.jersey().register(component.requestContextProvider());
         }
     }
 
@@ -85,12 +87,18 @@ public final class DemoAccountIdTest {
     @Singleton
     interface TestComponent {
 
-        static TestComponent create() {
-            return DaggerDemoAccountIdTest_TestComponent.create();
+        static TestComponent create(TestProviderRegistrar providerRegistrar) {
+            return DaggerDemoAccountIdTest_TestComponent.factory().create(providerRegistrar);
         }
 
         TestService service();
 
         RequestContextProvider requestContextProvider();
+
+        @Component.Factory
+        interface Factory {
+
+            TestComponent create(@BindsInstance TestProviderRegistrar providerRegistrar);
+        }
     }
 }

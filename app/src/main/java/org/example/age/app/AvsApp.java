@@ -11,7 +11,6 @@ import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.AvsConfigModule;
 import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.AvsClientModule;
-import org.example.age.module.common.RequestContextProvider;
 import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.dynamodb.DynamoDbAvsAccountStoreModule;
@@ -42,7 +41,6 @@ public class AvsApp extends Application<AvsAppConfig> {
     public void run(AvsAppConfig appConfig, Environment env) {
         AppComponent component = AppComponent.create(appConfig, env);
         env.jersey().register(component.service());
-        env.jersey().register(component.requestContextProvider());
     }
 
     /** Dagger component for the application. */
@@ -66,8 +64,6 @@ public class AvsApp extends Application<AvsAppConfig> {
 
         @Named("service")
         AvsApi service();
-
-        RequestContextProvider requestContextProvider();
 
         @Component.Factory
         interface Factory {

@@ -4,32 +4,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import java.util.concurrent.CompletionStage;
 import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public final class EnvUtilsTest {
+public final class JsonTest {
 
-    private static EnvUtils utils;
+    private static JsonMapper mapper;
 
     @BeforeAll
-    public static void createEnvUtils() {
+    public static void createJsonMapper() {
         TestComponent component = TestComponent.create();
-        utils = component.envUtils();
+        mapper = component.jsonMapper();
     }
 
     @Test
     public void serializeThenDeserialize() {
-        String json = utils.serialize("test");
-        String value = utils.deserialize(json, String.class);
+        String json = mapper.serialize("test");
+        String value = mapper.deserialize(json, String.class);
         assertThat(value).isEqualTo("test");
-    }
-
-    @Test
-    public void runAsync() {
-        CompletionStage<Integer> asyncTask = utils.runAsync(() -> 1);
-        assertThat(asyncTask).isCompletedWithValue(1);
     }
 
     /** Dagger component for the environment. */
@@ -38,9 +31,9 @@ public final class EnvUtilsTest {
     interface TestComponent {
 
         static TestComponent create() {
-            return DaggerEnvUtilsTest_TestComponent.create();
+            return DaggerJsonTest_TestComponent.create();
         }
 
-        EnvUtils envUtils();
+        JsonMapper jsonMapper();
     }
 }

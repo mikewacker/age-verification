@@ -11,7 +11,8 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.module.common.EnvUtils;
+import org.example.age.module.common.JsonMapper;
+import org.example.age.module.common.Worker;
 import org.example.age.service.module.store.SiteVerificationStore;
 import redis.clients.jedis.AbstractTransaction;
 import redis.clients.jedis.JedisPooled;
@@ -27,22 +28,24 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
             VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final JedisPooled client;
-    private final EnvUtils utils;
+    private final JsonMapper mapper;
+    private final Worker worker;
 
     @Inject
-    public RedisSiteVerificationStore(JedisPooled client, EnvUtils utils) {
+    public RedisSiteVerificationStore(JedisPooled client, JsonMapper mapper, Worker worker) {
         this.client = client;
-        this.utils = utils;
+        this.mapper = mapper;
+        this.worker = worker;
     }
 
     @Override
     public CompletionStage<VerificationState> load(String accountId) {
-        return utils.runAsync(() -> loadSync(accountId));
+        return worker.dispatch(() -> loadSync(accountId));
     }
 
     @Override
     public CompletionStage<Optional<String>> trySave(String accountId, VerifiedUser user, OffsetDateTime expiration) {
-        return utils.runAsync(() -> trySaveSync(accountId, user, expiration));
+        return worker.dispatch(() -> trySaveSync(accountId, user, expiration));
     }
 
     private VerificationState loadSync(String accountId) {
@@ -72,7 +75,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
                     .build();
         }
 
-        VerifiedUser user = utils.deserialize(userJson, VerifiedUser.class);
+        VerifiedUser user = mapper.deserialize(userJson, VerifiedUser.class);
         return VerificationState.builder()
                 .status(VerificationStatus.VERIFIED)
                 .user(user)
@@ -91,7 +94,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         // SET {age:verification:account:[accountId]}:expiration [expiration]
         // (HSET is not used because we can only expire the entire key, not individual fields.)
         String redisUserKey = getRedisAccountUserKey(accountId);
-        String userJson = utils.serialize(user);
+        String userJson = mapper.serialize(user);
         String redisExpirationKey = getRedisAccountExpirationKey(accountId);
         try (AbstractTransaction transaction = client.multi()) {
             transaction.set(redisUserKey, userJson, new SetParams().pxAt(pxAt));

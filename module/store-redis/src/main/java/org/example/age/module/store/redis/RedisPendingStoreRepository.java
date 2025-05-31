@@ -5,7 +5,8 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.example.age.module.common.EnvUtils;
+import org.example.age.module.common.JsonMapper;
+import org.example.age.module.common.Worker;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import redis.clients.jedis.JedisPooled;
@@ -15,14 +16,16 @@ import redis.clients.jedis.JedisPooled;
 final class RedisPendingStoreRepository implements PendingStoreRepository {
 
     private final JedisPooled client;
-    private final EnvUtils utils;
+    private final JsonMapper mapper;
+    private final Worker worker;
 
     private final Map<String, PendingStore<?>> stores = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    public RedisPendingStoreRepository(JedisPooled client, EnvUtils utils) {
+    public RedisPendingStoreRepository(JedisPooled client, JsonMapper mapper, Worker worker) {
         this.client = client;
-        this.utils = utils;
+        this.mapper = mapper;
+        this.worker = worker;
     }
 
     @SuppressWarnings("unchecked")
@@ -33,6 +36,6 @@ final class RedisPendingStoreRepository implements PendingStoreRepository {
 
     /** Creates a pending store. */
     private <V> PendingStore<V> create(String name, Class<V> valueType) {
-        return new RedisPendingStore<>(client, name, valueType, utils);
+        return new RedisPendingStore<>(client, name, valueType, mapper, worker);
     }
 }

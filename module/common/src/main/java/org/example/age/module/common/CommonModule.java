@@ -7,7 +7,8 @@ import dagger.Module;
  * Dagger module that binds...
  * <ul>
  *     <li>{@link RequestContextProvider}
- *     <li>{@link EnvUtils}
+ *     <li>{@link JsonMapper}
+ *     <li>{@link Worker}
  * </ul>
  * <p>
  * Depends on an unbound {@link LiteEnv}.
@@ -19,5 +20,8 @@ public interface CommonModule {
     RequestContextProvider bindRequestContextProvider(RequestContextFilter impl);
 
     @Binds
-    EnvUtils bindEnvUtils(EnvUtilsImpl impl);
+    JsonMapper bindJsonMapper(JsonMapperImpl impl);
+
+    @Binds
+    Worker bindWorker(WorkerImpl impl);
 }
