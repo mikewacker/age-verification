@@ -1,54 +1,34 @@
 package org.example.age.module.crypto.demo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
-import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
-
 import dagger.Component;
 import jakarta.inject.Singleton;
-import org.example.age.api.AgeCertificate;
-import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.testing.TestModels;
-import org.example.age.api.testing.TestSignatures;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.service.module.crypto.testing.AgeCertificateSignerVerifierTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
-public final class DemoAgeCertificateSignerVerifierTest {
+public final class DemoAgeCertificateSignerVerifierTest extends AgeCertificateSignerVerifierTestTemplate {
 
-    private static AgeCertificateSigner ageCertificateSigner;
-    private static AgeCertificateVerifier ageCertificateVerifier;
+    private static AgeCertificateSigner signer;
+    private static AgeCertificateVerifier verifier;
 
     @BeforeAll
     public static void createAgeCertificateSignerAndVerifier() {
         TestAvsComponent avsComponent = TestAvsComponent.create();
-        ageCertificateSigner = avsComponent.ageCertificateSigner();
+        signer = avsComponent.ageCertificateSigner();
         TestSiteComponent siteComponent = TestSiteComponent.create();
-        ageCertificateVerifier = siteComponent.ageCertificateVerifier();
+        verifier = siteComponent.ageCertificateVerifier();
     }
 
-    @Test
-    public void signThenVerify() {
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate();
-        AgeCertificate rtAgeCertificate =
-                await(ageCertificateSigner.sign(ageCertificate).thenCompose(ageCertificateVerifier::verify));
-        assertThat(rtAgeCertificate).isEqualTo(ageCertificate);
+    @Override
+    protected AgeCertificateSigner signer() {
+        return signer;
     }
 
-    @Test
-    public void error_AlgorithmNotImplemented() {
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate();
-        SignedAgeCertificate signedAgeCertificate = TestSignatures.signInvalid(ageCertificate, "dne");
-        awaitErrorCode(ageCertificateVerifier.verify(signedAgeCertificate), 501);
-    }
-
-    @Test
-    public void error_InvalidSignature() {
-        AgeCertificate ageCertificate = TestModels.createAgeCertificate();
-        SignedAgeCertificate signedAgeCertificate = TestSignatures.signInvalid(ageCertificate, "secp256r1");
-        awaitErrorCode(ageCertificateVerifier.verify(signedAgeCertificate), 401);
+    @Override
+    protected AgeCertificateVerifier verifier() {
+        return verifier;
     }
 
     /** Dagger component for crypto. */

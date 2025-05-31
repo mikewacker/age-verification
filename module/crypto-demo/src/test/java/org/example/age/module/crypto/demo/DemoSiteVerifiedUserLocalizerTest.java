@@ -1,32 +1,25 @@
 package org.example.age.module.crypto.demo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
-
 import dagger.Component;
 import jakarta.inject.Singleton;
-import org.example.age.api.VerifiedUser;
-import org.example.age.api.testing.TestModels;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.service.module.crypto.testing.SiteVerifiedUserLocalizerTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
-public final class DemoSiteVerifiedUserLocalizerTest {
+public final class DemoSiteVerifiedUserLocalizerTest extends SiteVerifiedUserLocalizerTestTemplate {
 
-    private static SiteVerifiedUserLocalizer userLocalizer;
+    private static SiteVerifiedUserLocalizer localizer;
 
     @BeforeAll
     public static void createVerifiedUserLocalizer() {
         TestComponent component = TestComponent.create();
-        userLocalizer = component.verifiedUserLocalizer();
+        localizer = component.verifiedUserLocalizer();
     }
 
-    @Test
-    public void localize() {
-        VerifiedUser user = TestModels.createVerifiedUser();
-        VerifiedUser localizedUser = await(userLocalizer.localize(user));
-        assertThat(localizedUser).isNotEqualTo(user);
+    @Override
+    protected SiteVerifiedUserLocalizer localizer() {
+        return localizer;
     }
 
     /** Dagger component for crypto. */
