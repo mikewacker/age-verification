@@ -9,7 +9,6 @@ import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -32,8 +31,9 @@ public class RequestContextTest {
 
     @Test
     public void requestContext() throws IOException {
-        String url = String.format("http://localhost:%d/test", app.getLocalPort());
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder()
+                .url(TestClient.createLocalhostUrl(app.getLocalPort()))
+                .build();
         try (Response response = TestClient.getHttp().newCall(request).execute()) {
             assertThat(response.isSuccessful()).isTrue();
             assertThat(response.body().string()).isEqualTo("GET");
@@ -41,14 +41,12 @@ public class RequestContextTest {
     }
 
     /** Test service that responds with the HTTP method. */
-    @Singleton
-    @Path("test")
+    @Path("")
     @Produces(MediaType.TEXT_PLAIN)
     public static final class TestService {
 
         private final RequestContextProvider requestContextProvider;
 
-        @Inject
         public TestService(RequestContextProvider requestContextProvider) {
             this.requestContextProvider = requestContextProvider;
         }
@@ -59,18 +57,19 @@ public class RequestContextTest {
         }
     }
 
-    /** Test application that runs {@link TestService}. */
+    /** Test application that runs the test service. */
     public static final class TestApp extends Application<Configuration> {
 
         @Override
         public void run(Configuration config, Environment env) {
             TestComponent component =
                     TestComponent.create(provider -> env.jersey().register(provider));
-            env.jersey().register(component.service());
+            TestService service = new TestService(component.requestContextProvider());
+            env.jersey().register(service);
         }
     }
 
-    /** Dagger component for the application. */
+    /** Dagger component for the request. */
     @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
     @Singleton
     interface TestComponent {
@@ -79,7 +78,7 @@ public class RequestContextTest {
             return DaggerRequestContextTest_TestComponent.factory().create(providerRegistrar);
         }
 
-        TestService service();
+        RequestContextProvider requestContextProvider();
 
         @Component.Factory
         interface Factory {

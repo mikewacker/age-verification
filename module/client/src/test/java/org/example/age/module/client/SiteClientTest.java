@@ -1,7 +1,5 @@
 package org.example.age.module.client;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import dagger.BindsInstance;
 import dagger.Component;
 import io.dropwizard.core.Application;
@@ -11,20 +9,13 @@ import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import org.example.age.api.AuthMatchData;
-import org.example.age.api.VerificationRequest;
 import org.example.age.api.client.AvsApi;
-import org.example.age.api.crypto.SecureId;
 import org.example.age.module.client.testing.TestDependenciesModule;
+import org.example.age.service.module.client.testing.SiteClientTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import retrofit2.Response;
 
-public final class SiteClientTest {
+public final class SiteClientTest extends SiteClientTestTemplate {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> app =
@@ -38,33 +29,12 @@ public final class SiteClientTest {
         avsClient = component.avsClient();
     }
 
-    @Test
-    public void avsClient() throws IOException {
-        Response<Void> response = avsClient.sendAgeCertificate().execute();
-        assertThat(response.isSuccessful()).isTrue();
+    @Override
+    protected AvsApi avsClient() {
+        return avsClient;
     }
 
-    /** Stub service implementation of {@link org.example.age.api.AvsApi}. */
-    public static final class StubAvsService implements org.example.age.api.AvsApi {
-
-        @Override
-        public CompletionStage<VerificationRequest> createVerificationRequestForSite(
-                String siteId, AuthMatchData authMatchData) {
-            return CompletableFuture.failedFuture(new UnsupportedOperationException());
-        }
-
-        @Override
-        public CompletionStage<Void> linkVerificationRequest(SecureId requestId) {
-            return CompletableFuture.failedFuture(new UnsupportedOperationException());
-        }
-
-        @Override
-        public CompletionStage<Void> sendAgeCertificate() {
-            return CompletableFuture.completedFuture(null);
-        }
-    }
-
-    /** Test application that runs {@link StubAvsService}. */
+    /** Test application that runs the test service. */
     public static final class TestApp extends Application<Configuration> {
 
         @Override

@@ -1,8 +1,5 @@
 package org.example.age.module.client;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import dagger.BindsInstance;
 import dagger.Component;
 import io.dropwizard.core.Application;
@@ -12,23 +9,13 @@ import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.NotFoundException;
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerificationStatus;
-import org.example.age.api.client.SiteApi;
 import org.example.age.module.client.testing.TestDependenciesModule;
 import org.example.age.service.module.client.SiteClientRepository;
+import org.example.age.service.module.client.testing.AvsClientTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import retrofit2.Response;
 
-public final class AvsClientTest {
+public final class AvsClientTest extends AvsClientTestTemplate {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> app =
@@ -42,41 +29,12 @@ public final class AvsClientTest {
         siteClients = component.siteClients();
     }
 
-    @Test
-    public void siteClient() throws IOException {
-        SiteApi siteClient = siteClients.get("site");
-        Response<VerificationState> response = siteClient.getVerificationState().execute();
-        assertThat(response.isSuccessful()).isTrue();
+    @Override
+    protected SiteClientRepository siteClients() {
+        return siteClients;
     }
 
-    @Test
-    public void error_UnregisteredSite() {
-        assertThatThrownBy(() -> siteClients.get("unregistered-site")).isInstanceOf(NotFoundException.class);
-    }
-
-    /** Stub service implementation of {@link org.example.age.api.SiteApi}. */
-    public static final class StubSiteService implements org.example.age.api.SiteApi {
-
-        @Override
-        public CompletionStage<VerificationState> getVerificationState() {
-            VerificationState state = VerificationState.builder()
-                    .status(VerificationStatus.UNVERIFIED)
-                    .build();
-            return CompletableFuture.completedFuture(state);
-        }
-
-        @Override
-        public CompletionStage<VerificationRequest> createVerificationRequest() {
-            return CompletableFuture.failedFuture(new UnsupportedOperationException());
-        }
-
-        @Override
-        public CompletionStage<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-            return CompletableFuture.failedFuture(new UnsupportedOperationException());
-        }
-    }
-
-    /** Test application that runs {@link StubSiteService}. */
+    /** Test application that runs the test service. */
     public static final class TestApp extends Application<Configuration> {
 
         @Override
