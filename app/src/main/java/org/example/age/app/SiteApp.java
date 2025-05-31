@@ -11,7 +11,6 @@ import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.config.SiteConfigModule;
 import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.SiteClientModule;
-import org.example.age.module.common.RequestContextProvider;
 import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.dynamodb.DynamoDbSiteAccountStoreModule;
@@ -42,7 +41,6 @@ public final class SiteApp extends Application<SiteAppConfig> {
     public void run(SiteAppConfig appConfig, Environment env) {
         AppComponent component = AppComponent.create(appConfig, env);
         env.jersey().register(component.service());
-        env.jersey().register(component.requestContextProvider());
     }
 
     /** Dagger component for the application. */
@@ -66,8 +64,6 @@ public final class SiteApp extends Application<SiteAppConfig> {
 
         @Named("service")
         SiteApi service();
-
-        RequestContextProvider requestContextProvider();
 
         @Component.Factory
         interface Factory {

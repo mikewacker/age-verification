@@ -11,4 +11,7 @@ public interface LiteEnv {
 
     /** Gets the worker thread pool. */
     ExecutorService worker();
+
+    /** Registers a provider with JAX-RS. */
+    void registerProvider(Object provider);
 }

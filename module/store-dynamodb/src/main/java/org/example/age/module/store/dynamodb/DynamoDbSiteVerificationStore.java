@@ -10,7 +10,8 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
-import org.example.age.module.common.EnvUtils;
+import org.example.age.module.common.JsonMapper;
+import org.example.age.module.common.Worker;
 import org.example.age.service.module.store.SiteVerificationStore;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -28,22 +29,24 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
             VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final DynamoDbClient client;
-    private final EnvUtils utils;
+    private final JsonMapper mapper;
+    private final Worker worker;
 
     @Inject
-    public DynamoDbSiteVerificationStore(DynamoDbClient client, EnvUtils utils) {
+    public DynamoDbSiteVerificationStore(DynamoDbClient client, JsonMapper mapper, Worker worker) {
         this.client = client;
-        this.utils = utils;
+        this.mapper = mapper;
+        this.worker = worker;
     }
 
     @Override
     public CompletionStage<VerificationState> load(String accountId) {
-        return utils.runAsync(() -> loadSync(accountId));
+        return worker.dispatch(() -> loadSync(accountId));
     }
 
     @Override
     public CompletionStage<Optional<String>> trySave(String accountId, VerifiedUser user, OffsetDateTime expiration) {
-        return utils.runAsync(() -> trySaveSync(accountId, user, expiration));
+        return worker.dispatch(() -> trySaveSync(accountId, user, expiration));
     }
 
     private VerificationState loadSync(String accountId) {
@@ -58,7 +61,7 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
             return UNVERIFIED;
         }
 
-        VerificationState state = utils.deserialize(stateS.s(), VerificationState.class);
+        VerificationState state = mapper.deserialize(stateS.s(), VerificationState.class);
         if (state.getExpiration().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
             return VerificationState.builder()
                     .status(VerificationStatus.EXPIRED)
@@ -81,7 +84,7 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
                 .user(user)
                 .expiration(expiration)
                 .build();
-        AttributeValue stateS = AttributeValue.fromS(utils.serialize(state));
+        AttributeValue stateS = AttributeValue.fromS(mapper.serialize(state));
         PutItemRequest accountRequest = PutItemRequest.builder()
                 .tableName(ACCOUNT_TABLE_NAME)
                 .item(Map.of("AccountId", accountIdS, "State", stateS))

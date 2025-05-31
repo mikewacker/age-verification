@@ -3,7 +3,8 @@ package org.example.age.module.store.redis;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import org.example.age.module.common.EnvUtils;
+import org.example.age.module.common.JsonMapper;
+import org.example.age.module.common.Worker;
 import org.example.age.service.module.store.PendingStore;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Pipeline;
@@ -18,33 +19,35 @@ final class RedisPendingStore<V> implements PendingStore<V> {
     private final JedisPooled client;
     private final String name;
     private final Class<V> valueType;
-    private final EnvUtils utils;
+    private final JsonMapper mapper;
+    private final Worker worker;
 
-    public RedisPendingStore(JedisPooled client, String name, Class<V> valueType, EnvUtils utils) {
+    public RedisPendingStore(JedisPooled client, String name, Class<V> valueType, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.name = name;
         this.valueType = valueType;
-        this.utils = utils;
+        this.mapper = mapper;
+        this.worker = worker;
     }
 
     @Override
     public CompletionStage<Void> put(String key, V value, OffsetDateTime expiration) {
-        return utils.runAsync(() -> putSync(key, value, expiration));
+        return worker.dispatch(() -> putSync(key, value, expiration));
     }
 
     @Override
     public CompletionStage<Optional<V>> tryGet(String key) {
-        return utils.runAsync(() -> tryGetSync(key));
+        return worker.dispatch(() -> tryGetSync(key));
     }
 
     @Override
     public CompletionStage<Optional<V>> tryRemove(String key) {
-        return utils.runAsync(() -> tryRemoveSync(key));
+        return worker.dispatch(() -> tryRemoveSync(key));
     }
 
     private Void putSync(String key, V value, OffsetDateTime expiration) {
         String redisKey = getRedisKey(key);
-        String json = utils.serialize(value);
+        String json = mapper.serialize(value);
         long pxAt = expiration.toInstant().toEpochMilli();
         client.set(redisKey, json, new SetParams().pxAt(pxAt));
         return null;
@@ -53,13 +56,13 @@ final class RedisPendingStore<V> implements PendingStore<V> {
     private Optional<V> tryGetSync(String key) {
         String redisKey = getRedisKey(key);
         String json = client.get(redisKey);
-        return (json != null) ? Optional.of(utils.deserialize(json, valueType)) : Optional.empty();
+        return (json != null) ? Optional.of(mapper.deserialize(json, valueType)) : Optional.empty();
     }
 
     private Optional<V> tryRemoveSync(String key) {
         String redisKey = getRedisKey(key);
         String json = del(redisKey);
-        return (json != null) ? Optional.of(utils.deserialize(json, valueType)) : Optional.empty();
+        return (json != null) ? Optional.of(mapper.deserialize(json, valueType)) : Optional.empty();
     }
 
     /** Gets the Redis key for a key. */

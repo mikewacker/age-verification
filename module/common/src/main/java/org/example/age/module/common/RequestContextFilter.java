@@ -12,7 +12,9 @@ final class RequestContextFilter implements RequestContextProvider, ContainerReq
     private final ThreadLocal<ContainerRequestContext> localRequestContext = new ThreadLocal<>();
 
     @Inject
-    public RequestContextFilter() {}
+    public RequestContextFilter(LiteEnv liteEnv) {
+        liteEnv.registerProvider(this);
+    }
 
     @Override
     public ContainerRequestContext get() {
