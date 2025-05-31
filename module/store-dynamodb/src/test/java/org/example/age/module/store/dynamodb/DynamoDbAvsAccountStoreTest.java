@@ -1,21 +1,16 @@
 package org.example.age.module.store.dynamodb;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
-
 import dagger.Component;
 import jakarta.inject.Singleton;
-import java.util.Optional;
-import org.example.age.api.VerifiedUser;
 import org.example.age.api.testing.TestModels;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
+import org.example.age.service.module.store.testing.AvsAccountStoreTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public final class DynamoDbAvsAccountStoreTest {
+public final class DynamoDbAvsAccountStoreTest extends AvsAccountStoreTestTemplate {
 
     @RegisterExtension
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
@@ -34,16 +29,9 @@ public final class DynamoDbAvsAccountStoreTest {
         dynamoDb.createAvsAccount("person", TestModels.createVerifiedUser());
     }
 
-    @Test
-    public void load() {
-        Optional<VerifiedUser> maybeUser = await(store.tryLoad("person"));
-        assertThat(maybeUser).isPresent();
-    }
-
-    @Test
-    public void load_Empty() {
-        Optional<VerifiedUser> maybeUser = await(store.tryLoad("unverified-person"));
-        assertThat(maybeUser).isEmpty();
+    @Override
+    protected AvsVerifiedUserStore store() {
+        return store;
     }
 
     /** Dagger component for the store. */
