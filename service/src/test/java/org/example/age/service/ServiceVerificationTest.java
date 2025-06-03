@@ -3,13 +3,9 @@ package org.example.age.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.common.testing.WebStageTesting.await;
 
-import dagger.Binds;
-import dagger.Component;
-import dagger.Module;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotFoundException;
+import java.util.Map;
+import java.util.Optional;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
@@ -19,10 +15,8 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.common.testing.WebStageTesting;
-import org.example.age.service.module.client.SiteClientRepository;
-import org.example.age.service.testing.TestDependenciesModule;
-import org.example.age.service.testing.TestWrappedAvsService;
-import org.example.age.service.testing.TestWrappedSiteService;
+import org.example.age.service.testing.TestAvsServiceComponent;
+import org.example.age.service.testing.TestSiteServiceComponent;
 import org.example.age.service.testing.request.TestAccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,11 +32,11 @@ public final class ServiceVerificationTest {
 
     @BeforeEach
     public void createServicesEtAl() {
-        TestSiteComponent siteComponent = TestSiteComponent.create();
-        siteService = new TestWrappedSiteService(siteComponent.service());
+        TestSiteServiceComponent siteComponent = TestSiteServiceComponent.create(new AdaptedAvsClient());
+        siteService = siteComponent.service();
         siteAccountId = siteComponent.accountId();
-        TestAvsComponent avsComponent = TestAvsComponent.create();
-        avsService = new TestWrappedAvsService(avsComponent.service());
+        TestAvsServiceComponent avsComponent = TestAvsServiceComponent.create(AdaptedSiteClient::get);
+        avsService = avsComponent.service();
         avsAccountId = avsComponent.accountId();
     }
 
@@ -58,11 +52,7 @@ public final class ServiceVerificationTest {
     }
 
     /** Adapts {@link AvsApi} to the corresponding client interface. */
-    @Singleton
-    static final class AdaptedAvsClient implements org.example.age.api.client.AvsApi {
-
-        @Inject
-        public AdaptedAvsClient() {}
+    private static final class AdaptedAvsClient implements org.example.age.api.client.AvsApi {
 
         @Override
         public Call<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
@@ -80,33 +70,15 @@ public final class ServiceVerificationTest {
         }
     }
 
-    /** Fake implementation of {@link SiteClientRepository}. */
-    @Singleton
-    static final class FakeSiteClientRepository implements SiteClientRepository {
-
-        private final org.example.age.api.client.SiteApi siteClient;
-
-        @Inject
-        public FakeSiteClientRepository(AdaptedSiteClient siteClient) {
-            this.siteClient = siteClient;
-        }
-
-        @Override
-        public org.example.age.api.client.SiteApi get(String siteId) {
-            if (!siteId.equals("site1")) {
-                throw new NotFoundException();
-            }
-
-            return siteClient;
-        }
-    }
-
     /** Adapts {@link SiteApi} to the corresponding client interface. */
-    @Singleton
-    static final class AdaptedSiteClient implements org.example.age.api.client.SiteApi {
+    private static final class AdaptedSiteClient implements org.example.age.api.client.SiteApi {
 
-        @Inject
-        public AdaptedSiteClient() {}
+        private static final Map<String, org.example.age.api.client.SiteApi> clients =
+                Map.of("site1", new AdaptedSiteClient());
+
+        public static org.example.age.api.client.SiteApi get(String siteId) {
+            return Optional.ofNullable(clients.get(siteId)).orElseThrow(NotFoundException::new);
+        }
 
         @Override
         public Call<VerificationState> getVerificationState() {
@@ -122,52 +94,5 @@ public final class ServiceVerificationTest {
         public Call<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
             return WebStageTesting.toCall(siteService.processAgeCertificate(signedAgeCertificate));
         }
-    }
-
-    /** Dagger component for the site service. */
-    @Component(modules = {SiteServiceModule.class, TestSiteClientModule.class, TestDependenciesModule.class})
-    @Singleton
-    interface TestSiteComponent {
-
-        static TestSiteComponent create() {
-            return DaggerServiceVerificationTest_TestSiteComponent.create();
-        }
-
-        @Named("service")
-        SiteApi service();
-
-        TestAccountId accountId();
-    }
-
-    /** Dagger component for the AVS service. */
-    @Component(modules = {AvsServiceModule.class, TestAvsClientModule.class, TestDependenciesModule.class})
-    @Singleton
-    interface TestAvsComponent {
-
-        static TestAvsComponent create() {
-            return DaggerServiceVerificationTest_TestAvsComponent.create();
-        }
-
-        @Named("service")
-        AvsApi service();
-
-        TestAccountId accountId();
-    }
-
-    /** Dagger module that binds <code>@Named("client") {@link org.example.age.api.client.AvsApi}</code>. */
-    @Module
-    interface TestSiteClientModule {
-
-        @Binds
-        @Named("client")
-        org.example.age.api.client.AvsApi bindAvsClient(AdaptedAvsClient client);
-    }
-
-    /** Dagger module that binds {@link SiteClientRepository}. */
-    @Module
-    interface TestAvsClientModule {
-
-        @Binds
-        SiteClientRepository bindSiteClientRepository(FakeSiteClientRepository impl);
     }
 }

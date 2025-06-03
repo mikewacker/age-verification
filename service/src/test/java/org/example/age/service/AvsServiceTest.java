@@ -5,18 +5,13 @@ import static org.assertj.core.api.Assertions.within;
 import static org.example.age.common.testing.WebStageTesting.await;
 import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
 
-import dagger.Binds;
-import dagger.Component;
-import dagger.Module;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotFoundException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AgeRange;
 import org.example.age.api.AuthMatchData;
@@ -27,9 +22,7 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.testing.TestSignatures;
-import org.example.age.service.module.client.SiteClientRepository;
-import org.example.age.service.testing.TestDependenciesModule;
-import org.example.age.service.testing.TestWrappedAvsService;
+import org.example.age.service.testing.TestAvsServiceComponent;
 import org.example.age.service.testing.request.TestAccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,8 +42,8 @@ public final class AvsServiceTest {
 
     @BeforeEach
     public void createAvsServiceEtAl() {
-        TestComponent component = TestComponent.create();
-        avsService = new TestWrappedAvsService(component.avsService());
+        TestAvsServiceComponent component = TestAvsServiceComponent.create(FakeSiteClient::get);
+        avsService = component.service();
         accountId = component.accountId();
         ageCertificate = null;
     }
@@ -121,35 +114,15 @@ public final class AvsServiceTest {
         awaitErrorCode(avsService.createVerificationRequestForSite("unregistered-site", EMPTY_DATA), 404);
     }
 
-    /** Fake implementation of {@link SiteClientRepository}. */
-    @Singleton
-    static final class FakeSiteClientRepository implements SiteClientRepository {
-
-        private static final Set<String> SITE_IDS = Set.of("site1", "site2");
-
-        private final SiteApi siteClient;
-
-        @Inject
-        public FakeSiteClientRepository(FakeSiteClient siteClient) {
-            this.siteClient = siteClient;
-        }
-
-        @Override
-        public SiteApi get(String siteId) {
-            if (!SITE_IDS.contains(siteId)) {
-                throw new NotFoundException();
-            }
-
-            return siteClient;
-        }
-    }
-
     /** Fake client implementation of {@link SiteApi}. */
-    @Singleton
-    static final class FakeSiteClient implements SiteApi {
+    private static final class FakeSiteClient implements SiteApi {
 
-        @Inject
-        public FakeSiteClient() {}
+        private static final Map<String, SiteApi> clients =
+                Map.of("site1", new FakeSiteClient(), "site2", new FakeSiteClient());
+
+        public static SiteApi get(String siteId) {
+            return Optional.ofNullable(clients.get(siteId)).orElseThrow(NotFoundException::new);
+        }
 
         @Override
         public Call<VerificationState> getVerificationState() {
@@ -166,28 +139,5 @@ public final class AvsServiceTest {
             ageCertificate = TestSignatures.verify(signedAgeCertificate);
             return Calls.response(Response.success(null));
         }
-    }
-
-    /** Dagger component for the service. */
-    @Component(modules = {AvsServiceModule.class, FakeClientModule.class, TestDependenciesModule.class})
-    @Singleton
-    interface TestComponent {
-
-        static TestComponent create() {
-            return DaggerAvsServiceTest_TestComponent.create();
-        }
-
-        @Named("service")
-        AvsApi avsService();
-
-        TestAccountId accountId();
-    }
-
-    /** Dagger module that binds {@link SiteClientRepository}. */
-    @Module
-    interface FakeClientModule {
-
-        @Binds
-        SiteClientRepository bindSiteClientRepository(FakeSiteClientRepository impl);
     }
 }
