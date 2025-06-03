@@ -5,12 +5,6 @@ import static org.assertj.core.api.Assertions.within;
 import static org.example.age.common.testing.WebStageTesting.await;
 import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
 
-import dagger.Binds;
-import dagger.Component;
-import dagger.Module;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -26,8 +20,7 @@ import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.testing.TestModels;
 import org.example.age.api.testing.TestSignatures;
-import org.example.age.service.testing.TestDependenciesModule;
-import org.example.age.service.testing.TestWrappedSiteService;
+import org.example.age.service.testing.TestSiteServiceComponent;
 import org.example.age.service.testing.request.TestAccountId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +34,8 @@ public final class SiteServiceTest {
 
     @BeforeEach
     public void createSiteServiceEtAl() {
-        TestComponent component = TestComponent.create();
-        siteService = new TestWrappedSiteService(component.siteService());
+        TestSiteServiceComponent component = TestSiteServiceComponent.create(new FakeAvsClient());
+        siteService = component.service();
         accountId = component.accountId();
     }
 
@@ -127,11 +120,7 @@ public final class SiteServiceTest {
     }
 
     /** Fake client implementation of {@link AvsApi}. */
-    @Singleton
-    static final class FakeAvsClient implements AvsApi {
-
-        @Inject
-        public FakeAvsClient() {}
+    private static final class FakeAvsClient implements AvsApi {
 
         @Override
         public Call<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
@@ -148,29 +137,5 @@ public final class SiteServiceTest {
         public Call<Void> sendAgeCertificate() {
             return Calls.failure(new UnsupportedOperationException());
         }
-    }
-
-    /** Dagger component for the service. */
-    @Component(modules = {SiteServiceModule.class, FakeClientModule.class, TestDependenciesModule.class})
-    @Singleton
-    interface TestComponent {
-
-        static TestComponent create() {
-            return DaggerSiteServiceTest_TestComponent.create();
-        }
-
-        @Named("service")
-        SiteApi siteService();
-
-        TestAccountId accountId();
-    }
-
-    /** Dagger module that binds <code>@Named("client") {@link AvsApi}</code>. */
-    @Module
-    interface FakeClientModule {
-
-        @Binds
-        @Named("client")
-        AvsApi bindAvsClient(FakeAvsClient client);
     }
 }

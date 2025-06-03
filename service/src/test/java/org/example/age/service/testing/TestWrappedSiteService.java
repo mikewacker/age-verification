@@ -1,5 +1,8 @@
 package org.example.age.service.testing;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
@@ -8,7 +11,15 @@ import org.example.age.api.VerificationState;
 import org.example.age.common.testing.WebStageTesting;
 
 /** Wrapper that converts uncaught exceptions to a failed stage. */
-public record TestWrappedSiteService(SiteApi delegate) implements SiteApi {
+@Singleton
+final class TestWrappedSiteService implements SiteApi {
+
+    private final SiteApi delegate;
+
+    @Inject
+    public TestWrappedSiteService(@Named("service") SiteApi delegate) {
+        this.delegate = delegate;
+    }
 
     @Override
     public CompletionStage<VerificationState> getVerificationState() {
