@@ -4,21 +4,16 @@ import dagger.Binds;
 import dagger.Module;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.example.age.service.module.store.PendingStoreRepository;
-import org.example.age.service.module.store.SiteVerificationStore;
 
 /**
  * Dagger modules that binds...
  * <ul>
- *     <li>{@link SiteVerificationStore}
  *     <li>{@link AvsVerifiedUserStore}
  *     <li>{@link PendingStoreRepository}
  * </ul>
  */
 @Module
-public interface TestStoreModule {
-
-    @Binds
-    SiteVerificationStore bindSiteVerificationStore(FakeSiteVerificationStore impl);
+public interface TestAvsStoreModule {
 
     @Binds
     AvsVerifiedUserStore bindAvsVerifiedUserStore(FakeAvsVerifiedUserStore impl);
