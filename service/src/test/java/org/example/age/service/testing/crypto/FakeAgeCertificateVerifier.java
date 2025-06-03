@@ -8,21 +8,14 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.testing.TestSignatures;
-import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 
-/** Fake implementation of {@link AgeCertificateSigner} and {@link AgeCertificateVerifier}. */
+/** Fake implementation of {@link AgeCertificateVerifier}. */
 @Singleton
-final class FakeAgeCertificateSignerVerifier implements AgeCertificateSigner, AgeCertificateVerifier {
+final class FakeAgeCertificateVerifier implements AgeCertificateVerifier {
 
     @Inject
-    public FakeAgeCertificateSignerVerifier() {}
-
-    @Override
-    public CompletionStage<SignedAgeCertificate> sign(AgeCertificate ageCertificate) {
-        SignedAgeCertificate signedAgeCertificate = TestSignatures.sign(ageCertificate);
-        return CompletableFuture.completedFuture(signedAgeCertificate);
-    }
+    public FakeAgeCertificateVerifier() {}
 
     @Override
     public CompletionStage<AgeCertificate> verify(SignedAgeCertificate signedAgeCertificate) {

@@ -1,9 +1,7 @@
 package org.example.age.service.testing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.common.testing.TestObjectMapper;
 import org.example.age.service.AvsServiceConfig;
 import org.example.age.service.SiteServiceConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
@@ -14,7 +12,8 @@ import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import org.example.age.service.module.store.SiteVerificationStore;
-import org.example.age.service.testing.crypto.TestCryptoModule;
+import org.example.age.service.testing.crypto.TestAvsCryptoModule;
+import org.example.age.service.testing.crypto.TestSiteCryptoModule;
 import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.service.testing.request.TestRequestModule;
 import org.example.age.service.testing.store.TestStoreModule;
@@ -36,21 +35,22 @@ import org.example.age.service.testing.store.TestStoreModule;
  * <p>
  * It also binds {@link TestAccountId}.
  */
-@Module(includes = {TestRequestModule.class, TestStoreModule.class, TestCryptoModule.class})
+@Module(
+        includes = {
+            TestRequestModule.class,
+            TestStoreModule.class,
+            TestSiteCryptoModule.class,
+            TestAvsCryptoModule.class,
+        })
 public interface TestDependenciesModule {
 
     @Provides
     static SiteServiceConfig provideSiteServiceConfig() {
-        return TestConfig.site();
+        return TestConfig.siteService();
     }
 
     @Provides
     static AvsServiceConfig provideAvsServiceConfig() {
-        return TestConfig.avs();
-    }
-
-    @Provides
-    static ObjectMapper provideObjectMapper() {
-        return TestObjectMapper.get();
+        return TestConfig.avsService();
     }
 }
