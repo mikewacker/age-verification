@@ -5,19 +5,13 @@ import static org.example.age.common.testing.WebStageTesting.await;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.common.testing.TestLiteEnvModule;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public final class WorkerTest {
 
-    private static Worker worker;
-
-    @BeforeAll
-    public static void createWorker() {
-        TestComponent component = TestComponent.create();
-        worker = component.worker();
-    }
+    private static final Worker worker = TestComponent.create();
 
     @Test
     public void dispatch() {
@@ -25,15 +19,13 @@ public final class WorkerTest {
         assertThat(value).isEqualTo(1);
     }
 
-    /** Dagger component for the environment. */
+    /** Dagger component for {@link Worker}. */
     @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<Worker> {
 
-        static TestComponent create() {
-            return DaggerWorkerTest_TestComponent.create();
+        static Worker create() {
+            return DaggerWorkerTest_TestComponent.create().get();
         }
-
-        Worker worker();
     }
 }

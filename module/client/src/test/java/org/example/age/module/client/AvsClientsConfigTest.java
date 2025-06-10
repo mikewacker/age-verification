@@ -8,6 +8,6 @@ public final class AvsClientsConfigTest {
 
     @Test
     public void serializeThenDeserialize() throws Exception {
-        JsonTesting.serializeThenDeserialize(TestConfig.createAvsClients(8080), AvsClientsConfig.class);
+        JsonTesting.serializeThenDeserialize(TestConfig.avsClients(), AvsClientsConfig.class);
     }
 }

@@ -85,6 +85,6 @@ public final class AppVerificationTest {
     }
 
     private static <A> A createClient(int port, String accountId, Class<A> apiType) {
-        return TestClient.createApi(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
+        return TestClient.api(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
     }
 }

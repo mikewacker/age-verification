@@ -5,9 +5,9 @@ import dagger.Component;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
-import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import okhttp3.Request;
 import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.example.age.module.common.testing.TestProviderRegistrar;
@@ -18,12 +18,11 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public final class DemoAccountIdTest extends AccountIdTestTemplate {
 
     @RegisterExtension
-    private static final DropwizardAppExtension<Configuration> app =
-            new DropwizardAppExtension<>(TestApp.class, null, ConfigOverride.randomPorts());
+    private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
 
     @Override
     protected int port() {
-        return app.getLocalPort();
+        return 8080;
     }
 
     @Override
@@ -36,23 +35,23 @@ public final class DemoAccountIdTest extends AccountIdTestTemplate {
 
         @Override
         public void run(Configuration config, Environment env) {
-            TestComponent component =
+            AccountIdContext accountIdContext =
                     TestComponent.create(provider -> env.jersey().register(provider));
-            TestService service = new TestService(component.accountIdContext());
+            TestService service = new TestService(accountIdContext);
             env.jersey().register(service);
         }
     }
 
-    /** Dagger component for the request. */
+    /** Dagger component for {@link AccountIdContext}. */
     @Component(modules = {DemoAccountIdModule.class, TestLiteEnvModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<AccountIdContext> {
 
-        static TestComponent create(TestProviderRegistrar providerRegistrar) {
-            return DaggerDemoAccountIdTest_TestComponent.factory().create(providerRegistrar);
+        static AccountIdContext create(TestProviderRegistrar providerRegistrar) {
+            return DaggerDemoAccountIdTest_TestComponent.factory()
+                    .create(providerRegistrar)
+                    .get();
         }
-
-        AccountIdContext accountIdContext();
 
         @Component.Factory
         interface Factory {

@@ -2,9 +2,9 @@ package org.example.age.module.store.dynamodb.client;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -17,16 +17,10 @@ import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 
 public final class DynamoDbClientTest {
 
+    private static final DynamoDbClient client = TestComponent.create();
+
     @RegisterExtension
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
-
-    private static DynamoDbClient client;
-
-    @BeforeAll
-    public static void createClient() {
-        TestComponent component = TestComponent.create();
-        client = component.dynamoDbClient();
-    }
 
     @Test
     public void useClient() {
@@ -46,15 +40,13 @@ public final class DynamoDbClientTest {
         client.waiter().waitUntilTableExists(builder -> builder.tableName("table"));
     }
 
-    /** Dagger component for the client. */
+    /** Dagger component for {@link DynamoDbClient} */
     @Component(modules = {DynamoDbClientModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<DynamoDbClient> {
 
-        static TestComponent create() {
-            return DaggerDynamoDbClientTest_TestComponent.create();
+        static DynamoDbClient create() {
+            return DaggerDynamoDbClientTest_TestComponent.create().get();
         }
-
-        DynamoDbClient dynamoDbClient();
     }
 }

@@ -21,38 +21,37 @@ public final class TestClient {
             JacksonConverterFactory.create(TestObjectMapper.get());
 
     /** Gets the HTTP client. */
-    public static OkHttpClient getHttp() {
+    public static OkHttpClient http() {
         return client;
     }
 
     /** Creates an API client. */
-    public static <A> A createApi(int port, Consumer<Request.Builder> requestInterceptor, Class<A> apiType) {
+    public static <A> A api(int port, Consumer<Request.Builder> requestInterceptor, Class<A> apiType) {
         return new Retrofit.Builder()
-                .baseUrl(createLocalhostUrl(port))
-                .client(createHttp(requestInterceptor))
+                .baseUrl(localhostUrl(port))
+                .client(http(requestInterceptor))
                 .addConverterFactory(jsonConverterFactory)
                 .build()
                 .create(apiType);
     }
 
     /** Creates a URL for localhost. */
-    public static URL createLocalhostUrl(int port) {
+    public static URL localhostUrl(int port) {
         try {
-            return createLocalhostUri(port).toURL();
+            return localhostUri(port).toURL();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
 
     /** Creates a URI for localhost. */
-    public static URI createLocalhostUri(int port) {
+    public static URI localhostUri(int port) {
         return URI.create(String.format("http://localhost:%d", port));
     }
 
     /** Creates an HTTP client that intercepts the request. */
-    private static OkHttpClient createHttp(Consumer<Request.Builder> requestInterceptor) {
-        return TestClient.getHttp()
-                .newBuilder()
+    private static OkHttpClient http(Consumer<Request.Builder> requestInterceptor) {
+        return http().newBuilder()
                 .addInterceptor(chain -> interceptRequest(chain, requestInterceptor))
                 .build();
     }

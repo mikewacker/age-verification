@@ -2,6 +2,7 @@ package org.example.age.module.store.dynamodb;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.api.testing.TestModels;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
@@ -12,16 +13,10 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class DynamoDbAvsAccountStoreTest extends AvsAccountStoreTestTemplate {
 
+    private static final AvsVerifiedUserStore store = TestComponent.create();
+
     @RegisterExtension
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
-
-    private static AvsVerifiedUserStore store;
-
-    @BeforeAll
-    public static void createAvsVerifiedUserStore() {
-        TestComponent component = TestComponent.create();
-        store = component.avsVerifiedUserStore();
-    }
 
     @BeforeAll
     public static void setUpContainer() {
@@ -34,15 +29,13 @@ public final class DynamoDbAvsAccountStoreTest extends AvsAccountStoreTestTempla
         return store;
     }
 
-    /** Dagger component for the store. */
+    /** Dagger component for {@link AvsVerifiedUserStore}. */
     @Component(modules = {DynamoDbAvsAccountStoreModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<AvsVerifiedUserStore> {
 
-        static TestComponent create() {
-            return DaggerDynamoDbAvsAccountStoreTest_TestComponent.create();
+        static AvsVerifiedUserStore create() {
+            return DaggerDynamoDbAvsAccountStoreTest_TestComponent.create().get();
         }
-
-        AvsVerifiedUserStore avsVerifiedUserStore();
     }
 }

@@ -4,19 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.common.testing.TestLiteEnvModule;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public final class JsonTest {
 
-    private static JsonMapper mapper;
-
-    @BeforeAll
-    public static void createJsonMapper() {
-        TestComponent component = TestComponent.create();
-        mapper = component.jsonMapper();
-    }
+    private static final JsonMapper mapper = TestComponent.create();
 
     @Test
     public void serializeThenDeserialize() {
@@ -25,15 +19,13 @@ public final class JsonTest {
         assertThat(value).isEqualTo("test");
     }
 
-    /** Dagger component for the environment. */
+    /** Dagger component for {@link JsonMapper}. */
     @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<JsonMapper> {
 
-        static TestComponent create() {
-            return DaggerJsonTest_TestComponent.create();
+        static JsonMapper create() {
+            return DaggerJsonTest_TestComponent.create().get();
         }
-
-        JsonMapper jsonMapper();
     }
 }

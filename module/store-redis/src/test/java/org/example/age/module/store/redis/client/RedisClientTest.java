@@ -4,25 +4,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;
 
 public final class RedisClientTest {
 
+    private static final JedisPooled client = TestComponent.create();
+
     @RegisterExtension
     private static final RedisTestContainer redis = new RedisTestContainer();
-
-    private static JedisPooled client;
-
-    @BeforeAll
-    public static void createClient() {
-        TestComponent component = TestComponent.create();
-        client = component.jedisPooled();
-    }
 
     @Test
     public void useClient() {
@@ -31,15 +25,13 @@ public final class RedisClientTest {
         assertThat(value).isEqualTo("value");
     }
 
-    /** Dagger component for the client. */
+    /** Dagger component for {@link JedisPooled}. */
     @Component(modules = {RedisClientModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<JedisPooled> {
 
-        static TestComponent create() {
-            return DaggerRedisClientTest_TestComponent.create();
+        static JedisPooled create() {
+            return DaggerRedisClientTest_TestComponent.create().get();
         }
-
-        JedisPooled jedisPooled();
     }
 }

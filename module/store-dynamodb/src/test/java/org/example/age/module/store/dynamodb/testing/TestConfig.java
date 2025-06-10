@@ -9,7 +9,7 @@ public final class TestConfig {
 
     private static final DynamoDbConfig dynamoDb = DynamoDbConfig.builder()
             .region(Region.US_EAST_1.toString())
-            .testEndpointOverride(TestClient.createLocalhostUri(DynamoDbTestContainer.PORT))
+            .testEndpointOverride(TestClient.localhostUri(DynamoDbTestContainer.PORT))
             .build();
 
     /** Gets the configuration for DynamoDB. */

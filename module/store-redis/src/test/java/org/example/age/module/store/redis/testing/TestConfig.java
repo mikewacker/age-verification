@@ -7,7 +7,7 @@ import org.example.age.module.store.redis.client.RedisConfig;
 public final class TestConfig {
 
     private static final RedisConfig redis = RedisConfig.builder()
-            .url(TestClient.createLocalhostUrl(RedisTestContainer.PORT))
+            .url(TestClient.localhostUrl(RedisTestContainer.PORT))
             .build();
 
     /** Gets the configuration for Redis. */

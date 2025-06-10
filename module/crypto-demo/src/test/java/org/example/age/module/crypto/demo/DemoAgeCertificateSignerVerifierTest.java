@@ -2,24 +2,16 @@ package org.example.age.module.crypto.demo;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.testing.AgeCertificateSignerVerifierTestTemplate;
-import org.junit.jupiter.api.BeforeAll;
 
 public final class DemoAgeCertificateSignerVerifierTest extends AgeCertificateSignerVerifierTestTemplate {
 
-    private static AgeCertificateSigner signer;
-    private static AgeCertificateVerifier verifier;
-
-    @BeforeAll
-    public static void createAgeCertificateSignerAndVerifier() {
-        TestAvsComponent avsComponent = TestAvsComponent.create();
-        signer = avsComponent.ageCertificateSigner();
-        TestSiteComponent siteComponent = TestSiteComponent.create();
-        verifier = siteComponent.ageCertificateVerifier();
-    }
+    private static final AgeCertificateSigner signer = TestAvsComponent.create();
+    private static final AgeCertificateVerifier verifier = TestSiteComponent.create();
 
     @Override
     protected AgeCertificateSigner signer() {
@@ -31,27 +23,25 @@ public final class DemoAgeCertificateSignerVerifierTest extends AgeCertificateSi
         return verifier;
     }
 
-    /** Dagger component for crypto. */
+    /** Dagger component for {@link AgeCertificateSigner}. */
     @Component(modules = {DemoAvsCryptoModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestAvsComponent {
+    interface TestAvsComponent extends Supplier<AgeCertificateSigner> {
 
-        static TestAvsComponent create() {
-            return DaggerDemoAgeCertificateSignerVerifierTest_TestAvsComponent.create();
+        static AgeCertificateSigner create() {
+            return DaggerDemoAgeCertificateSignerVerifierTest_TestAvsComponent.create()
+                    .get();
         }
-
-        AgeCertificateSigner ageCertificateSigner();
     }
 
-    /** Dagger component for crypto. */
+    /** Dagger component for {@link AgeCertificateVerifier}. */
     @Component(modules = {DemoSiteCryptoModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestSiteComponent {
+    interface TestSiteComponent extends Supplier<AgeCertificateVerifier> {
 
-        static TestSiteComponent create() {
-            return DaggerDemoAgeCertificateSignerVerifierTest_TestSiteComponent.create();
+        static AgeCertificateVerifier create() {
+            return DaggerDemoAgeCertificateSignerVerifierTest_TestSiteComponent.create()
+                    .get();
         }
-
-        AgeCertificateVerifier ageCertificateVerifier();
     }
 }
