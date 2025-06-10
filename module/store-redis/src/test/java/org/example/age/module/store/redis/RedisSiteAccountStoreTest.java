@@ -6,29 +6,23 @@ import static org.example.age.common.testing.WebStageTesting.await;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.example.age.api.VerifiedUser;
 import org.example.age.api.testing.TestModels;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;
 import org.example.age.service.module.store.testing.SiteAccountStoreTestTemplate;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;
 
 public final class RedisSiteAccountStoreTest extends SiteAccountStoreTestTemplate {
 
+    private static final SiteVerificationStore store = TestComponent.create();
+
     @RegisterExtension
     private static final RedisTestContainer redis = new RedisTestContainer();
-
-    private static SiteVerificationStore store;
-
-    @BeforeAll
-    public static void createSiteVerificationStore() {
-        TestComponent component = TestComponent.create();
-        store = component.siteVerificationStore();
-    }
 
     @Test
     public void redisKeys() {
@@ -51,15 +45,13 @@ public final class RedisSiteAccountStoreTest extends SiteAccountStoreTestTemplat
         return store;
     }
 
-    /** Dagger component for the store. */
+    /** Dagger component for {@link SiteVerificationStore}. */
     @Component(modules = {RedisSiteAccountStoreModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<SiteVerificationStore> {
 
-        static TestComponent create() {
-            return DaggerRedisSiteAccountStoreTest_TestComponent.create();
+        static SiteVerificationStore create() {
+            return DaggerRedisSiteAccountStoreTest_TestComponent.create().get();
         }
-
-        SiteVerificationStore siteVerificationStore();
     }
 }

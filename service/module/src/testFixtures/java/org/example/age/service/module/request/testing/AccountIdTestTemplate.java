@@ -17,10 +17,10 @@ public abstract class AccountIdTestTemplate {
 
     @Test
     public void accountId() throws IOException {
-        Request.Builder requestBuilder = new Request.Builder().url(TestClient.createLocalhostUrl(port()));
+        Request.Builder requestBuilder = new Request.Builder().url(TestClient.localhostUrl(port()));
         setAccountId(requestBuilder, "username");
         Request request = requestBuilder.build();
-        try (Response response = TestClient.getHttp().newCall(request).execute()) {
+        try (Response response = TestClient.http().newCall(request).execute()) {
             assertThat(response.isSuccessful()).isTrue();
             assertThat(response.body().string()).isEqualTo("username");
         }
@@ -29,8 +29,8 @@ public abstract class AccountIdTestTemplate {
     @Test
     public void noAccountId() throws IOException {
         Request request =
-                new Request.Builder().url(TestClient.createLocalhostUrl(port())).build();
-        try (Response response = TestClient.getHttp().newCall(request).execute()) {
+                new Request.Builder().url(TestClient.localhostUrl(port())).build();
+        try (Response response = TestClient.http().newCall(request).execute()) {
             assertThat(response.code()).isEqualTo(401);
         }
     }
@@ -42,13 +42,7 @@ public abstract class AccountIdTestTemplate {
     /** Test service that responds with the account ID. */
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)
-    public static final class TestService {
-
-        private final AccountIdContext accountIdContext;
-
-        public TestService(AccountIdContext accountIdContext) {
-            this.accountIdContext = accountIdContext;
-        }
+    public record TestService(AccountIdContext accountIdContext) {
 
         @GET
         public String accountId() {

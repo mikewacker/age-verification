@@ -72,7 +72,7 @@ public final class DynamoDbTestContainer extends BaseTestContainer<DynamoDbClien
     protected DynamoDbClient createClient() {
         return DynamoDbClient.builder()
                 .region(Region.US_EAST_1)
-                .endpointOverride(TestClient.createLocalhostUri(PORT))
+                .endpointOverride(TestClient.localhostUri(PORT))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(AwsBasicCredentials.create("dummyKey", "dummySecret")))
                 .build();

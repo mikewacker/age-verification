@@ -2,6 +2,7 @@ package org.example.age.module.store.redis;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.api.testing.TestModels;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
@@ -12,16 +13,10 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class RedisAvsAccountStoreTest extends AvsAccountStoreTestTemplate {
 
+    private static final AvsVerifiedUserStore store = TestComponent.create();
+
     @RegisterExtension
     private static final RedisTestContainer redis = new RedisTestContainer();
-
-    private static AvsVerifiedUserStore store;
-
-    @BeforeAll
-    public static void createAvsVerifiedUserStore() {
-        TestComponent component = TestComponent.create();
-        store = component.avsVerifiedUserStore();
-    }
 
     @BeforeAll
     public static void setUpContainer() {
@@ -33,15 +28,13 @@ public final class RedisAvsAccountStoreTest extends AvsAccountStoreTestTemplate 
         return store;
     }
 
-    /** Dagger component for the store. */
+    /** Dagger component for {@link AvsVerifiedUserStore}. */
     @Component(modules = {RedisAvsAccountStoreModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<AvsVerifiedUserStore> {
 
-        static TestComponent create() {
-            return DaggerRedisAvsAccountStoreTest_TestComponent.create();
+        static AvsVerifiedUserStore create() {
+            return DaggerRedisAvsAccountStoreTest_TestComponent.create().get();
         }
-
-        AvsVerifiedUserStore avsVerifiedUserStore();
     }
 }

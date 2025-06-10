@@ -7,18 +7,20 @@ import org.example.age.module.client.SiteClientsConfig;
 /** Configuration for testing. */
 public class TestConfig {
 
+    private static SiteClientsConfig siteClients =
+            SiteClientsConfig.builder().avsUrl(TestClient.localhostUrl(8080)).build();
+    private static AvsClientsConfig avsClients = AvsClientsConfig.builder()
+            .putSiteUrls("site", TestClient.localhostUrl(8080))
+            .build();
+
     /** Creates the configuration for clients on the site. */
-    public static SiteClientsConfig createSiteClients(int port) {
-        return SiteClientsConfig.builder()
-                .avsUrl(TestClient.createLocalhostUrl(port))
-                .build();
+    public static SiteClientsConfig siteClients() {
+        return siteClients;
     }
 
     /** Creates the configuration for clients on the age verification service. */
-    public static AvsClientsConfig createAvsClients(int port) {
-        return AvsClientsConfig.builder()
-                .putSiteUrls("site", TestClient.createLocalhostUrl(port))
-                .build();
+    public static AvsClientsConfig avsClients() {
+        return avsClients;
     }
 
     private TestConfig() {} // static class

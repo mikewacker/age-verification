@@ -1,33 +1,23 @@
 package org.example.age.module.client;
 
-import dagger.BindsInstance;
 import dagger.Component;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
-import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.client.testing.TestDependenciesModule;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.module.client.testing.AvsClientTestTemplate;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class AvsClientTest extends AvsClientTestTemplate {
 
+    private static final SiteClientRepository siteClients = TestComponent.create();
+
     @RegisterExtension
-    private static final DropwizardAppExtension<Configuration> app =
-            new DropwizardAppExtension<>(TestApp.class, null, ConfigOverride.randomPorts());
-
-    private static SiteClientRepository siteClients;
-
-    @BeforeAll
-    public static void createClients() {
-        TestComponent component = TestComponent.create(app.getLocalPort());
-        siteClients = component.siteClients();
-    }
+    private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
 
     @Override
     protected SiteClientRepository siteClients() {
@@ -43,21 +33,13 @@ public final class AvsClientTest extends AvsClientTestTemplate {
         }
     }
 
-    /** Dagger component for the clients. */
+    /** Dagger component for {@link SiteClientRepository}. */
     @Component(modules = {AvsClientModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<SiteClientRepository> {
 
-        static TestComponent create(int port) {
-            return DaggerAvsClientTest_TestComponent.factory().create(port);
-        }
-
-        SiteClientRepository siteClients();
-
-        @Component.Factory
-        interface Factory {
-
-            TestComponent create(@BindsInstance @Named("port") int port);
+        static SiteClientRepository create() {
+            return DaggerAvsClientTest_TestComponent.create().get();
         }
     }
 }

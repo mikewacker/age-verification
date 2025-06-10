@@ -5,28 +5,22 @@ import static org.example.age.common.testing.WebStageTesting.await;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import java.util.function.Supplier;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import org.example.age.service.module.store.testing.PendingStoreTestTemplate;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;
 
 public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
+    private static final PendingStoreRepository stores = TestComponent.create();
+
     @RegisterExtension
     private static final RedisTestContainer redis = new RedisTestContainer();
-
-    private static PendingStoreRepository stores;
-
-    @BeforeAll
-    public static void createPendingStoreRepository() {
-        TestComponent component = TestComponent.create();
-        stores = component.pendingStoreRepository();
-    }
 
     @Test
     public void redisKeys() {
@@ -42,15 +36,13 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
         return stores.get("name", Integer.class);
     }
 
-    /** Dagger component for the store. */
+    /** Dagger component for {@link PendingStoreRepository}. */
     @Component(modules = {RedisPendingStoreModule.class, TestDependenciesModule.class})
     @Singleton
-    interface TestComponent {
+    interface TestComponent extends Supplier<PendingStoreRepository> {
 
-        static TestComponent create() {
-            return DaggerRedisPendingStoreTest_TestComponent.create();
+        static PendingStoreRepository create() {
+            return DaggerRedisPendingStoreTest_TestComponent.create().get();
         }
-
-        PendingStoreRepository pendingStoreRepository();
     }
 }

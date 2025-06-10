@@ -19,7 +19,7 @@ public final class RedisTestContainer extends BaseTestContainer<JedisPooled> {
 
     @Override
     protected JedisPooled createClient() {
-        return new JedisPooled(TestClient.createLocalhostUri(PORT));
+        return new JedisPooled(TestClient.localhostUri(PORT));
     }
 
     @Override

@@ -29,14 +29,14 @@ public final class TestClientTest {
 
     @Test
     public void getHttp() {
-        OkHttpClient client = TestClient.getHttp();
+        OkHttpClient client = TestClient.http();
         assertThat(client).isNotNull();
-        assertThat(client).isSameAs(TestClient.getHttp());
+        assertThat(client).isSameAs(TestClient.http());
     }
 
     @Test
     public void createApi() throws IOException {
-        TestApi client = TestClient.createApi(
+        TestApi client = TestClient.api(
                 app.getLocalPort(), requestBuilder -> requestBuilder.header("Test-Header", "value"), TestApi.class);
         Response<Map<String, String>> response = client.test().execute();
         assertThat(response.isSuccessful()).isTrue();
@@ -45,7 +45,7 @@ public final class TestClientTest {
 
     @Test
     public void createLocalhostUrl() {
-        URL url = TestClient.createLocalhostUrl(8080);
+        URL url = TestClient.localhostUrl(8080);
         assertThat(url.toString()).isEqualTo("http://localhost:8080");
     }
 
