@@ -2,40 +2,36 @@ package org.example.age.service.testing;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import org.example.age.api.AvsApi;
+import java.util.function.Supplier;
+import org.example.age.service.AvsServiceConfig;
 import org.example.age.service.AvsServiceModule;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.testing.crypto.TestAvsCryptoModule;
-import org.example.age.service.testing.request.TestAccountId;
 import org.example.age.service.testing.request.TestRequestModule;
 import org.example.age.service.testing.store.TestAvsStoreModule;
 
-/** Dagger component for the service on the age verification service. */
+/** Dagger component for {@link TestAvsService}. */
 @Component(
         modules = {
             AvsServiceModule.class,
             TestRequestModule.class,
             TestAvsStoreModule.class,
             TestAvsCryptoModule.class,
-            TestAvsDependenciesModule.class,
         })
 @Singleton
-public interface TestAvsServiceComponent {
+public interface TestAvsServiceComponent extends Supplier<TestAvsService> {
 
-    static TestAvsServiceComponent create(SiteClientRepository siteClients) {
-        return DaggerTestAvsServiceComponent.factory().create(siteClients);
+    static TestAvsService create(SiteClientRepository siteClients) {
+        return DaggerTestAvsServiceComponent.factory()
+                .create(siteClients, TestConfig.avsService())
+                .get();
     }
-
-    @Named("testService")
-    AvsApi service();
-
-    TestAccountId accountId();
 
     @Component.Factory
     interface Factory {
 
-        TestAvsServiceComponent create(@BindsInstance SiteClientRepository siteClients);
+        TestAvsServiceComponent create(
+                @BindsInstance SiteClientRepository siteClients, @BindsInstance AvsServiceConfig config);
     }
 }

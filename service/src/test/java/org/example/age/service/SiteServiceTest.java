@@ -12,7 +12,6 @@ import java.time.temporal.ChronoUnit;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AuthMatchData;
 import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
@@ -20,28 +19,19 @@ import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.testing.TestModels;
 import org.example.age.api.testing.TestSignatures;
+import org.example.age.service.testing.TestSiteService;
 import org.example.age.service.testing.TestSiteServiceComponent;
-import org.example.age.service.testing.request.TestAccountId;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
 import retrofit2.mock.Calls;
 
 public final class SiteServiceTest {
 
-    private SiteApi siteService;
-    private TestAccountId accountId;
-
-    @BeforeEach
-    public void createSiteServiceEtAl() {
-        TestSiteServiceComponent component = TestSiteServiceComponent.create(new FakeAvsClient());
-        siteService = component.service();
-        accountId = component.accountId();
-    }
+    private final TestSiteService siteService = TestSiteServiceComponent.create(new FakeAvsClient());
 
     @Test
     public void verify() {
-        accountId.set("username");
+        siteService.setAccountId("username");
         VerificationState initState = await(siteService.getVerificationState());
         assertThat(initState.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
 
@@ -60,7 +50,7 @@ public final class SiteServiceTest {
 
     @Test
     public void error_DuplicateVerification() {
-        accountId.set("duplicate");
+        siteService.setAccountId("duplicate");
         VerificationRequest request = await(siteService.createVerificationRequest());
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 409);

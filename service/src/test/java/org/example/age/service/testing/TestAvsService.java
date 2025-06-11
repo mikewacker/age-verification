@@ -9,16 +9,22 @@ import org.example.age.api.AvsApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.common.testing.WebStageTesting;
+import org.example.age.service.testing.request.TestAccountId;
 
-/** Wrapper that converts uncaught exceptions to a failed stage. */
+/**
+ * Test wrapper for {@link AvsApi}.
+ * Converts uncaught exceptions to failed futures, and provides a way to set the account ID.
+ */
 @Singleton
-final class TestWrappedAvsService implements AvsApi {
+public final class TestAvsService implements AvsApi {
 
     private final AvsApi delegate;
+    private final TestAccountId accountId;
 
     @Inject
-    public TestWrappedAvsService(@Named("service") AvsApi delegate) {
+    TestAvsService(@Named("service") AvsApi delegate, TestAccountId accountId) {
         this.delegate = delegate;
+        this.accountId = accountId;
     }
 
     @Override
@@ -35,5 +41,9 @@ final class TestWrappedAvsService implements AvsApi {
     @Override
     public CompletionStage<Void> sendAgeCertificate() {
         return WebStageTesting.wrapExceptions(delegate::sendAgeCertificate);
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId.set(accountId);
     }
 }
