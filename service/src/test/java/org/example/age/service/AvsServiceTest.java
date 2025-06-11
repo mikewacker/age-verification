@@ -15,16 +15,14 @@ import java.util.Optional;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AgeRange;
 import org.example.age.api.AuthMatchData;
-import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.api.testing.TestSignatures;
+import org.example.age.service.testing.TestAvsService;
 import org.example.age.service.testing.TestAvsServiceComponent;
-import org.example.age.service.testing.request.TestAccountId;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -35,22 +33,15 @@ public final class AvsServiceTest {
     private static final AuthMatchData EMPTY_DATA =
             AuthMatchData.builder().name("").data("").build();
 
-    private AvsApi avsService;
-    private TestAccountId accountId;
+    private final TestAvsService avsService = TestAvsServiceComponent.create(this::getSiteClient);
 
-    private static AgeCertificate ageCertificate;
-
-    @BeforeEach
-    public void createAvsServiceEtAl() {
-        TestAvsServiceComponent component = TestAvsServiceComponent.create(FakeSiteClient::get);
-        avsService = component.service();
-        accountId = component.accountId();
-        ageCertificate = null;
-    }
+    private final Map<String, SiteApi> siteClients =
+            Map.of("site1", new FakeSiteClient(), "site2", new FakeSiteClient());
+    private AgeCertificate ageCertificate = null;
 
     @Test
     public void verify() {
-        accountId.set("person");
+        avsService.setAccountId("person");
         VerificationRequest request1 = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
         assertThat(request1.getSiteId()).isEqualTo("site1");
         OffsetDateTime expectedExpiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
@@ -79,14 +70,14 @@ public final class AvsServiceTest {
 
     @Test
     public void error_UnverifiedPerson() {
-        accountId.set("unverified-person");
+        avsService.setAccountId("unverified-person");
         awaitErrorCode(avsService.linkVerificationRequest(SecureId.generate()), 403);
         awaitErrorCode(avsService.sendAgeCertificate(), 403);
     }
 
     @Test
     public void error_LinkVerificationRequestTwice() {
-        accountId.set("person");
+        avsService.setAccountId("person");
         VerificationRequest request = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
         await(avsService.linkVerificationRequest(request.getId()));
         awaitErrorCode(avsService.linkVerificationRequest(request.getId()), 404);
@@ -94,7 +85,7 @@ public final class AvsServiceTest {
 
     @Test
     public void error_SendAgeCertificateTwice() {
-        accountId.set("person");
+        avsService.setAccountId("person");
         VerificationRequest request = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
         await(avsService.linkVerificationRequest(request.getId()));
         await(avsService.sendAgeCertificate());
@@ -103,26 +94,23 @@ public final class AvsServiceTest {
 
     @Test
     public void error_VerificationRequestNotFound() {
-        accountId.set("person");
+        avsService.setAccountId("person");
         awaitErrorCode(avsService.linkVerificationRequest(SecureId.generate()), 404);
         awaitErrorCode(avsService.sendAgeCertificate(), 404);
     }
 
     @Test
     public void error_UnregisteredSite() {
-        accountId.set("person");
+        avsService.setAccountId("person");
         awaitErrorCode(avsService.createVerificationRequestForSite("unregistered-site", EMPTY_DATA), 404);
     }
 
+    private SiteApi getSiteClient(String siteId) {
+        return Optional.ofNullable(siteClients.get(siteId)).orElseThrow(NotFoundException::new);
+    }
+
     /** Fake client implementation of {@link SiteApi}. */
-    private static final class FakeSiteClient implements SiteApi {
-
-        private static final Map<String, SiteApi> clients =
-                Map.of("site1", new FakeSiteClient(), "site2", new FakeSiteClient());
-
-        public static SiteApi get(String siteId) {
-            return Optional.ofNullable(clients.get(siteId)).orElseThrow(NotFoundException::new);
-        }
+    private final class FakeSiteClient implements SiteApi {
 
         @Override
         public Call<VerificationState> getVerificationState() {

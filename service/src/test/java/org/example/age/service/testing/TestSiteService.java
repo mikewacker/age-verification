@@ -4,21 +4,28 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
+import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.common.testing.WebStageTesting;
+import org.example.age.service.testing.request.TestAccountId;
 
-/** Wrapper that converts uncaught exceptions to a failed stage. */
+/**
+ * Test wrapper for {@link AvsApi}.
+ * Converts uncaught exceptions to failed futures, and provides a way to set the account ID.
+ */
 @Singleton
-final class TestWrappedSiteService implements SiteApi {
+public final class TestSiteService implements SiteApi {
 
     private final SiteApi delegate;
+    private final TestAccountId accountId;
 
     @Inject
-    public TestWrappedSiteService(@Named("service") SiteApi delegate) {
+    TestSiteService(@Named("service") SiteApi delegate, TestAccountId accountId) {
         this.delegate = delegate;
+        this.accountId = accountId;
     }
 
     @Override
@@ -34,5 +41,9 @@ final class TestWrappedSiteService implements SiteApi {
     @Override
     public CompletionStage<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
         return WebStageTesting.wrapExceptions(() -> delegate.processAgeCertificate(signedAgeCertificate));
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId.set(accountId);
     }
 }
