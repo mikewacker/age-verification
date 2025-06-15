@@ -15,6 +15,7 @@ include(
         "module:store-redis",
         "module:store-dynamodb",
         "module:crypto-demo",
+        "module:test",
 
         // app
         "app",

@@ -6,9 +6,9 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.api.client.AvsApi;
+import org.example.age.module.crypto.test.TestSiteCryptoModule;
 import org.example.age.service.SiteServiceConfig;
 import org.example.age.service.SiteServiceModule;
-import org.example.age.service.testing.crypto.TestSiteCryptoModule;
 import org.example.age.service.testing.request.TestRequestModule;
 import org.example.age.service.testing.store.TestSiteStoreModule;
 

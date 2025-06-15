@@ -1,8 +1,8 @@
-package org.example.age.service.testing.crypto;
+package org.example.age.module.crypto.test;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.HashMap;
+import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -15,14 +15,18 @@ import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
 @Singleton
 final class FakeAvsVerifiedUserLocalizer implements AvsVerifiedUserLocalizer {
 
-    private final Map<String, SecureId> keys = new HashMap<>();
+    private final Map<String, SecureId> keys = Map.of("site1", SecureId.generate(), "site2", SecureId.generate());
 
     @Inject
     public FakeAvsVerifiedUserLocalizer() {}
 
     @Override
     public CompletionStage<VerifiedUser> localize(VerifiedUser user, String siteId) {
-        SecureId key = keys.computeIfAbsent(siteId, id -> SecureId.generate());
+        SecureId key = keys.get(siteId);
+        if (key == null) {
+            return CompletableFuture.failedFuture(new NotFoundException());
+        }
+
         VerifiedUser localizedUser = Localization.localize(user, key);
         return CompletableFuture.completedFuture(localizedUser);
     }
