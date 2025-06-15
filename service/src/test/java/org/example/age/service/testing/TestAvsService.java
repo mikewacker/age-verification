@@ -9,7 +9,7 @@ import org.example.age.api.AvsApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.common.testing.WebStageTesting;
-import org.example.age.service.testing.request.TestAccountId;
+import org.example.age.module.request.test.TestAccountId;
 
 /**
  * Test wrapper for {@link AvsApi}.
