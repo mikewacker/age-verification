@@ -11,7 +11,7 @@ import org.example.age.api.crypto.Localization;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
 
-/** Fake implementation of {@link AvsVerifiedUserLocalizer}. */
+/** Fake implementation of {@link AvsVerifiedUserLocalizer}. It has two sites with IDs of "site1" and "site2". */
 @Singleton
 final class FakeAvsVerifiedUserLocalizer implements AvsVerifiedUserLocalizer {
 

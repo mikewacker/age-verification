@@ -7,17 +7,19 @@ import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.api.client.AvsApi;
 import org.example.age.module.crypto.test.TestSiteCryptoModule;
+import org.example.age.module.store.test.TestPendingStoreModule;
+import org.example.age.module.store.test.TestSiteAccountStoreModule;
 import org.example.age.service.SiteServiceConfig;
 import org.example.age.service.SiteServiceModule;
 import org.example.age.service.testing.request.TestRequestModule;
-import org.example.age.service.testing.store.TestSiteStoreModule;
 
 /** Dagger component for {@link TestSiteService} */
 @Component(
         modules = {
             SiteServiceModule.class,
             TestRequestModule.class,
-            TestSiteStoreModule.class,
+            TestSiteAccountStoreModule.class,
+            TestPendingStoreModule.class,
             TestSiteCryptoModule.class,
         })
 @Singleton
