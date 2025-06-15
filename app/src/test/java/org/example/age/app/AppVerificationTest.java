@@ -39,14 +39,8 @@ public final class AppVerificationTest {
     @RegisterExtension
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 
-    private static SiteApi siteClient;
-    private static AvsApi avsClient;
-
-    @BeforeAll
-    public static void createClients() {
-        siteClient = createClient(8080, "username", SiteApi.class);
-        avsClient = createClient(9090, "person", AvsApi.class);
-    }
+    private static final SiteApi siteClient = createClient(8080, "username", SiteApi.class);
+    private static final AvsApi avsClient = createClient(9090, "person", AvsApi.class);
 
     @BeforeAll
     public static void setUpContainers() {
