@@ -14,8 +14,16 @@ public abstract class AvsVerifiedUserLocalizerTestTemplate {
     @Test
     public void localize() {
         VerifiedUser user = TestModels.createVerifiedUser();
-        VerifiedUser localizedUser = await(localizer().localize(user, "site"));
-        assertThat(localizedUser).isNotEqualTo(user);
+        VerifiedUser localizedUser = await(localizer().localize(user, "site1"));
+        assertThat(localizedUser.getPseudonym()).isNotEqualTo(user.getPseudonym());
+    }
+
+    @Test
+    public void localize_DifferentSites() {
+        VerifiedUser user = TestModels.createVerifiedUser();
+        VerifiedUser localizedUser1 = await(localizer().localize(user, "site1"));
+        VerifiedUser localizedUser2 = await(localizer().localize(user, "site2"));
+        assertThat(localizedUser1.getPseudonym()).isNotEqualTo(localizedUser2.getPseudonym());
     }
 
     @Test

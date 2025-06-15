@@ -17,8 +17,6 @@ import org.example.age.common.testing.TestObjectMapper;
 public final class TestSignatures {
 
     private static final KeyPair keyPair = generateKeyPair();
-    private static final Signature signer = createSigner(keyPair.getPrivate());
-    private static final Signature verifier = createVerifier(keyPair.getPublic());
 
     /** Gets the NIST P-256 key pair. */
     public static KeyPair getKeyPair() {
@@ -27,6 +25,7 @@ public final class TestSignatures {
 
     /** Signs an age certificate. */
     public static SignedAgeCertificate sign(AgeCertificate ageCertificate) {
+        Signature signer = createSigner(keyPair.getPrivate());
         SignatureData data = SignatureData.sign(ageCertificate, TestObjectMapper.get(), signer);
         DigitalSignature signature =
                 DigitalSignature.builder().algorithm("secp256r1").data(data).build();
@@ -50,6 +49,7 @@ public final class TestSignatures {
 
     /** Verifies a signed age certificate. */
     public static AgeCertificate verify(SignedAgeCertificate signedAgeCertificate) {
+        Signature verifier = createVerifier(keyPair.getPublic());
         AgeCertificate ageCertificate = signedAgeCertificate.getAgeCertificate();
         SignatureData data = signedAgeCertificate.getSignature().getData();
         data.verify(ageCertificate, TestObjectMapper.get(), verifier);

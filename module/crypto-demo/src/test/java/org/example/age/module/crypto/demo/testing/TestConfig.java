@@ -1,5 +1,6 @@
 package org.example.age.module.crypto.demo.testing;
 
+import java.util.Map;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
@@ -12,7 +13,7 @@ public final class TestConfig {
             .signing(ConfigKeyPair.publicKey())
             .build();
     private static final AvsKeysConfig avsKeys = AvsKeysConfig.builder()
-            .putLocalization("site", SecureId.generate())
+            .putAllLocalization(Map.of("site1", SecureId.generate(), "site2", SecureId.generate()))
             .signing(ConfigKeyPair.privateKey())
             .build();
 

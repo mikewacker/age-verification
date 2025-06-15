@@ -1,4 +1,4 @@
-package org.example.age.service.testing.crypto;
+package org.example.age.module.crypto.test;
 
 import dagger.Binds;
 import dagger.Module;

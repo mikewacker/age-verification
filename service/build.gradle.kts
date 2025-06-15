@@ -19,5 +19,6 @@ dependencies {
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":api")))
+    testImplementation(testFixtures(project(":module:test")))
     testImplementation(libs.retrofit.mock)
 }
