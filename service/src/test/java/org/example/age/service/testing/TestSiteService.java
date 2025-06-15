@@ -10,7 +10,7 @@ import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.common.testing.WebStageTesting;
-import org.example.age.service.testing.request.TestAccountId;
+import org.example.age.module.request.test.TestAccountId;
 
 /**
  * Test wrapper for {@link AvsApi}.

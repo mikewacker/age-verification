@@ -1,15 +1,13 @@
-package org.example.age.service.testing.request;
+package org.example.age.module.request.test;
 
 import dagger.Binds;
 import dagger.Module;
 import org.example.age.service.module.request.AccountIdContext;
 
 /**
- * Dagger modules that binds...
- * <ul>
- *     <li>{@link AccountIdContext}
- *     <li>{@link TestAccountId}
- * </ul>
+ * Dagger modules that binds {@link AccountIdContext}.
+ * <p>
+ * The account ID is set via {@link TestAccountId}, which is also bound.
  */
 @Module
 public interface TestRequestModule {
