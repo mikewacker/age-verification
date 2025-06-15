@@ -11,6 +11,8 @@ import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
  *     <li>{@link AgeCertificateSigner}
  *     <li>{@link AvsVerifiedUserLocalizer}
  * </ul>
+ * <p>
+ * It has two sites with IDs of "site1" and "site2".
  */
 @Module
 public interface TestAvsCryptoModule {

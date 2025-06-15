@@ -1,4 +1,4 @@
-package org.example.age.service.testing.store;
+package org.example.age.module.store.test;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -16,7 +16,7 @@ import org.example.age.service.module.store.SiteVerificationStore;
 /**
  * Fake, in-memory implementation of {@link SiteVerificationStore}.
  * It does not check for duplicate or expired verifications,
- * though a duplicate verification can be triggered if "duplicate" is the username.
+ * though a duplicate verification can be triggered if the account ID is "duplicate".
  */
 @Singleton
 final class FakeSiteVerificationStore implements SiteVerificationStore {
