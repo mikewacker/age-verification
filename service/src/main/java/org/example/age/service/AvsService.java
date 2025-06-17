@@ -14,7 +14,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AgeThresholds;
-import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.VerificationRequest;
@@ -63,10 +62,9 @@ final class AvsService implements AvsApi {
     }
 
     @Override
-    public CompletionStage<VerificationRequest> createVerificationRequestForSite(
-            String siteId, AuthMatchData authMatchData) {
+    public CompletionStage<VerificationRequest> createVerificationRequestForSite(String siteId) {
         siteClients.get(siteId); // check that the site is registered
-        VerificationRequest request = createVerificationRequestForSite(siteId);
+        VerificationRequest request = createVerificationRequest(siteId);
         return storeUnlinkedVerificationRequest(request);
     }
 
@@ -112,7 +110,7 @@ final class AvsService implements AvsApi {
     }
 
     /** Creates a {@link VerificationRequest} for the site. */
-    private VerificationRequest createVerificationRequestForSite(String siteId) {
+    private VerificationRequest createVerificationRequest(String siteId) {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(config.verificationRequestExpiresIn());
         return VerificationRequest.builder()
                 .id(SecureId.generate())

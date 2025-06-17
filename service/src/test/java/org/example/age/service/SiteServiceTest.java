@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import org.example.age.api.AgeCertificate;
-import org.example.age.api.AuthMatchData;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
@@ -113,7 +112,7 @@ public final class SiteServiceTest {
     private static final class FakeAvsClient implements AvsApi {
 
         @Override
-        public Call<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
+        public Call<VerificationRequest> createVerificationRequestForSite(String siteId) {
             VerificationRequest request = TestModels.createVerificationRequest(siteId);
             return Calls.response(request);
         }

@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.example.age.api.AgeCertificate;
 import org.example.age.api.AgeRange;
-import org.example.age.api.AuthMatchData;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
@@ -30,9 +29,6 @@ import retrofit2.mock.Calls;
 
 public final class AvsServiceTest {
 
-    private static final AuthMatchData EMPTY_DATA =
-            AuthMatchData.builder().name("").data("").build();
-
     private final TestAvsService avsService = TestAvsServiceComponent.create(this::getSiteClient);
 
     private final Map<String, SiteApi> siteClients =
@@ -42,7 +38,7 @@ public final class AvsServiceTest {
     @Test
     public void verify() {
         avsService.setAccountId("person");
-        VerificationRequest request1 = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
+        VerificationRequest request1 = await(avsService.createVerificationRequestForSite("site1"));
         assertThat(request1.getSiteId()).isEqualTo("site1");
         OffsetDateTime expectedExpiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
         assertThat(request1.getExpiration()).isCloseTo(expectedExpiration, within(1, ChronoUnit.SECONDS));
@@ -55,7 +51,7 @@ public final class AvsServiceTest {
                 .isEqualTo(AgeRange.builder().min(18).build());
 
         ageCertificate = null;
-        VerificationRequest request2 = await(avsService.createVerificationRequestForSite("site2", EMPTY_DATA));
+        VerificationRequest request2 = await(avsService.createVerificationRequestForSite("site2"));
         await(avsService.linkVerificationRequest(request2.getId()));
         await(avsService.sendAgeCertificate());
         SecureId pseudonym2 = ageCertificate.getUser().getPseudonym();
@@ -78,7 +74,7 @@ public final class AvsServiceTest {
     @Test
     public void error_LinkVerificationRequestTwice() {
         avsService.setAccountId("person");
-        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
+        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1"));
         await(avsService.linkVerificationRequest(request.getId()));
         awaitErrorCode(avsService.linkVerificationRequest(request.getId()), 404);
     }
@@ -86,7 +82,7 @@ public final class AvsServiceTest {
     @Test
     public void error_SendAgeCertificateTwice() {
         avsService.setAccountId("person");
-        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1", EMPTY_DATA));
+        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1"));
         await(avsService.linkVerificationRequest(request.getId()));
         await(avsService.sendAgeCertificate());
         awaitErrorCode(avsService.sendAgeCertificate(), 404);
@@ -102,7 +98,7 @@ public final class AvsServiceTest {
     @Test
     public void error_UnregisteredSite() {
         avsService.setAccountId("person");
-        awaitErrorCode(avsService.createVerificationRequestForSite("unregistered-site", EMPTY_DATA), 404);
+        awaitErrorCode(avsService.createVerificationRequestForSite("unregistered-site"), 404);
     }
 
     private SiteApi getSiteClient(String siteId) {

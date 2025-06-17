@@ -66,13 +66,6 @@ paths:
           schema:
             type: string
           required: true
-      requestBody:
-        description: (optional) Data used by the age verification service to match the person to this request.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AuthMatchData'
-        required: true # some generators don't support a null body
       responses:
         '200':
           description: Verification request.
@@ -129,15 +122,3 @@ components:
       description: Verification status of an account.
       type: string
       enum: [unverified, verified, expired]
-
-    # avs
-    AuthMatchData:
-      description: Data used to check that the same person is using the site and the age verification service.
-      properties:
-        name:
-          description: Name that determines how the freeform data is processed, or empty to ignore this data.
-          type: string
-        data:
-          description: Freeform data.
-          type: string
-      required: [name, data]
