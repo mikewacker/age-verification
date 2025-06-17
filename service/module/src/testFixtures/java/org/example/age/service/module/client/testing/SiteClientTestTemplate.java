@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.AuthMatchData;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
@@ -26,8 +25,7 @@ public abstract class SiteClientTestTemplate {
     public static final class StubAvsService implements org.example.age.api.AvsApi {
 
         @Override
-        public CompletionStage<VerificationRequest> createVerificationRequestForSite(
-                String siteId, AuthMatchData authMatchData) {
+        public CompletionStage<VerificationRequest> createVerificationRequestForSite(String siteId) {
             return CompletableFuture.failedFuture(new UnsupportedOperationException());
         }
 

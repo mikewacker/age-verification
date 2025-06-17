@@ -13,7 +13,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import org.example.age.api.AgeCertificate;
-import org.example.age.api.AuthMatchData;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
@@ -32,9 +31,6 @@ import retrofit2.Call;
 /** Service implementation of {@link SiteApi}. */
 @Singleton
 final class SiteService implements SiteApi {
-
-    private static final AuthMatchData EMPTY_DATA =
-            AuthMatchData.builder().name("").data("").build();
 
     private final AccountIdContext accountIdContext;
     private final AvsApi avsClient;
@@ -88,7 +84,7 @@ final class SiteService implements SiteApi {
 
     /** Creates a {@link VerificationRequest} for this site. */
     private CompletionStage<VerificationRequest> createVerificationRequestForThisSite() {
-        Call<VerificationRequest> call = avsClient.createVerificationRequestForSite(config.id(), EMPTY_DATA);
+        Call<VerificationRequest> call = avsClient.createVerificationRequestForSite(config.id());
         return AsyncCalls.make(call)
                 .exceptionallyCompose(t -> CompletableFuture.failedFuture(new InternalServerErrorException(t)));
     }

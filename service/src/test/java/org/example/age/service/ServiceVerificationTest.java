@@ -6,7 +6,6 @@ import static org.example.age.common.testing.WebStageTesting.await;
 import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
 import java.util.Optional;
-import org.example.age.api.AuthMatchData;
 import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
@@ -49,8 +48,8 @@ public final class ServiceVerificationTest {
     private final class AdaptedAvsClient implements org.example.age.api.client.AvsApi {
 
         @Override
-        public Call<VerificationRequest> createVerificationRequestForSite(String siteId, AuthMatchData authMatchData) {
-            return WebStageTesting.toCall(avsService.createVerificationRequestForSite(siteId, authMatchData));
+        public Call<VerificationRequest> createVerificationRequestForSite(String siteId) {
+            return WebStageTesting.toCall(avsService.createVerificationRequestForSite(siteId));
         }
 
         @Override
