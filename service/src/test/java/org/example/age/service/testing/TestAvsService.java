@@ -12,8 +12,8 @@ import org.example.age.common.testing.WebStageTesting;
 import org.example.age.module.request.test.TestAccountId;
 
 /**
- * Test wrapper for {@link AvsApi}.
- * Converts uncaught exceptions to failed futures, and provides a way to set the account ID.
+ * Decorator for {@link AvsApi} that converts uncaught exceptions to failed futures.
+ * Also provides a way to set the account ID.
  */
 @Singleton
 public final class TestAvsService implements AvsApi {

@@ -4,7 +4,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.AvsApi;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
@@ -13,8 +12,8 @@ import org.example.age.common.testing.WebStageTesting;
 import org.example.age.module.request.test.TestAccountId;
 
 /**
- * Test wrapper for {@link AvsApi}.
- * Converts uncaught exceptions to failed futures, and provides a way to set the account ID.
+ * Decorator for {@link SiteApi} that converts uncaught exceptions to failed futures.
+ * Also provides a way to set the account ID.
  */
 @Singleton
 public final class TestSiteService implements SiteApi {
