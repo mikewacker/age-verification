@@ -9,8 +9,8 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import okhttp3.Request;
+import org.example.age.module.common.testing.TestComponentRegistrar;
 import org.example.age.module.common.testing.TestLiteEnvModule;
-import org.example.age.module.common.testing.TestProviderRegistrar;
 import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.request.testing.AccountIdTestTemplate;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -35,8 +35,7 @@ public final class DemoAccountIdTest extends AccountIdTestTemplate {
 
         @Override
         public void run(Configuration config, Environment env) {
-            AccountIdContext accountIdContext =
-                    TestComponent.create(provider -> env.jersey().register(provider));
+            AccountIdContext accountIdContext = TestComponent.create(env);
             TestService service = new TestService(accountIdContext);
             env.jersey().register(service);
         }
@@ -47,16 +46,16 @@ public final class DemoAccountIdTest extends AccountIdTestTemplate {
     @Singleton
     interface TestComponent extends Supplier<AccountIdContext> {
 
-        static AccountIdContext create(TestProviderRegistrar providerRegistrar) {
+        static AccountIdContext create(Environment env) {
             return DaggerDemoAccountIdTest_TestComponent.factory()
-                    .create(providerRegistrar)
+                    .create(component -> env.jersey().register(component))
                     .get();
         }
 
         @Component.Factory
         interface Factory {
 
-            TestComponent create(@BindsInstance TestProviderRegistrar providerRegistrar);
+            TestComponent create(@BindsInstance TestComponentRegistrar componentRegistrar);
         }
     }
 }
