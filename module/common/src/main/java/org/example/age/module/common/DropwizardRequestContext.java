@@ -1,5 +1,6 @@
 package org.example.age.module.common;
 
+import io.dropwizard.core.setup.Environment;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -10,15 +11,15 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
 
-/** Implementation of {@link RequestContext} that uses Jersey/HK2. */
+/** Implementation of {@link RequestContext} for Dropwizard. */
 @Singleton
-final class JerseyRequestContext implements RequestContext {
+final class DropwizardRequestContext implements RequestContext {
 
     private Provider<HttpHeaders> httpHeadersProvider;
 
     @Inject
-    public JerseyRequestContext(LiteEnv liteEnv) {
-        liteEnv.register(new RequestContextInjector());
+    public DropwizardRequestContext(Environment env) {
+        env.jersey().register(new RequestContextInjector());
     }
 
     @Override

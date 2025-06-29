@@ -7,16 +7,16 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(libs.bundles.dagger)
     api(libs.bundles.jaxRs)
     api(libs.bundles.json)
-    implementation(libs.dropwizard.jersey)
+    implementation(libs.bundles.dagger)
+    implementation(libs.bundles.dropwizard)
 
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
-    testFixturesApi(libs.bundles.dagger)
     testFixturesApi(libs.junitJupiter.api)
     testFixturesImplementation(testFixtures(project(":common")))
+    testFixturesImplementation(libs.bundles.dagger)
     testFixturesImplementation(libs.bundles.json)
 
     testAnnotationProcessor(libs.dagger.compiler)

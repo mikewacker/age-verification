@@ -1,13 +1,11 @@
-package org.example.age.app.env;
+package org.example.age.module.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.core.setup.Environment;
-import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.util.Duration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
-import org.example.age.module.common.LiteEnv;
 
 /** Implementation of {@link LiteEnv} for Dropwizard. */
 @Singleton
@@ -15,13 +13,11 @@ final class DropwizardLiteEnv implements LiteEnv {
 
     private final ObjectMapper mapper;
     private final ExecutorService worker;
-    private final JerseyEnvironment jersey;
 
     @Inject
     public DropwizardLiteEnv(Environment env) {
         mapper = env.getObjectMapper();
         worker = createWorker(env);
-        jersey = env.jersey();
     }
 
     @Override
@@ -32,11 +28,6 @@ final class DropwizardLiteEnv implements LiteEnv {
     @Override
     public ExecutorService worker() {
         return worker;
-    }
-
-    @Override
-    public void register(Object component) {
-        jersey.register(component);
     }
 
     /** Creates the thread pool for the worker. */

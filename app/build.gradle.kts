@@ -15,6 +15,7 @@ dependencies {
     api(libs.bundles.dropwizard)
     api(libs.bundles.json)
     implementation(project(":module:request-demo"))
+    implementation(project(":module:common"))
     implementation(libs.bundles.dynamoDb) // for Dagger
     implementation(libs.bundles.redis) // for Dagger
 
