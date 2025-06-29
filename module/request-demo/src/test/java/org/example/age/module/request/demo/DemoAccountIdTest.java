@@ -9,8 +9,6 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import okhttp3.Request;
-import org.example.age.module.common.testing.TestComponentRegistrar;
-import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.request.testing.AccountIdTestTemplate;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -42,20 +40,18 @@ public final class DemoAccountIdTest extends AccountIdTestTemplate {
     }
 
     /** Dagger component for {@link AccountIdContext}. */
-    @Component(modules = {DemoAccountIdModule.class, TestLiteEnvModule.class})
+    @Component(modules = DemoAccountIdModule.class)
     @Singleton
     interface TestComponent extends Supplier<AccountIdContext> {
 
         static AccountIdContext create(Environment env) {
-            return DaggerDemoAccountIdTest_TestComponent.factory()
-                    .create(component -> env.jersey().register(component))
-                    .get();
+            return DaggerDemoAccountIdTest_TestComponent.factory().create(env).get();
         }
 
         @Component.Factory
         interface Factory {
 
-            TestComponent create(@BindsInstance TestComponentRegistrar componentRegistrar);
+            TestComponent create(@BindsInstance Environment env);
         }
     }
 }

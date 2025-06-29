@@ -1,9 +1,8 @@
-package org.example.age.app.env;
+package org.example.age.module.common;
 
 import dagger.Binds;
 import dagger.Module;
 import io.dropwizard.core.setup.Environment;
-import org.example.age.module.common.LiteEnv;
 
 /**
  * Dagger module that binds {@link LiteEnv}.
@@ -11,7 +10,7 @@ import org.example.age.module.common.LiteEnv;
  * Depends on an unbound {@link Environment}.
  */
 @Module
-public interface EnvModule {
+public interface LiteEnvModule {
 
     @Binds
     LiteEnv bindLiteEnv(DropwizardLiteEnv impl);

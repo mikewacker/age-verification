@@ -51,7 +51,7 @@ Gradle is the build system. The code is split into multiple Gradle modules (e.g.
 - Implementations of the JAX-RS interfaces can be found in `:service`.
 - Implementations of the interfaces in `:service:module` can be found in `:module:*` (e.g., `:module:store-redis`).
     - Many modules come with configuration, which is defined via Immutables + Jackson.
-    - Modules depend on [`LiteEnv`](/module/common/src/main/java/org/example/age/module/common/LiteEnv.java), a lightweight facade for the Dropwizard `Environment`.
+    - Many modules depend on [`LiteEnv`](/module/common/src/main/java/org/example/age/module/common/LiteEnv.java), a lightweight facade for the Dropwizard `Environment`.
 - Since this is a proof-of-concept, some modules in `:module:*` have "demo" implementations.
 
 **Web Applications**
@@ -59,7 +59,7 @@ Gradle is the build system. The code is split into multiple Gradle modules (e.g.
 - The web applications can be found in `:app`.
 - A Dropwizard app only needs to implement one method: `void run(T configuration, Environment environment)`.
     - The configuration class (`T extends Configuration`) is a [container](/app/src/main/java/org/example/age/app/config/SiteAppConfig.java) for all the module-specific configuration.
-    - An [implementation](/app/src/main/java/org/example/age/app/env/DropwizardLiteEnv.java) of the `LiteEnv` facade is provided using the Dropwizard `Environment`.
+    - An [implementation](/module/common/src/main/java/org/example/age/module/common/DropwizardLiteEnv.java) of the `LiteEnv` facade is provided using the Dropwizard `Environment`.
 - Since a proof-of-concept is not deployed to production, ops features are excluded: health checks, metrics, logging, etc.
 
 ### Testability
@@ -120,7 +120,7 @@ Most of the test coverage comes from unit tests.
     - To inject an instance of the class for each request, a Dropwizard app would call `register(Class<?>)`; this uses HK2.
 - We cannot add a `@Context HttpHeaders` arg to the JAX-RS interface; this interface is generated from the OpenAPI YAML file.
 
-**Solution:** Use Jersey/HK2 to inject a `Provider<HttpHeaders>` via a `ContainerLifecyleListener`. See: [`JerseyRequestContext`](/module/common/src/main/java/org/example/age/module/common/JerseyRequestContext.java)
+**Solution:** Use HK2 to inject a `Provider<HttpHeaders>` via a `ContainerLifecycleListener`. See: [`DropwizardRequestContext`](/module/common/src/main/java/org/example/age/module/common/DropwizardRequestContext.java)
 
 - **Downside:** This provider only works if you call `get()` in the thread that handles the HTTP request.
 

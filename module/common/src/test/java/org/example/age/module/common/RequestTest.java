@@ -18,8 +18,6 @@ import java.util.function.Supplier;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.testing.TestClient;
-import org.example.age.module.common.testing.TestComponentRegistrar;
-import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -62,20 +60,18 @@ public final class RequestTest {
         }
     }
 
-    @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
+    @Component(modules = RequestModule.class)
     @Singleton
     interface TestComponent extends Supplier<RequestContext> {
 
         static RequestContext create(Environment env) {
-            return DaggerRequestTest_TestComponent.factory()
-                    .create(component -> env.jersey().register(component))
-                    .get();
+            return DaggerRequestTest_TestComponent.factory().create(env).get();
         }
 
         @Component.Factory
         interface Factory {
 
-            TestComponent create(@BindsInstance TestComponentRegistrar componentRegistrar);
+            TestComponent create(@BindsInstance Environment env);
         }
     }
 }

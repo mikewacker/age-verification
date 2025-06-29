@@ -9,8 +9,8 @@ import jakarta.inject.Singleton;
 import org.example.age.api.AvsApi;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.AvsConfigModule;
-import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.AvsClientModule;
+import org.example.age.module.common.LiteEnvModule;
 import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.dynamodb.DynamoDbAvsAccountStoreModule;
@@ -53,7 +53,7 @@ public class AvsApp extends Application<AvsAppConfig> {
                 RedisPendingStoreModule.class,
                 DemoAvsCryptoModule.class,
                 AvsConfigModule.class,
-                EnvModule.class,
+                LiteEnvModule.class,
             })
     @Singleton
     interface AppComponent {

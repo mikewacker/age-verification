@@ -11,7 +11,4 @@ public interface LiteEnv {
 
     /** Gets the worker thread pool. */
     ExecutorService worker();
-
-    /** Registers a component with Jersey. */
-    void register(Object component);
 }

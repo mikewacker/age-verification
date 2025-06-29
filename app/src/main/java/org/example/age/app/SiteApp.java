@@ -9,8 +9,8 @@ import jakarta.inject.Singleton;
 import org.example.age.api.SiteApi;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.config.SiteConfigModule;
-import org.example.age.app.env.EnvModule;
 import org.example.age.module.client.SiteClientModule;
+import org.example.age.module.common.LiteEnvModule;
 import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
 import org.example.age.module.request.demo.DemoAccountIdModule;
 import org.example.age.module.store.dynamodb.DynamoDbSiteAccountStoreModule;
@@ -53,7 +53,7 @@ public final class SiteApp extends Application<SiteAppConfig> {
                 RedisPendingStoreModule.class,
                 DemoSiteCryptoModule.class,
                 SiteConfigModule.class,
-                EnvModule.class,
+                LiteEnvModule.class,
             })
     @Singleton
     interface AppComponent {
