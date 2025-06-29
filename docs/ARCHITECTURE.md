@@ -120,9 +120,9 @@ Most of the test coverage comes from unit tests.
     - To inject an instance of the class for each request, a Dropwizard app would call `register(Class<?>)`; this uses HK2.
 - We cannot add a `@Context HttpHeaders` arg to the JAX-RS interface; this interface is generated from the OpenAPI YAML file.
 
-**Solution:** Get the request context via [`ContainerRequestFilter`](https://jakarta.ee/specifications/restful-ws/4.0/apidocs/jakarta.ws.rs/jakarta/ws/rs/container/containerrequestfilter) and store it in a `ThreadLocal` variable. See: [`RequestContextFilter`](/module/common/src/main/java/org/example/age/module/common/RequestContextFilter.java)
+**Solution:** Use Jersey/HK2 to inject a `Provider<HttpHeaders>` via a `ContainerLifecyleListener`. See: [`JerseyRequestContext`](/module/common/src/main/java/org/example/age/module/common/JerseyRequestContext.java)
 
-- **Downside:** If request handling moves to a different thread, `RequestContextFilter` will no longer work.
+- **Downside:** This provider only works if you call `get()` in the thread that handles the HTTP request.
 
 ### Testability
 

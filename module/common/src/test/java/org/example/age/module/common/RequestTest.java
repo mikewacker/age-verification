@@ -18,34 +18,36 @@ import java.util.function.Supplier;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.testing.TestClient;
+import org.example.age.module.common.testing.TestComponentRegistrar;
 import org.example.age.module.common.testing.TestLiteEnvModule;
-import org.example.age.module.common.testing.TestProviderRegistrar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-public class RequestContextTest {
+public final class RequestTest {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> app = new DropwizardAppExtension<>(TestApp.class);
 
     @Test
-    public void requestContext() throws IOException {
-        Request request =
-                new Request.Builder().url(TestClient.localhostUrl(8080)).build();
+    public void httpHeaders() throws IOException {
+        Request request = new Request.Builder()
+                .url(TestClient.localhostUrl(8080))
+                .header("Custom-Header", "value")
+                .build();
         try (Response response = TestClient.http().newCall(request).execute()) {
             assertThat(response.isSuccessful()).isTrue();
-            assertThat(response.body().string()).isEqualTo("GET");
+            assertThat(response.body().string()).isEqualTo("value");
         }
     }
 
-    /** Test service that responds with the HTTP method. */
+    /** Test service that responds with the value of a custom header. */
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)
-    public record TestService(RequestContextProvider requestContextProvider) {
+    public record TestService(RequestContext requestContext) {
 
         @GET
         public String method() {
-            return requestContextProvider.get().getMethod();
+            return requestContext.httpHeaders().getHeaderString("Custom-Header");
         }
     }
 
@@ -54,28 +56,26 @@ public class RequestContextTest {
 
         @Override
         public void run(Configuration config, Environment env) {
-            RequestContextProvider requestContextProvider =
-                    TestComponent.create(provider -> env.jersey().register(provider));
-            TestService service = new TestService(requestContextProvider);
+            RequestContext request = TestComponent.create(env);
+            TestService service = new TestService(request);
             env.jersey().register(service);
         }
     }
 
-    /** Dagger component for {@link RequestContextProvider}. */
     @Component(modules = {CommonModule.class, TestLiteEnvModule.class})
     @Singleton
-    interface TestComponent extends Supplier<RequestContextProvider> {
+    interface TestComponent extends Supplier<RequestContext> {
 
-        static RequestContextProvider create(TestProviderRegistrar providerRegistrar) {
-            return DaggerRequestContextTest_TestComponent.factory()
-                    .create(providerRegistrar)
+        static RequestContext create(Environment env) {
+            return DaggerRequestTest_TestComponent.factory()
+                    .create(component -> env.jersey().register(component))
                     .get();
         }
 
         @Component.Factory
         interface Factory {
 
-            TestComponent create(@BindsInstance TestProviderRegistrar providerRegistrar);
+            TestComponent create(@BindsInstance TestComponentRegistrar componentRegistrar);
         }
     }
 }

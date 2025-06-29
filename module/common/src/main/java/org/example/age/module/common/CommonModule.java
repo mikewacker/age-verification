@@ -6,7 +6,7 @@ import dagger.Module;
 /**
  * Dagger module that binds...
  * <ul>
- *     <li>{@link RequestContextProvider}
+ *     <li>{@link RequestContext}
  *     <li>{@link JsonMapper}
  *     <li>{@link Worker}
  * </ul>
@@ -17,7 +17,7 @@ import dagger.Module;
 public interface CommonModule {
 
     @Binds
-    RequestContextProvider bindRequestContextProvider(RequestContextFilter impl);
+    RequestContext bindRequestContext(JerseyRequestContext impl);
 
     @Binds
     JsonMapper bindJsonMapper(JsonMapperImpl impl);

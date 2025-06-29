@@ -14,11 +14,11 @@ import org.example.age.module.common.LiteEnv;
 final class TestLiteEnv implements LiteEnv {
 
     private final ExecutorService worker = Executors.newFixedThreadPool(1);
-    private final TestProviderRegistrar providerRegistrar;
+    private final TestComponentRegistrar componentRegistrar;
 
     @Inject
-    public TestLiteEnv(Optional<TestProviderRegistrar> maybeProviderRegistrar) {
-        providerRegistrar = maybeProviderRegistrar.orElse(provider -> {});
+    public TestLiteEnv(Optional<TestComponentRegistrar> maybeComponentRegistrar) {
+        componentRegistrar = maybeComponentRegistrar.orElse(component -> {});
     }
 
     @Override
@@ -32,7 +32,7 @@ final class TestLiteEnv implements LiteEnv {
     }
 
     @Override
-    public void registerProvider(Object provider) {
-        providerRegistrar.register(provider);
+    public void register(Object component) {
+        componentRegistrar.register(component);
     }
 }

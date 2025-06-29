@@ -3,9 +3,8 @@ package org.example.age.module.request.demo;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
-import jakarta.ws.rs.container.ContainerRequestContext;
 import java.util.Optional;
-import org.example.age.module.common.RequestContextProvider;
+import org.example.age.module.common.RequestContext;
 import org.example.age.service.module.request.AccountIdContext;
 
 /**
@@ -15,17 +14,16 @@ import org.example.age.service.module.request.AccountIdContext;
 @Singleton
 final class DemoAccountIdContext implements AccountIdContext {
 
-    private final RequestContextProvider requestContextProvider;
+    private final RequestContext requestContext;
 
     @Inject
-    public DemoAccountIdContext(RequestContextProvider requestContextProvider) {
-        this.requestContextProvider = requestContextProvider;
+    public DemoAccountIdContext(RequestContext requestContext) {
+        this.requestContext = requestContext;
     }
 
     @Override
     public String getForRequest() {
-        ContainerRequestContext requestContext = requestContextProvider.get();
-        return Optional.ofNullable(requestContext.getHeaderString("Account-Id"))
+        return Optional.ofNullable(requestContext.httpHeaders().getHeaderString("Account-Id"))
                 .orElseThrow(() -> new NotAuthorizedException("failed to authenticate account"));
     }
 }

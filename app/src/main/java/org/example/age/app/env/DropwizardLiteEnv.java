@@ -35,8 +35,8 @@ final class DropwizardLiteEnv implements LiteEnv {
     }
 
     @Override
-    public void registerProvider(Object provider) {
-        jersey.register(provider);
+    public void register(Object component) {
+        jersey.register(component);
     }
 
     /** Creates the thread pool for the worker. */

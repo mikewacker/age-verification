@@ -10,6 +10,7 @@ dependencies {
     api(libs.bundles.dagger)
     api(libs.bundles.jaxRs)
     api(libs.bundles.json)
+    implementation(libs.dropwizard.jersey)
 
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
