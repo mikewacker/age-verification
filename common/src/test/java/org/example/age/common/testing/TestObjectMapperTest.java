@@ -13,4 +13,11 @@ public final class TestObjectMapperTest {
         assertThat(mapper).isNotNull();
         assertThat(mapper).isSameAs(TestObjectMapper.get());
     }
+
+    @Test
+    public void serializeThenDeserialize() {
+        String json = TestObjectMapper.serialize("test");
+        String value = TestObjectMapper.deserialize(json, String.class);
+        assertThat(value).isEqualTo("test");
+    }
 }
