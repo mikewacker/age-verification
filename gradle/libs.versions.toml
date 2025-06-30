@@ -1,32 +1,32 @@
 [versions]
 # main
-aws = "2.31.45"
+aws = "2.31.73"
 dagger = "2.56.2"
-dropwizard = "5.0.0-rc.2"
-immutables = "2.10.1"
-jackson = "2.19.0"
+dropwizard = "5.0.0-rc.3"
+immutables = "2.11.0"
+jackson = "2.19.1"
 jakartaAnnotation = "3.0.0"
 jakartaInject = "2.0.1"
 jakartaValidation = "3.1.1"
 jaxRs = "4.0.0"
-jedis = "5.2.0"
+jedis = "6.0.0"
 okhttp = "4.12.0"
-retrofit = "2.11.0"
+retrofit = "3.0.0"
 
 # test
 assertj = "3.27.3"
 guava = "33.4.8-jre"
-junitJupiter = "5.12.2"
-junitPlatform = "1.12.2"
+junitJupiter = "5.13.2"
+junitPlatform = "1.13.2"
 
 # plugin
-plugin-errorprone = "4.2.0"
-plugin-openapi = "7.12.0"
-plugin-spotless = "7.0.3"
+plugin-errorprone = "4.3.0"
+plugin-openapi = "7.14.0"
+plugin-spotless = "7.0.4"
 
 # special
-errorprone = "2.38.0"
-plugin-spotless-palantir = "2.63.0"
+errorprone = "2.39.0"
+plugin-spotless-palantir = "2.69.0"
 
 [libraries]
 # main (annotation processor)
