@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.example.age.api.VerifiedUser;
-import org.example.age.common.testing.JsonTesting;
 import org.example.age.common.testing.TestClient;
+import org.example.age.common.testing.TestObjectMapper;
 import org.example.age.module.common.testing.BaseTestContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -60,7 +60,7 @@ public final class DynamoDbTestContainer extends BaseTestContainer<DynamoDbClien
     /** Creates an account on the age verification service. */
     public void createAvsAccount(String accountId, VerifiedUser user) {
         AttributeValue accountIdS = AttributeValue.fromS(accountId);
-        AttributeValue userS = AttributeValue.fromS(JsonTesting.serialize(user));
+        AttributeValue userS = AttributeValue.fromS(TestObjectMapper.serialize(user));
         PutItemRequest userRequest = PutItemRequest.builder()
                 .tableName("Age.User")
                 .item(Map.of("AccountId", accountIdS, "User", userS))

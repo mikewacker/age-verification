@@ -1,8 +1,8 @@
 package org.example.age.module.store.redis.testing;
 
 import org.example.age.api.VerifiedUser;
-import org.example.age.common.testing.JsonTesting;
 import org.example.age.common.testing.TestClient;
+import org.example.age.common.testing.TestObjectMapper;
 import org.example.age.module.common.testing.BaseTestContainer;
 import redis.clients.jedis.JedisPooled;
 
@@ -14,7 +14,7 @@ public final class RedisTestContainer extends BaseTestContainer<JedisPooled> {
     /** Creates an account on the age verification service. */
     public void createAvsAccount(String accountId, VerifiedUser user) {
         String redisKey = String.format("age:user:%s", accountId);
-        getClient().set(redisKey, JsonTesting.serialize(user));
+        getClient().set(redisKey, TestObjectMapper.serialize(user));
     }
 
     @Override

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.common.testing.JsonTesting;
+import org.example.age.common.testing.TestObjectMapper;
 import org.example.age.service.module.store.PendingStore;
 
 /** Fake, in-memory implementation of {@link PendingStore}. Key-value pairs do not expire. */
@@ -21,7 +21,7 @@ final class FakePendingStore<V> implements PendingStore<V> {
 
     @Override
     public CompletionStage<Void> put(String key, Object value, OffsetDateTime expiration) {
-        String jsonValue = JsonTesting.serialize(value);
+        String jsonValue = TestObjectMapper.serialize(value);
         store.put(key, jsonValue);
         return CompletableFuture.completedFuture(null);
     }
@@ -45,7 +45,7 @@ final class FakePendingStore<V> implements PendingStore<V> {
         }
 
         String jsonValue = maybeJsonValue.get();
-        V value = JsonTesting.deserialize(jsonValue, valueType);
+        V value = TestObjectMapper.deserialize(jsonValue, valueType);
         return CompletableFuture.completedFuture(Optional.of(value));
     }
 }
