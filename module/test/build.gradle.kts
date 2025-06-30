@@ -7,11 +7,11 @@ plugins {
 dependencies {
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
-    testFixturesApi(project(":service:module"))
-    testFixturesApi(libs.bundles.dagger)
     testFixturesImplementation(testFixtures(project(":common")))
     testFixturesImplementation(project(":api"))
     testFixturesImplementation(testFixtures(project(":api")))
+    testFixturesImplementation(project(":service:module"))
+    testFixturesImplementation(libs.bundles.dagger)
     testFixturesImplementation(libs.bundles.jaxRs)
 
     testAnnotationProcessor(libs.dagger.compiler)
@@ -19,4 +19,6 @@ dependencies {
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":service:module")))
+    testImplementation(libs.bundles.dagger)
+    testImplementation(libs.bundles.jaxRs)
 }

@@ -1,6 +1,6 @@
 [versions]
 # main
-awsSdk = "2.31.45"
+aws = "2.31.45"
 dagger = "2.56.2"
 dropwizard = "5.0.0-rc.2"
 immutables = "2.10.1"
@@ -35,12 +35,11 @@ errorprone-core = { module = "com.google.errorprone:error_prone_core", version.r
 immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
 
 # main
-awsSdk-dynamoDb = { module = "software.amazon.awssdk:dynamodb", version.ref = "awsSdk" }
+aws-dynamoDb = { module = "software.amazon.awssdk:dynamodb", version.ref = "aws" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
 jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
-jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jakartaAnnotation-api = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakartaInject-api = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInject" }
@@ -52,8 +51,6 @@ retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = 
 
 # test
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-dropwizard-jackson = { module = "io.dropwizard:dropwizard-jackson", version.ref = "dropwizard" }
-dropwizard-jersey = { module = "io.dropwizard:dropwizard-jersey", version.ref = "dropwizard" }
 dropwizard-testing = { module = "io.dropwizard:dropwizard-testing", version.ref = "dropwizard" }
 guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
@@ -70,8 +67,8 @@ plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", ver
 # main
 dagger = ["dagger-dagger", "jakartaInject-api"]
 dropwizard = ["dropwizard-core"]
-dynamoDb = ["awsSdk-dynamoDb"]
+dynamoDb = ["aws-dynamoDb"]
 jaxRs = ["jaxRs-api"]
-json = ["immutables-annotations", "jackson-annotations", "jackson-databind", "jakartaAnnotation-api", "jakartaValidation-api"]
+json = ["immutables-annotations", "jackson-databind", "jakartaAnnotation-api", "jakartaValidation-api"]
 redis = ["jedis-jedis"]
 retrofit = ["okhttp-okhttp", "retrofit-converterJackson", "retrofit-retrofit"]

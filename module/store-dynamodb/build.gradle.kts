@@ -8,19 +8,18 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
     annotationProcessor(libs.immutables.value)
 
-    api(project(":common"))
-    api(project(":service:module"))
-    api(project(":module:common"))
-    api(libs.bundles.dagger)
-    api(libs.bundles.json)
+    implementation(project(":common"))
     implementation(project(":api"))
+    implementation(project(":service:module"))
+    implementation(project(":module:common"))
+    implementation(libs.bundles.dagger)
     implementation(libs.bundles.dynamoDb)
+    implementation(libs.bundles.json)
 
     testFixturesApi(testFixtures(project(":module:common")))
     testFixturesApi(libs.bundles.dynamoDb)
-    testFixturesApi(libs.junitJupiter.api)
     testFixturesImplementation(testFixtures(project(":common")))
-    testFixturesImplementation(testFixtures(project(":api")))
+    testFixturesImplementation(project(":api"))
 
     testAnnotationProcessor(libs.dagger.compiler)
 
