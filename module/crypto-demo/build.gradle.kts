@@ -7,18 +7,17 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
     annotationProcessor(libs.immutables.value)
 
-    api(project(":common"))
-    api(project(":service:module"))
-    api(project(":module:common"))
-    api(libs.bundles.dagger)
-    api(libs.bundles.json)
+    implementation(project(":common"))
     implementation(project(":api"))
+    implementation(project(":service:module"))
+    implementation(project(":module:common"))
+    implementation(libs.bundles.dagger)
     implementation(libs.bundles.jaxRs)
+    implementation(libs.bundles.json)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(testFixtures(project(":common")))
-    testImplementation(testFixtures(project(":api")))
     testImplementation(testFixtures(project(":service:module")))
     testImplementation(testFixtures(project(":module:common")))
 }

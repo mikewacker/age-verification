@@ -7,24 +7,35 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
+    // configuration
     api(project(":service"))
     api(project(":module:client"))
     api(project(":module:store-redis"))
     api(project(":module:store-dynamodb"))
     api(project(":module:crypto-demo"))
+
     api(libs.bundles.dropwizard)
-    api(libs.bundles.json)
+    implementation(project(":api"))
     implementation(project(":module:request-demo"))
     implementation(project(":module:common"))
-    implementation(libs.bundles.dynamoDb) // for Dagger
-    implementation(libs.bundles.redis) // for Dagger
+    implementation(libs.bundles.dagger)
+    implementation(libs.bundles.json)
+
+    // Dagger component
+    implementation(project(":service:module"))
+    implementation(libs.bundles.dynamoDb)
+    implementation(libs.bundles.redis)
 
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(libs.bundles.dropwizard)
     testFixturesImplementation(project(":service"))
     testFixturesImplementation(testFixtures(project(":module:test")))
+    testFixturesImplementation(libs.bundles.dagger)
     testFixturesImplementation(libs.bundles.retrofit)
+
+    // Dagger component
+    testFixturesImplementation(project(":service:module"))
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(testFixtures(project(":module:store-redis")))

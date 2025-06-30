@@ -28,7 +28,7 @@ openApiJava {
 dependencies {
     annotationProcessor(libs.immutables.value)
 
-    api(project(":common"))
+    implementation(project(":common"))
 
     testFixturesImplementation(testFixtures(project(":common")))
 
