@@ -10,7 +10,7 @@ public final class JsonTesting {
     /** Serializes then deserializes an object, asserting that the deserialized object equals the original object. */
     public static <V> void serializeThenDeserialize(V value, Class<V> valueType) throws IOException {
         String json = TestObjectMapper.get().writeValueAsString(value);
-        V rtValue = TestObjectMapper.deserialize(json, valueType);
+        V rtValue = TestObjectMapper.get().readValue(json, valueType);
         assertThat(rtValue).isEqualTo(value);
     }
 

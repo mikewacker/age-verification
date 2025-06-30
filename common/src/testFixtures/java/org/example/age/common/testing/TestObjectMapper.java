@@ -14,32 +14,22 @@ public final class TestObjectMapper {
         return mapper;
     }
 
-    /** Serializes an object to JSON. */
+    /** Serializes an object to JSON without checked exceptions. */
     public static String serialize(Object value) {
         try {
-            return serializeInternal(value);
+            return mapper.writeValueAsString(value);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
-    /** Deserializes an object from JSON. */
+    /** Deserializes an object from JSON without checked exceptions. */
     public static <V> V deserialize(String json, Class<V> valueType) {
         try {
-            return deserializeInternal(json, valueType);
+            return mapper.readValue(json, valueType);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
-    }
-
-    /** Serializes an object to JSON. */
-    private static String serializeInternal(Object value) throws IOException {
-        return TestObjectMapper.get().writeValueAsString(value);
-    }
-
-    /** Deserializes an object from JSON. */
-    private static <V> V deserializeInternal(String json, Class<V> valueType) throws IOException {
-        return TestObjectMapper.get().readValue(json, valueType);
     }
 
     private TestObjectMapper() {} // static class
