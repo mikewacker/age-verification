@@ -1,5 +1,7 @@
 # Architecture
 
+**Audience:** Engineers who build web applications, but may not build them in Java.
+
 **Controlling Idea:** The product exhibits craftsmanship because of the architectural choices that were made.
 
 - Focus on getting things done. Frameworks can help, but they can also become a distraction.
@@ -13,20 +15,19 @@ See [`SiteService`](/service/src/main/java/org/example/age/service/SiteService.j
 
 **Web APIs**
 
-- **[OpenAPI](https://www.openapis.org/):** Defines web APIs using a language-agnostic framework.
+- **[OpenAPI](https://www.openapis.org/):** Defines web APIs using a language-agnostic framework. A natural starting point given our audience.
 
 **Java Web APIs and Web Clients**
 
-Go POJO. Getting things done is easier when you work with Plain Old Java Objects.
+Go POJO: Plain Old Java Object. Getting things done is easier when you work with POJO interfaces.
 
-- A [custom Gradle plugin](/buildSrc/src/main/kotlin/openapi-java.gradle.kts) generates (async) Java web APIs and web clients from the OpenAPI YAML file.
-    - **[JAX-RS](https://jakarta.ee/specifications/restful-ws/4.0/):** Creates web APIs as POJO interfaces with a few annotations.
-    - **[Retrofit](https://square.github.io/retrofit/):** Creates web clients as POJO interfaces with a few annotations.
+- **[JAX-RS](https://jakarta.ee/specifications/restful-ws/4.0/):** Creates web APIs as POJO interfaces with a few annotations. ([Generated](/buildSrc/src/main/kotlin/openapi-java.gradle.kts) from the OpenAPI YAML.)
+- **[Retrofit](https://square.github.io/retrofit/):** Creates web clients as POJO interfaces with a few annotations. (Generated from the OpenAPI YAML.)
 - **[Immutables](https://immutables.github.io/) + [Jackson](https://github.com/FasterXML/jackson):** Creates value types for JSON data as POJO interfaces with a few annotations.
 
 **Java Web Applications**
 
-- **[Dropwizard](https://www.dropwizard.io/):** Web application framework that focuses on getting things done.
+- **[Dropwizard](https://www.dropwizard.io/):** Web application framework that focuses on getting things done&mdash;and has a shallow learning curve.
 - **[Dagger](https://dagger.dev/):** Dependency injection framework. Dependencies are injected at compile-time; mistakes are compilation errors.
 
 **Stores**
@@ -114,11 +115,10 @@ Most of the test coverage comes from unit tests.
 
 **Request Context**
 
-**Problem:** How do I access the HTTP headers for a request?
+**Problem:** How do I access the HTTP headers for a request? We cannot add a `@Context HttpHeaders` arg to...
 
-- If we use Dagger, we cannot add a `@Context HttpHeaders` arg to the `@Inject`'ed constructor of a service class.
-    - To inject an instance of the class for each request, a Dropwizard app would call `register(Class<?>)`; this uses HK2.
-- We cannot add a `@Context HttpHeaders` arg to the JAX-RS interface; this interface is generated from the OpenAPI YAML file.
+- the `@Inject`'ed constructor. The Dagger component produces singleton-scoped services that are registered with Jersey.
+- the methods of the JAX-RS interface. This interface is generated from the OpenAPI YAML file.
 
 **Solution:** Use HK2 to inject a `Provider<HttpHeaders>` via a `ContainerLifecycleListener`. See: [`DropwizardRequestContext`](/module/common/src/main/java/org/example/age/module/common/DropwizardRequestContext.java)
 
