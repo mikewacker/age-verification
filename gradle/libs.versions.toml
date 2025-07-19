@@ -2,6 +2,7 @@
 # main
 aws = "2.31.73"
 dagger = "2.56.2"
+darc = "0.1.0"
 dropwizard = "5.0.0-rc.3"
 immutables = "2.11.0"
 jackson = "2.19.1"
@@ -37,6 +38,7 @@ immutables-value = { module = "org.immutables:value", version.ref = "immutables"
 # main
 aws-dynamoDb = { module = "software.amazon.awssdk:dynamodb", version.ref = "aws" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+darc-darc = { module = "io.github.mikewacker.darc:darc", version.ref = "darc" }
 dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
 jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
@@ -66,6 +68,7 @@ plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", ver
 [bundles]
 # main
 dagger = ["dagger-dagger", "jakartaInject-api"]
+darc = ["darc-darc"]
 dropwizard = ["dropwizard-core"]
 dynamoDb = ["aws-dynamoDb"]
 jaxRs = ["jaxRs-api"]

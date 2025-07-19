@@ -120,9 +120,7 @@ Most of the test coverage comes from unit tests.
 - the `@Inject`'ed constructor. The Dagger component produces singleton-scoped services that are registered with Jersey.
 - the methods of the JAX-RS interface. This interface is generated from the OpenAPI YAML file.
 
-**Solution:** Use HK2 to inject a `Provider<HttpHeaders>` via a `ContainerLifecycleListener`. See: [`DropwizardRequestContext`](/module/common/src/main/java/org/example/age/module/common/DropwizardRequestContext.java)
-
-- **Downside:** This provider only works if you call `get()` in the thread that handles the HTTP request.
+**Solution:** [DARC](https://github.com/mikewacker/darc)
 
 ### Testability
 

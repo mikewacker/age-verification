@@ -7,7 +7,6 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(libs.bundles.jaxRs)
     api(libs.bundles.json)
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.dropwizard)

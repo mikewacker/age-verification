@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":service:module"))
     implementation(project(":module:common"))
     implementation(libs.bundles.dagger)
+    implementation(libs.bundles.darc)
     implementation(libs.bundles.jaxRs)
 
     testAnnotationProcessor(libs.dagger.compiler)
