@@ -2,7 +2,7 @@ package org.example.age.module.request.demo;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.module.common.RequestModule;
+import io.github.mikewacker.darc.RequestContextModule;
 import org.example.age.service.module.request.AccountIdContext;
 
 /**
@@ -12,7 +12,7 @@ import org.example.age.service.module.request.AccountIdContext;
  * <p>
  * Uses an {@code Account-Id} header; it suffices to say that a production application should NOT do this.
  */
-@Module(includes = RequestModule.class)
+@Module(includes = RequestContextModule.class)
 public interface DemoAccountIdModule {
 
     @Binds

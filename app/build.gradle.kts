@@ -23,6 +23,7 @@ dependencies {
 
     // Dagger component
     implementation(project(":service:module"))
+    implementation(libs.bundles.darc)
     implementation(libs.bundles.dynamoDb)
     implementation(libs.bundles.redis)
 

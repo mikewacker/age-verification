@@ -1,10 +1,10 @@
 package org.example.age.module.request.demo;
 
+import io.github.mikewacker.darc.RequestContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
-import org.example.age.module.common.RequestContext;
 import org.example.age.service.module.request.AccountIdContext;
 
 /**
