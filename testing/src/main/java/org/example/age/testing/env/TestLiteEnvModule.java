@@ -1,4 +1,4 @@
-package org.example.age.module.common.testing;
+package org.example.age.testing.env;
 
 import dagger.Binds;
 import dagger.Module;

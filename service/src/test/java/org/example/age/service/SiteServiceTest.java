@@ -2,8 +2,8 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.common.testing.WebStageTesting.await;
-import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.util.WebStageTesting.await;
+import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -16,10 +16,10 @@ import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.api.testing.TestModels;
-import org.example.age.api.testing.TestSignatures;
 import org.example.age.service.testing.TestSiteService;
 import org.example.age.service.testing.TestSiteServiceComponent;
+import org.example.age.testing.api.TestModels;
+import org.example.age.testing.api.TestSignatures;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
 import retrofit2.mock.Calls;

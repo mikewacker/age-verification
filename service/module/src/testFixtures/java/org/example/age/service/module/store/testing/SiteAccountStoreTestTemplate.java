@@ -1,7 +1,7 @@
 package org.example.age.service.module.store.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
+import static org.example.age.testing.util.WebStageTesting.await;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -11,8 +11,8 @@ import java.util.Optional;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.testing.TestModels;
 import org.example.age.service.module.store.SiteVerificationStore;
+import org.example.age.testing.api.TestModels;
 import org.junit.jupiter.api.Test;
 
 public abstract class SiteAccountStoreTestTemplate {

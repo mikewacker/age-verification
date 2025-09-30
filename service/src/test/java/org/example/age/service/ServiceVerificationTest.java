@@ -1,7 +1,7 @@
 package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
+import static org.example.age.testing.util.WebStageTesting.await;
 
 import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
@@ -13,11 +13,11 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.VerificationStatus;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.testing.WebStageTesting;
 import org.example.age.service.testing.TestAvsService;
 import org.example.age.service.testing.TestAvsServiceComponent;
 import org.example.age.service.testing.TestSiteService;
 import org.example.age.service.testing.TestSiteServiceComponent;
+import org.example.age.testing.util.WebStageTesting;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
 

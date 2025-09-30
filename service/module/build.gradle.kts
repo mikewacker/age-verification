@@ -11,8 +11,7 @@ dependencies {
     testFixturesApi(project(":api"))
     testFixturesApi(libs.bundles.retrofit)
     testFixturesApi(libs.junitJupiter.api)
-    testFixturesImplementation(testFixtures(project(":common")))
-    testFixturesImplementation(testFixtures(project(":api")))
+    testFixturesImplementation(project(":testing"))
     testFixturesImplementation(libs.bundles.jaxRs)
     testFixturesImplementation(libs.assertj.core)
 }

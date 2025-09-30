@@ -2,8 +2,8 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.common.testing.WebStageTesting.await;
-import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.util.WebStageTesting.await;
+import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
 
 import jakarta.ws.rs.NotFoundException;
 import java.time.Duration;
@@ -19,9 +19,9 @@ import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.api.testing.TestSignatures;
 import org.example.age.service.testing.TestAvsService;
 import org.example.age.service.testing.TestAvsServiceComponent;
+import org.example.age.testing.api.TestSignatures;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
 import retrofit2.Response;

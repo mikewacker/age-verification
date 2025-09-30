@@ -9,7 +9,7 @@ import java.security.KeyPairGenerator;
 import java.security.Signature;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
-import org.example.age.common.testing.JsonTesting;
+import org.example.age.testing.util.JsonTesting;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

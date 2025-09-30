@@ -1,18 +1,18 @@
 package org.example.age.module.store.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
+import static org.example.age.testing.util.WebStageTesting.await;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.testing.TestModels;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;
 import org.example.age.service.module.store.testing.SiteAccountStoreTestTemplate;
+import org.example.age.testing.api.TestModels;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;

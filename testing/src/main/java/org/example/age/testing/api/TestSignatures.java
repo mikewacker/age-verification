@@ -1,4 +1,4 @@
-package org.example.age.api.testing;
+package org.example.age.testing.api;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -11,7 +11,7 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.common.testing.TestObjectMapper;
+import org.example.age.testing.util.TestObjectMapper;
 
 /** Test utilities for signing and verifying age certificates. Uses a singleton key pair. */
 public final class TestSignatures {

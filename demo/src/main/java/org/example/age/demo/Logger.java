@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.errorprone.annotations.FormatMethod;
 import java.io.IOException;
-import org.example.age.common.testing.TestObjectMapper;
+import org.example.age.testing.util.TestObjectMapper;
 
 /** Console logger. */
 public class Logger {

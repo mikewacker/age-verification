@@ -14,13 +14,13 @@ dependencies {
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(libs.junitJupiter.api)
-    testFixturesImplementation(testFixtures(project(":common")))
+    testFixturesImplementation(project(":testing"))
     testFixturesImplementation(libs.bundles.dagger)
     testFixturesImplementation(libs.bundles.json)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
-    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":testing"))
     testImplementation(libs.bundles.dropwizard)
     testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)

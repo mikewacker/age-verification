@@ -38,7 +38,7 @@ dependencies {
     // Dagger component
     testFixturesImplementation(project(":service:module"))
 
-    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":testing"))
     testImplementation(testFixtures(project(":module:store-redis")))
     testImplementation(testFixtures(project(":module:store-dynamodb")))
     testImplementation(libs.bundles.retrofit)

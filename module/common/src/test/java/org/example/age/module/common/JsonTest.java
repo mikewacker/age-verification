@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.module.common.testing.TestLiteEnvModule;
+import org.example.age.testing.env.TestLiteEnvModule;
 import org.junit.jupiter.api.Test;
 
 public final class JsonTest {

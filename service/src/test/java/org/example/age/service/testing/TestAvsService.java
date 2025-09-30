@@ -7,8 +7,8 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.api.AvsApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.testing.WebStageTesting;
 import org.example.age.module.request.test.TestAccountId;
+import org.example.age.testing.util.WebStageTesting;
 
 /**
  * Decorator for {@link AvsApi} that converts uncaught exceptions to failed futures.

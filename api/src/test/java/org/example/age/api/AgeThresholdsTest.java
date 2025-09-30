@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.IOException;
 import java.util.List;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.testing.JsonTesting;
+import org.example.age.testing.util.JsonTesting;
 import org.junit.jupiter.api.Test;
 
 public final class AgeThresholdsTest {

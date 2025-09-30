@@ -1,8 +1,8 @@
 package org.example.age.module.client.testing;
 
-import org.example.age.common.testing.TestClient;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.client.SiteClientsConfig;
+import org.example.age.testing.util.TestClient;
 
 /** Configuration for testing. */
 public class TestConfig {

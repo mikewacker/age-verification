@@ -1,4 +1,4 @@
-package org.example.age.common.testing;
+package org.example.age.testing.util;
 
 import static org.assertj.core.api.Assertions.fail;
 
