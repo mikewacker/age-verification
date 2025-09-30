@@ -20,4 +20,6 @@ include(
         // app
         "app",
         "demo",
+
+        "testing",
 )

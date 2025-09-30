@@ -1,6 +1,6 @@
 package org.example.age.module.store.redis.testing;
 
-import org.example.age.api.testing.TestModels;
+import org.example.age.testing.api.TestModels;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

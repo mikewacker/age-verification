@@ -8,8 +8,8 @@ import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.SiteApi;
 import org.example.age.api.VerificationRequest;
 import org.example.age.api.VerificationState;
-import org.example.age.common.testing.WebStageTesting;
 import org.example.age.module.request.test.TestAccountId;
+import org.example.age.testing.util.WebStageTesting;
 
 /**
  * Decorator for {@link SiteApi} that converts uncaught exceptions to failed futures.

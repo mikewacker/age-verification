@@ -1,9 +1,9 @@
 package org.example.age.module.store.redis.testing;
 
 import org.example.age.api.VerifiedUser;
-import org.example.age.common.testing.TestClient;
-import org.example.age.common.testing.TestObjectMapper;
 import org.example.age.module.common.testing.BaseTestContainer;
+import org.example.age.testing.util.TestClient;
+import org.example.age.testing.util.TestObjectMapper;
 import redis.clients.jedis.JedisPooled;
 
 /** Test container for Redis that has been cleaned. */

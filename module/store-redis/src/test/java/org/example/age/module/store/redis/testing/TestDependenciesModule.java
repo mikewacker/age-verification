@@ -3,8 +3,8 @@ package org.example.age.module.store.redis.testing;
 import dagger.Module;
 import dagger.Provides;
 import org.example.age.module.common.LiteEnv;
-import org.example.age.module.common.testing.TestLiteEnvModule;
 import org.example.age.module.store.redis.client.RedisConfig;
+import org.example.age.testing.env.TestLiteEnvModule;
 
 /**
  * Dagger module that binds...

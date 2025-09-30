@@ -9,8 +9,8 @@ import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.common.testing.TestClient;
 import org.example.age.service.module.request.AccountIdContext;
+import org.example.age.testing.util.TestClient;
 import org.junit.jupiter.api.Test;
 
 public abstract class AccountIdTestTemplate {

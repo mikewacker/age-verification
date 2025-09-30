@@ -18,13 +18,12 @@ dependencies {
 
     testFixturesApi(testFixtures(project(":module:common")))
     testFixturesApi(libs.bundles.dynamoDb)
-    testFixturesImplementation(testFixtures(project(":common")))
+    testFixturesImplementation(project(":testing"))
     testFixturesImplementation(project(":api"))
 
     testAnnotationProcessor(libs.dagger.compiler)
 
-    testImplementation(testFixtures(project(":common")))
-    testImplementation(testFixtures(project(":api")))
+    testImplementation(project(":testing"))
     testImplementation(testFixtures(project(":service:module")))
     testImplementation(testFixtures(project(":module:common")))
 }

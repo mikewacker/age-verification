@@ -13,7 +13,7 @@ import org.example.age.api.VerificationStatus;
 import org.example.age.api.client.AvsApi;
 import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.testing.TestClient;
+import org.example.age.testing.util.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import retrofit2.Response;

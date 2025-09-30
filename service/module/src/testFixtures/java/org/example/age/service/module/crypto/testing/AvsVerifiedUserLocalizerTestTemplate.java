@@ -1,12 +1,12 @@
 package org.example.age.service.module.crypto.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.common.testing.WebStageTesting.await;
-import static org.example.age.common.testing.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.util.WebStageTesting.await;
+import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
 
 import org.example.age.api.VerifiedUser;
-import org.example.age.api.testing.TestModels;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
+import org.example.age.testing.api.TestModels;
 import org.junit.jupiter.api.Test;
 
 public abstract class AvsVerifiedUserLocalizerTestTemplate {

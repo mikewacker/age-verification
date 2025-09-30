@@ -2,7 +2,6 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     id("openapi-java")
-    `java-test-fixtures`
     id("org.example.age.java-conventions")
 }
 
@@ -30,9 +29,7 @@ dependencies {
 
     implementation(project(":common"))
 
-    testFixturesImplementation(testFixtures(project(":common")))
-
-    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":testing"))
     testImplementation(libs.guava.testlib)
 }
 

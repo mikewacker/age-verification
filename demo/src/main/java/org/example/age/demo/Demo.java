@@ -10,9 +10,9 @@ import org.example.age.api.client.SiteApi;
 import org.example.age.api.crypto.SecureId;
 import org.example.age.app.AvsApp;
 import org.example.age.app.SiteApp;
-import org.example.age.common.testing.TestClient;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
+import org.example.age.testing.util.TestClient;
 import retrofit2.Response;
 
 /** Runs the demo. */

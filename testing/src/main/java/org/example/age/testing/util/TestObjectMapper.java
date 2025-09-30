@@ -1,4 +1,4 @@
-package org.example.age.common.testing;
+package org.example.age.testing.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
