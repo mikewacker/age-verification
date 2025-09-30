@@ -51,25 +51,25 @@ public final class BaseTestContainerTest {
         private boolean isClean = false;
         private boolean isClosed = false;
 
-        public boolean isClean() {
+        boolean isClean() {
             return isClean;
         }
 
-        public boolean isClosed() {
+        boolean isClosed() {
             return isClosed;
         }
 
-        public void doOps() {
+        void doOps() {
             checkIsNotClosed();
             isClean = false;
         }
 
-        public void clean() {
+        void clean() {
             checkIsNotClosed();
             isClean = true;
         }
 
-        public void close() {
+        void close() {
             isClosed = true;
         }
 
