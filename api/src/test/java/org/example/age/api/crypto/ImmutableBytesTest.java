@@ -48,13 +48,13 @@ public final class ImmutableBytesTest {
     /** Test implementation of {@link ImmutableBytes}. */
     private static final class TestBytes extends ImmutableBytes {
 
-        public static TestBytes of(byte[] bytes) {
+        static TestBytes of(byte[] bytes) {
             byte[] copiedBytes = Arrays.copyOf(bytes, bytes.length);
             return new TestBytes(copiedBytes);
         }
 
         @JsonCreator
-        public static TestBytes fromString(String text) {
+        static TestBytes fromString(String text) {
             byte[] bytes = bytesFromString(text);
             return new TestBytes(bytes);
         }

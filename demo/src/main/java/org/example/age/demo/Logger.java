@@ -11,7 +11,7 @@ public class Logger {
 
     private static final ObjectWriter writer = TestObjectMapper.get()
             .copy()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
             .writerWithDefaultPrettyPrinter();
     private static boolean isVerbose = false;
 
