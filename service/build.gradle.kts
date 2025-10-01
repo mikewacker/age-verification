@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":common:util"))
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
+    implementation(project(":common:spi"))
     implementation(project(":service:module"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.jaxRs)

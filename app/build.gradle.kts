@@ -17,12 +17,13 @@ dependencies {
     api(libs.bundles.dropwizard)
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
-    implementation(project(":module:request-demo"))
-    implementation(project(":common:env"))
+    implementation(project(":common:provider:request-demo"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.json)
 
     // Dagger component
+    implementation(project(":common:spi"))
+    implementation(project(":common:env"))
     implementation(project(":service:module"))
     implementation(libs.bundles.darc)
     implementation(libs.bundles.dynamoDb)
@@ -38,6 +39,7 @@ dependencies {
     testFixturesImplementation(libs.bundles.retrofit)
 
     // Dagger component
+    testFixturesImplementation(project(":common:spi"))
     testFixturesImplementation(project(":service:module"))
 
     testImplementation(project(":testing"))
