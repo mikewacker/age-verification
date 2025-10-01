@@ -6,17 +6,17 @@ import static org.example.age.testing.util.WebStageTesting.await;
 import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
 import java.util.Optional;
-import org.example.age.api.AvsApi;
-import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.SiteApi;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerificationStatus;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.avs.api.AvsApi;
+import org.example.age.common.api.SignedAgeCertificate;
+import org.example.age.common.api.VerificationRequest;
+import org.example.age.common.api.crypto.SecureId;
 import org.example.age.service.testing.TestAvsService;
 import org.example.age.service.testing.TestAvsServiceComponent;
 import org.example.age.service.testing.TestSiteService;
 import org.example.age.service.testing.TestSiteServiceComponent;
+import org.example.age.site.api.SiteApi;
+import org.example.age.site.api.VerificationState;
+import org.example.age.site.api.VerificationStatus;
 import org.example.age.testing.util.WebStageTesting;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
@@ -26,7 +26,7 @@ public final class ServiceVerificationTest {
     private final TestSiteService siteService = TestSiteServiceComponent.create(new AdaptedAvsClient());
     private final TestAvsService avsService = TestAvsServiceComponent.create(this::getSiteClient);
 
-    private final Map<String, org.example.age.api.client.SiteApi> siteClients =
+    private final Map<String, org.example.age.site.api.client.SiteApi> siteClients =
             Map.of("site1", new AdaptedSiteClient());
 
     @Test
@@ -40,12 +40,12 @@ public final class ServiceVerificationTest {
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
     }
 
-    private org.example.age.api.client.SiteApi getSiteClient(String siteId) {
+    private org.example.age.site.api.client.SiteApi getSiteClient(String siteId) {
         return Optional.ofNullable(siteClients.get(siteId)).orElseThrow(NotFoundException::new);
     }
 
     /** Adapts {@link AvsApi} to the corresponding client interface. */
-    private final class AdaptedAvsClient implements org.example.age.api.client.AvsApi {
+    private final class AdaptedAvsClient implements org.example.age.avs.api.client.AvsApi {
 
         @Override
         public Call<VerificationRequest> createVerificationRequestForSite(String siteId) {
@@ -64,7 +64,7 @@ public final class ServiceVerificationTest {
     }
 
     /** Adapts {@link SiteApi} to the corresponding client interface. */
-    private final class AdaptedSiteClient implements org.example.age.api.client.SiteApi {
+    private final class AdaptedSiteClient implements org.example.age.site.api.client.SiteApi {
 
         @Override
         public Call<VerificationState> getVerificationState() {

@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.security.KeyPair;
-import org.example.age.api.AgeCertificate;
-import org.example.age.api.SignedAgeCertificate;
+import org.example.age.common.api.AgeCertificate;
+import org.example.age.common.api.SignedAgeCertificate;
 import org.junit.jupiter.api.Test;
 
 public final class TestSignaturesTest {

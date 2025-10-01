@@ -7,12 +7,12 @@ import jakarta.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerificationStatus;
-import org.example.age.api.client.SiteApi;
+import org.example.age.common.api.SignedAgeCertificate;
+import org.example.age.common.api.VerificationRequest;
 import org.example.age.service.module.client.SiteClientRepository;
+import org.example.age.site.api.VerificationState;
+import org.example.age.site.api.VerificationStatus;
+import org.example.age.site.api.client.SiteApi;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 
@@ -32,8 +32,8 @@ public abstract class AvsClientTestTemplate {
 
     protected abstract SiteClientRepository siteClients();
 
-    /** Stub service implementation of {@link org.example.age.api.SiteApi}. */
-    public static final class StubSiteService implements org.example.age.api.SiteApi {
+    /** Stub service implementation of {@link org.example.age.site.api.SiteApi}. */
+    public static final class StubSiteService implements org.example.age.site.api.SiteApi {
 
         @Override
         public CompletionStage<VerificationState> getVerificationState() {

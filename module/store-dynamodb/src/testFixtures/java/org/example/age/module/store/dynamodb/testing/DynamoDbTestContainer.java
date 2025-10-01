@@ -3,7 +3,7 @@ package org.example.age.module.store.dynamodb.testing;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.module.common.testing.BaseTestContainer;
 import org.example.age.testing.util.TestClient;
 import org.example.age.testing.util.TestObjectMapper;

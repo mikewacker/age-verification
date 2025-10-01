@@ -12,13 +12,11 @@ import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
-import org.example.age.api.AgeCertificate;
-import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.SiteApi;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerifiedUser;
-import org.example.age.api.client.AvsApi;
+import org.example.age.avs.api.client.AvsApi;
+import org.example.age.common.api.AgeCertificate;
+import org.example.age.common.api.SignedAgeCertificate;
+import org.example.age.common.api.VerificationRequest;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.util.AsyncCalls;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
@@ -26,6 +24,8 @@ import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.store.PendingStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 import org.example.age.service.module.store.SiteVerificationStore;
+import org.example.age.site.api.SiteApi;
+import org.example.age.site.api.VerificationState;
 import retrofit2.Call;
 
 /** Service implementation of {@link SiteApi}. */

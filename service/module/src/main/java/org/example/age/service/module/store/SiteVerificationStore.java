@@ -3,8 +3,8 @@ package org.example.age.service.module.store;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
+import org.example.age.site.api.VerificationState;
 
 /** Persistent store that retrieves the verification state for each account on a site. */
 public interface SiteVerificationStore {

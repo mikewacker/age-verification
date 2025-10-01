@@ -2,7 +2,7 @@ package org.example.age.service.testing;
 
 import java.time.Duration;
 import java.util.Map;
-import org.example.age.api.AgeThresholds;
+import org.example.age.common.api.AgeThresholds;
 import org.example.age.service.AvsServiceConfig;
 import org.example.age.service.SiteServiceConfig;
 

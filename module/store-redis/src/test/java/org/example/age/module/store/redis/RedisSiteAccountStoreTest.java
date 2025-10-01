@@ -7,7 +7,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
 import org.example.age.service.module.store.SiteVerificationStore;

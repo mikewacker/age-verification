@@ -3,11 +3,11 @@ package org.example.age.testing.api;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import org.example.age.api.AgeCertificate;
-import org.example.age.api.AgeRange;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerifiedUser;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.common.api.AgeCertificate;
+import org.example.age.common.api.AgeRange;
+import org.example.age.common.api.VerificationRequest;
+import org.example.age.common.api.VerifiedUser;
+import org.example.age.common.api.crypto.SecureId;
 
 /** Creates model objects for testing. */
 public final class TestModels {

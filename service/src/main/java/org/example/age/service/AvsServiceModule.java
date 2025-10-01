@@ -3,7 +3,7 @@ package org.example.age.service;
 import dagger.Binds;
 import dagger.Module;
 import jakarta.inject.Named;
-import org.example.age.api.AvsApi;
+import org.example.age.avs.api.AvsApi;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;

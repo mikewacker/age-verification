@@ -1,7 +1,7 @@
 package org.example.age.service.module.crypto;
 
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 
 /** Localizes verified users. */
 @FunctionalInterface

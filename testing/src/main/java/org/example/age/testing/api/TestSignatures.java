@@ -7,10 +7,10 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
-import org.example.age.api.AgeCertificate;
-import org.example.age.api.DigitalSignature;
-import org.example.age.api.SignedAgeCertificate;
-import org.example.age.api.crypto.SignatureData;
+import org.example.age.common.api.AgeCertificate;
+import org.example.age.common.api.DigitalSignature;
+import org.example.age.common.api.SignedAgeCertificate;
+import org.example.age.common.api.crypto.SignatureData;
 import org.example.age.testing.util.TestObjectMapper;
 
 /** Test utilities for signing and verifying age certificates. Uses a singleton key pair. */

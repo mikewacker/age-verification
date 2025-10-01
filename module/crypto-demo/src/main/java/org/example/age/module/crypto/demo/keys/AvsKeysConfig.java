@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PrivateKey;
 import java.util.Map;
-import org.example.age.api.AvsApi;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.common.api.crypto.SecureId;
 import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /**
- * Configuration for the keys used by the service implementation of {@link AvsApi}.
+ * Configuration for the keys used by the service implementation of {@code AvsApi}.
  * <p>
  * It suffices to say that a production application should NOT store keys in configuration.
  */

@@ -1,7 +1,7 @@
 package org.example.age.module.crypto.demo.testing;
 
 import java.util.Map;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 

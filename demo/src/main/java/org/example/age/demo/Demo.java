@@ -1,17 +1,17 @@
 package org.example.age.demo;
 
 import java.util.List;
-import org.example.age.api.AgeRange;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerifiedUser;
-import org.example.age.api.client.AvsApi;
-import org.example.age.api.client.SiteApi;
-import org.example.age.api.crypto.SecureId;
 import org.example.age.app.AvsApp;
 import org.example.age.app.SiteApp;
+import org.example.age.avs.api.client.AvsApi;
+import org.example.age.common.api.AgeRange;
+import org.example.age.common.api.VerificationRequest;
+import org.example.age.common.api.VerifiedUser;
+import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
+import org.example.age.site.api.VerificationState;
+import org.example.age.site.api.client.SiteApi;
 import org.example.age.testing.util.TestClient;
 import retrofit2.Response;
 

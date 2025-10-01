@@ -8,7 +8,8 @@ dependencies {
     annotationProcessor(libs.immutables.value)
 
     implementation(project(":common:util"))
-    implementation(project(":api"))
+    implementation(project(":site:api"))
+    implementation(project(":avs:api"))
     implementation(project(":service:module"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.jaxRs)

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.example.age.testing.api.TestModels;
 

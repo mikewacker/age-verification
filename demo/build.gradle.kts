@@ -4,7 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":api"))
+    implementation(project(":site:api"))
+    implementation(project(":avs:api"))
     implementation(project(":app"))
     implementation(project(":testing"))
     implementation(testFixtures(project(":module:store-redis")))

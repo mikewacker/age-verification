@@ -7,7 +7,7 @@ plugins {
 dependencies {
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
-    testFixturesImplementation(project(":api"))
+    testFixturesImplementation(project(":common:api"))
     testFixturesImplementation(project(":service:module"))
     testFixturesImplementation(project(":testing"))
     testFixturesImplementation(libs.bundles.dagger)

@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.VerificationState;
-import org.example.age.api.VerificationStatus;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.service.module.store.SiteVerificationStore;
+import org.example.age.site.api.VerificationState;
+import org.example.age.site.api.VerificationStatus;
 
 /**
  * Fake, in-memory implementation of {@link SiteVerificationStore}.

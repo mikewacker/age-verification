@@ -3,13 +3,12 @@ package org.example.age.service;
 import dagger.Binds;
 import dagger.Module;
 import jakarta.inject.Named;
-import org.example.age.api.SiteApi;
-import org.example.age.api.client.AvsApi;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
 import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.store.PendingStoreRepository;
 import org.example.age.service.module.store.SiteVerificationStore;
+import org.example.age.site.api.SiteApi;
 
 /**
  * Dagger module that binds <code>@Named("service") {@link SiteApi}</code>.

@@ -9,7 +9,7 @@ dependencies {
     annotationProcessor(libs.immutables.value)
 
     implementation(project(":common:util"))
-    implementation(project(":api"))
+    implementation(project(":common:api"))
     implementation(project(":service:module"))
     implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
@@ -18,8 +18,8 @@ dependencies {
 
     testFixturesApi(testFixtures(project(":module:common")))
     testFixturesApi(libs.bundles.dynamoDb)
+    testFixturesImplementation(project(":common:api"))
     testFixturesImplementation(project(":testing"))
-    testFixturesImplementation(project(":api"))
 
     testAnnotationProcessor(libs.dagger.compiler)
 
