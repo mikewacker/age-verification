@@ -10,7 +10,7 @@ import org.example.age.api.AgeCertificate;
 import org.example.age.api.DigitalSignature;
 import org.example.age.api.SignedAgeCertificate;
 import org.example.age.api.crypto.SignatureData;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.LiteEnv;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 

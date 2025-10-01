@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.Map;
 import org.example.age.api.AgeThresholds;
 import org.example.age.api.AvsApi;
-import org.example.age.common.ValueStyle;
+import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link AvsApi}. */

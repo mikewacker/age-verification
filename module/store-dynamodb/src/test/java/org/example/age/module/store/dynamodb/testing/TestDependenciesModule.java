@@ -2,7 +2,7 @@ package org.example.age.module.store.dynamodb.testing;
 
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.LiteEnv;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.testing.env.TestLiteEnvModule;
 

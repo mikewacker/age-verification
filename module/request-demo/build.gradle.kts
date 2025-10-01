@@ -7,7 +7,7 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
 
     implementation(project(":service:module"))
-    implementation(project(":module:common"))
+    implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.darc)
     implementation(libs.bundles.jaxRs)

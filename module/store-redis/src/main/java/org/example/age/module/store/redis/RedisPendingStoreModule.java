@@ -2,8 +2,8 @@ package org.example.age.module.store.redis;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.module.common.CommonModule;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.EnvModule;
+import org.example.age.common.env.LiteEnv;
 import org.example.age.module.store.redis.client.RedisClientModule;
 import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.module.store.PendingStoreRepository;
@@ -17,7 +17,7 @@ import org.example.age.service.module.store.PendingStoreRepository;
  *     <li>{@link LiteEnv}
  * </ul>
  */
-@Module(includes = {RedisClientModule.class, CommonModule.class})
+@Module(includes = {RedisClientModule.class, EnvModule.class})
 public interface RedisPendingStoreModule {
 
     @Binds

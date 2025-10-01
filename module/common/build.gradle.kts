@@ -5,12 +5,6 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
-
-    api(libs.bundles.json)
-    implementation(libs.bundles.dagger)
-    implementation(libs.bundles.dropwizard)
-
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(libs.junitJupiter.api)

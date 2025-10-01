@@ -2,7 +2,7 @@ package org.example.age.module.crypto.demo.testing;
 
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.LiteEnv;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.testing.env.TestLiteEnvModule;

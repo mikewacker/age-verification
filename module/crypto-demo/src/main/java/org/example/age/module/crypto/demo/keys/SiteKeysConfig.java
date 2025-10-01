@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PublicKey;
 import org.example.age.api.SiteApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.ValueStyle;
+import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /**

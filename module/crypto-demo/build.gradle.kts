@@ -7,10 +7,10 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
     annotationProcessor(libs.immutables.value)
 
-    implementation(project(":common"))
+    implementation(project(":common:util"))
     implementation(project(":api"))
     implementation(project(":service:module"))
-    implementation(project(":module:common"))
+    implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.jaxRs)
     implementation(libs.bundles.json)

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 import java.net.URI;
-import org.example.age.common.ValueStyle;
+import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 import software.amazon.awssdk.regions.Region;
 

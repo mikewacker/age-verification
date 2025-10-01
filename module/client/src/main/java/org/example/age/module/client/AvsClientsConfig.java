@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.Map;
 import org.example.age.api.AvsApi;
 import org.example.age.api.client.SiteApi;
-import org.example.age.common.ValueStyle;
+import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the clients used by the service implementation of {@link AvsApi}. */

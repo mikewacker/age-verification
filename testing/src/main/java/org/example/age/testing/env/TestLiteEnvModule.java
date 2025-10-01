@@ -2,7 +2,7 @@ package org.example.age.testing.env;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.LiteEnv;
 
 /**
  * Dagger module that binds {@link LiteEnv}.

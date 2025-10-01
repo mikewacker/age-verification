@@ -27,7 +27,7 @@ openApiJava {
 dependencies {
     annotationProcessor(libs.immutables.value)
 
-    implementation(project(":common"))
+    implementation(project(":common:util"))
 
     testImplementation(project(":testing"))
     testImplementation(libs.guava.testlib)
