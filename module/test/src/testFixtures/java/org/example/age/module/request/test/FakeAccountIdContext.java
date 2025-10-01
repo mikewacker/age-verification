@@ -3,7 +3,7 @@ package org.example.age.module.request.test;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
-import org.example.age.service.module.request.AccountIdContext;
+import org.example.age.common.spi.request.AccountIdContext;
 
 /** Fake implementation of {@link AccountIdContext}. The account ID is set via {@link TestAccountId}. */
 @Singleton

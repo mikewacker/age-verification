@@ -7,14 +7,17 @@ include(
     "site:api",
     "avs:api",
 
+    "common:spi",
+    "common:spi-testing",
     "service:module",
-
-    "common:env",
 
     "service",
 
+    "common:env",
+
+    "common:provider:request-demo",
+
     "module:common",
-    "module:request-demo",
     "module:client",
     "module:store-redis",
     "module:store-dynamodb",

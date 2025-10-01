@@ -4,10 +4,10 @@ import dagger.Binds;
 import dagger.Module;
 import jakarta.inject.Named;
 import org.example.age.avs.api.AvsApi;
+import org.example.age.common.spi.request.AccountIdContext;
 import org.example.age.service.module.client.SiteClientRepository;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
-import org.example.age.service.module.request.AccountIdContext;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.example.age.service.module.store.PendingStoreRepository;
 

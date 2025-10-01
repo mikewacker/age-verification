@@ -7,7 +7,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.function.Supplier;
-import org.example.age.service.module.request.AccountIdContext;
+import org.example.age.common.spi.request.AccountIdContext;
 import org.junit.jupiter.api.Test;
 
 public final class TestAccountIdTest {
