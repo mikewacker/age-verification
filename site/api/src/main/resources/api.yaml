@@ -1,0 +1,86 @@
+openapi: 3.0.0
+
+info:
+  title: "Age Verification API: Site"
+  version: 1.0.0
+
+tags:
+  - name: site
+    description: Site verifying its accounts.
+
+paths:
+  /verification-state:
+    get:
+      tags: [site]
+      description: Gets the verification state for the account.
+      operationId: getVerificationState
+      responses:
+        '200':
+          description: Verification state for the account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationState'
+
+  /verification-request/create:
+    post:
+      tags: [site]
+      description: Creates a verification request for the account.
+      operationId: createVerificationRequest
+      responses:
+        '200':
+          description: Verification request for the account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationRequest'
+
+  /age-certificate/process:
+    post:
+      tags: [site]
+      description: Processes an age certificate from the age verification service.
+      operationId: processAgeCertificate
+      requestBody:
+        description: Signed age certificate to process.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignedAgeCertificate'
+        required: true
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    VerificationState:
+      description: Current state of an account for age verification.
+      type: object
+      properties:
+        status:
+          description: Verification status.
+          $ref: '#/components/schemas/VerificationStatus'
+        user:
+          description: Verified user if the account is verified.
+          $ref: '#/components/schemas/VerifiedUser'
+        expiration:
+          description: Time when an account's verified status expired or will expire.
+          type: string
+          format: date-time
+      required: [status]
+
+    VerificationStatus:
+      description: Verification status of an account.
+      type: string
+      enum: [unverified, verified, expired]
+
+    # placeholders for schema mappings
+    SignedAgeCertificate:
+      type: object
+      properties:
+        workaround: # see: https://github.com/OpenAPITools/openapi-generator/issues/13987
+          type: string
+    VerificationRequest:
+      type: object
+    VerifiedUser:
+      type: object

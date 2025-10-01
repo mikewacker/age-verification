@@ -65,9 +65,8 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     )
 
     // Generate only the apis and models. Don't generate the invokers or other supporting files.
-    val apiPackageName = extension.packageName.map { "$it.api" }
-    apiPackage = apiPackageName
-    modelPackage = apiPackageName
+    apiPackage = extension.packageName
+    modelPackage = extension.packageName
     globalProperties = mapOf(
         "apis" to "",
         "models" to "",
@@ -100,7 +99,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     inputSpec = extension.inputSpecPath
     schemaMappings = provider {
         val packageName = extension.packageName.get()
-        extension.dedupSchemas.get().associateWith { "$packageName.api.$it" } + extension.schemaMappings.get()
+        extension.dedupSchemas.get().associateWith { "$packageName.$it" } + extension.schemaMappings.get()
     }
     outputDir = buildDirPath(outputDirPath)
 
@@ -111,7 +110,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     )
 
     // Generate only the apis and models (and a few invoker sources that are referenced). Don't generate test.
-    val clientPackageName = extension.packageName.map { "$it.api.client" }
+    val clientPackageName = extension.packageName.map { "$it.client" }
     apiPackage = clientPackageName
     modelPackage = clientPackageName
     invokerPackage = clientPackageName.map { "$it.util" }

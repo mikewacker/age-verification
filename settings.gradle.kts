@@ -2,14 +2,17 @@ rootProject.name = "age-verification"
 
 include(
         "common:util",
-    "common:env",
 
-    // interfaces
-    "api",
+    "common:api",
+    "site:api",
+    "avs:api",
+
     "service:module",
 
-    // implementations
+    "common:env",
+
     "service",
+
     "module:common",
     "module:request-demo",
     "module:client",
@@ -18,9 +21,9 @@ include(
     "module:crypto-demo",
     "module:test",
 
-    // app
     "app",
-    "demo",
 
     "testing",
+
+    "demo",
 )
