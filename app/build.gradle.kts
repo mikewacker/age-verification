@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    `java-test-fixtures`
     id("org.example.age.java-conventions")
 }
 
@@ -28,19 +27,6 @@ dependencies {
     implementation(libs.bundles.darc)
     implementation(libs.bundles.dynamoDb)
     implementation(libs.bundles.redis)
-
-    testFixturesAnnotationProcessor(libs.dagger.compiler)
-
-    testFixturesApi(libs.bundles.dropwizard)
-    testFixturesImplementation(project(":site:api"))
-    testFixturesImplementation(project(":avs:api"))
-    testFixturesImplementation(testFixtures(project(":module:test")))
-    testFixturesImplementation(libs.bundles.dagger)
-    testFixturesImplementation(libs.bundles.retrofit)
-
-    // Dagger component
-    testFixturesImplementation(project(":common:spi"))
-    testFixturesImplementation(project(":service:module"))
 
     testImplementation(project(":testing"))
     testImplementation(testFixtures(project(":module:store-redis")))
