@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URL;
 import java.util.Map;
-import org.example.age.api.AvsApi;
-import org.example.age.api.client.SiteApi;
+import org.example.age.avs.api.AvsApi;
 import org.example.age.common.util.ValueStyle;
+import org.example.age.site.api.client.SiteApi;
 import org.immutables.value.Value;
 
 /** Configuration for the clients used by the service implementation of {@link AvsApi}. */

@@ -7,7 +7,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.service.module.store.SiteVerificationStore;
 import org.example.age.service.module.store.testing.SiteAccountStoreTestTemplate;
 import org.example.age.testing.api.TestModels;

@@ -15,7 +15,8 @@ dependencies {
     api(project(":module:crypto-demo"))
 
     api(libs.bundles.dropwizard)
-    implementation(project(":api"))
+    implementation(project(":site:api"))
+    implementation(project(":avs:api"))
     implementation(project(":module:request-demo"))
     implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
@@ -30,7 +31,8 @@ dependencies {
     testFixturesAnnotationProcessor(libs.dagger.compiler)
 
     testFixturesApi(libs.bundles.dropwizard)
-    testFixturesImplementation(project(":service"))
+    testFixturesImplementation(project(":site:api"))
+    testFixturesImplementation(project(":avs:api"))
     testFixturesImplementation(testFixtures(project(":module:test")))
     testFixturesImplementation(libs.bundles.dagger)
     testFixturesImplementation(libs.bundles.retrofit)

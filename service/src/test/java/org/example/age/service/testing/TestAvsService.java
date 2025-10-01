@@ -4,9 +4,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.AvsApi;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.avs.api.AvsApi;
+import org.example.age.common.api.VerificationRequest;
+import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.request.test.TestAccountId;
 import org.example.age.testing.util.WebStageTesting;
 

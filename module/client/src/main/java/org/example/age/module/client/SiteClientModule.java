@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import org.example.age.api.client.AvsApi;
+import org.example.age.avs.api.client.AvsApi;
 import org.example.age.common.env.EnvModule;
 import org.example.age.common.env.LiteEnv;
 

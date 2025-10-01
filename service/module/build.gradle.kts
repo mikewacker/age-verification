@@ -5,10 +5,11 @@ plugins {
 }
 
 dependencies {
-    api(project(":api"))
+    api(project(":site:api"))
     implementation(libs.jaxRs.api)
 
-    testFixturesApi(project(":api"))
+    testFixturesApi(project(":site:api"))
+    testFixturesApi(project(":avs:api"))
     testFixturesApi(libs.bundles.retrofit)
     testFixturesApi(libs.junitJupiter.api)
     testFixturesImplementation(project(":testing"))

@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":api"))
+    api(project(":common:api"))
     api(project(":common:env"))
     api(libs.bundles.json)
     api(libs.bundles.retrofit)

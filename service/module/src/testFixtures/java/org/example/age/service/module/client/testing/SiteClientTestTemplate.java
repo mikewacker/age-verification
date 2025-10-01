@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.VerificationRequest;
-import org.example.age.api.client.AvsApi;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.avs.api.client.AvsApi;
+import org.example.age.common.api.VerificationRequest;
+import org.example.age.common.api.crypto.SecureId;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 
@@ -21,8 +21,8 @@ public abstract class SiteClientTestTemplate {
 
     protected abstract AvsApi avsClient();
 
-    /** Stub service implementation of {@link org.example.age.api.AvsApi}. */
-    public static final class StubAvsService implements org.example.age.api.AvsApi {
+    /** Stub service implementation of {@link org.example.age.avs.api.AvsApi}. */
+    public static final class StubAvsService implements org.example.age.avs.api.AvsApi {
 
         @Override
         public CompletionStage<VerificationRequest> createVerificationRequestForSite(String siteId) {

@@ -6,9 +6,9 @@ import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.api.VerifiedUser;
-import org.example.age.api.crypto.Localization;
-import org.example.age.api.crypto.SecureId;
+import org.example.age.common.api.VerifiedUser;
+import org.example.age.common.api.crypto.Localization;
+import org.example.age.common.api.crypto.SecureId;
 import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
 
 /** Fake implementation of {@link AvsVerifiedUserLocalizer}. It has two sites with IDs of "site1" and "site2". */

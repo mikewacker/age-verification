@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.util.WebStageTesting.await;
 
 import java.util.Optional;
-import org.example.age.api.VerifiedUser;
+import org.example.age.common.api.VerifiedUser;
 import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.junit.jupiter.api.Test;
 

@@ -7,7 +7,7 @@ import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import org.example.age.api.client.AvsApi;
+import org.example.age.avs.api.client.AvsApi;
 import org.example.age.module.client.testing.TestDependenciesModule;
 import org.example.age.service.module.client.testing.SiteClientTestTemplate;
 import org.junit.jupiter.api.extension.RegisterExtension;

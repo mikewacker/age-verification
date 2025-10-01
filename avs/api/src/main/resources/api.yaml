@@ -1,0 +1,63 @@
+openapi: 3.0.0
+
+info:
+  title: "Age Verification API: Age Verification Service"
+  version: 1.0.0
+
+tags:
+  - name: avs
+    description: Third-party age verification service.
+
+paths:
+  /site/{siteId}/verification-request/create:
+    post:
+      tags: [avs]
+      description: Creates a verification request for the site.
+      operationId: createVerificationRequestForSite
+      parameters:
+        - name: siteId
+          description: ID of the site.
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Verification request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationRequest'
+
+  /verification-request/{requestId}/link:
+    post:
+      tags: [avs]
+      description: Links the verification request to the person.
+      operationId: linkVerificationRequest
+      parameters:
+        - name: requestId
+          description: ID of the verification request.
+          in: path
+          schema:
+            $ref: '#/components/schemas/SecureId'
+          required: true
+      responses:
+        '200':
+          description: OK
+
+  /age-certificate/send:
+    post:
+      description: Sends an age certificate for the person, using the linked verification request.
+      tags: [avs]
+      operationId: sendAgeCertificate
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    # placeholders for schema mappings
+    VerificationRequest:
+      type: object
+    SecureId:
+      type: string
