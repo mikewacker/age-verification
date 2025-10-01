@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import org.example.age.api.SiteApi;
-import org.example.age.common.ValueStyle;
+import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link SiteApi}. */

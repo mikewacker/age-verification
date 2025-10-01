@@ -7,7 +7,7 @@ import java.security.PrivateKey;
 import java.util.Map;
 import org.example.age.api.AvsApi;
 import org.example.age.api.crypto.SecureId;
-import org.example.age.common.ValueStyle;
+import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /**

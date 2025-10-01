@@ -1,25 +1,26 @@
 rootProject.name = "age-verification"
 
 include(
-        "common",
+        "common:util",
+    "common:env",
 
-        // interfaces
-        "api",
-        "service:module",
+    // interfaces
+    "api",
+    "service:module",
 
-        // implementations
-        "service",
-        "module:common",
-        "module:request-demo",
-        "module:client",
-        "module:store-redis",
-        "module:store-dynamodb",
-        "module:crypto-demo",
-        "module:test",
+    // implementations
+    "service",
+    "module:common",
+    "module:request-demo",
+    "module:client",
+    "module:store-redis",
+    "module:store-dynamodb",
+    "module:crypto-demo",
+    "module:test",
 
-        // app
-        "app",
-        "demo",
+    // app
+    "app",
+    "demo",
 
-        "testing",
+    "testing",
 )

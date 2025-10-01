@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.LiteEnv;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;

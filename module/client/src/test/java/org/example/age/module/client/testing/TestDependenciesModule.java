@@ -2,9 +2,9 @@ package org.example.age.module.client.testing;
 
 import dagger.Module;
 import dagger.Provides;
+import org.example.age.common.env.LiteEnv;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.client.SiteClientsConfig;
-import org.example.age.module.common.LiteEnv;
 import org.example.age.testing.env.TestLiteEnvModule;
 
 /**

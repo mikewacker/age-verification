@@ -17,7 +17,7 @@ dependencies {
     api(libs.bundles.dropwizard)
     implementation(project(":api"))
     implementation(project(":module:request-demo"))
-    implementation(project(":module:common"))
+    implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.json)
 

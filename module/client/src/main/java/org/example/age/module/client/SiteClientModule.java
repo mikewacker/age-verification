@@ -5,8 +5,8 @@ import dagger.Provides;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.example.age.api.client.AvsApi;
-import org.example.age.module.common.CommonModule;
-import org.example.age.module.common.LiteEnv;
+import org.example.age.common.env.EnvModule;
+import org.example.age.common.env.LiteEnv;
 
 /**
  * Dagger module that binds <code>@Named("client") {@link AvsApi}</code>.
@@ -17,7 +17,7 @@ import org.example.age.module.common.LiteEnv;
  *     <li>{@link LiteEnv}.
  * </ul>
  */
-@Module(includes = CommonModule.class)
+@Module(includes = EnvModule.class)
 public interface SiteClientModule {
 
     @Provides
