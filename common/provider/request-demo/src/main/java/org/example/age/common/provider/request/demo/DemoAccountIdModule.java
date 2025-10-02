@@ -3,7 +3,7 @@ package org.example.age.common.provider.request.demo;
 import dagger.Binds;
 import dagger.Module;
 import io.github.mikewacker.darc.RequestContextModule;
-import org.example.age.common.spi.request.AccountIdContext;
+import org.example.age.common.spi.AccountIdContext;
 
 /**
  * Dagger module that binds {@link AccountIdContext}.

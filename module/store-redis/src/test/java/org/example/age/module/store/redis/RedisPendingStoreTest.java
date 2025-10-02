@@ -6,11 +6,11 @@ import static org.example.age.testing.util.WebStageTesting.await;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
+import org.example.age.common.spi.PendingStore;
+import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.module.store.redis.testing.TestDependenciesModule;
-import org.example.age.service.module.store.PendingStore;
-import org.example.age.service.module.store.PendingStoreRepository;
-import org.example.age.service.module.store.testing.PendingStoreTestTemplate;
+import org.example.age.testing.common.spi.PendingStoreTestTemplate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;
@@ -24,7 +24,7 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
     @Test
     public void redisKeys() {
-        await(store().put("key-redis", 1, expiration()));
+        await(store().put("key-redis", 1, expiresIn()));
 
         JedisPooled client = redis.getClient();
         String value = client.get("age:pending:name:key-redis");

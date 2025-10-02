@@ -10,6 +10,7 @@ dependencies {
 
     implementation(project(":common:util"))
     implementation(project(":common:api"))
+    implementation(project(":common:spi"))
     implementation(project(":service:module"))
     implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
@@ -24,6 +25,7 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
+    testImplementation(project(":common:spi-testing"))
     testImplementation(testFixtures(project(":service:module")))
     testImplementation(testFixtures(project(":module:common")))
 }

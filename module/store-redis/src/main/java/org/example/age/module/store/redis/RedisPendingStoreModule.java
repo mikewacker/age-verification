@@ -4,9 +4,9 @@ import dagger.Binds;
 import dagger.Module;
 import org.example.age.common.env.EnvModule;
 import org.example.age.common.env.LiteEnv;
+import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.module.store.redis.client.RedisClientModule;
 import org.example.age.module.store.redis.client.RedisConfig;
-import org.example.age.service.module.store.PendingStoreRepository;
 
 /**
  * Dagger module that binds {@link PendingStoreRepository}.

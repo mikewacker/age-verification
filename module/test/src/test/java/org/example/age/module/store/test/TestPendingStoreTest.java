@@ -3,9 +3,9 @@ package org.example.age.module.store.test;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.service.module.store.PendingStore;
-import org.example.age.service.module.store.PendingStoreRepository;
-import org.example.age.service.module.store.testing.PendingStoreTestTemplate;
+import org.example.age.common.spi.PendingStore;
+import org.example.age.common.spi.PendingStoreRepository;
+import org.example.age.testing.common.spi.PendingStoreTestTemplate;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

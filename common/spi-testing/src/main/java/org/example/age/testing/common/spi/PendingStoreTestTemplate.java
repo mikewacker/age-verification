@@ -1,4 +1,4 @@
-package org.example.age.service.module.store.testing;
+package org.example.age.testing.common.spi;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.util.WebStageTesting.await;
@@ -8,21 +8,21 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-import org.example.age.service.module.store.PendingStore;
+import org.example.age.common.spi.PendingStore;
 import org.junit.jupiter.api.Test;
 
 public abstract class PendingStoreTestTemplate {
 
     @Test
     public void putThenGet() {
-        await(store().put("key1", 1, expiration()));
+        await(store().put("key1", 1, expiresIn()));
         Optional<Integer> maybeValue = await(store().tryGet("key1"));
         assertThat(maybeValue).hasValue(1);
     }
 
     @Test
     public void putThenRemoveThenGet() {
-        await(store().put("key2", 1, expiration()));
+        await(store().put("key2", 1, expiresIn()));
         Optional<Integer> maybeValue1 = await(store().tryRemove("key2"));
         assertThat(maybeValue1).hasValue(1);
         Optional<Integer> maybeValue2 = await(store().tryGet("key2"));
@@ -44,7 +44,7 @@ public abstract class PendingStoreTestTemplate {
         assertThat(maybeValue).isEmpty();
     }
 
-    protected static OffsetDateTime expiration() {
+    protected static OffsetDateTime expiresIn() {
         return expiresIn(Duration.ofMinutes(5));
     }
 
