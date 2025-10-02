@@ -5,7 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
-import org.example.age.common.spi.request.AccountIdContext;
+import org.example.age.common.spi.AccountIdContext;
 
 /**
  * Implementation of {@link AccountIdContext}.

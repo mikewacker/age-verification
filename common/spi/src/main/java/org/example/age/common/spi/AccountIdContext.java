@@ -1,4 +1,4 @@
-package org.example.age.common.spi.request;
+package org.example.age.common.spi;
 
 /**
  * Gets the account ID from the HTTP request, or throws {@code NotAuthorizedException}.

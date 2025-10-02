@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
-import org.example.age.service.module.store.PendingStore;
-import org.example.age.service.module.store.PendingStoreRepository;
+import org.example.age.common.spi.PendingStore;
+import org.example.age.common.spi.PendingStoreRepository;
 import redis.clients.jedis.JedisPooled;
 
 /** Implementation of {@link PendingStoreRepository} that is backed by Redis. */

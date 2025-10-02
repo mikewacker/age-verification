@@ -18,6 +18,7 @@ dependencies {
 
     testImplementation(project(":testing"))
     testImplementation(project(":common:spi"))
+    testImplementation(project(":common:spi-testing"))
     testImplementation(testFixtures(project(":service:module")))
     testImplementation(libs.bundles.dagger)
     testImplementation(libs.bundles.jaxRs)

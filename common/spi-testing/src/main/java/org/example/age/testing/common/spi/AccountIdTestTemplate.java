@@ -1,4 +1,4 @@
-package org.example.age.testing.common.spi.request;
+package org.example.age.testing.common.spi;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.example.age.common.spi.request.AccountIdContext;
+import org.example.age.common.spi.AccountIdContext;
 import org.example.age.testing.util.TestClient;
 import org.junit.jupiter.api.Test;
 

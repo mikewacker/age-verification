@@ -2,7 +2,7 @@ package org.example.age.module.store.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.module.store.PendingStoreRepository;
+import org.example.age.common.spi.PendingStoreRepository;
 
 /**
  * Dagger module that binds {@link PendingStoreRepository}.

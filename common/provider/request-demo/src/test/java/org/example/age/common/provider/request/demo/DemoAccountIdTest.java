@@ -10,8 +10,8 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import okhttp3.Request;
-import org.example.age.common.spi.request.AccountIdContext;
-import org.example.age.testing.common.spi.request.AccountIdTestTemplate;
+import org.example.age.common.spi.AccountIdContext;
+import org.example.age.testing.common.spi.AccountIdTestTemplate;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public final class DemoAccountIdTest extends AccountIdTestTemplate {

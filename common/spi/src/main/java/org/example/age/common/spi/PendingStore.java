@@ -1,4 +1,4 @@
-package org.example.age.service.module.store;
+package org.example.age.common.spi;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;

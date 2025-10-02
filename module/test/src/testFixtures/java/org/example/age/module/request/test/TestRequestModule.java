@@ -2,7 +2,7 @@ package org.example.age.module.request.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.spi.request.AccountIdContext;
+import org.example.age.common.spi.AccountIdContext;
 
 /**
  * Dagger modules that binds {@link AccountIdContext}.

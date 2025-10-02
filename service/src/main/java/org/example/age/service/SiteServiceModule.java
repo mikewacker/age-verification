@@ -3,10 +3,10 @@ package org.example.age.service;
 import dagger.Binds;
 import dagger.Module;
 import jakarta.inject.Named;
-import org.example.age.common.spi.request.AccountIdContext;
+import org.example.age.common.spi.AccountIdContext;
+import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
-import org.example.age.service.module.store.PendingStoreRepository;
 import org.example.age.service.module.store.SiteVerificationStore;
 import org.example.age.site.api.SiteApi;
 

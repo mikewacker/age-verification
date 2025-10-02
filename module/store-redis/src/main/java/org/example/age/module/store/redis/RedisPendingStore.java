@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
-import org.example.age.service.module.store.PendingStore;
+import org.example.age.common.spi.PendingStore;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;

@@ -1,4 +1,4 @@
-package org.example.age.service.module.store;
+package org.example.age.common.spi;
 
 /** Repository of ephemeral key-value stores. */
 @FunctionalInterface
