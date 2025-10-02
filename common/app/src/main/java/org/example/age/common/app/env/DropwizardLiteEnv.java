@@ -1,4 +1,4 @@
-package org.example.age.common.env;
+package org.example.age.common.app.env;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.core.setup.Environment;
@@ -6,6 +6,7 @@ import io.dropwizard.util.Duration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
+import org.example.age.common.env.LiteEnv;
 
 /** Implementation of {@link LiteEnv} for Dropwizard. */
 @Singleton

@@ -6,10 +6,8 @@ plugins {
 dependencies {
     annotationProcessor(libs.dagger.compiler)
 
-    api(libs.jackson.databind)
+    implementation(project(":common:env"))
     implementation(libs.dagger.dagger)
-
-    testAnnotationProcessor(libs.dagger.compiler)
-
-    testImplementation(project(":testing"))
+    implementation(libs.dropwizard.core)
+    implementation(libs.jackson.databind)
 }

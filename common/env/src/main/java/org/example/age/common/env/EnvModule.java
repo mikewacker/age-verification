@@ -13,11 +13,13 @@ import dagger.Module;
  * Depends on an unbound {@link LiteEnv}.
  */
 @Module
-public interface EnvModule {
+public abstract class EnvModule {
 
     @Binds
-    JsonMapper bindJsonMapper(JsonMapperImpl impl);
+    abstract JsonMapper bindJsonMapper(JsonMapperImpl impl);
 
     @Binds
-    Worker bindWorker(WorkerImpl impl);
+    abstract Worker bindWorker(WorkerImpl impl);
+
+    EnvModule() {}
 }

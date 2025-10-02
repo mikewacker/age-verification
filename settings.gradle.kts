@@ -24,6 +24,7 @@ include(
     "module:crypto-demo",
     "module:test",
 
+    "common:app",
     "app",
 
     "testing",
