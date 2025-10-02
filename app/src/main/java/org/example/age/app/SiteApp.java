@@ -8,7 +8,7 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.example.age.app.config.SiteAppConfig;
 import org.example.age.app.config.SiteConfigModule;
-import org.example.age.common.env.LiteEnvModule;
+import org.example.age.common.app.env.DropwizardEnvModule;
 import org.example.age.common.provider.request.demo.DemoAccountIdModule;
 import org.example.age.module.client.SiteClientModule;
 import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
@@ -53,7 +53,7 @@ public final class SiteApp extends Application<SiteAppConfig> {
                 RedisPendingStoreModule.class,
                 DemoSiteCryptoModule.class,
                 SiteConfigModule.class,
-                LiteEnvModule.class,
+                DropwizardEnvModule.class,
             })
     @Singleton
     interface AppComponent {

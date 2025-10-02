@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
     implementation(project(":common:provider:request-demo"))
+    implementation(project(":common:app"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.json)
 

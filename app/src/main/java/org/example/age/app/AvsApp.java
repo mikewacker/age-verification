@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
 import org.example.age.app.config.AvsAppConfig;
 import org.example.age.app.config.AvsConfigModule;
 import org.example.age.avs.api.AvsApi;
-import org.example.age.common.env.LiteEnvModule;
+import org.example.age.common.app.env.DropwizardEnvModule;
 import org.example.age.common.provider.request.demo.DemoAccountIdModule;
 import org.example.age.module.client.AvsClientModule;
 import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
@@ -53,7 +53,7 @@ public class AvsApp extends Application<AvsAppConfig> {
                 RedisPendingStoreModule.class,
                 DemoAvsCryptoModule.class,
                 AvsConfigModule.class,
-                LiteEnvModule.class,
+                DropwizardEnvModule.class,
             })
     @Singleton
     interface AppComponent {
