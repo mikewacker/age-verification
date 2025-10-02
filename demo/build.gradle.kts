@@ -1,6 +1,6 @@
 plugins {
     application
-    id("org.example.age.java-conventions")
+    id("buildlogic.java-conventions")
 }
 
 dependencies {

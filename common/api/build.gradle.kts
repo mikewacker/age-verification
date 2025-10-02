@@ -2,7 +2,7 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     id("openapi-java")
-    id("org.example.age.java-conventions")
+    id("buildlogic.java-conventions")
 }
 
 openApiJava {
