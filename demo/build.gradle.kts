@@ -1,6 +1,7 @@
 plugins {
     application
     id("buildlogic.java-conventions")
+    alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
@@ -16,6 +17,10 @@ dependencies {
 
 application {
     mainClass = "org.example.age.demo.Demo"
+}
+
+dockerCompose {
+    isRequiredBy(tasks.run)
 }
 
 tasks.matching { it.group == "distribution" }.configureEach { enabled = false }

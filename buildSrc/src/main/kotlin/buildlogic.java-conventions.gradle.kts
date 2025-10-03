@@ -33,7 +33,7 @@ java {
 
 spotless {
     java {
-        palantirJavaFormat(libs.versions.plugin.spotless.palantir.get())
+        palantirJavaFormat(libs.versions.plugins.spotless.palantir.get())
     }
 }
 

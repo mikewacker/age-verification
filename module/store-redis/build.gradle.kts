@@ -2,6 +2,7 @@ plugins {
     `java-library`
     `java-test-fixtures`
     id("buildlogic.java-conventions")
+    alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
@@ -26,4 +27,8 @@ dependencies {
     testImplementation(project(":common:spi-testing"))
     testImplementation(testFixtures(project(":service:module")))
     testImplementation(testFixtures(project(":module:common")))
+}
+
+dockerCompose {
+    isRequiredBy(tasks.test)
 }

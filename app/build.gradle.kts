@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
@@ -34,4 +35,8 @@ dependencies {
     testImplementation(testFixtures(project(":module:store-dynamodb")))
     testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)
+}
+
+dockerCompose {
+    isRequiredBy(tasks.test)
 }
