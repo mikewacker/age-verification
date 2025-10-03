@@ -13,7 +13,6 @@ dependencies {
     implementation(project(":common:spi"))
     implementation(project(":service:module"))
     implementation(libs.bundles.dagger)
-    implementation(libs.bundles.jaxRs)
     implementation(libs.bundles.json)
     implementation(libs.bundles.retrofit)
 
