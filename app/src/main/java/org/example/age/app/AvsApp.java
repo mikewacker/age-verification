@@ -20,21 +20,9 @@ import org.example.age.service.AvsServiceModule;
 /** Application for the age verification service. */
 public class AvsApp extends Application<AvsAppConfig> {
 
-    private final String name;
-
-    /** Creates an application. */
-    public AvsApp(String name) {
-        this.name = name;
-    }
-
-    /** Creates an application with the default name. */
-    public AvsApp() {
-        this("avs");
-    }
-
     @Override
     public String getName() {
-        return name;
+        return "avs";
     }
 
     @Override

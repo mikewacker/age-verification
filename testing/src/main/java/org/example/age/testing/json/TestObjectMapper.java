@@ -1,4 +1,4 @@
-package org.example.age.testing.util;
+package org.example.age.testing.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

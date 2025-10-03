@@ -20,21 +20,9 @@ import org.example.age.site.api.SiteApi;
 /** Application for a site. */
 public final class SiteApp extends Application<SiteAppConfig> {
 
-    private final String name;
-
-    /** Creates an application. */
-    public SiteApp(String name) {
-        this.name = name;
-    }
-
-    /** Creates an application with the default name. */
-    public SiteApp() {
-        this("site");
-    }
-
     @Override
     public String getName() {
-        return name;
+        return "site";
     }
 
     @Override

@@ -2,8 +2,8 @@ package org.example.age.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.example.age.testing.util.WebStageTesting.await;
-import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.client.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;

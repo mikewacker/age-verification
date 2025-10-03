@@ -10,7 +10,7 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.spi.AccountIdContext;
-import org.example.age.testing.util.TestClient;
+import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
 
 public abstract class AccountIdTestTemplate {

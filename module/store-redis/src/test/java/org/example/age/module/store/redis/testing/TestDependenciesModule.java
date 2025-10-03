@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.store.redis.client.RedisConfig;
-import org.example.age.testing.env.TestLiteEnvModule;
+import org.example.age.testing.env.TestEnvModule;
 
 /**
  * Dagger module that binds...
@@ -13,7 +13,7 @@ import org.example.age.testing.env.TestLiteEnvModule;
  *     <li>{@link LiteEnv}.
  * </ul>
  */
-@Module(includes = TestLiteEnvModule.class)
+@Module(includes = TestEnvModule.class)
 public interface TestDependenciesModule {
 
     @Provides

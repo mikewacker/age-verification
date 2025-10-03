@@ -2,7 +2,7 @@ package org.example.age.module.crypto.demo;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.env.EnvModule;
+import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
@@ -23,7 +23,7 @@ import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
  * <p>
  * Loads keys from configuration; it suffices to say that a production application should NOT do this.
  */
-@Module(includes = EnvModule.class)
+@Module(includes = BaseEnvModule.class)
 public interface DemoAvsCryptoModule {
 
     @Binds

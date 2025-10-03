@@ -2,7 +2,7 @@ package org.example.age.module.client;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.env.EnvModule;
+import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.service.module.client.SiteClientRepository;
 
@@ -15,7 +15,7 @@ import org.example.age.service.module.client.SiteClientRepository;
  *     <li>{@link LiteEnv}</code>
  * </ul>
  */
-@Module(includes = EnvModule.class)
+@Module(includes = BaseEnvModule.class)
 public interface AvsClientModule {
 
     @Binds

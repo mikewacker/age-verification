@@ -12,15 +12,15 @@ import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.client.SiteApi;
-import org.example.age.testing.util.TestClient;
+import org.example.age.testing.client.TestClient;
 import retrofit2.Response;
 
 /** Runs the demo. */
 public final class Demo {
 
-    private static final AvsApp checkMyAge = new AvsApp("check-my-age");
-    private static final SiteApp crackle = new SiteApp("crackle");
-    private static final SiteApp pop = new SiteApp("pop");
+    private static final AvsApp checkMyAge = new AvsApp();
+    private static final SiteApp crackle = new SiteApp();
+    private static final SiteApp pop = new SiteApp();
     private static final RedisTestContainer redis = new RedisTestContainer();
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 

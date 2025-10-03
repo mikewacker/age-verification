@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.common.spi.PendingStore;
-import org.example.age.testing.util.TestObjectMapper;
+import org.example.age.testing.json.TestObjectMapper;
 
 /** Fake, in-memory implementation of {@link PendingStore}. Key-value pairs do not expire. */
 final class FakePendingStore<V> implements PendingStore<V> {

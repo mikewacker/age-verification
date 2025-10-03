@@ -1,9 +1,9 @@
-package org.example.age.testing.util;
+package org.example.age.testing.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.example.age.testing.util.WebStageTesting.await;
-import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.client.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;

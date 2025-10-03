@@ -3,7 +3,7 @@ package org.example.age.demo;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.errorprone.annotations.FormatMethod;
 import java.io.IOException;
-import org.example.age.testing.util.TestObjectMapper;
+import org.example.age.testing.json.TestObjectMapper;
 
 /** Console logger. */
 public class Logger {

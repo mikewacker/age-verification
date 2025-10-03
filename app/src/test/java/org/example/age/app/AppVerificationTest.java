@@ -17,7 +17,7 @@ import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
 import org.example.age.site.api.client.SiteApi;
-import org.example.age.testing.util.TestClient;
+import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;

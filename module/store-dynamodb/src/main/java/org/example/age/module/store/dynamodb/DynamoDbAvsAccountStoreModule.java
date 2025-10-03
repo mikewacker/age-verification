@@ -2,7 +2,7 @@ package org.example.age.module.store.dynamodb;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.common.env.EnvModule;
+import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.store.dynamodb.client.DynamoDbClientModule;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
@@ -17,7 +17,7 @@ import org.example.age.service.module.store.AvsVerifiedUserStore;
  *     <li>{@link LiteEnv}
  * </ul>
  */
-@Module(includes = {DynamoDbClientModule.class, EnvModule.class})
+@Module(includes = {DynamoDbClientModule.class, BaseEnvModule.class})
 public interface DynamoDbAvsAccountStoreModule {
 
     @Binds

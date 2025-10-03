@@ -1,7 +1,7 @@
 package org.example.age.testing.common.spi;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.util.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.await;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;

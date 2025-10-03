@@ -10,10 +10,10 @@ import org.example.age.common.env.LiteEnv;
  * The worker has a single thread.
  */
 @Module
-public abstract class TestLiteEnvModule {
+public abstract class TestEnvModule {
 
     @Binds
     abstract LiteEnv bindLiteEnv(TestLiteEnv impl);
 
-    TestLiteEnvModule() {}
+    TestEnvModule() {}
 }

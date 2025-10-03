@@ -6,7 +6,7 @@ import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.example.age.common.env.LiteEnv;
-import org.example.age.testing.util.TestObjectMapper;
+import org.example.age.testing.json.TestObjectMapper;
 
 /** Test implementation of {@link LiteEnv}. The worker has a single thread. */
 @Singleton

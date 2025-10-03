@@ -1,7 +1,7 @@
 package org.example.age.service.module.store.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.util.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.await;
 
 import java.util.Optional;
 import org.example.age.common.api.VerifiedUser;
