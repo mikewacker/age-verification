@@ -9,7 +9,6 @@ dependencies {
     implementation(project(":common:spi"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.darc)
-    implementation(libs.bundles.jaxRs)
 
     testAnnotationProcessor(libs.dagger.compiler)
 

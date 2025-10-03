@@ -16,6 +16,8 @@ val libs = the<LibrariesForLibs>() // version catalog workaround for buildSrc
 dependencies {
     errorprone(libs.errorprone.core)
 
+    implementation(libs.jaxRs.api)
+
     testImplementation(libs.assertj.core)
     testImplementation(libs.junitJupiter.api)
 

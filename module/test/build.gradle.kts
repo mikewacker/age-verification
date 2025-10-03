@@ -12,7 +12,7 @@ dependencies {
     testFixturesImplementation(project(":service:module"))
     testFixturesImplementation(project(":testing"))
     testFixturesImplementation(libs.bundles.dagger)
-    testFixturesImplementation(libs.bundles.jaxRs)
+    testFixturesImplementation(libs.jaxRs.api)
 
     testAnnotationProcessor(libs.dagger.compiler)
 
@@ -21,5 +21,4 @@ dependencies {
     testImplementation(project(":common:spi-testing"))
     testImplementation(testFixtures(project(":service:module")))
     testImplementation(libs.bundles.dagger)
-    testImplementation(libs.bundles.jaxRs)
 }

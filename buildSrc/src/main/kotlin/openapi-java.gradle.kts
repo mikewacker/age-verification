@@ -149,6 +149,6 @@ val libs = the<LibrariesForLibs>() // version catalog workaround for buildSrc
 
 dependencies {
     api(libs.bundles.retrofit)
-    implementation(libs.bundles.jaxRs)
     implementation(libs.bundles.json)
+    implementation(libs.jaxRs.api)
 }
