@@ -1,6 +1,5 @@
 package org.example.age.module.crypto.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -11,7 +10,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.SignedAgeCertificate;
 import org.example.age.common.api.crypto.SignatureData;
-import org.example.age.common.env.LiteEnv;
+import org.example.age.common.env.JsonMapper;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateVerifier;
 
@@ -23,12 +22,12 @@ import org.example.age.service.module.crypto.AgeCertificateVerifier;
 final class DemoAgeCertificateVerifier implements AgeCertificateVerifier {
 
     private final SiteKeysConfig config;
-    private final ObjectMapper mapper;
+    private final JsonMapper mapper;
 
     @Inject
-    public DemoAgeCertificateVerifier(SiteKeysConfig config, LiteEnv liteEnv) {
+    public DemoAgeCertificateVerifier(SiteKeysConfig config, JsonMapper mapper) {
         this.config = config;
-        this.mapper = liteEnv.jsonMapper();
+        this.mapper = mapper;
     }
 
     @Override
@@ -37,11 +36,12 @@ final class DemoAgeCertificateVerifier implements AgeCertificateVerifier {
             return CompletableFuture.failedFuture(new ServerErrorException(501));
         }
 
-        SignatureData data = signedAgeCertificate.getSignature().getData();
-        AgeCertificate ageCertificate = signedAgeCertificate.getAgeCertificate();
         Signature verifier = createVerifier();
+        AgeCertificate ageCertificate = signedAgeCertificate.getAgeCertificate();
+        String ageCertificateJson = mapper.serialize(ageCertificate);
+        SignatureData data = signedAgeCertificate.getSignature().getData();
         try {
-            data.verify(ageCertificate, mapper, verifier);
+            data.verify(verifier, ageCertificateJson);
         } catch (RuntimeException e) {
             return CompletableFuture.failedFuture(new NotAuthorizedException("signature verification failed"));
         }

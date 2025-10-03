@@ -1,6 +1,5 @@
 package org.example.age.module.crypto.demo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.security.Signature;
@@ -10,7 +9,7 @@ import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.DigitalSignature;
 import org.example.age.common.api.SignedAgeCertificate;
 import org.example.age.common.api.crypto.SignatureData;
-import org.example.age.common.env.LiteEnv;
+import org.example.age.common.env.JsonMapper;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.module.crypto.AgeCertificateSigner;
 
@@ -22,18 +21,19 @@ import org.example.age.service.module.crypto.AgeCertificateSigner;
 final class DemoAgeCertificateSigner implements AgeCertificateSigner {
 
     private final AvsKeysConfig config;
-    private final ObjectMapper mapper;
+    private final JsonMapper mapper;
 
     @Inject
-    public DemoAgeCertificateSigner(AvsKeysConfig config, LiteEnv liteEnv) {
+    public DemoAgeCertificateSigner(AvsKeysConfig config, JsonMapper mapper) {
         this.config = config;
-        this.mapper = liteEnv.jsonMapper();
+        this.mapper = mapper;
     }
 
     @Override
     public CompletionStage<SignedAgeCertificate> sign(AgeCertificate ageCertificate) {
         Signature signer = createSigner();
-        SignatureData data = SignatureData.sign(ageCertificate, mapper, signer);
+        String ageCertificateJson = mapper.serialize(ageCertificate);
+        SignatureData data = SignatureData.sign(signer, ageCertificateJson);
         DigitalSignature signature =
                 DigitalSignature.builder().algorithm("secp256r1").data(data).build();
         SignedAgeCertificate signedAgeCertificate = SignedAgeCertificate.builder()
