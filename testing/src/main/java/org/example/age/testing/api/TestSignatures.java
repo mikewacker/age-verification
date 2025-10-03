@@ -1,5 +1,6 @@
 package org.example.age.testing.api;
 
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
@@ -26,7 +27,8 @@ public final class TestSignatures {
     /** Signs an age certificate. */
     public static SignedAgeCertificate sign(AgeCertificate ageCertificate) {
         Signature signer = createSigner(keyPair.getPrivate());
-        SignatureData data = SignatureData.sign(ageCertificate, TestObjectMapper.get(), signer);
+        String ageCertificateJson = serialize(ageCertificate);
+        SignatureData data = SignatureData.sign(signer, ageCertificateJson);
         DigitalSignature signature =
                 DigitalSignature.builder().algorithm("secp256r1").data(data).build();
         return SignedAgeCertificate.builder()
@@ -51,8 +53,9 @@ public final class TestSignatures {
     public static AgeCertificate verify(SignedAgeCertificate signedAgeCertificate) {
         Signature verifier = createVerifier(keyPair.getPublic());
         AgeCertificate ageCertificate = signedAgeCertificate.getAgeCertificate();
+        String ageCertificateJson = serialize(ageCertificate);
         SignatureData data = signedAgeCertificate.getSignature().getData();
-        data.verify(ageCertificate, TestObjectMapper.get(), verifier);
+        data.verify(verifier, ageCertificateJson);
         return ageCertificate;
     }
 
@@ -86,6 +89,15 @@ public final class TestSignatures {
             verifier.initVerify(publicKey);
             return verifier;
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Serializes an age certificate to JSON. */
+    private static String serialize(AgeCertificate ageCertificate) {
+        try {
+            return TestObjectMapper.get().writeValueAsString(ageCertificate);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
