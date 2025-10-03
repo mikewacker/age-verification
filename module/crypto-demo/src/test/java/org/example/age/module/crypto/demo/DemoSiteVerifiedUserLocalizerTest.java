@@ -4,8 +4,8 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
-import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
 import org.example.age.service.module.crypto.testing.SiteVerifiedUserLocalizerTestTemplate;
+import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 public final class DemoSiteVerifiedUserLocalizerTest extends SiteVerifiedUserLocalizerTestTemplate {
 

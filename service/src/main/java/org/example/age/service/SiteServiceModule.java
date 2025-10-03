@@ -5,10 +5,10 @@ import dagger.Module;
 import jakarta.inject.Named;
 import org.example.age.common.spi.AccountIdContext;
 import org.example.age.common.spi.PendingStoreRepository;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
-import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
-import org.example.age.service.module.store.SiteVerificationStore;
 import org.example.age.site.api.SiteApi;
+import org.example.age.site.spi.AgeCertificateVerifier;
+import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 /**
  * Dagger module that binds <code>@Named("service") {@link SiteApi}</code>.

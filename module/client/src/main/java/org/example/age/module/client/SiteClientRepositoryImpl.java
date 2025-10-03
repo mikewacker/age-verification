@@ -6,7 +6,7 @@ import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.example.age.service.module.client.SiteClientRepository;
+import org.example.age.avs.spi.SiteClientRepository;
 import org.example.age.site.api.client.SiteApi;
 
 /** Implementation of {@link SiteClientRepository}. */

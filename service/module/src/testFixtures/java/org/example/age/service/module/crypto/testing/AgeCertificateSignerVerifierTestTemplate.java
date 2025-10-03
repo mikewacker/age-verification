@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.client.WebStageTesting.await;
 import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
+import org.example.age.avs.spi.AgeCertificateSigner;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.SignedAgeCertificate;
-import org.example.age.service.module.crypto.AgeCertificateSigner;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.site.spi.AgeCertificateVerifier;
 import org.example.age.testing.api.TestModels;
 import org.example.age.testing.api.TestSignatures;
 import org.junit.jupiter.api.Test;

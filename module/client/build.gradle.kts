@@ -7,10 +7,8 @@ dependencies {
     annotationProcessor(libs.dagger.compiler)
     annotationProcessor(libs.immutables.value)
 
-    implementation(project(":common:util"))
-    implementation(project(":site:api"))
-    implementation(project(":avs:api"))
-    implementation(project(":service:module"))
+    implementation(project(":site:spi"))
+    implementation(project(":avs:spi"))
     implementation(project(":common:env"))
     implementation(libs.bundles.dagger)
     implementation(libs.bundles.json)

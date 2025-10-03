@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.SignedAgeCertificate;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.site.spi.AgeCertificateVerifier;
 import org.example.age.testing.api.TestSignatures;
 
 /** Fake implementation of {@link AgeCertificateVerifier}. */

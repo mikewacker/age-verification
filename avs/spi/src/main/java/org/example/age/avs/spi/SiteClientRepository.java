@@ -1,4 +1,4 @@
-package org.example.age.service.module.client;
+package org.example.age.avs.spi;
 
 import jakarta.ws.rs.NotFoundException;
 import org.example.age.site.api.client.SiteApi;

@@ -12,7 +12,7 @@ import org.example.age.common.api.SignedAgeCertificate;
 import org.example.age.common.api.crypto.SignatureData;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.site.spi.AgeCertificateVerifier;
 
 /**
  * Implementation of {@link AgeCertificateVerifier}.

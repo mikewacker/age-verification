@@ -1,4 +1,4 @@
-package org.example.age.service.module.crypto;
+package org.example.age.avs.spi;
 
 import jakarta.ws.rs.NotFoundException;
 import java.util.concurrent.CompletionStage;
