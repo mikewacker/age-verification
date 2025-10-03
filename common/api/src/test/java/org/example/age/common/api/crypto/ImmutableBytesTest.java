@@ -7,7 +7,7 @@ import com.google.common.testing.EqualsTester;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import org.example.age.testing.util.JsonTesting;
+import org.example.age.testing.json.JsonTesting;
 import org.junit.jupiter.api.Test;
 
 public final class ImmutableBytesTest {

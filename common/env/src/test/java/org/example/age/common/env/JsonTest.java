@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.testing.env.TestLiteEnvModule;
+import org.example.age.testing.env.TestEnvModule;
 import org.junit.jupiter.api.Test;
 
 public final class JsonTest {
@@ -20,7 +20,7 @@ public final class JsonTest {
     }
 
     /** Dagger component for {@link JsonMapper}. */
-    @Component(modules = {EnvModule.class, TestLiteEnvModule.class})
+    @Component(modules = {BaseEnvModule.class, TestEnvModule.class})
     @Singleton
     interface TestComponent extends Supplier<JsonMapper> {
 

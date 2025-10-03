@@ -19,9 +19,9 @@ import java.util.function.Supplier;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.example.age.common.api.AgeRange;
-import org.example.age.common.env.EnvModule;
+import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.JsonMapper;
-import org.example.age.testing.util.TestClient;
+import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -66,7 +66,7 @@ public final class JsonTest {
     }
 
     /** Dagger component for {@link JsonMapper}.*/
-    @Component(modules = {EnvModule.class, DropwizardEnvModule.class})
+    @Component(modules = {BaseEnvModule.class, DropwizardEnvModule.class})
     @Singleton
     interface TestComponent extends Supplier<JsonMapper> {
 

@@ -1,8 +1,8 @@
 package org.example.age.service.module.crypto.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.util.WebStageTesting.await;
-import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.client.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.SignedAgeCertificate;

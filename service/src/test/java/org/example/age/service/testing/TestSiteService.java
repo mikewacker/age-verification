@@ -9,7 +9,7 @@ import org.example.age.common.api.VerificationRequest;
 import org.example.age.module.request.test.TestAccountId;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.api.VerificationState;
-import org.example.age.testing.util.WebStageTesting;
+import org.example.age.testing.client.WebStageTesting;
 
 /**
  * Decorator for {@link SiteApi} that converts uncaught exceptions to failed futures.

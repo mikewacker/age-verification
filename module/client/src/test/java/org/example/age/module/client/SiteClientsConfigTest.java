@@ -1,7 +1,7 @@
 package org.example.age.module.client;
 
 import org.example.age.module.client.testing.TestConfig;
-import org.example.age.testing.util.JsonTesting;
+import org.example.age.testing.json.JsonTesting;
 import org.junit.jupiter.api.Test;
 
 public final class SiteClientsConfigTest {

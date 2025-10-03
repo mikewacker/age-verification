@@ -8,7 +8,7 @@ import org.example.age.avs.api.AvsApi;
 import org.example.age.common.api.VerificationRequest;
 import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.request.test.TestAccountId;
-import org.example.age.testing.util.WebStageTesting;
+import org.example.age.testing.client.WebStageTesting;
 
 /**
  * Decorator for {@link AvsApi} that converts uncaught exceptions to failed futures.

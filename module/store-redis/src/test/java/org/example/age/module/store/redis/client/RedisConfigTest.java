@@ -2,7 +2,7 @@ package org.example.age.module.store.redis.client;
 
 import java.io.IOException;
 import org.example.age.module.store.redis.testing.TestConfig;
-import org.example.age.testing.util.JsonTesting;
+import org.example.age.testing.json.JsonTesting;
 import org.junit.jupiter.api.Test;
 
 public final class RedisConfigTest {

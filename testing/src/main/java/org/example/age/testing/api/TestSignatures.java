@@ -11,7 +11,7 @@ import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.DigitalSignature;
 import org.example.age.common.api.SignedAgeCertificate;
 import org.example.age.common.api.crypto.SignatureData;
-import org.example.age.testing.util.TestObjectMapper;
+import org.example.age.testing.json.TestObjectMapper;
 
 /** Test utilities for signing and verifying age certificates. Uses a singleton key pair. */
 public final class TestSignatures {

@@ -1,7 +1,7 @@
 package org.example.age.module.store.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.util.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.await;
 
 import dagger.Component;
 import jakarta.inject.Singleton;

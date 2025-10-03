@@ -1,4 +1,4 @@
-package org.example.age.testing.util;
+package org.example.age.testing.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,14 +28,14 @@ public final class TestClientTest {
             new DropwizardAppExtension<>(TestApp.class, null, ConfigOverride.randomPorts());
 
     @Test
-    public void getHttp() {
+    public void http() {
         OkHttpClient client = TestClient.http();
         assertThat(client).isNotNull();
         assertThat(client).isSameAs(TestClient.http());
     }
 
     @Test
-    public void createApi() throws IOException {
+    public void api() throws IOException {
         TestApi client = TestClient.api(
                 app.getLocalPort(), requestBuilder -> requestBuilder.header("Test-Header", "value"), TestApi.class);
         Response<Map<String, String>> response = client.test().execute();
@@ -44,7 +44,7 @@ public final class TestClientTest {
     }
 
     @Test
-    public void createLocalhostUrl() {
+    public void localhostUrl() {
         URL url = TestClient.localhostUrl(8080);
         assertThat(url.toString()).isEqualTo("http://localhost:8080");
     }
@@ -56,10 +56,10 @@ public final class TestClientTest {
         Call<Map<String, String>> test();
     }
 
-    /** Test service for {@link TestApi}. */
+    /** Test endpoint that corresponds to {@link TestApi}. */
     @Path("test")
     @Produces(MediaType.APPLICATION_JSON)
-    public static final class TestService {
+    public static final class TestEndpoint {
 
         @jakarta.ws.rs.GET
         public Map<String, String> test(@HeaderParam("Test-Header") String value) {
@@ -67,12 +67,12 @@ public final class TestClientTest {
         }
     }
 
-    /** Test application that runs {@link TestService}. */
+    /** Test application for {@link TestEndpoint}. */
     public static final class TestApp extends Application<Configuration> {
 
         @Override
         public void run(Configuration config, Environment env) {
-            env.jersey().register(new TestService());
+            env.jersey().register(new TestEndpoint());
         }
     }
 }

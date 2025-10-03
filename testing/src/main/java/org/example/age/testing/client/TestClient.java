@@ -1,4 +1,4 @@
-package org.example.age.testing.util;
+package org.example.age.testing.client;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -9,6 +9,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.example.age.testing.json.TestObjectMapper;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;

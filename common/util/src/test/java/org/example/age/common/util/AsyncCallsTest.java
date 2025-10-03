@@ -1,8 +1,8 @@
 package org.example.age.common.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.example.age.testing.util.WebStageTesting.await;
-import static org.example.age.testing.util.WebStageTesting.awaitErrorCode;
+import static org.example.age.testing.client.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
 import java.io.IOException;
 import okhttp3.ResponseBody;
