@@ -10,4 +10,10 @@ dependencies {
     implementation(libs.dagger.dagger)
     implementation(libs.dropwizard.core)
     implementation(libs.jackson.databind)
+
+    testAnnotationProcessor(libs.dagger.compiler)
+
+    testImplementation(project(":common:api"))
+    testImplementation(project(":testing"))
+    testImplementation(libs.dropwizard.testing)
 }

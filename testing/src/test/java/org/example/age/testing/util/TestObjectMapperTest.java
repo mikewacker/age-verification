@@ -3,6 +3,8 @@ package org.example.age.testing.util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import org.example.age.common.api.AgeRange;
 import org.junit.jupiter.api.Test;
 
 public final class TestObjectMapperTest {
@@ -15,9 +17,9 @@ public final class TestObjectMapperTest {
     }
 
     @Test
-    public void serializeThenDeserialize() {
-        String json = TestObjectMapper.serialize("test");
-        String value = TestObjectMapper.deserialize(json, String.class);
-        assertThat(value).isEqualTo("test");
+    public void serializeNonNull() throws IOException {
+        AgeRange ageRange = AgeRange.builder().min(18).build();
+        String json = TestObjectMapper.get().writeValueAsString(ageRange);
+        assertThat(json).isEqualTo("{\"min\":18}");
     }
 }
