@@ -1,4 +1,4 @@
-package org.example.age.service.module.crypto;
+package org.example.age.site.spi;
 
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.ServerErrorException;

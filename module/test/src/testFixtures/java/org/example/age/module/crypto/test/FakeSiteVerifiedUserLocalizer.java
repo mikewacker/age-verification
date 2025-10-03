@@ -7,7 +7,7 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.api.crypto.Localization;
 import org.example.age.common.api.crypto.SecureId;
-import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 /** Fake implementation of {@link SiteVerifiedUserLocalizer}. */
 @Singleton

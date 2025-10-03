@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.client.WebStageTesting.await;
 
 import java.util.Optional;
+import org.example.age.avs.spi.AvsVerifiedUserStore;
 import org.example.age.common.api.VerifiedUser;
-import org.example.age.service.module.store.AvsVerifiedUserStore;
 import org.junit.jupiter.api.Test;
 
 public abstract class AvsAccountStoreTestTemplate {

@@ -2,11 +2,11 @@ package org.example.age.module.crypto.demo;
 
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.avs.spi.AgeCertificateSigner;
+import org.example.age.avs.spi.AvsVerifiedUserLocalizer;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
-import org.example.age.service.module.crypto.AgeCertificateSigner;
-import org.example.age.service.module.crypto.AvsVerifiedUserLocalizer;
 
 /**
  * Dagger module that binds...

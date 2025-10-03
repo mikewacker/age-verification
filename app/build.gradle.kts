@@ -22,9 +22,9 @@ dependencies {
     implementation(libs.bundles.json)
 
     // Dagger component
-    implementation(project(":common:spi"))
+    implementation(project(":site:spi"))
+    implementation(project(":avs:spi"))
     implementation(project(":common:env"))
-    implementation(project(":service:module"))
     implementation(libs.bundles.darc)
     implementation(libs.bundles.dynamoDb)
     implementation(libs.bundles.redis)

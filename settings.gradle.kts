@@ -8,6 +8,8 @@ include(
     "avs:api",
 
     "common:spi",
+    "site:spi",
+    "avs:spi",
     "common:spi-testing",
     "service:module",
 

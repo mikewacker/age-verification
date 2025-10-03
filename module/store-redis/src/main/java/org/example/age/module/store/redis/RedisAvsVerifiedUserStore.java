@@ -4,10 +4,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+import org.example.age.avs.spi.AvsVerifiedUserStore;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
-import org.example.age.service.module.store.AvsVerifiedUserStore;
 import redis.clients.jedis.JedisPooled;
 
 /** Implementation of {@link AvsVerifiedUserStore} that is backed by Redis. */

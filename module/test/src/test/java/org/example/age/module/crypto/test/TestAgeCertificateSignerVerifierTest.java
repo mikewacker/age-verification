@@ -3,9 +3,9 @@ package org.example.age.module.crypto.test;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.service.module.crypto.AgeCertificateSigner;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
+import org.example.age.avs.spi.AgeCertificateSigner;
 import org.example.age.service.module.crypto.testing.AgeCertificateSignerVerifierTestTemplate;
+import org.example.age.site.spi.AgeCertificateVerifier;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package org.example.age.service.module.store;
+package org.example.age.avs.spi;
 
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;

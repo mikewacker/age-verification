@@ -3,10 +3,10 @@ package org.example.age.module.crypto.demo;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
+import org.example.age.avs.spi.AgeCertificateSigner;
 import org.example.age.module.crypto.demo.testing.TestDependenciesModule;
-import org.example.age.service.module.crypto.AgeCertificateSigner;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
 import org.example.age.service.module.crypto.testing.AgeCertificateSignerVerifierTestTemplate;
+import org.example.age.site.spi.AgeCertificateVerifier;
 
 public final class DemoAgeCertificateSignerVerifierTest extends AgeCertificateSignerVerifierTestTemplate {
 

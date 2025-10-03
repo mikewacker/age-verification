@@ -2,11 +2,11 @@ package org.example.age.module.store.dynamodb;
 
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.avs.spi.AvsVerifiedUserStore;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.store.dynamodb.client.DynamoDbClientModule;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
-import org.example.age.service.module.store.AvsVerifiedUserStore;
 
 /**
  * Dagger module that binds {@link AvsVerifiedUserStore}.

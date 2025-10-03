@@ -2,8 +2,8 @@ package org.example.age.module.crypto.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
-import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.site.spi.AgeCertificateVerifier;
+import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 /**
  * Dagger module that binds...

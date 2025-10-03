@@ -2,9 +2,9 @@ package org.example.age.module.client;
 
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.avs.spi.SiteClientRepository;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
-import org.example.age.service.module.client.SiteClientRepository;
 
 /**
  * Dagger module that binds {@link SiteClientRepository}.

@@ -2,7 +2,7 @@ package org.example.age.module.store.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.service.module.store.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerificationStore;
 
 /**
  * Dagger modules that binds {@link SiteVerificationStore}.

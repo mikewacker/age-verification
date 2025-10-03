@@ -6,7 +6,7 @@ import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.store.dynamodb.client.DynamoDbClientModule;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
-import org.example.age.service.module.store.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerificationStore;
 
 /**
  * Dagger module that binds {@link SiteVerificationStore}.

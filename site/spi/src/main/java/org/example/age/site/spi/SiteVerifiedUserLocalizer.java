@@ -1,4 +1,4 @@
-package org.example.age.service.module.crypto;
+package org.example.age.site.spi;
 
 import java.util.concurrent.CompletionStage;
 import org.example.age.common.api.VerifiedUser;

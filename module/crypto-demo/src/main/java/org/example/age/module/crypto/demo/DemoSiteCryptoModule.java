@@ -5,8 +5,8 @@ import dagger.Module;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
-import org.example.age.service.module.crypto.AgeCertificateVerifier;
-import org.example.age.service.module.crypto.SiteVerifiedUserLocalizer;
+import org.example.age.site.spi.AgeCertificateVerifier;
+import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 /**
  * Dagger module that binds...
