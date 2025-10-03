@@ -1,5 +1,6 @@
 package org.example.age.testing.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.io.IOException;
 /** Singleton JSON object mapper for testing. */
 public final class TestObjectMapper {
 
-    private static final ObjectMapper mapper = Jackson.newObjectMapper();
+    private static final ObjectMapper mapper = create();
 
     /** Gets the JSON object mapper. */
     public static ObjectMapper get() {
@@ -30,6 +31,13 @@ public final class TestObjectMapper {
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    /** Creates the JSON object mapper. */
+    private static ObjectMapper create() {
+        ObjectMapper mapper = Jackson.newObjectMapper();
+        mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+        return mapper;
     }
 
     private TestObjectMapper() {} // static class

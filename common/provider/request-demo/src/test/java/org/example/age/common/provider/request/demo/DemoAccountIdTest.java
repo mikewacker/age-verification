@@ -30,7 +30,7 @@ public final class DemoAccountIdTest extends AccountIdTestTemplate {
         return app.getLocalPort();
     }
 
-    /** Test application that runs the test service. */
+    /** Test application for {@link TestEndpoint}. */
     public static final class TestApp extends Application<Configuration> {
 
         @Override
