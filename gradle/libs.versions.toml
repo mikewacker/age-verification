@@ -21,13 +21,14 @@ junitJupiter = "5.13.4"
 junitPlatform = "1.13.4"
 
 # plugin
-plugin-errorprone = "4.3.0"
-plugin-openapi = "7.16.0"
-plugin-spotless = "8.0.0"
+plugins-dockerCompose = "0.17.12"
+plugins-errorprone = "4.3.0"
+plugins-openapi = "7.16.0"
+plugins-spotless = "8.0.0"
 
 # special
 errorprone = "2.42.0"
-plugin-spotless-palantir = "2.75.0"
+plugins-spotless-palantir = "2.75.0"
 
 [libraries]
 # main (annotation processor)
@@ -61,9 +62,12 @@ junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher"
 retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock", version.ref = "retrofit" }
 
 # plugin
-plugin-errorprone = { module = "net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin", version.ref = "plugin-errorprone" }
-plugin-openapi = { module = "org.openapitools:openapi-generator-gradle-plugin", version.ref = "plugin-openapi" }
-plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "plugin-spotless" }
+pluginLibs-errorprone = { module = "net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin", version.ref = "plugins-errorprone" }
+pluginLibs-openapi = { module = "org.openapitools:openapi-generator-gradle-plugin", version.ref = "plugins-openapi" }
+pluginLibs-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "plugins-spotless" }
+
+[plugins]
+dockerCompose = { id = "com.avast.gradle.docker-compose", version.ref = "plugins-dockerCompose" }
 
 [bundles]
 # main

@@ -7,8 +7,8 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.plugin.errorprone)
-    implementation(libs.plugin.openapi)
-    implementation(libs.plugin.spotless)
+    implementation(libs.pluginLibs.errorprone)
+    implementation(libs.pluginLibs.openapi)
+    implementation(libs.pluginLibs.spotless)
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location)) // version catalog workaround for buildSrc
 }
