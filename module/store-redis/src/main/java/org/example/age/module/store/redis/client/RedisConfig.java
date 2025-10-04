@@ -3,7 +3,7 @@ package org.example.age.module.store.redis.client;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URL;
-import org.example.age.common.util.ValueStyle;
+import org.example.age.common.annotation.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for Redis. */

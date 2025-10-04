@@ -23,9 +23,8 @@ openApiJava {
 }
 
 dependencies {
-    api(project(":common:util"))
-
     testImplementation(libs.guava.testlib)
+    testImplementation(libs.retrofit.mock)
 }
 
 // Make a best effort to apply conventions.
@@ -36,6 +35,5 @@ spotless {
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Xlint:-rawtypes,-this-escape")
     options.errorprone.excludedPaths = ".*/build/generated/sources/.*[.]java"
 }

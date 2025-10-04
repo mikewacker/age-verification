@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.List;
-import org.example.age.common.util.ValueStyle;
+import org.example.age.common.annotation.ValueStyle;
 import org.immutables.value.Value;
 
 /** Ordered list of age thresholds. */

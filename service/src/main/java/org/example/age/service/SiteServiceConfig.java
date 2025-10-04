@@ -3,7 +3,7 @@ package org.example.age.service;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
-import org.example.age.common.util.ValueStyle;
+import org.example.age.common.annotation.ValueStyle;
 import org.example.age.site.api.SiteApi;
 import org.immutables.value.Value;
 
