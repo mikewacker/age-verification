@@ -2,31 +2,24 @@ plugins {
     `java-library`
     `java-test-fixtures`
     id("buildlogic.java-conventions")
+    id("buildlogic.json")
+    id("buildlogic.dagger")
     alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
-    annotationProcessor(libs.immutables.value)
-
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
     implementation(project(":common:env"))
-    implementation(libs.bundles.dagger)
-    implementation(libs.bundles.json)
-    implementation(libs.bundles.redis)
+    implementation(libs.jedis.jedis)
 
+    testFixturesApi(project(":common:api"))
     testFixturesApi(testFixtures(project(":module:common")))
-    testFixturesApi(libs.bundles.redis)
-    testFixturesImplementation(project(":common:api"))
+    testFixturesApi(libs.jedis.jedis)
     testFixturesImplementation(project(":testing"))
 
-    testAnnotationProcessor(libs.dagger.compiler)
-
-    testImplementation(project(":testing"))
     testImplementation(project(":common:spi-testing"))
     testImplementation(project(":service:module"))
-    testImplementation(testFixtures(project(":module:common")))
 }
 
 dockerCompose {

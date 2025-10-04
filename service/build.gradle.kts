@@ -1,21 +1,14 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.json")
+    id("buildlogic.dagger")
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
-    annotationProcessor(libs.immutables.value)
-
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
-    implementation(libs.bundles.dagger)
-    implementation(libs.bundles.json)
-    implementation(libs.bundles.retrofit)
 
-    testAnnotationProcessor(libs.dagger.compiler)
-
-    testImplementation(project(":testing"))
     testImplementation(project(":module:test"))
     testImplementation(libs.retrofit.mock)
 }

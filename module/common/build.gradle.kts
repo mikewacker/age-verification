@@ -5,17 +5,6 @@ plugins {
 }
 
 dependencies {
-    testFixturesAnnotationProcessor(libs.dagger.compiler)
-
+    testFixturesApi(platform(libs.junit.bom))
     testFixturesApi(libs.junitJupiter.api)
-    testFixturesImplementation(project(":testing"))
-    testFixturesImplementation(libs.bundles.dagger)
-    testFixturesImplementation(libs.bundles.json)
-
-    testAnnotationProcessor(libs.dagger.compiler)
-
-    testImplementation(project(":testing"))
-    testImplementation(libs.bundles.dropwizard)
-    testImplementation(libs.bundles.retrofit)
-    testImplementation(libs.dropwizard.testing)
 }

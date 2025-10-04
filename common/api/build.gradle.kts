@@ -3,6 +3,7 @@ import net.ltgt.gradle.errorprone.errorprone
 plugins {
     id("openapi-java")
     id("buildlogic.java-conventions")
+    id("buildlogic.json")
 }
 
 openApiJava {
@@ -22,11 +23,8 @@ openApiJava {
 }
 
 dependencies {
-    annotationProcessor(libs.immutables.value)
-
     api(project(":common:util"))
 
-    testImplementation(project(":testing"))
     testImplementation(libs.guava.testlib)
 }
 

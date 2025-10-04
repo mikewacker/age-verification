@@ -7,18 +7,15 @@ dropwizard = "5.0.0"
 immutables = "2.11.4"
 jackson = "2.20.0"
 jakartaAnnotation = "3.0.0"
-jakartaInject = "2.0.1"
 jakartaValidation = "3.1.1"
 jaxRs = "4.0.0"
 jedis = "6.2.0"
-okhttp = "5.1.0"
 retrofit = "3.0.0"
 
 # test
 assertj = "3.27.6"
 guava = "33.5.0-jre"
-junitJupiter = "5.13.4"
-junitPlatform = "1.13.4"
+junit = "5.13.4"
 
 # plugin
 plugins-dockerCompose = "0.17.12"
@@ -31,35 +28,47 @@ errorprone = "2.42.0"
 plugins-spotless-palantir = "2.75.0"
 
 [libraries]
-# main (annotation processor)
-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
-immutables-value = { module = "org.immutables:value", version.ref = "immutables" }
+# main: BOMs
+aws-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws" }
+dropwizard-bom = { module = "io.dropwizard:dropwizard-bom", version.ref = "dropwizard" }
+immutables-bom = { module = "org.immutables:bom", version.ref = "immutables" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
+retrofit-bom = { module = "com.squareup.retrofit2:retrofit-bom", version.ref = "retrofit" }
 
-# main
-aws-dynamoDb = { module = "software.amazon.awssdk:dynamodb", version.ref = "aws" }
+# main: libraries
+aws-dynamoDb = { module = "software.amazon.awssdk:dynamodb" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 darc-darc = { module = "io.github.mikewacker.darc:darc", version.ref = "darc" }
-dropwizard-core = { module = "io.dropwizard:dropwizard-core", version.ref = "dropwizard" }
+dropwizard-core = { module = "io.dropwizard:dropwizard-core" }
 jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
-immutables-annotations = { module = "org.immutables:value-annotations", version.ref = "immutables" }
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+immutables-annotations = { module = "org.immutables:value-annotations" }
+jacksonCore-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }
+jacksonCore-databind = { module = "com.fasterxml.jackson.core:jackson-databind" }
 jakartaAnnotation-api = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
-jakartaInject-api = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakartaInject" }
 jakartaValidation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidation" }
 jaxRs-api = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jaxRs" }
-okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-retrofit-converterJackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "retrofit" }
-retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit" }
 
-# test
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-dropwizard-testing = { module = "io.dropwizard:dropwizard-testing", version.ref = "dropwizard" }
+# main: annotation processors
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
+immutables-value = { module = "org.immutables:value" }
+
+# test: BOMs
+assertj-bom = { module = "org.assertj:assertj-bom", version.ref = "assertj" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+
+# test: libraries
+assertj-core = { module = "org.assertj:assertj-core" }
+dropwizard-jackson = { module = "io.dropwizard:dropwizard-jackson" }
+dropwizard-jersey = { module = "io.dropwizard:dropwizard-jersey" }
+dropwizard-testing = { module = "io.dropwizard:dropwizard-testing" }
 guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guava" }
-junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
-junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
-junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatform" }
-retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock", version.ref = "retrofit" }
+junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
+junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+retrofit-converterJackson = { module = "com.squareup.retrofit2:converter-jackson" }
+retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock" }
 
 # plugin
 pluginLibs-errorprone = { module = "net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin", version.ref = "plugins-errorprone" }
@@ -68,13 +77,3 @@ pluginLibs-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle",
 
 [plugins]
 dockerCompose = { id = "com.avast.gradle.docker-compose", version.ref = "plugins-dockerCompose" }
-
-[bundles]
-# main
-dagger = ["dagger-dagger", "jakartaInject-api"]
-darc = ["darc-darc"]
-dropwizard = ["dropwizard-core"]
-dynamoDb = ["aws-dynamoDb"]
-json = ["immutables-annotations", "jackson-databind", "jakartaAnnotation-api", "jakartaValidation-api"]
-redis = ["jedis-jedis"]
-retrofit = ["okhttp-okhttp", "retrofit-converterJackson", "retrofit-retrofit"]

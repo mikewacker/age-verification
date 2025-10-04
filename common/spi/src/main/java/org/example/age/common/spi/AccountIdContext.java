@@ -1,7 +1,9 @@
 package org.example.age.common.spi;
 
+import jakarta.ws.rs.NotAuthorizedException;
+
 /**
- * Gets the account ID from the HTTP request, or throws {@code NotAuthorizedException}.
+ * Gets the account ID from the HTTP request, or throws {@link NotAuthorizedException}.
  * <p>
  * This context is only available in the thread that handles the HTTP request.
  */

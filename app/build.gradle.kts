@@ -1,39 +1,39 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.dagger")
     alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
+    api(platform(libs.dropwizard.bom))
+    api(libs.dropwizard.core)
 
-    // configuration
-    api(project(":service"))
-    api(project(":module:client"))
-    api(project(":module:store-redis"))
-    api(project(":module:store-dynamodb"))
-    api(project(":module:crypto-demo"))
-
-    api(libs.bundles.dropwizard)
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
+    implementation(project(":service"))
     implementation(project(":common:provider:request-demo"))
+    implementation(project(":module:client"))
+    implementation(project(":module:store-redis"))
+    implementation(project(":module:store-dynamodb"))
+    implementation(project(":module:crypto-demo"))
     implementation(project(":common:app"))
-    implementation(libs.bundles.dagger)
-    implementation(libs.bundles.json)
+    implementation(libs.jacksonCore.annotations)
+    implementation(libs.jakartaValidation.api)
 
-    // Dagger component
+    // Dagger component + JDK-8305250
+    implementation(platform(libs.aws.bom))
+    implementation(platform(libs.immutables.bom))
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
     implementation(project(":common:env"))
-    implementation(libs.bundles.darc)
-    implementation(libs.bundles.dynamoDb)
-    implementation(libs.bundles.redis)
+    implementation(libs.aws.dynamoDb)
+    implementation(libs.darc.darc)
+    implementation(libs.immutables.annotations)
+    implementation(libs.jedis.jedis)
 
-    testImplementation(project(":testing"))
     testImplementation(testFixtures(project(":module:store-redis")))
     testImplementation(testFixtures(project(":module:store-dynamodb")))
-    testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)
 }
 

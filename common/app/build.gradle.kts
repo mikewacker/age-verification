@@ -1,19 +1,14 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.dagger")
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
-
+    implementation(platform(libs.dropwizard.bom))
     implementation(project(":common:env"))
-    implementation(libs.dagger.dagger)
     implementation(libs.dropwizard.core)
-    implementation(libs.jackson.databind)
-
-    testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":common:api"))
-    testImplementation(project(":testing"))
     testImplementation(libs.dropwizard.testing)
 }

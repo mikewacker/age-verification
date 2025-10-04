@@ -1,17 +1,21 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.dagger")
 }
 
 dependencies {
     api(project(":common:api"))
     api(project(":common:env"))
-    api(libs.bundles.json)
-    api(libs.bundles.retrofit)
-    implementation(libs.bundles.dagger)
-    implementation(libs.bundles.dropwizard) // also provides RuntimeDelegate for JAX-RS response
+
+    implementation(platform(libs.assertj.bom))
+    implementation(platform(libs.dropwizard.bom))
     implementation(libs.assertj.core)
+    implementation(libs.dropwizard.jackson)
+    implementation(libs.retrofit.converterJackson)
     implementation(libs.retrofit.mock)
+
+    runtimeOnly(libs.dropwizard.jersey) // provides RuntimeDelegate for JAX-RS response
 
     testImplementation(libs.dropwizard.testing)
 }

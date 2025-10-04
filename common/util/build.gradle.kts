@@ -4,9 +4,11 @@ plugins {
 }
 
 dependencies {
-    api(libs.bundles.retrofit)
-    api(libs.immutables.annotations) // see: https://bugs.openjdk.org/browse/JDK-8305250
+    api(platform(libs.retrofit.bom))
+    api(libs.retrofit.retrofit)
 
-    testImplementation(project(":testing"))
+    implementation(platform(libs.immutables.bom))
+    implementation(libs.immutables.annotations)
+
     testImplementation(libs.retrofit.mock)
 }
