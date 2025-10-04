@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
     implementation(project(":common:env"))
+    implementation(project(":common:provider:redis"))
     implementation(libs.aws.dynamoDb)
     implementation(libs.darc.darc)
     implementation(libs.jedis.jedis)

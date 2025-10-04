@@ -1,21 +1,12 @@
-package org.example.age.module.store.redis.testing;
+package org.example.age.common.provider.redis.testing;
 
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
-import org.example.age.common.env.LiteEnv;
 import org.example.age.common.provider.redis.RedisConfig;
 import org.example.age.testing.client.TestClient;
-import org.example.age.testing.env.TestEnvModule;
 
-/**
- * Dagger module that binds...
- * <ul>
- *     <li>{@link RedisConfig}
- *     <li>{@link LiteEnv}.
- * </ul>
- */
-@Module(includes = TestEnvModule.class)
+@Module
 public interface TestDependenciesModule {
 
     @Provides

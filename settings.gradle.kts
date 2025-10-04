@@ -18,6 +18,7 @@ include(
     "common:env",
 
     "common:provider:request-demo",
+    "common:provider:redis",
     "module:common",
     "module:client",
     "module:store-redis",

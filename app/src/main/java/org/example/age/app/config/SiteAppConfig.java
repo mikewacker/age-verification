@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.example.age.common.provider.redis.RedisConfig;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
-import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.SiteServiceConfig;
 
 /** Configuration for the application. */
