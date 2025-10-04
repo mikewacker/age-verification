@@ -1,19 +1,14 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.dagger")
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
-
     implementation(project(":common:spi"))
-    implementation(libs.bundles.dagger)
-    implementation(libs.bundles.darc)
+    implementation(libs.darc.darc)
 
-    testAnnotationProcessor(libs.dagger.compiler)
-
+    testImplementation(platform(libs.dropwizard.bom))
     testImplementation(project(":common:spi-testing"))
-    testImplementation(libs.bundles.dropwizard)
-    testImplementation(libs.bundles.retrofit)
     testImplementation(libs.dropwizard.testing)
 }

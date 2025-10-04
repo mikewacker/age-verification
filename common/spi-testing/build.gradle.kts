@@ -5,7 +5,9 @@ plugins {
 
 dependencies {
     api(project(":common:spi"))
-    api(libs.retrofit.retrofit)
+
+    implementation(platform(libs.assertj.bom))
+    implementation(platform(libs.junit.bom))
     implementation(project(":testing"))
     implementation(libs.assertj.core)
     implementation(libs.junitJupiter.api)

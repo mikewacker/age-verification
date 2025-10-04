@@ -18,6 +18,11 @@ dependencies {
 
     implementation(libs.jaxRs.api)
 
+    testImplementation(platform(libs.assertj.bom))
+    testImplementation(platform(libs.junit.bom))
+    if (project.name != "testing") {
+        testImplementation(project(":testing"))
+    }
     testImplementation(libs.assertj.core)
     testImplementation(libs.junitJupiter.api)
 

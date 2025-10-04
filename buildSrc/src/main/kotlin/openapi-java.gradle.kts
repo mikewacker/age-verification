@@ -148,7 +148,12 @@ repositories {
 val libs = the<LibrariesForLibs>() // version catalog workaround for buildSrc
 
 dependencies {
-    api(libs.bundles.retrofit)
-    implementation(libs.bundles.json)
+    api(platform(libs.retrofit.bom))
+    api(libs.retrofit.retrofit)
+
+    implementation(platform(libs.jackson.bom))
+    implementation(libs.jacksonCore.annotations)
+    implementation(libs.jakartaAnnotation.api)
+    implementation(libs.jakartaValidation.api)
     implementation(libs.jaxRs.api)
 }

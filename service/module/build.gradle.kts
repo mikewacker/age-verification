@@ -6,8 +6,10 @@ plugins {
 dependencies {
     api(project(":site:spi"))
     api(project(":avs:spi"))
-    api(libs.bundles.retrofit)
-    api(libs.junitJupiter.api)
+
+    implementation(platform(libs.assertj.bom))
+    implementation(platform(libs.junit.bom))
     implementation(project(":testing"))
     implementation(libs.assertj.core)
+    implementation(libs.junitJupiter.api)
 }

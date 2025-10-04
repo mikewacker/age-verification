@@ -1,15 +1,10 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.dagger")
 }
 
 dependencies {
-    annotationProcessor(libs.dagger.compiler)
-
-    api(libs.jackson.databind)
-    implementation(libs.dagger.dagger)
-
-    testAnnotationProcessor(libs.dagger.compiler)
-
-    testImplementation(project(":testing"))
+    api(platform(libs.jackson.bom))
+    api(libs.jacksonCore.databind)
 }
