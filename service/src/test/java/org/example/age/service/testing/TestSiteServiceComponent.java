@@ -2,7 +2,6 @@ package org.example.age.service.testing;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.avs.api.client.AvsApi;
@@ -34,7 +33,6 @@ public interface TestSiteServiceComponent extends Supplier<TestSiteService> {
     @Component.Factory
     interface Factory {
 
-        TestSiteServiceComponent create(
-                @BindsInstance @Named("client") AvsApi avsClient, @BindsInstance SiteServiceConfig config);
+        TestSiteServiceComponent create(@BindsInstance AvsApi avsClient, @BindsInstance SiteServiceConfig config);
     }
 }

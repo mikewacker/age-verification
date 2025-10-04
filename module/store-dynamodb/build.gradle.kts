@@ -8,10 +8,11 @@ plugins {
 }
 
 dependencies {
+    api(project(":common:client:dynamodb"))
+
     implementation(platform(libs.aws.bom))
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
-    implementation(project(":common:client:dynamodb"))
     implementation(project(":common:env"))
     implementation(libs.aws.dynamoDb)
 
