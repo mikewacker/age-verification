@@ -11,6 +11,7 @@ dependencies {
     implementation(platform(libs.aws.bom))
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
+    implementation(project(":common:client:dynamodb"))
     implementation(project(":common:env"))
     implementation(libs.aws.dynamoDb)
 
@@ -25,4 +26,5 @@ dependencies {
 
 dockerCompose {
     isRequiredBy(tasks.test)
+    useComposeFiles = listOf("${project(":common:client:dynamodb").projectDir}/docker-compose-test.yml")
 }

@@ -2,10 +2,10 @@ package org.example.age.module.store.dynamodb;
 
 import dagger.Binds;
 import dagger.Module;
+import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
+import org.example.age.common.client.dynamodb.DynamoDbClientModule;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
-import org.example.age.module.store.dynamodb.client.DynamoDbClientModule;
-import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.site.spi.SiteVerificationStore;
 
 /**
@@ -13,7 +13,7 @@ import org.example.age.site.spi.SiteVerificationStore;
  * <p>
  * Depends on an unbound...
  * <ul>
- *     <li>{@link DynamoDbConfig}
+ *     <li>{@link DynamoDbClientConfig}
  *     <li>{@link LiteEnv}
  * </ul>
  */
