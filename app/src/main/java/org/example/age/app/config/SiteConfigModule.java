@@ -2,10 +2,10 @@ package org.example.age.app.config;
 
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.common.provider.redis.RedisConfig;
+import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
+import org.example.age.common.client.redis.RedisClientConfig;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
-import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.service.SiteServiceConfig;
 
 /**
@@ -13,8 +13,8 @@ import org.example.age.service.SiteServiceConfig;
  * <ul>
  *     <li>{@link SiteServiceConfig}
  *     <li>{@link SiteClientsConfig}
- *     <li>{@link RedisConfig}
- *     <li>{@link DynamoDbConfig}
+ *     <li>{@link RedisClientConfig}
+ *     <li>{@link DynamoDbClientConfig}
  *     <li>{@link SiteKeysConfig}
  * </ul>
  * <p>
@@ -34,12 +34,12 @@ public interface SiteConfigModule {
     }
 
     @Provides
-    static RedisConfig provideRedisConfig(SiteAppConfig appConfig) {
+    static RedisClientConfig provideRedisConfig(SiteAppConfig appConfig) {
         return appConfig.getRedis();
     }
 
     @Provides
-    static DynamoDbConfig provideDynamoDbConfig(SiteAppConfig appConfig) {
+    static DynamoDbClientConfig provideDynamoDbConfig(SiteAppConfig appConfig) {
         return appConfig.getDynamoDb();
     }
 

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.example.age.common.provider.redis.RedisConfig;
+import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
+import org.example.age.common.client.redis.RedisClientConfig;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
-import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.service.AvsServiceConfig;
 
 /** Configuration for the application. */
@@ -23,11 +23,11 @@ public final class AvsAppConfig extends Configuration {
 
     @Valid
     @NotNull
-    private RedisConfig redis;
+    private RedisClientConfig redis;
 
     @Valid
     @NotNull
-    private DynamoDbConfig dynamoDb;
+    private DynamoDbClientConfig dynamoDb;
 
     @Valid
     @NotNull
@@ -54,22 +54,22 @@ public final class AvsAppConfig extends Configuration {
     }
 
     @JsonProperty
-    public RedisConfig getRedis() {
+    public RedisClientConfig getRedis() {
         return redis;
     }
 
     @JsonProperty
-    public void setRedis(RedisConfig redis) {
+    public void setRedis(RedisClientConfig redis) {
         this.redis = redis;
     }
 
     @JsonProperty
-    public DynamoDbConfig getDynamoDb() {
+    public DynamoDbClientConfig getDynamoDb() {
         return dynamoDb;
     }
 
     @JsonProperty
-    public void setDynamoDb(DynamoDbConfig dynamoDb) {
+    public void setDynamoDb(DynamoDbClientConfig dynamoDb) {
         this.dynamoDb = dynamoDb;
     }
 

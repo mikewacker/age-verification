@@ -2,10 +2,10 @@ package org.example.age.app.config;
 
 import dagger.Module;
 import dagger.Provides;
-import org.example.age.common.provider.redis.RedisConfig;
+import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
+import org.example.age.common.client.redis.RedisClientConfig;
 import org.example.age.module.client.AvsClientsConfig;
 import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
-import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.service.AvsServiceConfig;
 
 /**
@@ -13,8 +13,8 @@ import org.example.age.service.AvsServiceConfig;
  * <ul>
  *     <li>{@link AvsServiceConfig}
  *     <li>{@link AvsClientsConfig}
- *     <li>{@link RedisConfig}
- *     <li>{@link DynamoDbConfig}
+ *     <li>{@link RedisClientConfig}
+ *     <li>{@link DynamoDbClientConfig}
  *     <li>{@link AvsKeysConfig}
  * </ul>
  * <p>
@@ -34,12 +34,12 @@ public interface AvsConfigModule {
     }
 
     @Provides
-    static RedisConfig provideRedisConfig(AvsAppConfig appConfig) {
+    static RedisClientConfig provideRedisConfig(AvsAppConfig appConfig) {
         return appConfig.getRedis();
     }
 
     @Provides
-    static DynamoDbConfig provideDynamoDbConfig(AvsAppConfig appConfig) {
+    static DynamoDbClientConfig provideDynamoDbConfig(AvsAppConfig appConfig) {
         return appConfig.getDynamoDb();
     }
 

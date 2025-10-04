@@ -2,14 +2,14 @@ package org.example.age.module.store.dynamodb.testing;
 
 import dagger.Module;
 import dagger.Provides;
+import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.env.LiteEnv;
-import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
 import org.example.age.testing.env.TestEnvModule;
 
 /**
  * Dagger module that binds...
  * <ul>
- *     <li>{@link DynamoDbConfig}
+ *     <li>{@link DynamoDbClientConfig}
  *     <li>{@link LiteEnv}
  * </ul>
  */
@@ -17,7 +17,7 @@ import org.example.age.testing.env.TestEnvModule;
 public interface TestDependenciesModule {
 
     @Provides
-    static DynamoDbConfig provideDynamoDbConfig() {
+    static DynamoDbClientConfig provideDynamoDbConfig() {
         return TestConfig.dynamoDb();
     }
 }
