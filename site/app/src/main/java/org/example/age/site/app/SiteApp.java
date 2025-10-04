@@ -1,4 +1,4 @@
-package org.example.age.app;
+package org.example.age.site.app;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -6,8 +6,6 @@ import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import org.example.age.app.config.SiteAppConfig;
-import org.example.age.app.config.SiteConfigModule;
 import org.example.age.common.app.env.DropwizardEnvModule;
 import org.example.age.common.provider.request.demo.DemoAccountIdModule;
 import org.example.age.module.client.SiteClientModule;
@@ -16,6 +14,8 @@ import org.example.age.module.store.dynamodb.DynamoDbSiteAccountStoreModule;
 import org.example.age.module.store.redis.RedisPendingStoreModule;
 import org.example.age.service.SiteServiceModule;
 import org.example.age.site.api.SiteApi;
+import org.example.age.site.app.config.SiteAppConfig;
+import org.example.age.site.app.config.SiteConfigModule;
 
 /** Application for a site. */
 public final class SiteApp extends Application<SiteAppConfig> {

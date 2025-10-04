@@ -30,7 +30,9 @@ include(
     "module:test",
 
     "common:app",
-    "app",
+    "site:app",
+    "avs:app",
+    "integrationTest:app",
 
     "testing",
 

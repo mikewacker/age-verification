@@ -1,4 +1,4 @@
-package org.example.age.app.config;
+package org.example.age.site.app.config;
 
 import dagger.Module;
 import dagger.Provides;

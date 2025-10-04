@@ -1,4 +1,4 @@
-package org.example.age.app.config;
+package org.example.age.avs.app.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
@@ -6,20 +6,20 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.client.redis.RedisClientConfig;
-import org.example.age.module.client.SiteClientsConfig;
-import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
-import org.example.age.service.SiteServiceConfig;
+import org.example.age.module.client.AvsClientsConfig;
+import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
+import org.example.age.service.AvsServiceConfig;
 
 /** Configuration for the application. */
-public final class SiteAppConfig extends Configuration {
+public final class AvsAppConfig extends Configuration {
 
     @Valid
     @NotNull
-    private SiteServiceConfig service;
+    private AvsServiceConfig service;
 
     @Valid
     @NotNull
-    private SiteClientsConfig clients;
+    private AvsClientsConfig clients;
 
     @Valid
     @NotNull
@@ -31,25 +31,25 @@ public final class SiteAppConfig extends Configuration {
 
     @Valid
     @NotNull
-    private SiteKeysConfig keys;
+    private AvsKeysConfig keys;
 
     @JsonProperty
-    public SiteServiceConfig getService() {
+    public AvsServiceConfig getService() {
         return service;
     }
 
     @JsonProperty
-    public void setService(SiteServiceConfig service) {
+    public void setService(AvsServiceConfig service) {
         this.service = service;
     }
 
     @JsonProperty
-    public SiteClientsConfig getClients() {
+    public AvsClientsConfig getClients() {
         return clients;
     }
 
     @JsonProperty
-    public void setClients(SiteClientsConfig clients) {
+    public void setClients(AvsClientsConfig clients) {
         this.clients = clients;
     }
 
@@ -74,12 +74,12 @@ public final class SiteAppConfig extends Configuration {
     }
 
     @JsonProperty
-    public SiteKeysConfig getKeys() {
+    public AvsKeysConfig getKeys() {
         return keys;
     }
 
     @JsonProperty
-    public void setKeys(SiteKeysConfig keys) {
+    public void setKeys(AvsKeysConfig keys) {
         this.keys = keys;
     }
 }

@@ -2,7 +2,6 @@ plugins {
     `java-library`
     id("buildlogic.java-conventions")
     id("buildlogic.dagger")
-    alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
@@ -10,7 +9,6 @@ dependencies {
     api(libs.dropwizard.core)
 
     implementation(project(":site:api"))
-    implementation(project(":avs:api"))
     implementation(project(":service"))
     implementation(project(":common:provider:request-demo"))
     implementation(project(":module:client"))
@@ -24,19 +22,10 @@ dependencies {
     // Dagger component
     implementation(platform(libs.aws.bom))
     implementation(project(":site:spi"))
-    implementation(project(":avs:spi"))
     implementation(project(":common:client:dynamodb"))
     implementation(project(":common:client:redis"))
     implementation(project(":common:env"))
     implementation(libs.aws.dynamoDb)
     implementation(libs.darc.darc)
     implementation(libs.jedis.jedis)
-
-    testImplementation(testFixtures(project(":module:store-redis")))
-    testImplementation(testFixtures(project(":module:store-dynamodb")))
-    testImplementation(libs.dropwizard.testing)
-}
-
-dockerCompose {
-    isRequiredBy(tasks.test)
 }

@@ -7,7 +7,8 @@ plugins {
 dependencies {
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
-    implementation(project(":app"))
+    implementation(project(":site:app"))
+    implementation(project(":avs:app"))
     implementation(project(":testing"))
     implementation(testFixtures(project(":module:store-redis")))
     implementation(testFixtures(project(":module:store-dynamodb")))
