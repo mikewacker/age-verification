@@ -1,7 +1,7 @@
 rootProject.name = "age-verification"
 
 include(
-        "common:util",
+    ":common:annotation",
 
     "common:api",
     "site:api",
@@ -18,7 +18,6 @@ include(
     "common:env",
 
     "common:provider:request-demo",
-
     "module:common",
     "module:client",
     "module:store-redis",

@@ -1,5 +1,9 @@
-package org.example.age.common.util;
+package org.example.age.common.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.immutables.value.Generated;
 import org.immutables.value.Value;
 
@@ -11,4 +15,6 @@ import org.immutables.value.Value;
         allowedClasspathAnnotations = {Generated.class, javax.annotation.processing.Generated.class},
         defaults = @Value.Immutable(copy = false),
         from = "")
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.SOURCE)
 public @interface ValueStyle {}

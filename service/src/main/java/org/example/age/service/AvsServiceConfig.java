@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import java.util.Map;
 import org.example.age.avs.api.AvsApi;
+import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.api.AgeThresholds;
-import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /** Configuration for the service implementation of {@link AvsApi}. */

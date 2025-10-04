@@ -11,9 +11,11 @@ repositories {
 val libs = the<LibrariesForLibs>() // version catalog workaround for buildSrc
 
 dependencies {
-    implementation(platform(libs.immutables.bom))
+    compileOnly(platform(libs.immutables.bom))
+    compileOnly(project(":common:annotation"))
+    compileOnly(libs.immutables.annotations)
+
     implementation(platform(libs.jackson.bom))
-    implementation(libs.immutables.annotations)
     implementation(libs.jacksonCore.databind)
     implementation(libs.jakartaAnnotation.api)
 

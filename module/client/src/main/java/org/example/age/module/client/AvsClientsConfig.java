@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URL;
 import java.util.Map;
 import org.example.age.avs.api.AvsApi;
-import org.example.age.common.util.ValueStyle;
+import org.example.age.common.annotation.ValueStyle;
 import org.example.age.site.api.client.SiteApi;
 import org.immutables.value.Value;
 

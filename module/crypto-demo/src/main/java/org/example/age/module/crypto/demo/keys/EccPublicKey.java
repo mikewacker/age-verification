@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.math.BigInteger;
 import java.security.spec.ECPoint;
-import org.example.age.common.util.ValueStyle;
+import org.example.age.common.annotation.ValueStyle;
 import org.immutables.value.Value;
 
 /** Public key for elliptic curve cryptography. Does not include the definition of the curve. */

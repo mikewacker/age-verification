@@ -22,11 +22,11 @@ import org.example.age.common.api.AgeThresholds;
 import org.example.age.common.api.SignedAgeCertificate;
 import org.example.age.common.api.VerificationRequest;
 import org.example.age.common.api.VerifiedUser;
+import org.example.age.common.api.client.AsyncCalls;
 import org.example.age.common.api.crypto.SecureId;
 import org.example.age.common.spi.AccountIdContext;
 import org.example.age.common.spi.PendingStore;
 import org.example.age.common.spi.PendingStoreRepository;
-import org.example.age.common.util.AsyncCalls;
 import org.example.age.site.api.client.SiteApi;
 import retrofit2.Call;
 

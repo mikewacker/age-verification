@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.PrivateKey;
 import java.util.Map;
+import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.api.crypto.SecureId;
-import org.example.age.common.util.ValueStyle;
 import org.immutables.value.Value;
 
 /**

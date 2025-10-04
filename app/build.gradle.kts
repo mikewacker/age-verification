@@ -21,15 +21,13 @@ dependencies {
     implementation(libs.jacksonCore.annotations)
     implementation(libs.jakartaValidation.api)
 
-    // Dagger component + JDK-8305250
+    // Dagger component
     implementation(platform(libs.aws.bom))
-    implementation(platform(libs.immutables.bom))
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
     implementation(project(":common:env"))
     implementation(libs.aws.dynamoDb)
     implementation(libs.darc.darc)
-    implementation(libs.immutables.annotations)
     implementation(libs.jedis.jedis)
 
     testImplementation(testFixtures(project(":module:store-redis")))
