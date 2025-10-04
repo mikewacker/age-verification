@@ -1,14 +1,13 @@
 plugins {
-    `java-test-fixtures`
+    `java-library`
     id("buildlogic.java-conventions")
 }
 
 dependencies {
-    testFixturesApi(project(":site:spi"))
-    testFixturesApi(project(":avs:spi"))
-    testFixturesApi(libs.bundles.retrofit)
-    testFixturesApi(libs.junitJupiter.api)
-    testFixturesImplementation(project(":testing"))
-    testFixturesImplementation(libs.assertj.core)
-    testFixturesImplementation(libs.jaxRs.api)
+    api(project(":site:spi"))
+    api(project(":avs:spi"))
+    api(libs.bundles.retrofit)
+    api(libs.junitJupiter.api)
+    implementation(project(":testing"))
+    implementation(libs.assertj.core)
 }

@@ -8,6 +8,5 @@ dependencies {
     api(libs.retrofit.retrofit)
     implementation(project(":testing"))
     implementation(libs.assertj.core)
-    implementation(libs.jaxRs.api)
     implementation(libs.junitJupiter.api)
 }

@@ -24,7 +24,7 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
-    testImplementation(testFixtures(project(":service:module")))
+    testImplementation(project(":service:module"))
     testImplementation(testFixtures(project(":module:common")))
 }
 
