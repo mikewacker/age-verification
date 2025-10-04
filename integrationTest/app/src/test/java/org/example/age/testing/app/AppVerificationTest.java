@@ -1,13 +1,13 @@
-package org.example.age.app;
+package org.example.age.testing.app;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import java.io.IOException;
-import org.example.age.app.config.AvsAppConfig;
-import org.example.age.app.config.SiteAppConfig;
 import org.example.age.avs.api.client.AvsApi;
+import org.example.age.avs.app.AvsApp;
+import org.example.age.avs.app.config.AvsAppConfig;
 import org.example.age.common.api.AgeRange;
 import org.example.age.common.api.VerificationRequest;
 import org.example.age.common.api.VerifiedUser;
@@ -17,6 +17,8 @@ import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
 import org.example.age.site.api.client.SiteApi;
+import org.example.age.site.app.SiteApp;
+import org.example.age.site.app.config.SiteAppConfig;
 import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

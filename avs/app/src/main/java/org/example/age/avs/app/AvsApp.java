@@ -1,4 +1,4 @@
-package org.example.age.app;
+package org.example.age.avs.app;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -6,9 +6,9 @@ import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import org.example.age.app.config.AvsAppConfig;
-import org.example.age.app.config.AvsConfigModule;
 import org.example.age.avs.api.AvsApi;
+import org.example.age.avs.app.config.AvsAppConfig;
+import org.example.age.avs.app.config.AvsConfigModule;
 import org.example.age.common.app.env.DropwizardEnvModule;
 import org.example.age.common.provider.request.demo.DemoAccountIdModule;
 import org.example.age.module.client.AvsClientModule;
