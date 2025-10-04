@@ -15,10 +15,12 @@ include(
 
     "service",
 
+    "common:env",
+
+    "common:client:api",
     "common:client:dynamodb",
     "common:client:redis",
 
-    "common:env",
     "common:provider:request-demo",
     "module:common",
     "module:client",

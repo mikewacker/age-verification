@@ -12,10 +12,9 @@ import redis.clients.jedis.JedisPooled;
 
 public final class RedisClientTest {
 
-    private static final JedisPooled client = TestComponent.create();
-
     @Test
     public void useClient() {
+        JedisPooled client = TestComponent.create();
         client.set("key", "value");
         String value = client.get("key");
         assertThat(value).isEqualTo("value");
