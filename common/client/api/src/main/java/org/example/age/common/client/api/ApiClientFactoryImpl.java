@@ -1,9 +1,9 @@
 package org.example.age.common.client.api;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
-import jakarta.inject.Singleton;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import org.example.age.common.env.LiteEnv;
