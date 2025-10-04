@@ -16,6 +16,6 @@ dependencies {
     testAnnotationProcessor(libs.dagger.compiler)
 
     testImplementation(project(":testing"))
-    testImplementation(testFixtures(project(":module:test")))
+    testImplementation(project(":module:test"))
     testImplementation(libs.retrofit.mock)
 }

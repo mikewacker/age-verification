@@ -25,7 +25,7 @@ dependencies {
 
     testImplementation(project(":testing"))
     testImplementation(project(":common:spi-testing"))
-    testImplementation(testFixtures(project(":service:module")))
+    testImplementation(project(":service:module"))
     testImplementation(testFixtures(project(":module:common")))
 }
 
