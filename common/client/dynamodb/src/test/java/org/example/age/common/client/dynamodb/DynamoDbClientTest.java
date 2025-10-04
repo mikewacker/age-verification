@@ -17,10 +17,9 @@ import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 
 public final class DynamoDbClientTest {
 
-    private static final DynamoDbClient client = TestComponent.create();
-
     @Test
     public void useClient() {
+        DynamoDbClient client = TestComponent.create();
         CreateTableRequest tableRequest = CreateTableRequest.builder()
                 .tableName("table")
                 .attributeDefinitions(AttributeDefinition.builder()

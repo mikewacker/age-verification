@@ -1,55 +1,43 @@
-package org.example.age.testing.client;
+package org.example.age.common.client.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dagger.Component;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
-import jakarta.ws.rs.HeaderParam;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import okhttp3.OkHttpClient;
+import java.util.function.Supplier;
+import org.example.age.testing.client.TestClient;
+import org.example.age.testing.env.TestEnvModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
 
-public final class TestClientTest {
+public final class ApiClientTest {
 
     @RegisterExtension
     private static final DropwizardAppExtension<Configuration> app =
             new DropwizardAppExtension<>(TestApp.class, null, ConfigOverride.randomPorts());
 
     @Test
-    public void http() {
-        OkHttpClient client = TestClient.http();
-        assertThat(client).isNotNull();
-        assertThat(client).isSameAs(TestClient.http());
-    }
-
-    @Test
-    public void api() throws IOException {
-        TestApi client = TestClient.api(
-                app.getLocalPort(), requestBuilder -> requestBuilder.header("Test-Header", "value"), TestApi.class);
+    public void useClient() throws IOException {
+        TestApi client = TestComponent.create().create(TestClient.localhostUrl(app.getLocalPort()), TestApi.class);
         Response<List<String>> response = client.test().execute();
         assertThat(response.isSuccessful()).isTrue();
-        assertThat(response.body()).containsExactly("value");
+        assertThat(response.body()).containsExactly("test");
     }
 
-    @Test
-    public void localhostUrl() {
-        URL url = TestClient.localhostUrl(8080);
-        assertThat(url.toString()).isEqualTo("http://localhost:8080");
-    }
-
-    /** Client for a test API that responds with the value of the test header. */
+    /** Test client API. */
     interface TestApi {
 
         @GET("test")
@@ -62,8 +50,8 @@ public final class TestClientTest {
     public static final class TestEndpoint {
 
         @jakarta.ws.rs.GET
-        public List<String> test(@HeaderParam("Test-Header") String value) {
-            return List.of(value);
+        public List<String> test() {
+            return List.of("test");
         }
     }
 
@@ -73,6 +61,16 @@ public final class TestClientTest {
         @Override
         public void run(Configuration config, Environment env) {
             env.jersey().register(new TestEndpoint());
+        }
+    }
+
+    /** Dagger component for {@link ApiClientFactory}. */
+    @Component(modules = {ApiClientModule.class, TestEnvModule.class})
+    @Singleton
+    interface TestComponent extends Supplier<ApiClientFactory> {
+
+        static ApiClientFactory create() {
+            return DaggerApiClientTest_TestComponent.create().get();
         }
     }
 }
