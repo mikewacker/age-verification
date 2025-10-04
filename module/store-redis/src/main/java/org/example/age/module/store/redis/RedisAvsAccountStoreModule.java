@@ -5,8 +5,8 @@ import dagger.Module;
 import org.example.age.avs.spi.AvsVerifiedUserStore;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
-import org.example.age.module.store.redis.client.RedisClientModule;
-import org.example.age.module.store.redis.client.RedisConfig;
+import org.example.age.common.provider.redis.RedisConfig;
+import org.example.age.common.provider.redis.RedisModule;
 
 /**
  * Dagger module that binds {@link AvsVerifiedUserStore}.
@@ -17,7 +17,7 @@ import org.example.age.module.store.redis.client.RedisConfig;
  *     <li>{@link LiteEnv}
  * </ul>
  */
-@Module(includes = {RedisClientModule.class, BaseEnvModule.class})
+@Module(includes = {RedisModule.class, BaseEnvModule.class})
 public interface RedisAvsAccountStoreModule {
 
     @Binds

@@ -2,10 +2,10 @@ package org.example.age.app.config;
 
 import dagger.Module;
 import dagger.Provides;
+import org.example.age.common.provider.redis.RedisConfig;
 import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.module.store.dynamodb.client.DynamoDbConfig;
-import org.example.age.module.store.redis.client.RedisConfig;
 import org.example.age.service.SiteServiceConfig;
 
 /**

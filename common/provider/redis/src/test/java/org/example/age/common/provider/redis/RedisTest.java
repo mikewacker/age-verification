@@ -1,22 +1,17 @@
-package org.example.age.module.store.redis.client;
+package org.example.age.common.provider.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.module.store.redis.testing.RedisTestContainer;
-import org.example.age.module.store.redis.testing.TestDependenciesModule;
+import org.example.age.common.provider.redis.testing.TestDependenciesModule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import redis.clients.jedis.JedisPooled;
 
-public final class RedisClientTest {
+public final class RedisTest {
 
     private static final JedisPooled client = TestComponent.create();
-
-    @RegisterExtension
-    private static final RedisTestContainer redis = new RedisTestContainer();
 
     @Test
     public void useClient() {
@@ -26,12 +21,12 @@ public final class RedisClientTest {
     }
 
     /** Dagger component for {@link JedisPooled}. */
-    @Component(modules = {RedisClientModule.class, TestDependenciesModule.class})
+    @Component(modules = {RedisModule.class, TestDependenciesModule.class})
     @Singleton
     interface TestComponent extends Supplier<JedisPooled> {
 
         static JedisPooled create() {
-            return DaggerRedisClientTest_TestComponent.create().get();
+            return DaggerRedisTest_TestComponent.create().get();
         }
     }
 }
