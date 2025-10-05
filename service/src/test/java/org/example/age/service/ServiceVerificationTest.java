@@ -3,9 +3,7 @@ package org.example.age.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.client.WebStageTesting.await;
 
-import jakarta.ws.rs.NotFoundException;
 import java.util.Map;
-import java.util.Optional;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.common.api.SignedAgeCertificate;
 import org.example.age.common.api.VerificationRequest;
@@ -24,10 +22,7 @@ import retrofit2.Call;
 public final class ServiceVerificationTest {
 
     private final TestSiteService siteService = TestSiteServiceComponent.create(new AdaptedAvsClient());
-    private final TestAvsService avsService = TestAvsServiceComponent.create(this::getSiteClient);
-
-    private final Map<String, org.example.age.site.api.client.SiteApi> siteClients =
-            Map.of("site1", new AdaptedSiteClient());
+    private final TestAvsService avsService = TestAvsServiceComponent.create(Map.of("site1", new AdaptedSiteClient()));
 
     @Test
     public void verify() {
@@ -38,10 +33,6 @@ public final class ServiceVerificationTest {
         await(avsService.sendAgeCertificate());
         VerificationState state = await(siteService.getVerificationState());
         assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
-    }
-
-    private org.example.age.site.api.client.SiteApi getSiteClient(String siteId) {
-        return Optional.ofNullable(siteClients.get(siteId)).orElseThrow(NotFoundException::new);
     }
 
     /** Adapts {@link AvsApi} to the corresponding client interface. */

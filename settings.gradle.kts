@@ -21,10 +21,10 @@ include(
     "common:client:dynamodb",
     "common:client:redis",
     "site:client:avs",
+    "avs:client:site",
 
     "common:provider:request-demo",
     "module:common",
-    "module:client",
     "module:store-redis",
     "module:store-dynamodb",
     "module:crypto-demo",

@@ -8,6 +8,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -16,7 +17,6 @@ import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.spi.AgeCertificateSigner;
 import org.example.age.avs.spi.AvsVerifiedUserLocalizer;
 import org.example.age.avs.spi.AvsVerifiedUserStore;
-import org.example.age.avs.spi.SiteClientRepository;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.AgeThresholds;
 import org.example.age.common.api.SignedAgeCertificate;
@@ -34,7 +34,7 @@ import retrofit2.Call;
 final class AvsService implements AvsApi {
 
     private final AccountIdContext accountIdContext;
-    private final SiteClientRepository siteClients;
+    private final Map<String, SiteApi> siteClients;
     private final AvsVerifiedUserStore userStore;
     private final PendingStore<VerificationRequest> pendingUnlinkedRequestStore;
     private final PendingStore<VerificationRequest> pendingLinkedRequestStore;
@@ -45,7 +45,7 @@ final class AvsService implements AvsApi {
     @Inject
     public AvsService(
             AccountIdContext accountIdContext,
-            SiteClientRepository siteClients,
+            Map<String, SiteApi> siteClients,
             AvsVerifiedUserStore userStore,
             PendingStoreRepository pendingStores,
             AgeCertificateSigner ageCertificateSigner,
@@ -63,7 +63,7 @@ final class AvsService implements AvsApi {
 
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequestForSite(String siteId) {
-        siteClients.get(siteId); // check that the site is registered
+        getSiteClient(siteId); // check that the site is registered
         VerificationRequest request = createVerificationRequest(siteId);
         return storeUnlinkedVerificationRequest(request);
     }
@@ -91,6 +91,11 @@ final class AvsService implements AvsApi {
                         .build())
                 .thenCompose(ageCertificateSigner::sign)
                 .thenCompose(this::sendSignedAgeCertificate);
+    }
+
+    /** Gets the client for the site, or throws {@link NotFoundException} if the site is not registered. */
+    private SiteApi getSiteClient(String siteId) {
+        return Optional.ofNullable(siteClients.get(siteId)).orElseThrow(NotFoundException::new);
     }
 
     /** Loads a verified account. */
@@ -144,7 +149,7 @@ final class AvsService implements AvsApi {
     /** Sends a {@link SignedAgeCertificate} to the corresponding site. */
     private CompletionStage<Void> sendSignedAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
         String siteId = signedAgeCertificate.getAgeCertificate().getRequest().getSiteId();
-        SiteApi siteClient = siteClients.get(siteId);
+        SiteApi siteClient = getSiteClient(siteId);
         Call<Void> call = siteClient.processAgeCertificate(signedAgeCertificate);
         return AsyncCalls.make(call)
                 .exceptionallyCompose(t -> CompletableFuture.failedFuture(

@@ -1,15 +1,14 @@
-package org.example.age.module.client;
+package org.example.age.avs.app.config;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.net.URL;
-import java.util.Map;
-import org.example.age.avs.api.AvsApi;
+import org.example.age.avs.client.site.SiteClientsConfig;
 import org.example.age.common.annotation.ValueStyle;
-import org.example.age.site.api.client.SiteApi;
+import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
+import org.example.age.common.client.redis.RedisClientConfig;
 import org.immutables.value.Value;
 
-/** Configuration for the clients used by the service implementation of {@link AvsApi}. */
+/** Configuration for the clients. */
 @Value.Immutable
 @ValueStyle
 @JsonSerialize
@@ -21,8 +20,14 @@ public interface AvsClientsConfig {
         return new Builder();
     }
 
-    /** Base URLs of the clients for {@link SiteApi}, keyed by site ID. */
-    Map<String, URL> siteUrls();
+    /** Configuration for the site clients. */
+    SiteClientsConfig sites();
+
+    /** Configuration for the DynamoDB client. */
+    DynamoDbClientConfig dynamoDb();
+
+    /** Configuration for the Redis client. */
+    RedisClientConfig redis();
 
     /** Builder for the configuration. */
     final class Builder extends ImmutableAvsClientsConfig.Builder {
