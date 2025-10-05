@@ -4,7 +4,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.avs.spi.AvsVerifiedUserStore;
-import org.example.age.service.module.store.testing.AvsAccountStoreTestTemplate;
+import org.example.age.testing.site.spi.AvsAccountStoreTestTemplate;
 
 public final class TestAvsAccountStoreTest extends AvsAccountStoreTestTemplate {
 

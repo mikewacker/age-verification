@@ -23,7 +23,7 @@ dependencies {
     testFixturesImplementation(project(":testing"))
 
     testImplementation(project(":site:spi-testing"))
-    testImplementation(project(":service:module"))
+    testImplementation(project(":avs:spi-testing"))
 }
 
 dockerCompose {
