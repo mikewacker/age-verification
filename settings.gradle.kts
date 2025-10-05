@@ -12,6 +12,7 @@ include(
     "avs:spi",
     "common:spi-testing",
     "site:spi-testing",
+    "avs:spi-testing",
     "service:module",
 
     "service",

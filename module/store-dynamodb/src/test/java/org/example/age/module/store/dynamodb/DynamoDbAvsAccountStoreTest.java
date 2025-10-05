@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import org.example.age.avs.spi.AvsVerifiedUserStore;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
-import org.example.age.service.module.store.testing.AvsAccountStoreTestTemplate;
 import org.example.age.testing.api.TestModels;
+import org.example.age.testing.site.spi.AvsAccountStoreTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

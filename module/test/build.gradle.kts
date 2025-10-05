@@ -11,5 +11,6 @@ dependencies {
 
     testImplementation(project(":common:spi-testing"))
     testImplementation(project(":site:spi-testing"))
+    testImplementation(project(":avs:spi-testing"))
     testImplementation(project(":service:module"))
 }
