@@ -5,13 +5,11 @@ import static org.assertj.core.api.Assertions.within;
 import static org.example.age.testing.client.WebStageTesting.await;
 import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
-import jakarta.ws.rs.NotFoundException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
-import java.util.Optional;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.AgeRange;
 import org.example.age.common.api.SignedAgeCertificate;
@@ -29,10 +27,9 @@ import retrofit2.mock.Calls;
 
 public final class AvsServiceTest {
 
-    private final TestAvsService avsService = TestAvsServiceComponent.create(this::getSiteClient);
+    private final TestAvsService avsService =
+            TestAvsServiceComponent.create(Map.of("site1", new FakeSiteClient(), "site2", new FakeSiteClient()));
 
-    private final Map<String, SiteApi> siteClients =
-            Map.of("site1", new FakeSiteClient(), "site2", new FakeSiteClient());
     private AgeCertificate ageCertificate = null;
 
     @Test
@@ -99,10 +96,6 @@ public final class AvsServiceTest {
     public void error_UnregisteredSite() {
         avsService.setAccountId("person");
         awaitErrorCode(avsService.createVerificationRequestForSite("unregistered-site"), 404);
-    }
-
-    private SiteApi getSiteClient(String siteId) {
-        return Optional.ofNullable(siteClients.get(siteId)).orElseThrow(NotFoundException::new);
     }
 
     /** Fake client implementation of {@link SiteApi}. */

@@ -4,6 +4,7 @@ aws = "2.34.5"
 dagger = "2.57.2"
 darc = "0.1.0"
 dropwizard = "5.0.0"
+guava = "33.5.0-jre"
 immutables = "2.11.4"
 jackson = "2.20.0"
 jakartaAnnotation = "3.0.0"
@@ -14,7 +15,6 @@ retrofit = "3.0.0"
 
 # test
 assertj = "3.27.6"
-guava = "33.5.0-jre"
 junit = "5.13.4"
 
 # plugin
@@ -40,6 +40,7 @@ aws-dynamoDb = { module = "software.amazon.awssdk:dynamodb" }
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 darc-darc = { module = "io.github.mikewacker.darc:darc", version.ref = "darc" }
 dropwizard-core = { module = "io.dropwizard:dropwizard-core" }
+guava-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 jedis-jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 immutables-annotations = { module = "org.immutables:value-annotations" }
 jacksonCore-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }

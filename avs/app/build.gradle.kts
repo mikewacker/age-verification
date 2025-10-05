@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
+    id("buildlogic.json")
     id("buildlogic.dagger")
 }
 
@@ -11,7 +12,7 @@ dependencies {
     implementation(project(":avs:api"))
     implementation(project(":service"))
     implementation(project(":common:provider:request-demo"))
-    implementation(project(":module:client"))
+    implementation(project(":avs:client:site"))
     implementation(project(":module:store-redis"))
     implementation(project(":module:store-dynamodb"))
     implementation(project(":module:crypto-demo"))
@@ -21,9 +22,9 @@ dependencies {
 
     // Dagger component
     implementation(platform(libs.aws.bom))
+    implementation(project(":site:api"))
     implementation(project(":avs:spi"))
-    implementation(project(":common:client:dynamodb"))
-    implementation(project(":common:client:redis"))
+    implementation(project(":common:client:api"))
     implementation(project(":common:env"))
     implementation(libs.aws.dynamoDb)
     implementation(libs.darc.darc)

@@ -6,12 +6,10 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":site:spi"))
-    implementation(project(":avs:spi"))
-    implementation(project(":common:env"))
-    implementation(libs.retrofit.converterJackson)
+    implementation(project(":site:api"))
+    implementation(project(":common:client:api"))
+    implementation(libs.guava.guava)
 
     testImplementation(platform(libs.dropwizard.bom))
-    testImplementation(project(":service:module"))
     testImplementation(libs.dropwizard.testing)
 }
