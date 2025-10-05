@@ -1,0 +1,21 @@
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:${DYNAMODB_VERSION}
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    ports:
+      - "8000:8000"
+    volumes:
+      - dynamodb-data:/data
+    depends_on:
+      seed-dynamodb:
+        condition: service_completed_successfully
+
+  seed-dynamodb:
+    image: alpine
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
+    volumes:
+      - ./src/test/resources:/seed-data:ro
+      - dynamodb-data:/data
+
+volumes:
+  dynamodb-data:

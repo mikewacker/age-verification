@@ -11,10 +11,10 @@ services:
 
   seed-redis:
     image: alpine
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
     volumes:
       - ./src/test/resources:/seed-data:ro
       - redis-data:/data
-    command: cp /seed-data/dump.rdb /data/
 
 volumes:
   redis-data:

@@ -14,10 +14,11 @@ public final class RedisClientTest {
 
     @Test
     public void useClient() {
-        JedisPooled client = TestComponent.create();
-        client.set("key", "value");
-        String value = client.get("key");
-        assertThat(value).isEqualTo("value");
+        try (JedisPooled client = TestComponent.create()) {
+            client.set("key", "value");
+            String value = client.get("key");
+            assertThat(value).isEqualTo("value");
+        }
     }
 
     /** Dagger component for {@link JedisPooled}. */

@@ -19,21 +19,22 @@ public final class DynamoDbClientTest {
 
     @Test
     public void useClient() {
-        DynamoDbClient client = TestComponent.create();
-        CreateTableRequest tableRequest = CreateTableRequest.builder()
-                .tableName("table")
-                .attributeDefinitions(AttributeDefinition.builder()
-                        .attributeName("id")
-                        .attributeType(ScalarAttributeType.S)
-                        .build())
-                .keySchema(KeySchemaElement.builder()
-                        .attributeName("id")
-                        .keyType(KeyType.HASH)
-                        .build())
-                .billingMode(BillingMode.PAY_PER_REQUEST)
-                .build();
-        client.createTable(tableRequest);
-        client.waiter().waitUntilTableExists(builder -> builder.tableName("table"));
+        try (DynamoDbClient client = TestComponent.create()) {
+            CreateTableRequest tableRequest = CreateTableRequest.builder()
+                    .tableName("table")
+                    .attributeDefinitions(AttributeDefinition.builder()
+                            .attributeName("id")
+                            .attributeType(ScalarAttributeType.S)
+                            .build())
+                    .keySchema(KeySchemaElement.builder()
+                            .attributeName("id")
+                            .keyType(KeyType.HASH)
+                            .build())
+                    .billingMode(BillingMode.PAY_PER_REQUEST)
+                    .build();
+            client.createTable(tableRequest);
+            client.waiter().waitUntilTableExists(builder -> builder.tableName("table"));
+        }
     }
 
     /** Dagger component for {@link DynamoDbClient} */
