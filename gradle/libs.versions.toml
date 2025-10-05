@@ -28,6 +28,7 @@ errorprone = "2.42.0"
 plugins-spotless-palantir = "2.75.0"
 
 # Docker image
+dockerImages-dynamoDb = "3.1.0"
 dockerImages-redis = "8.2.1"
 
 [libraries]

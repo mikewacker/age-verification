@@ -28,5 +28,6 @@ dependencies {
 
 dockerCompose {
     isRequiredBy(tasks.test)
-    useComposeFiles = listOf("${project(":common:client:dynamodb").projectDir}/docker-compose-test.yml")
+    useComposeFiles = listOf("$projectDir/docker-compose-test.yml")
+    environment.put("DYNAMODB_VERSION", libs.versions.dockerImages.dynamoDb)
 }
