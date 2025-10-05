@@ -22,6 +22,7 @@ dependencies {
     testFixturesApi(libs.aws.dynamoDb)
     testFixturesImplementation(project(":testing"))
 
+    testImplementation(project(":site:spi-testing"))
     testImplementation(project(":service:module"))
 }
 

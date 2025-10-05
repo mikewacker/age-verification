@@ -15,14 +15,14 @@ public abstract class PendingStoreTestTemplate {
 
     @Test
     public void putThenGet() {
-        await(store().put("key1", 1, expiresIn()));
+        await(store().put("key1", 1, expiration()));
         Optional<Integer> maybeValue = await(store().tryGet("key1"));
         assertThat(maybeValue).hasValue(1);
     }
 
     @Test
     public void putThenRemoveThenGet() {
-        await(store().put("key2", 1, expiresIn()));
+        await(store().put("key2", 1, expiration()));
         Optional<Integer> maybeValue1 = await(store().tryRemove("key2"));
         assertThat(maybeValue1).hasValue(1);
         Optional<Integer> maybeValue2 = await(store().tryGet("key2"));
@@ -44,7 +44,7 @@ public abstract class PendingStoreTestTemplate {
         assertThat(maybeValue).isEmpty();
     }
 
-    protected static OffsetDateTime expiresIn() {
+    protected static OffsetDateTime expiration() {
         return expiresIn(Duration.ofMinutes(5));
     }
 

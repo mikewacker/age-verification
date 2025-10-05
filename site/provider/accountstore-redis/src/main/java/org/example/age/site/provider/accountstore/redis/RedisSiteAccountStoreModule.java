@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.site.provider.accountstore.redis;
 
 import dagger.Binds;
 import dagger.Module;
@@ -18,8 +18,10 @@ import org.example.age.site.spi.SiteVerificationStore;
  * </ul>
  */
 @Module(includes = {RedisClientModule.class, BaseEnvModule.class})
-public interface RedisSiteAccountStoreModule {
+public abstract class RedisSiteAccountStoreModule {
 
     @Binds
-    SiteVerificationStore bindSiteVerificationStore(RedisSiteVerificationStore impl);
+    abstract SiteVerificationStore bindSiteVerificationStore(RedisSiteVerificationStore impl);
+
+    RedisSiteAccountStoreModule() {}
 }
