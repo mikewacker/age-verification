@@ -1,0 +1,20 @@
+services:
+  redis:
+    image: redis:${REDIS_VERSION}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    depends_on:
+      seed-redis:
+        condition: service_completed_successfully
+
+  seed-redis:
+    image: alpine
+    volumes:
+      - ./src/test/resources:/seed-data:ro
+      - redis-data:/data
+    command: cp /seed-data/dump.rdb /data/
+
+volumes:
+  redis-data:

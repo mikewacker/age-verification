@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.avs.provider.accountstore.redis;
 
 import dagger.Binds;
 import dagger.Module;
@@ -18,8 +18,10 @@ import org.example.age.common.env.LiteEnv;
  * </ul>
  */
 @Module(includes = {RedisClientModule.class, BaseEnvModule.class})
-public interface RedisAvsAccountStoreModule {
+public abstract class RedisAvsAccountStoreModule {
 
     @Binds
-    AvsVerifiedUserStore bindAvsVerifiedUserStore(RedisAvsVerifiedUserStore impl);
+    abstract AvsVerifiedUserStore bindAvsVerifiedUserStore(RedisAvsVerifiedUserStore impl);
+
+    RedisAvsAccountStoreModule() {}
 }
