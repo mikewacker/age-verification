@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.common.provider.pendingstore.redis;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

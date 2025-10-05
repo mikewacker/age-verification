@@ -23,9 +23,12 @@ plugins-errorprone = "4.3.0"
 plugins-openapi = "7.16.0"
 plugins-spotless = "8.0.0"
 
-# special
+# static analysis
 errorprone = "2.42.0"
 plugins-spotless-palantir = "2.75.0"
+
+# Docker image
+dockerImages-redis = "8.2.1"
 
 [libraries]
 # main: BOMs
@@ -48,6 +51,7 @@ jacksonCore-databind = { module = "com.fasterxml.jackson.core:jackson-databind" 
 jakartaAnnotation-api = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakartaValidation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidation" }
 jaxRs-api = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jaxRs" }
+retrofit-converterJackson = { module = "com.squareup.retrofit2:converter-jackson" }
 retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit" }
 
 # main: annotation processors
@@ -68,7 +72,6 @@ guava-testlib = { module = "com.google.guava:guava-testlib", version.ref = "guav
 junitJupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junitJupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junitPlatform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-retrofit-converterJackson = { module = "com.squareup.retrofit2:converter-jackson" }
 retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock" }
 
 # plugin

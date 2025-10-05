@@ -1,4 +1,4 @@
-package org.example.age.common.provider.request.demo;
+package org.example.age.common.provider.account.demo;
 
 import dagger.BindsInstance;
 import dagger.Component;
