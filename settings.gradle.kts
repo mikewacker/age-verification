@@ -23,7 +23,7 @@ include(
     "site:client:avs",
     "avs:client:site",
 
-    "common:provider:request-demo",
+    "common:provider:account-demo",
     "module:common",
     "module:store-redis",
     "module:store-dynamodb",

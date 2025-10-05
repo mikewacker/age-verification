@@ -11,7 +11,7 @@ dependencies {
 
     implementation(project(":site:api"))
     implementation(project(":service"))
-    implementation(project(":common:provider:request-demo"))
+    implementation(project(":common:provider:account-demo"))
     implementation(project(":site:client:avs"))
     implementation(project(":module:store-dynamodb"))
     implementation(project(":module:store-redis"))
