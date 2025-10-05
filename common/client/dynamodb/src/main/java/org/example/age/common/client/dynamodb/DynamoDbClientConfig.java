@@ -9,7 +9,7 @@ import org.example.age.common.annotation.ValueStyle;
 import org.immutables.value.Value;
 import software.amazon.awssdk.regions.Region;
 
-/** Configuration for DynamoDB. */
+/** Configuration for the DynamoDB client. */
 @Value.Immutable
 @ValueStyle
 @JsonSerialize

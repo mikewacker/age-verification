@@ -20,6 +20,7 @@ include(
     "common:client:api",
     "common:client:dynamodb",
     "common:client:redis",
+    "site:client:avs",
 
     "common:provider:request-demo",
     "module:common",

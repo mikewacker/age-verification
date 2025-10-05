@@ -1,7 +1,6 @@
 package org.example.age.service;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.ForbiddenException;
@@ -43,7 +42,7 @@ final class SiteService implements SiteApi {
     @Inject
     public SiteService(
             AccountIdContext accountIdContext,
-            @Named("client") AvsApi avsClient,
+            AvsApi avsClient,
             SiteVerificationStore verificationStore,
             PendingStoreRepository pendingStores,
             AgeCertificateVerifier ageCertificateVerifier,

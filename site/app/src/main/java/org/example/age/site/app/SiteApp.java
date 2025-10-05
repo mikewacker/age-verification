@@ -8,7 +8,6 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.example.age.common.app.env.DropwizardEnvModule;
 import org.example.age.common.provider.request.demo.DemoAccountIdModule;
-import org.example.age.module.client.SiteClientModule;
 import org.example.age.module.crypto.demo.DemoSiteCryptoModule;
 import org.example.age.module.store.dynamodb.DynamoDbSiteAccountStoreModule;
 import org.example.age.module.store.redis.RedisPendingStoreModule;
@@ -16,6 +15,7 @@ import org.example.age.service.SiteServiceModule;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.app.config.SiteAppConfig;
 import org.example.age.site.app.config.SiteConfigModule;
+import org.example.age.site.client.avs.AvsClientModule;
 
 /** Application for a site. */
 public final class SiteApp extends Application<SiteAppConfig> {
@@ -36,7 +36,7 @@ public final class SiteApp extends Application<SiteAppConfig> {
             modules = {
                 SiteServiceModule.class,
                 DemoAccountIdModule.class,
-                SiteClientModule.class,
+                AvsClientModule.class,
                 DynamoDbSiteAccountStoreModule.class,
                 RedisPendingStoreModule.class,
                 DemoSiteCryptoModule.class,

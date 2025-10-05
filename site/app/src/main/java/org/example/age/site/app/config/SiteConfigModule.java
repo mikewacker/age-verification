@@ -4,17 +4,17 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.client.redis.RedisClientConfig;
-import org.example.age.module.client.SiteClientsConfig;
 import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
 import org.example.age.service.SiteServiceConfig;
+import org.example.age.site.client.avs.AvsClientConfig;
 
 /**
  * Dagger module that binds...
  * <ul>
  *     <li>{@link SiteServiceConfig}
- *     <li>{@link SiteClientsConfig}
- *     <li>{@link RedisClientConfig}
+ *     <li>{@link AvsClientConfig}
  *     <li>{@link DynamoDbClientConfig}
+ *     <li>{@link RedisClientConfig}
  *     <li>{@link SiteKeysConfig}
  * </ul>
  * <p>
@@ -29,18 +29,18 @@ public interface SiteConfigModule {
     }
 
     @Provides
-    static SiteClientsConfig provieSiteClientsConfig(SiteAppConfig appConfig) {
-        return appConfig.getClients();
+    static AvsClientConfig provieAvsClientConfig(SiteAppConfig appConfig) {
+        return appConfig.getClients().avs();
     }
 
     @Provides
-    static RedisClientConfig provideRedisConfig(SiteAppConfig appConfig) {
-        return appConfig.getRedis();
+    static DynamoDbClientConfig provideDynamoDbClientConfig(SiteAppConfig appConfig) {
+        return appConfig.getClients().dynamoDb();
     }
 
     @Provides
-    static DynamoDbClientConfig provideDynamoDbConfig(SiteAppConfig appConfig) {
-        return appConfig.getDynamoDb();
+    static RedisClientConfig provideRedisClientConfig(SiteAppConfig appConfig) {
+        return appConfig.getClients().redis();
     }
 
     @Provides

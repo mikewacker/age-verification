@@ -1,30 +1,28 @@
-package org.example.age.module.client;
+package org.example.age.site.client.avs;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.net.URL;
-import org.example.age.avs.api.client.AvsApi;
 import org.example.age.common.annotation.ValueStyle;
-import org.example.age.site.api.client.SiteApi;
 import org.immutables.value.Value;
 
-/** Configuration for the clients used by the service implementation of {@link SiteApi}. */
+/** Configuration for the age verification service client. */
 @Value.Immutable
 @ValueStyle
 @JsonSerialize
-@JsonDeserialize(as = ImmutableSiteClientsConfig.class)
-public interface SiteClientsConfig {
+@JsonDeserialize(as = ImmutableAvsClientConfig.class)
+public interface AvsClientConfig {
 
     /** Creates a builder for the configuration. */
     static Builder builder() {
         return new Builder();
     }
 
-    /** Base URL of the client for {@link AvsApi}. */
-    URL avsUrl();
+    /** URL of the age verification service. */
+    URL url();
 
     /** Builder for the configuration. */
-    final class Builder extends ImmutableSiteClientsConfig.Builder {
+    final class Builder extends ImmutableAvsClientConfig.Builder {
 
         Builder() {}
     }

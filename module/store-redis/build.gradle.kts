@@ -7,9 +7,10 @@ plugins {
 }
 
 dependencies {
+    api(project(":common:client:redis"))
+
     implementation(project(":site:spi"))
     implementation(project(":avs:spi"))
-    implementation(project(":common:client:redis"))
     implementation(project(":common:env"))
     implementation(libs.jedis.jedis)
 
