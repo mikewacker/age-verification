@@ -24,6 +24,7 @@ include(
     "avs:client:site",
 
     "common:provider:account-demo",
+    "common:provider:pendingstore-redis",
     "module:common",
     "module:store-redis",
     "module:store-dynamodb",

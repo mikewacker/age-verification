@@ -25,5 +25,6 @@ dependencies {
 
 dockerCompose {
     isRequiredBy(tasks.test)
-    useComposeFiles = listOf("${project(":common:client:redis").projectDir}/docker-compose-test.yml")
+    useComposeFiles = listOf("$projectDir/docker-compose-test.yml")
+    environment.put("REDIS_VERSION", libs.versions.dockerImages.redis)
 }

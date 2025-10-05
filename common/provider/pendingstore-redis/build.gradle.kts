@@ -1,13 +1,18 @@
 plugins {
     `java-library`
     id("buildlogic.java-conventions")
-    id("buildlogic.json")
     id("buildlogic.dagger")
     alias(libs.plugins.dockerCompose)
 }
 
 dependencies {
+    api(project(":common:client:redis"))
+
+    implementation(project(":common:spi"))
+    implementation(project(":common:env"))
     implementation(libs.jedis.jedis)
+
+    testImplementation(project(":common:spi-testing"))
 }
 
 dockerCompose {

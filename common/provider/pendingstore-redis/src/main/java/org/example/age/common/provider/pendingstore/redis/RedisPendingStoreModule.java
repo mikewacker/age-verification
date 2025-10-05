@@ -1,4 +1,4 @@
-package org.example.age.module.store.redis;
+package org.example.age.common.provider.pendingstore.redis;
 
 import dagger.Binds;
 import dagger.Module;
@@ -18,8 +18,10 @@ import org.example.age.common.spi.PendingStoreRepository;
  * </ul>
  */
 @Module(includes = {RedisClientModule.class, BaseEnvModule.class})
-public interface RedisPendingStoreModule {
+public abstract class RedisPendingStoreModule {
 
     @Binds
-    PendingStoreRepository bindPendingStoreRepository(RedisPendingStoreRepository impl);
+    abstract PendingStoreRepository bindPendingStoreRepository(RedisPendingStoreRepository impl);
+
+    RedisPendingStoreModule() {}
 }
