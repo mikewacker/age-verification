@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":service"))
     implementation(project(":common:provider:account-demo"))
     implementation(project(":site:client:avs"))
-    implementation(project(":module:store-dynamodb"))
+    implementation(project(":site:provider:accountstore-dynamodb"))
     implementation(project(":common:provider:pendingstore-redis"))
     implementation(project(":module:crypto-demo"))
     implementation(project(":common:app"))
