@@ -22,7 +22,7 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
     @Test
     public void redisKeys() {
-        await(store().put("key-redis", 1, expiresIn()));
+        await(store().put("key-redis", 1, expiration()));
         try (JedisPooled client = new JedisPooled(TestClient.localhostUri(6379))) {
             String value = client.get("age:pending:name:key-redis");
             assertThat(value).isEqualTo("1");

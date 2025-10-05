@@ -5,8 +5,8 @@ import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.module.store.dynamodb.testing.TestDependenciesModule;
-import org.example.age.service.module.store.testing.SiteAccountStoreTestTemplate;
 import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.testing.site.spi.SiteAccountStoreTestTemplate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.RegisterExtension;
 

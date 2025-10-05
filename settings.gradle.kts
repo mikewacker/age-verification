@@ -11,6 +11,7 @@ include(
     "site:spi",
     "avs:spi",
     "common:spi-testing",
+    "site:spi-testing",
     "service:module",
 
     "service",
@@ -25,6 +26,7 @@ include(
 
     "common:provider:account-demo",
     "common:provider:pendingstore-redis",
+    "site:provider:accountstore-redis",
     "module:common",
     "module:store-redis",
     "module:store-dynamodb",
