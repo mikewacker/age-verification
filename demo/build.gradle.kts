@@ -10,7 +10,6 @@ dependencies {
     implementation(project(":site:app"))
     implementation(project(":avs:app"))
     implementation(project(":testing"))
-    implementation(testFixtures(project(":module:store-redis")))
     implementation(testFixtures(project(":module:store-dynamodb")))
 }
 

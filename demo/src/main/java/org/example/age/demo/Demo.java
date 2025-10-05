@@ -8,7 +8,6 @@ import org.example.age.common.api.VerificationRequest;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
-import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.client.SiteApi;
 import org.example.age.site.app.SiteApp;
@@ -21,7 +20,6 @@ public final class Demo {
     private static final AvsApp checkMyAge = new AvsApp();
     private static final SiteApp crackle = new SiteApp();
     private static final SiteApp pop = new SiteApp();
-    private static final RedisTestContainer redis = new RedisTestContainer();
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 
     private static final AvsApi parentAvsClient = createClient(9090, "John Smith", AvsApi.class);
@@ -95,7 +93,6 @@ public final class Demo {
     /** Sets up the demo. */
     private static void setUp() throws Exception {
         // Set up containers.
-        redis.beforeAll(null);
         dynamoDb.beforeAll(null);
         dynamoDb.createSiteAccountStoreTables(); // can share since each site has a different pseudonym for a person
         dynamoDb.createAvsAccountStoreTables();
@@ -121,7 +118,6 @@ public final class Demo {
 
     /** Tears down the demo. */
     private static void tearDown() throws Exception {
-        redis.afterAll(null);
         dynamoDb.afterAll(null);
         System.exit(0);
     }

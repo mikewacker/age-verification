@@ -10,7 +10,6 @@ dependencies {
     testImplementation(project(":avs:api"))
     testImplementation(project(":site:app"))
     testImplementation(project(":avs:app"))
-    testImplementation(testFixtures(project(":module:store-redis")))
     testImplementation(testFixtures(project(":module:store-dynamodb")))
     testImplementation(libs.dropwizard.testing)
 }

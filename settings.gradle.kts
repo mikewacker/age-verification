@@ -37,7 +37,7 @@ include(
     "common:app",
     "site:app",
     "avs:app",
-    "integrationTest:app",
+    "integration-test:app",
 
     "testing",
 

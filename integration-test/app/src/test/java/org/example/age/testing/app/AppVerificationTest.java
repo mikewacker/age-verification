@@ -13,7 +13,6 @@ import org.example.age.common.api.VerificationRequest;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
-import org.example.age.module.store.redis.testing.RedisTestContainer;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
 import org.example.age.site.api.client.SiteApi;
@@ -34,9 +33,6 @@ public final class AppVerificationTest {
     @RegisterExtension
     private static final DropwizardAppExtension<AvsAppConfig> avsApp =
             new DropwizardAppExtension<>(AvsApp.class, ResourceHelpers.resourceFilePath("config-avs.yaml"));
-
-    @RegisterExtension
-    private static final RedisTestContainer redis = new RedisTestContainer();
 
     @RegisterExtension
     private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
