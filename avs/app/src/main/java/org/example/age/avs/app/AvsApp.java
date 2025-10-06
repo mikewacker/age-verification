@@ -20,6 +20,11 @@ import org.example.age.service.AvsServiceModule;
 /** Application for the age verification service. */
 public class AvsApp extends Application<AvsAppConfig> {
 
+    /** Runs the application. */
+    public static void main(String[] args) throws Exception {
+        new AvsApp().run(args);
+    }
+
     @Override
     public String getName() {
         return "avs";

@@ -20,6 +20,11 @@ import org.example.age.site.provider.accountstore.dynamodb.DynamoDbSiteAccountSt
 /** Application for a site. */
 public final class SiteApp extends Application<SiteAppConfig> {
 
+    /** Runs the application. */
+    public static void main(String[] args) throws Exception {
+        new SiteApp().run(args);
+    }
+
     @Override
     public String getName() {
         return "site";

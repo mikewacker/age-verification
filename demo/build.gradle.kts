@@ -5,12 +5,14 @@ plugins {
 }
 
 dependencies {
+    implementation(platform(libs.dropwizard.bom))
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
     implementation(project(":site:app"))
     implementation(project(":avs:app"))
     implementation(project(":testing"))
     implementation(testFixtures(project(":module:store-dynamodb")))
+    implementation(libs.dropwizard.core)
 }
 
 application {
@@ -20,5 +22,3 @@ application {
 dockerCompose {
     isRequiredBy(tasks.run)
 }
-
-tasks.matching { it.group == "distribution" }.configureEach { enabled = false }
