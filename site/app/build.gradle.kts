@@ -1,14 +1,11 @@
 plugins {
-    `java-library`
+    application
     id("buildlogic.java-conventions")
     id("buildlogic.json")
     id("buildlogic.dagger")
 }
 
 dependencies {
-    api(platform(libs.dropwizard.bom))
-    api(libs.dropwizard.core)
-
     implementation(project(":site:api"))
     implementation(project(":service"))
     implementation(project(":common:provider:account-demo"))
@@ -17,6 +14,8 @@ dependencies {
     implementation(project(":common:provider:pendingstore-redis"))
     implementation(project(":module:crypto-demo"))
     implementation(project(":common:app"))
+    implementation(platform(libs.dropwizard.bom))
+    implementation(libs.dropwizard.core)
     implementation(libs.jakartaValidation.api)
 
     // Dagger component
@@ -28,4 +27,8 @@ dependencies {
     implementation(libs.aws.dynamoDb)
     implementation(libs.darc.darc)
     implementation(libs.jedis.jedis)
+}
+
+application {
+    mainClass = "org.example.age.site.app.SiteApp"
 }
