@@ -1,0 +1,95 @@
+services:
+  site:
+    image: mikewacker/age-verification-site:test
+    command: server /config/config.yml
+    build:
+      context: ../..
+      dockerfile: Dockerfile.test
+      target: site
+      args:
+        TEMURIN_JRE_TAG: ${TEMURIN_JRE_TAG}
+    networks:
+      - public
+      - site-private
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src/test/resources/site/config:/config:ro
+    depends_on:
+      - site-dynamodb
+      - site-redis
+
+  site-dynamodb:
+    image: amazon/dynamodb-local:${DYNAMODB_TAG}
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    networks:
+      - site-private
+    volumes:
+      - site-dynamodb-data:/data
+    depends_on:
+      site-dynamodb-seed:
+        condition: service_completed_successfully
+
+  site-dynamodb-seed:
+    image: alpine:${ALPINE_TAG}
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
+    volumes:
+      - ./src/test/resources/site/data/dynamodb:/seed-data:ro
+      - site-dynamodb-data:/data
+
+  site-redis:
+    image: redis:${REDIS_TAG}
+    networks:
+      - site-private
+
+  avs:
+    image: mikewacker/age-verification-avs:test
+    command: server /config/config.yml
+    build:
+      context: ../..
+      dockerfile: Dockerfile.test
+      target: avs
+      args:
+        TEMURIN_JRE_TAG: ${TEMURIN_JRE_TAG}
+    networks:
+      - public
+      - avs-private
+    ports:
+      - "9090:80"
+    volumes:
+      - ./src/test/resources/avs/config:/config:ro
+    depends_on:
+      - avs-dynamodb
+      - avs-redis
+
+  avs-dynamodb:
+    image: amazon/dynamodb-local:${DYNAMODB_TAG}
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    networks:
+      - avs-private
+    volumes:
+      - avs-dynamodb-data:/data
+    depends_on:
+      avs-dynamodb-seed:
+        condition: service_completed_successfully
+
+  avs-dynamodb-seed:
+    image: alpine:${ALPINE_TAG}
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
+    volumes:
+      - ./src/test/resources/avs/data/dynamodb:/seed-data:ro
+      - avs-dynamodb-data:/data
+
+  avs-redis:
+    image: redis:${REDIS_TAG}
+    networks:
+      - avs-private
+
+networks:
+  public:
+  site-private:
+  avs-private:
+
+volumes:
+  site-dynamodb-data:
+  avs-dynamodb-data:

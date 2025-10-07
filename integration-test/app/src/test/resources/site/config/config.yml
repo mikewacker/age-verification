@@ -4,12 +4,12 @@ service:
 
 clients:
   avs:
-    url: http://localhost:9090
+    url: http://avs
   dynamoDb:
     region: us-east-1
-    testEndpointOverride: http://localhost:8000
+    testEndpointOverride: http://site-dynamodb:8000
   redis:
-    url: http://localhost:6379
+    url: http://site-redis:6379
 
 keys:
   signing:
@@ -20,5 +20,5 @@ keys:
 server:
   applicationConnectors:
     - type: http
-      port: 8080
+      port: 80
   adminConnectors: []
