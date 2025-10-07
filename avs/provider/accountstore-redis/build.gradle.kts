@@ -17,6 +17,7 @@ dependencies {
 
 dockerCompose {
     isRequiredBy(tasks.test)
-    useComposeFiles = listOf("$projectDir/docker-compose-test.yml")
-    environment.put("REDIS_VERSION", libs.versions.dockerImages.redis)
+    useComposeFiles = listOf("docker-compose-test.yml")
+    environment.put("ALPINE_TAG", libs.versions.dockerImages.alpine)
+    environment.put("REDIS_TAG", libs.versions.dockerImages.redis)
 }
