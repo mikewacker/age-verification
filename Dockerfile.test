@@ -1,0 +1,18 @@
+# Uses locally built artifacts. Switch to Dockerfile if this creates problems (e.g., local testing).
+
+# For CI testing, the local OS+JDK is noble+temurin, consistent with Dockerfile. See: .github/workflows/build.yml
+# (Using Dockerfile for CI testing would build the code twice: once locally, and once in a Docker container.)
+
+# Assumes that the artifacts have been built (./gradlew installDist). See: integration-test/app/build.gradle.kts
+
+ARG TEMURIN_JRE_TAG
+
+FROM eclipse-temurin:${TEMURIN_JRE_TAG} AS site
+WORKDIR /app
+COPY ./site/app/build/install/app/ /app/
+ENTRYPOINT ["/app/bin/app"]
+
+FROM eclipse-temurin:${TEMURIN_JRE_TAG} AS avs
+WORKDIR /app
+COPY  ./avs/app/build/install/app/ /app/
+ENTRYPOINT ["/app/bin/app"]

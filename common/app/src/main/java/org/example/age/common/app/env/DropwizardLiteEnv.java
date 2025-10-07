@@ -3,7 +3,6 @@ package org.example.age.common.app.env;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.core.setup.Environment;
-import io.dropwizard.util.Duration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +45,6 @@ final class DropwizardLiteEnv implements LiteEnv {
                 .executorService("worker")
                 .maxThreads(size)
                 .minThreads(size)
-                .shutdownTime(Duration.milliseconds(1))
                 .build();
     }
 }

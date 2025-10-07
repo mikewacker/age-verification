@@ -5,15 +5,19 @@ plugins {
 }
 
 dependencies {
-    testImplementation(platform(libs.dropwizard.bom))
     testImplementation(project(":site:api"))
     testImplementation(project(":avs:api"))
-    testImplementation(project(":site:app"))
-    testImplementation(project(":avs:app"))
-    testImplementation(testFixtures(project(":module:store-dynamodb")))
-    testImplementation(libs.dropwizard.testing)
 }
 
 dockerCompose {
     isRequiredBy(tasks.test)
+    useComposeFiles = listOf("docker-compose-test.yml")
+    environment.put("ALPINE_TAG", libs.versions.dockerImages.alpine)
+    environment.put("DYNAMODB_TAG", libs.versions.dockerImages.dynamoDb)
+    environment.put("REDIS_TAG", libs.versions.dockerImages.redis)
+    environment.put("TEMURIN_JRE_TAG", libs.versions.dockerImages.temurinJre)
+}
+
+tasks.named("composeBuild") {
+    dependsOn(":site:app:installDist", ":avs:app:installDist")
 }
