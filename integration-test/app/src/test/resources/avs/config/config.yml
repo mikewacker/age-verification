@@ -17,7 +17,8 @@ keys:
   signing:
     s: 87808632867103956881705523559918117434194472117688001288631494927155518459976
   localization:
-    site: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
+    keys:
+      site: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
 
 server:
   applicationConnectors:

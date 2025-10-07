@@ -11,10 +11,11 @@ import org.example.age.avs.app.config.AvsAppConfig;
 import org.example.age.avs.app.config.AvsConfigModule;
 import org.example.age.avs.client.site.SiteClientsModule;
 import org.example.age.avs.provider.accountstore.dynamodb.DynamoDbAvsAccountStoreModule;
+import org.example.age.avs.provider.certificatesigner.demo.DemoCertificateSignerModule;
+import org.example.age.avs.provider.userlocalizer.demo.DemoAvsUserLocalizerModule;
 import org.example.age.common.app.env.DropwizardEnvModule;
 import org.example.age.common.provider.account.demo.DemoAccountIdModule;
 import org.example.age.common.provider.pendingstore.redis.RedisPendingStoreModule;
-import org.example.age.module.crypto.demo.DemoAvsCryptoModule;
 import org.example.age.service.AvsServiceModule;
 
 /** Application for the age verification service. */
@@ -44,7 +45,8 @@ public class AvsApp extends Application<AvsAppConfig> {
                 SiteClientsModule.class,
                 DynamoDbAvsAccountStoreModule.class,
                 RedisPendingStoreModule.class,
-                DemoAvsCryptoModule.class,
+                DemoCertificateSignerModule.class,
+                DemoAvsUserLocalizerModule.class,
                 AvsConfigModule.class,
                 DropwizardEnvModule.class,
             })

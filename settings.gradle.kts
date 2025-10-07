@@ -33,6 +33,7 @@ include(
     "site:provider:userlocalizer-demo",
     "avs:provider:accountstore-dynamodb",
     "avs:provider:accountstore-redis",
+    "avs:provider:certificatesigner-demo",
     "avs:provider:userlocalizer-demo",
     "module:common",
     "module:store-dynamodb",

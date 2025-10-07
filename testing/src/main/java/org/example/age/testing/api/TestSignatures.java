@@ -26,7 +26,12 @@ public final class TestSignatures {
 
     /** Signs an age certificate. */
     public static SignedAgeCertificate sign(AgeCertificate ageCertificate) {
-        Signature signer = createSigner(keyPair.getPrivate());
+        return sign(ageCertificate, keyPair.getPrivate());
+    }
+
+    /** Signs an age certificate. */
+    public static SignedAgeCertificate sign(AgeCertificate ageCertificate, PrivateKey privateKey) {
+        Signature signer = createSigner(privateKey);
         String ageCertificateJson = serialize(ageCertificate);
         SignatureData data = SignatureData.sign(signer, ageCertificateJson);
         DigitalSignature signature =
@@ -51,7 +56,12 @@ public final class TestSignatures {
 
     /** Verifies a signed age certificate. */
     public static AgeCertificate verify(SignedAgeCertificate signedAgeCertificate) {
-        Signature verifier = createVerifier(keyPair.getPublic());
+        return verify(signedAgeCertificate, keyPair.getPublic());
+    }
+
+    /** Verifies a signed age certificate. */
+    public static AgeCertificate verify(SignedAgeCertificate signedAgeCertificate, PublicKey publicKey) {
+        Signature verifier = createVerifier(publicKey);
         AgeCertificate ageCertificate = signedAgeCertificate.getAgeCertificate();
         String ageCertificateJson = serialize(ageCertificate);
         SignatureData data = signedAgeCertificate.getSignature().getData();

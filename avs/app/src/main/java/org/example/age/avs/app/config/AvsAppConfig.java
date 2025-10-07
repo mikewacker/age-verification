@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.example.age.module.crypto.demo.keys.AvsKeysConfig;
 import org.example.age.service.AvsServiceConfig;
 
 /** Configuration for the application. */

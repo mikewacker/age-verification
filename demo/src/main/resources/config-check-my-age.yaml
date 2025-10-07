@@ -19,8 +19,9 @@ keys:
   signing:
     s: 87808632867103956881705523559918117434194472117688001288631494927155518459976
   localization:
-    crackle: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
-    pop: W1zah29NMWEOEsd8VNFX6E3Vo8Z-HLNQ5cDH3-9KyVg
+    keys:
+      crackle: pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY
+      pop: W1zah29NMWEOEsd8VNFX6E3Vo8Z-HLNQ5cDH3-9KyVg
 
 server:
   applicationConnectors:
