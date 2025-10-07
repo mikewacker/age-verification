@@ -1,5 +1,5 @@
 services:
   redis:
-    image: redis:${REDIS_VERSION}
+    image: redis:${REDIS_TAG}
     ports:
       - "6379:6379"
