@@ -1,6 +1,7 @@
 package org.example.age.testing.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.jackson.Jackson;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public final class TestObjectMapper {
     private static ObjectMapper create() {
         ObjectMapper mapper = Jackson.newObjectMapper();
         mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); // disabled in prod
         return mapper;
     }
 
