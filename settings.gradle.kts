@@ -27,6 +27,7 @@ include(
 
     "common:provider:account-demo",
     "common:provider:pendingstore-redis",
+    "common:provider:signingkey-demo",
     "site:provider:accountstore-dynamodb",
     "site:provider:accountstore-redis",
     "site:provider:userlocalizer-demo",
