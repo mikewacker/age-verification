@@ -1,4 +1,4 @@
-service:
+endpoint:
   id: pop
   verifiedAccountExpiresIn: P30D
 

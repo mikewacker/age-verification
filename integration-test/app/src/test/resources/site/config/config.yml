@@ -1,4 +1,4 @@
-service:
+endpoint:
   id: site
   verifiedAccountExpiresIn: P30D
 

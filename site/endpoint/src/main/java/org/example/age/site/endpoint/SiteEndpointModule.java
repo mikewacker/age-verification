@@ -1,8 +1,8 @@
-package org.example.age.service;
+package org.example.age.site.endpoint;
 
 import dagger.Binds;
 import dagger.Module;
-import jakarta.inject.Named;
+import org.example.age.avs.api.client.AvsApi;
 import org.example.age.common.spi.AccountIdContext;
 import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.site.api.SiteApi;
@@ -11,23 +11,24 @@ import org.example.age.site.spi.SiteVerificationStore;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 /**
- * Dagger module that binds <code>@Named("service") {@link SiteApi}</code>.
+ * Dagger module that binds the {@link SiteApi} endpoint.
  * <p>
  * Depends on an unbound...
  * <ul>
  *     <li>{@link AccountIdContext}
- *     <li><code>@Named("client") {@link AvsApi}</code>
+ *     <li>{@link AvsApi}
  *     <li>{@link SiteVerificationStore}
  *     <li>{@link PendingStoreRepository}
  *     <li>{@link AgeCertificateVerifier}
  *     <li>{@link SiteVerifiedUserLocalizer}
- *     <li>{@link SiteServiceConfig}
+ *     <li>{@link SiteEndpointConfig}
  * </ul>
  */
 @Module
-public interface SiteServiceModule {
+public abstract class SiteEndpointModule {
 
     @Binds
-    @Named("service")
-    SiteApi bindSiteService(SiteService service);
+    abstract SiteApi bindSiteEndpoint(SiteEndpoint endpoint);
+
+    SiteEndpointModule() {}
 }

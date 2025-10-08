@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.site.endpoint;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -27,9 +27,9 @@ import org.example.age.site.spi.SiteVerificationStore;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 import retrofit2.Call;
 
-/** Service implementation of {@link SiteApi}. */
+/** Endpoint for {@link SiteApi}. */
 @Singleton
-final class SiteService implements SiteApi {
+final class SiteEndpoint implements SiteApi {
 
     private final AccountIdContext accountIdContext;
     private final AvsApi avsClient;
@@ -37,17 +37,17 @@ final class SiteService implements SiteApi {
     private final PendingStore<String> pendingRequestStore;
     private final AgeCertificateVerifier ageCertificateVerifier;
     private final SiteVerifiedUserLocalizer userLocalizer;
-    private final SiteServiceConfig config;
+    private final SiteEndpointConfig config;
 
     @Inject
-    public SiteService(
+    public SiteEndpoint(
             AccountIdContext accountIdContext,
             AvsApi avsClient,
             SiteVerificationStore verificationStore,
             PendingStoreRepository pendingStores,
             AgeCertificateVerifier ageCertificateVerifier,
             SiteVerifiedUserLocalizer userLocalizer,
-            SiteServiceConfig config) {
+            SiteEndpointConfig config) {
         this.accountIdContext = accountIdContext;
         this.avsClient = avsClient;
         this.verificationStore = verificationStore;

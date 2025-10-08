@@ -1,4 +1,4 @@
-service:
+endpoint:
   verificationRequestExpiresIn: PT5M
   ageThresholds:
     crackle: [13, 18]

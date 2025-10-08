@@ -8,7 +8,7 @@ plugins {
 dependencies {
     implementation(platform(libs.dropwizard.bom))
     implementation(project(":avs:api"))
-    implementation(project(":service"))
+    implementation(project(":avs:endpoint"))
     implementation(project(":common:provider:account-demo"))
     implementation(project(":avs:client:site"))
     implementation(project(":avs:provider:accountstore-dynamodb"))

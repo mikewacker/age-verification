@@ -1,7 +1,6 @@
 package org.example.age.service.testing;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.concurrent.CompletionStage;
 import org.example.age.common.api.SignedAgeCertificate;
@@ -22,7 +21,7 @@ public final class TestSiteService implements SiteApi {
     private final TestAccountId accountId;
 
     @Inject
-    TestSiteService(@Named("service") SiteApi delegate, TestAccountId accountId) {
+    TestSiteService(SiteApi delegate, TestAccountId accountId) {
         this.delegate = delegate;
         this.accountId = accountId;
     }

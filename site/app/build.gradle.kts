@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":site:api"))
-    implementation(project(":service"))
+    implementation(project(":site:endpoint"))
     implementation(project(":common:provider:account-demo"))
     implementation(project(":site:client:avs"))
     implementation(project(":site:provider:accountstore-dynamodb"))

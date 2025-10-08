@@ -14,6 +14,8 @@ include(
     "site:spi-testing",
     "avs:spi-testing",
 
+    "site:endpoint",
+    "avs:endpoint",
     "service",
 
     "common:env",
