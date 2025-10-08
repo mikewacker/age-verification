@@ -4,9 +4,10 @@ import dagger.Module;
 import dagger.Provides;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.client.redis.RedisClientConfig;
-import org.example.age.module.crypto.demo.keys.SiteKeysConfig;
+import org.example.age.common.provider.signingkey.demo.EcPublicKeyConfig;
 import org.example.age.service.SiteServiceConfig;
 import org.example.age.site.client.avs.AvsClientConfig;
+import org.example.age.site.provider.userlocalizer.demo.SiteLocalizationKeyConfig;
 
 /**
  * Dagger module that binds...
@@ -15,7 +16,8 @@ import org.example.age.site.client.avs.AvsClientConfig;
  *     <li>{@link AvsClientConfig}
  *     <li>{@link DynamoDbClientConfig}
  *     <li>{@link RedisClientConfig}
- *     <li>{@link SiteKeysConfig}
+ *     <li>{@link EcPublicKeyConfig}
+ *     <li>{@link SiteLocalizationKeyConfig}
  * </ul>
  * <p>
  * Depends on an unbound {@link SiteAppConfig}.
@@ -44,7 +46,12 @@ public interface SiteConfigModule {
     }
 
     @Provides
-    static SiteKeysConfig provideSiteKeysConfig(SiteAppConfig appConfig) {
-        return appConfig.getKeys();
+    static EcPublicKeyConfig provideEcPublicKeyConfig(SiteAppConfig appConfig) {
+        return appConfig.getKeys().signing();
+    }
+
+    @Provides
+    static SiteLocalizationKeyConfig provideSiteLocalizationKeyConfig(SiteAppConfig appConfig) {
+        return appConfig.getKeys().localization();
     }
 }

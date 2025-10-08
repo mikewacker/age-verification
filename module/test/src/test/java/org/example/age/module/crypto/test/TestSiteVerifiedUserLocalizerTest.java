@@ -3,10 +3,10 @@ package org.example.age.module.crypto.test;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.service.module.crypto.testing.SiteVerifiedUserLocalizerTestTemplate;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
+import org.example.age.testing.site.spi.SiteUserLocalizerTestTemplate;
 
-public final class TestSiteVerifiedUserLocalizerTest extends SiteVerifiedUserLocalizerTestTemplate {
+public final class TestSiteVerifiedUserLocalizerTest extends SiteUserLocalizerTestTemplate {
 
     private static final SiteVerifiedUserLocalizer localizer = TestComponent.create();
 

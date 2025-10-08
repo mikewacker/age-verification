@@ -13,7 +13,6 @@ include(
     "common:spi-testing",
     "site:spi-testing",
     "avs:spi-testing",
-    "service:module",
 
     "service",
 
@@ -30,6 +29,7 @@ include(
     "common:provider:signingkey-demo",
     "site:provider:accountstore-dynamodb",
     "site:provider:accountstore-redis",
+    "site:provider:certificateverifier-demo",
     "site:provider:userlocalizer-demo",
     "avs:provider:accountstore-dynamodb",
     "avs:provider:accountstore-redis",
@@ -37,7 +37,6 @@ include(
     "avs:provider:userlocalizer-demo",
     "module:common",
     "module:store-dynamodb",
-    "module:crypto-demo",
     "module:test",
 
     "common:app",
