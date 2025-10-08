@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.avs.endpoint;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -9,12 +9,12 @@ import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.api.AgeThresholds;
 import org.immutables.value.Value;
 
-/** Configuration for the service implementation of {@link AvsApi}. */
+/** Configuration for the {@link AvsApi} endpoint. */
 @Value.Immutable
 @ValueStyle
 @JsonSerialize
-@JsonDeserialize(as = ImmutableAvsServiceConfig.class)
-public interface AvsServiceConfig {
+@JsonDeserialize(as = ImmutableAvsEndpointConfig.class)
+public interface AvsEndpointConfig {
 
     /** Creates a builder for the configuration. */
     static Builder builder() {
@@ -28,7 +28,7 @@ public interface AvsServiceConfig {
     Map<String, AgeThresholds> ageThresholds();
 
     /** Builder for the configuration. */
-    final class Builder extends ImmutableAvsServiceConfig.Builder {
+    final class Builder extends ImmutableAvsEndpointConfig.Builder {
 
         Builder() {}
     }

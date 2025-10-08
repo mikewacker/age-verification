@@ -1,8 +1,7 @@
-package org.example.age.service;
+package org.example.age.avs.endpoint;
 
 import dagger.Binds;
 import dagger.Module;
-import jakarta.inject.Named;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.spi.AgeCertificateSigner;
 import org.example.age.avs.spi.AvsVerifiedUserLocalizer;
@@ -12,7 +11,7 @@ import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.site.api.client.SiteApi;
 
 /**
- * Dagger module that binds <code>@Named("service") {@link AvsApi}</code>.
+ * Dagger module that binds the {@link AvsApi} endpoint.
  * <p>
  * Depends on an unbound...
  * <ul>
@@ -22,13 +21,14 @@ import org.example.age.site.api.client.SiteApi;
  *     <li>{@link PendingStoreRepository}
  *     <li>{@link AgeCertificateSigner}
  *     <li>{@link AvsVerifiedUserLocalizer}
- *     <li>{@link AvsServiceConfig}
+ *     <li>{@link AvsEndpointConfig}
  * </ul>
  */
 @Module
-public interface AvsServiceModule {
+public abstract class AvsEndpointModule {
 
     @Binds
-    @Named("service")
-    AvsApi bindAvsService(AvsService service);
+    abstract AvsApi bindAvsEndpoint(AvsEndpoint endpoint);
+
+    AvsEndpointModule() {}
 }

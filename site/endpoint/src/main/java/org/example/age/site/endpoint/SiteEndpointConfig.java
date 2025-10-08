@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.site.endpoint;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -7,12 +7,12 @@ import org.example.age.common.annotation.ValueStyle;
 import org.example.age.site.api.SiteApi;
 import org.immutables.value.Value;
 
-/** Configuration for the service implementation of {@link SiteApi}. */
+/** Configuration for the {@link SiteApi} endpoint. */
 @Value.Immutable
 @ValueStyle
 @JsonSerialize
-@JsonDeserialize(as = ImmutableSiteServiceConfig.class)
-public interface SiteServiceConfig {
+@JsonDeserialize(as = ImmutableSiteEndpointConfig.class)
+public interface SiteEndpointConfig {
 
     /** Creates a builder for the configuration. */
     static Builder builder() {
@@ -26,7 +26,7 @@ public interface SiteServiceConfig {
     Duration verifiedAccountExpiresIn();
 
     /** Builder for the configuration. */
-    final class Builder extends ImmutableSiteServiceConfig.Builder {
+    final class Builder extends ImmutableSiteEndpointConfig.Builder {
 
         Builder() {}
     }

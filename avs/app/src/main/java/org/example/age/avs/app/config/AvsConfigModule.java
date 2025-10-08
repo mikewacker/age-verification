@@ -3,16 +3,16 @@ package org.example.age.avs.app.config;
 import dagger.Module;
 import dagger.Provides;
 import org.example.age.avs.client.site.SiteClientsConfig;
+import org.example.age.avs.endpoint.AvsEndpointConfig;
 import org.example.age.avs.provider.userlocalizer.demo.AvsLocalizationKeysConfig;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.client.redis.RedisClientConfig;
 import org.example.age.common.provider.signingkey.demo.EcPrivateKeyConfig;
-import org.example.age.service.AvsServiceConfig;
 
 /**
  * Dagger module that binds...
  * <ul>
- *     <li>{@link AvsServiceConfig}
+ *     <li>{@link AvsEndpointConfig}
  *     <li>{@link SiteClientsConfig}
  *     <li>{@link DynamoDbClientConfig}
  *     <li>{@link RedisClientConfig}
@@ -23,11 +23,11 @@ import org.example.age.service.AvsServiceConfig;
  * Depends on an unbound {@link AvsAppConfig}.
  */
 @Module
-public interface AvsConfigModule {
+public abstract class AvsConfigModule {
 
     @Provides
-    static AvsServiceConfig provideAvsServiceConfig(AvsAppConfig appConfig) {
-        return appConfig.getService();
+    static AvsEndpointConfig provideAvsEndpointConfig(AvsAppConfig appConfig) {
+        return appConfig.getEndpoint();
     }
 
     @Provides
@@ -54,4 +54,6 @@ public interface AvsConfigModule {
     static AvsLocalizationKeysConfig provideAvsLocalizationKeysConfig(AvsAppConfig appConfig) {
         return appConfig.getKeys().localization();
     }
+
+    AvsConfigModule() {}
 }

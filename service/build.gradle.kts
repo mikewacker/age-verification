@@ -6,9 +6,10 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":site:spi"))
-    implementation(project(":avs:spi"))
-
+    testImplementation(project(":site:spi"))
+    testImplementation(project(":avs:spi"))
+    testImplementation(project(":site:endpoint"))
+    testImplementation(project(":avs:endpoint"))
     testImplementation(project(":module:test"))
     testImplementation(libs.retrofit.mock)
 }

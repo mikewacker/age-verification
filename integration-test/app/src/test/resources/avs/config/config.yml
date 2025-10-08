@@ -1,4 +1,4 @@
-service:
+endpoint:
   verificationRequestExpiresIn: PT5M
   ageThresholds:
     site: [13, 18]

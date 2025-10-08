@@ -1,4 +1,4 @@
-service:
+endpoint:
   id: crackle
   verifiedAccountExpiresIn: P30D
 

@@ -1,4 +1,4 @@
-package org.example.age.service;
+package org.example.age.avs.endpoint;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -30,8 +30,9 @@ import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.site.api.client.SiteApi;
 import retrofit2.Call;
 
+/** Endpoint for {@link AvsApi}. */
 @Singleton
-final class AvsService implements AvsApi {
+final class AvsEndpoint implements AvsApi {
 
     private final AccountIdContext accountIdContext;
     private final Map<String, SiteApi> siteClients;
@@ -40,17 +41,17 @@ final class AvsService implements AvsApi {
     private final PendingStore<VerificationRequest> pendingLinkedRequestStore;
     private final AgeCertificateSigner ageCertificateSigner;
     private final AvsVerifiedUserLocalizer userLocalizer;
-    private final AvsServiceConfig config;
+    private final AvsEndpointConfig config;
 
     @Inject
-    public AvsService(
+    public AvsEndpoint(
             AccountIdContext accountIdContext,
             Map<String, SiteApi> siteClients,
             AvsVerifiedUserStore userStore,
             PendingStoreRepository pendingStores,
             AgeCertificateSigner ageCertificateSigner,
             AvsVerifiedUserLocalizer userLocalizer,
-            AvsServiceConfig config) {
+            AvsEndpointConfig config) {
         this.accountIdContext = accountIdContext;
         this.siteClients = siteClients;
         this.userStore = userStore;
@@ -152,11 +153,14 @@ final class AvsService implements AvsApi {
         SiteApi siteClient = getSiteClient(siteId);
         Call<Void> call = siteClient.processAgeCertificate(signedAgeCertificate);
         return AsyncCalls.make(call)
-                .exceptionallyCompose(t -> CompletableFuture.failedFuture(
-                        (!(t instanceof WebApplicationException e)
-                                        || (e.getResponse().getStatus() != 404))
-                                ? new InternalServerErrorException(t)
-                                : t));
+                .exceptionallyCompose(t -> CompletableFuture.failedFuture(mapProcessAgeCertificateError(t)));
+    }
+
+    /** Maps all errors except 404 errors to a 500 error.*/
+    private static Throwable mapProcessAgeCertificateError(Throwable t) {
+        return (!(t instanceof WebApplicationException e) || (e.getResponse().getStatus() != 404))
+                ? new InternalServerErrorException(t)
+                : t;
     }
 
     /** Account with a {@link VerifiedUser}. */
