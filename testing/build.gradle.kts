@@ -8,9 +8,7 @@ dependencies {
     api(project(":common:api"))
     api(project(":common:env"))
 
-    implementation(platform(libs.assertj.bom))
     implementation(platform(libs.dropwizard.bom))
-    implementation(libs.assertj.core)
     implementation(libs.dropwizard.jackson)
     implementation(libs.retrofit.converterJackson)
     implementation(libs.retrofit.mock)
