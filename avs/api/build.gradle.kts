@@ -1,5 +1,6 @@
 plugins {
     id("openapi-java")
+    id("buildlogic.java")
 }
 
 openApiJava {

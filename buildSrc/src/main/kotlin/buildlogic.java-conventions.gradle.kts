@@ -2,7 +2,7 @@ import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
-    java
+    id("buildlogic.java")
     id("com.diffplug.spotless")
     id("net.ltgt.errorprone")
 }
@@ -17,23 +17,26 @@ dependencies {
     errorprone(libs.errorprone.core)
 
     implementation(libs.jaxRs.api)
+    if (project.path.endsWith("testing")) {
+        implementation(platform(libs.assertj.bom))
+        implementation(platform(libs.junit.bom))
+        implementation(libs.assertj.core)
+        implementation(libs.junitJupiter.api)
+        if (project.path != ":testing") {
+            implementation(project(":testing"))
+        }
+    }
 
     testImplementation(platform(libs.assertj.bom))
     testImplementation(platform(libs.junit.bom))
-    if (project.name != "testing") {
-        testImplementation(project(":testing"))
-    }
     testImplementation(libs.assertj.core)
     testImplementation(libs.junitJupiter.api)
+    if (project.path != ":testing") {
+        testImplementation(project(":testing"))
+    }
 
     testRuntimeOnly(libs.junitJupiter.engine)
     testRuntimeOnly(libs.junitPlatform.launcher)
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
 }
 
 spotless {
