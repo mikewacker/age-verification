@@ -92,7 +92,7 @@ public final class WebStageTestingTest {
 
     private static Void sleep() {
         try {
-            Thread.sleep(3);
+            Thread.sleep(10);
             return null;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
