@@ -1,4 +1,4 @@
-package org.example.age.module.store.test;
+package org.example.age.site.provider.accountstore.test;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

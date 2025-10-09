@@ -1,4 +1,4 @@
-package org.example.age.module.store.test;
+package org.example.age.site.provider.accountstore.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.client.WebStageTesting.await;

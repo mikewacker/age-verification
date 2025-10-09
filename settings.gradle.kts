@@ -18,6 +18,7 @@ include(
     "avs:endpoint",
     "service",
     "common:provider:testing",
+    "site:provider:testing",
     "avs:provider:testing",
     "module:test",
 

@@ -1,4 +1,4 @@
-package org.example.age.module.crypto.test;
+package org.example.age.site.provider.userlocalizer.test;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 import org.example.age.testing.site.spi.SiteUserLocalizerTestTemplate;
 
-public final class TestSiteVerifiedUserLocalizerTest extends SiteUserLocalizerTestTemplate {
+public final class TestSiteUserLocalizerTest extends SiteUserLocalizerTestTemplate {
 
     private static final SiteVerifiedUserLocalizer localizer = TestComponent.create();
 
@@ -16,13 +16,12 @@ public final class TestSiteVerifiedUserLocalizerTest extends SiteUserLocalizerTe
     }
 
     /** Dagger component for {@link SiteVerifiedUserLocalizer}. */
-    @Component(modules = TestSiteCryptoModule.class)
+    @Component(modules = TestSiteUserLocalizerModule.class)
     @Singleton
     interface TestComponent extends Supplier<SiteVerifiedUserLocalizer> {
 
         static SiteVerifiedUserLocalizer create() {
-            return DaggerTestSiteVerifiedUserLocalizerTest_TestComponent.create()
-                    .get();
+            return DaggerTestSiteUserLocalizerTest_TestComponent.create().get();
         }
     }
 }
