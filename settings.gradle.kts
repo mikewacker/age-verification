@@ -16,11 +16,10 @@ include(
 
     "site:endpoint",
     "avs:endpoint",
-    "service",
+    "integration-testing:endpoint",
     "common:provider:testing",
     "site:provider:testing",
     "avs:provider:testing",
-    "module:test",
 
     "common:env",
 
@@ -45,9 +44,10 @@ include(
     "common:app",
     "site:app",
     "avs:app",
-    "integration-test:app",
+    "integration-testing:app",
 
     "testing",
+    "integration-testing:testing",
 
     "module:common",
     "module:store-dynamodb",
