@@ -28,15 +28,15 @@ import retrofit2.mock.Calls;
 public final class AvsServiceTest {
 
     private final TestAvsService avsService =
-            TestAvsServiceComponent.create(Map.of("site1", new FakeSiteClient(), "site2", new FakeSiteClient()));
+            TestAvsServiceComponent.create(Map.of("site", new FakeSiteClient(), "other-site", new FakeSiteClient()));
 
     private AgeCertificate ageCertificate = null;
 
     @Test
     public void verify() {
         avsService.setAccountId("person");
-        VerificationRequest request1 = await(avsService.createVerificationRequestForSite("site1"));
-        assertThat(request1.getSiteId()).isEqualTo("site1");
+        VerificationRequest request1 = await(avsService.createVerificationRequestForSite("site"));
+        assertThat(request1.getSiteId()).isEqualTo("site");
         OffsetDateTime expectedExpiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(5));
         assertThat(request1.getExpiration()).isCloseTo(expectedExpiration, within(1, ChronoUnit.SECONDS));
 
@@ -48,7 +48,7 @@ public final class AvsServiceTest {
                 .isEqualTo(AgeRange.builder().min(18).build());
 
         ageCertificate = null;
-        VerificationRequest request2 = await(avsService.createVerificationRequestForSite("site2"));
+        VerificationRequest request2 = await(avsService.createVerificationRequestForSite("other-site"));
         await(avsService.linkVerificationRequest(request2.getId()));
         await(avsService.sendAgeCertificate());
         SecureId pseudonym2 = ageCertificate.getUser().getPseudonym();
@@ -71,7 +71,7 @@ public final class AvsServiceTest {
     @Test
     public void error_LinkVerificationRequestTwice() {
         avsService.setAccountId("person");
-        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1"));
+        VerificationRequest request = await(avsService.createVerificationRequestForSite("site"));
         await(avsService.linkVerificationRequest(request.getId()));
         awaitErrorCode(avsService.linkVerificationRequest(request.getId()), 404);
     }
@@ -79,7 +79,7 @@ public final class AvsServiceTest {
     @Test
     public void error_SendAgeCertificateTwice() {
         avsService.setAccountId("person");
-        VerificationRequest request = await(avsService.createVerificationRequestForSite("site1"));
+        VerificationRequest request = await(avsService.createVerificationRequestForSite("site"));
         await(avsService.linkVerificationRequest(request.getId()));
         await(avsService.sendAgeCertificate());
         awaitErrorCode(avsService.sendAgeCertificate(), 404);

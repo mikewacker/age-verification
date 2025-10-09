@@ -35,7 +35,7 @@ public final class SiteServiceTest {
         assertThat(initState.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
 
         VerificationRequest request = await(siteService.createVerificationRequest());
-        assertThat(request.getSiteId()).isEqualTo("site1");
+        assertThat(request.getSiteId()).isEqualTo("site");
 
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         await(siteService.processAgeCertificate(signedAgeCertificate));
@@ -63,14 +63,14 @@ public final class SiteServiceTest {
 
     @Test
     public void error_AccountNotFound() {
-        VerificationRequest request = TestModels.createVerificationRequest("site1");
+        VerificationRequest request = TestModels.createVerificationRequest("site");
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 404);
     }
 
     @Test
     public void error_WrongSite() {
-        VerificationRequest request = TestModels.createVerificationRequest("site2");
+        VerificationRequest request = TestModels.createVerificationRequest("other-site");
         SignedAgeCertificate signedAgeCertificate = createSignedAgeCertificate(request);
         awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 403);
     }
@@ -84,7 +84,7 @@ public final class SiteServiceTest {
 
     @Test
     public void error_InvalidSignature() {
-        VerificationRequest request = TestModels.createVerificationRequest("site1");
+        VerificationRequest request = TestModels.createVerificationRequest("site");
         SignedAgeCertificate signedAgeCertificate = createInvalidSignedAgeCertificate(request);
         awaitErrorCode(siteService.processAgeCertificate(signedAgeCertificate), 401);
     }
@@ -103,7 +103,7 @@ public final class SiteServiceTest {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(Duration.ofMinutes(-5));
         return VerificationRequest.builder()
                 .id(SecureId.generate())
-                .siteId("site1")
+                .siteId("site")
                 .expiration(expiration)
                 .build();
     }

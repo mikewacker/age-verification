@@ -15,7 +15,7 @@ import org.example.age.common.api.crypto.SecureId;
 @Singleton
 final class FakeAvsVerifiedUserLocalizer implements AvsVerifiedUserLocalizer {
 
-    private final Map<String, SecureId> keys = Map.of("site1", SecureId.generate(), "site2", SecureId.generate());
+    private final Map<String, SecureId> keys = Map.of("site", SecureId.generate(), "other-site", SecureId.generate());
 
     @Inject
     public FakeAvsVerifiedUserLocalizer() {}

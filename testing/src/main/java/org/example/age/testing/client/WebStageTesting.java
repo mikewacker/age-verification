@@ -4,21 +4,15 @@ import static org.assertj.core.api.Assertions.fail;
 
 import jakarta.ws.rs.WebApplicationException;
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Supplier;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.mock.Calls;
 
 /** Test utilities for an asynchronous stage that is returned by a JAX-RS API. */
 public final class WebStageTesting {
 
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(1);
 
     /** Waits for the asynchronous stage to complete and returns its value, asserting that it completed successfully. */
     public static <V> V await(CompletionStage<V> stage) {
@@ -63,40 +57,6 @@ public final class WebStageTesting {
             fail(message, cause);
         } catch (TimeoutException | InterruptedException e) {
             fail(e);
-        }
-    }
-
-    /** Converts an asynchronous stage to an asynchronous Retrofit call. */
-    public static <V> Call<V> toCall(CompletionStage<V> stage) {
-        return toCall(stage, DEFAULT_TIMEOUT);
-    }
-
-    /** Converts an asynchronous stage to an asynchronous Retrofit call. */
-    public static <V> Call<V> toCall(CompletionStage<V> stage, Duration timeout) {
-        return Calls.defer(() -> completeAsCall(stage, timeout));
-    }
-
-    /** Wraps an asynchronous API, converting uncaught exceptions to a failed stage. */
-    public static <V> CompletionStage<V> wrapExceptions(Supplier<CompletionStage<V>> api) {
-        try {
-            return api.get();
-        } catch (RuntimeException e) {
-            return CompletableFuture.failedFuture(e);
-        }
-    }
-
-    /** Completes the asynchronous stage, converting the result to a Retrofit call. */
-    private static <V> Call<V> completeAsCall(CompletionStage<V> stage, Duration timeout) {
-        try {
-            V value = get(stage, timeout);
-            return Calls.response(value);
-        } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            int errorCode = getErrorCode(cause);
-            Response<V> response = Response.error(errorCode, ResponseBody.create("", null));
-            return Calls.response(response);
-        } catch (TimeoutException | InterruptedException e) {
-            return Calls.failure(e);
         }
     }
 

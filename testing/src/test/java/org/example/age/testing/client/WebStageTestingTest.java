@@ -7,14 +7,11 @@ import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public final class WebStageTestingTest {
 
@@ -91,43 +88,6 @@ public final class WebStageTestingTest {
                 .isInstanceOf(AssertionError.class)
                 .hasCauseInstanceOf(TimeoutException.class)
                 .hasMessage("");
-    }
-
-    @Test
-    public void toCall_Success() throws IOException {
-        CompletionStage<String> stage = CompletableFuture.completedStage("value");
-        Response<String> response = WebStageTesting.toCall(stage).execute();
-        assertThat(response.isSuccessful()).isTrue();
-        assertThat(response.body()).isEqualTo("value");
-    }
-
-    @Test
-    public void toCall_ErrorCode() throws IOException {
-        CompletionStage<?> stage = CompletableFuture.failedStage(new NotFoundException());
-        Response<?> response = WebStageTesting.toCall(stage).execute();
-        assertThat(response.code()).isEqualTo(404);
-    }
-
-    @Test
-    public void toCall_Exception() throws IOException {
-        CompletionStage<?> stage = CompletableFuture.failedStage(new IllegalStateException());
-        Response<?> response = WebStageTesting.toCall(stage).execute();
-        assertThat(response.code()).isEqualTo(500);
-    }
-
-    @Test
-    public void toCall_Timeout() {
-        CompletionStage<?> stage = CompletableFuture.supplyAsync(WebStageTestingTest::sleep);
-        Call<?> call = WebStageTesting.toCall(stage, Duration.ofMillis(1));
-        assertThatThrownBy(call::execute).isInstanceOf(TimeoutException.class);
-    }
-
-    @Test
-    public void wrapExceptions() {
-        CompletionStage<?> stage = WebStageTesting.wrapExceptions(() -> {
-            throw new NotFoundException();
-        });
-        awaitErrorCode(stage, 404);
     }
 
     private static Void sleep() {

@@ -8,7 +8,7 @@ import org.example.age.common.api.VerificationRequest;
 import org.example.age.module.request.test.TestAccountId;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.api.VerificationState;
-import org.example.age.testing.client.WebStageTesting;
+import org.example.age.testing.client.TestAsyncEndpoints;
 
 /**
  * Decorator for {@link SiteApi} that converts uncaught exceptions to failed futures.
@@ -22,23 +22,23 @@ public final class TestSiteService implements SiteApi {
 
     @Inject
     TestSiteService(SiteApi delegate, TestAccountId accountId) {
-        this.delegate = delegate;
+        this.delegate = TestAsyncEndpoints.test(delegate, SiteApi.class);
         this.accountId = accountId;
     }
 
     @Override
     public CompletionStage<VerificationState> getVerificationState() {
-        return WebStageTesting.wrapExceptions(delegate::getVerificationState);
+        return delegate.getVerificationState();
     }
 
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequest() {
-        return WebStageTesting.wrapExceptions(delegate::createVerificationRequest);
+        return delegate.createVerificationRequest();
     }
 
     @Override
     public CompletionStage<Void> processAgeCertificate(SignedAgeCertificate signedAgeCertificate) {
-        return WebStageTesting.wrapExceptions(() -> delegate.processAgeCertificate(signedAgeCertificate));
+        return delegate.processAgeCertificate(signedAgeCertificate);
     }
 
     public void setAccountId(String accountId) {
