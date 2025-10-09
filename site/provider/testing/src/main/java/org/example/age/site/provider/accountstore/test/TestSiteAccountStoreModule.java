@@ -1,4 +1,4 @@
-package org.example.age.module.store.test;
+package org.example.age.site.provider.accountstore.test;
 
 import dagger.Binds;
 import dagger.Module;
@@ -11,8 +11,10 @@ import org.example.age.site.spi.SiteVerificationStore;
  * though a duplicate verification can be triggered if the account ID is "duplicate".
  */
 @Module
-public interface TestSiteAccountStoreModule {
+public abstract class TestSiteAccountStoreModule {
 
     @Binds
-    SiteVerificationStore bindSiteVerificationStore(FakeSiteVerificationStore impl);
+    abstract SiteVerificationStore bindSiteVerificationStore(FakeSiteVerificationStore impl);
+
+    TestSiteAccountStoreModule() {}
 }

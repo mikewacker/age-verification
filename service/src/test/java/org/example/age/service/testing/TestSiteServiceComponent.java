@@ -7,11 +7,12 @@ import java.time.Duration;
 import java.util.function.Supplier;
 import org.example.age.avs.api.client.AvsApi;
 import org.example.age.common.provider.pendingstore.test.TestPendingStoreModule;
-import org.example.age.module.crypto.test.TestSiteCryptoModule;
 import org.example.age.module.request.test.TestRequestModule;
-import org.example.age.module.store.test.TestSiteAccountStoreModule;
 import org.example.age.site.endpoint.SiteEndpointConfig;
 import org.example.age.site.endpoint.SiteEndpointModule;
+import org.example.age.site.provider.accountstore.test.TestSiteAccountStoreModule;
+import org.example.age.site.provider.certificateverifier.test.TestCertificateVerifierModule;
+import org.example.age.site.provider.userlocalizer.test.TestSiteUserLocalizerModule;
 
 /** Dagger component for {@link TestSiteService} */
 @Component(
@@ -20,7 +21,8 @@ import org.example.age.site.endpoint.SiteEndpointModule;
             TestRequestModule.class,
             TestSiteAccountStoreModule.class,
             TestPendingStoreModule.class,
-            TestSiteCryptoModule.class,
+            TestCertificateVerifierModule.class,
+            TestSiteUserLocalizerModule.class,
         })
 @Singleton
 public interface TestSiteServiceComponent extends Supplier<TestSiteService> {

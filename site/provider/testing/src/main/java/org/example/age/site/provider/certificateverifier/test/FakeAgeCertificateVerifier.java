@@ -1,4 +1,4 @@
-package org.example.age.module.crypto.test;
+package org.example.age.site.provider.certificateverifier.test;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

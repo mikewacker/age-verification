@@ -1,4 +1,4 @@
-package org.example.age.module.crypto.test;
+package org.example.age.site.provider.userlocalizer.test;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -9,11 +9,11 @@ import org.example.age.common.api.crypto.Localization;
 import org.example.age.common.api.crypto.SecureId;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
-/** Fake implementation of {@link SiteVerifiedUserLocalizer}. */
+/** Fake implementation of {@link SiteVerifiedUserLocalizer}. Uses a seeded key */
 @Singleton
 final class FakeSiteVerifiedUserLocalizer implements SiteVerifiedUserLocalizer {
 
-    private final SecureId key = SecureId.generate();
+    private final SecureId key = SecureId.fromString("NWKnDAiC7iM_hqothKM5Lnaor0xS77DzV9q9QpSeJLc");
 
     @Inject
     public FakeSiteVerifiedUserLocalizer() {}
