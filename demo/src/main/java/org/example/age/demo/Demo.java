@@ -1,26 +1,17 @@
 package org.example.age.demo;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.IOException;
 import org.example.age.avs.api.client.AvsApi;
-import org.example.age.avs.app.AvsApp;
-import org.example.age.common.api.AgeRange;
 import org.example.age.common.api.VerificationRequest;
-import org.example.age.common.api.VerifiedUser;
-import org.example.age.common.api.crypto.SecureId;
-import org.example.age.module.store.dynamodb.testing.DynamoDbTestContainer;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.client.SiteApi;
-import org.example.age.site.app.SiteApp;
 import org.example.age.testing.client.TestClient;
+import org.example.age.testing.json.TestObjectMapper;
 import retrofit2.Response;
 
 /** Runs the demo. */
 public final class Demo {
-
-    private static final AvsApp checkMyAge = new AvsApp();
-    private static final SiteApp crackle = new SiteApp();
-    private static final SiteApp pop = new SiteApp();
-    private static final DynamoDbTestContainer dynamoDb = new DynamoDbTestContainer();
 
     private static final AvsApi parentAvsClient = createClient(9090, "John Smith", AvsApi.class);
     private static final AvsApi childAvsClient = createClient(9090, "Billy Smith", AvsApi.class);
@@ -31,48 +22,54 @@ public final class Demo {
 
     private static final String AVS_NAME = "CheckMyAge";
 
+    private static final ObjectWriter writer = TestObjectMapper.get().writerWithDefaultPrettyPrinter();
+
     /** Main method. */
     @SuppressWarnings("CatchAndPrintStackTrace")
-    public static void main(String[] args) throws Exception {
-        setUp();
+    public static void main(String[] args) {
         try {
-            Logger.setVerbose(true);
-            verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith");
-            Logger.setVerbose(false);
-            verifyAge(childCrackleClient, childAvsClient, "Crackle", "publius-jr", "Billy Smith");
-            verifyAge(parentPopClient, parentAvsClient, "Pop", "JohnS", "John Smith");
-            verifyAge(childPopClient, childAvsClient, "Pop", "BillyS", "Billy Smith");
+            verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith", true);
+            verifyAge(childCrackleClient, childAvsClient, "Crackle", "publius-jr", "Billy Smith", false);
+            verifyAge(parentPopClient, parentAvsClient, "Pop", "JohnS", "John Smith", false);
+            verifyAge(childPopClient, childAvsClient, "Pop", "BillyS", "Billy Smith", false);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            tearDown();
         }
     }
 
     /** Verifies a single account. */
     private static void verifyAge(
-            SiteApi siteClient, AvsApi avsClient, String siteName, String accountName, String realName)
-            throws Exception {
-        Logger.info("\n================================================================\n");
-        Logger.info("%s uses %s to verify his account on %s, \"%s\".", realName, AVS_NAME, siteName, accountName);
+            SiteApi siteClient, AvsApi avsClient, String siteName, String accountName, String realName, boolean verbose)
+            throws IOException {
+        log("\n================================================================\n");
+        log("%s uses %s to verify his account on %s, \"%s\".", realName, AVS_NAME, siteName, accountName);
 
         VerificationRequest request = get(siteClient.createVerificationRequest().execute());
-        Logger.verbose("- On %s, %s begins the process to verify \"%s\".", siteName, realName, accountName);
-        Logger.verbose("- (Behind the scenes, %s contacts %s.)", siteName, AVS_NAME);
-        Logger.verbose("    - %s does NOT share the account name, \"%s\", with %s.", siteName, accountName, AVS_NAME);
-        Logger.verbose("- %s redirects %s to %s.", siteName, realName, AVS_NAME);
+        if (verbose) {
+            log("- On %s, %s begins the process to verify \"%s\".", siteName, realName, accountName);
+            log("- (Behind the scenes, %s contacts %s.)", siteName, AVS_NAME);
+            log("    - %s does NOT share the account name, \"%s\", with %s.", siteName, accountName, AVS_NAME);
+            log("- %s redirects %s to %s.", siteName, realName, AVS_NAME);
+        }
 
         get(avsClient.linkVerificationRequest(request.getId()).execute());
         get(avsClient.sendAgeCertificate().execute());
-        Logger.verbose("- %s confirms with %s that he wants to verify an account on %s.", realName, AVS_NAME, siteName);
-        Logger.verbose("    - %s does NOT know which account on %s is being verified.", AVS_NAME, siteName);
-        Logger.verbose("- (Behind the scenes, %s sends an age certificate to %s.)", AVS_NAME, siteName);
-        Logger.verbose("    - %s does NOT share %s's real name with %s.", AVS_NAME, realName, siteName);
-        Logger.verbose("- %s redirects %s to %s.", AVS_NAME, realName, siteName);
+        if (verbose) {
+            log("- %s confirms with %s that he wants to verify an account on %s.", realName, AVS_NAME, siteName);
+            log("    - %s does NOT know which account on %s is being verified.", AVS_NAME, siteName);
+            log("- (Behind the scenes, %s sends an age certificate to %s.)", AVS_NAME, siteName);
+            log("    - %s does NOT share %s's real name with %s.", AVS_NAME, realName, siteName);
+            log("- %s redirects %s to %s.", AVS_NAME, realName, siteName);
+        }
 
         VerificationState state = get(siteClient.getVerificationState().execute());
-        Logger.info("\"%s\" is verified on %s:", accountName, siteName);
-        Logger.json(state.getUser());
+        log("\"%s\" is verified on %s:", accountName, siteName);
+        logJson(state.getUser());
+    }
+
+    /** Creates a client for an account. */
+    private static <A> A createClient(int port, String accountId, Class<A> apiType) {
+        return TestClient.api(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
     }
 
     /** Gets the result of a successful response. */
@@ -85,41 +82,17 @@ public final class Demo {
         return response.body();
     }
 
-    /** Creates a client for an account. */
-    private static <A> A createClient(int port, String accountId, Class<A> apiType) {
-        return TestClient.api(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
+    /** Logs a message. */
+    @SuppressWarnings("AnnotateFormatMethod")
+    public static void log(String format, Object... args) {
+        String msg = String.format(format, args);
+        System.out.println(msg);
     }
 
-    /** Sets up the demo. */
-    private static void setUp() throws Exception {
-        // Set up containers.
-        dynamoDb.beforeAll(null);
-        dynamoDb.createSiteAccountStoreTables(); // can share since each site has a different pseudonym for a person
-        dynamoDb.createAvsAccountStoreTables();
-        SecureId parentPseudonym = SecureId.fromString("uhzmISXl7szUDLVuYNvDVf6jiL3ExwCybtg-KlazHU4");
-        VerifiedUser parent = VerifiedUser.builder()
-                .pseudonym(parentPseudonym)
-                .ageRange(AgeRange.builder().min(40).max(40).build())
-                .build();
-        dynamoDb.createAvsAccount("John Smith", parent);
-        SecureId childPseudonym = SecureId.fromString("KB0b9pDo8j7-1p90fFokbgHj8hzbbU7jCGGjfuMzLR4");
-        VerifiedUser child = VerifiedUser.builder()
-                .pseudonym(childPseudonym)
-                .ageRange(AgeRange.builder().min(13).max(13).build())
-                .guardianPseudonyms(List.of(parentPseudonym))
-                .build();
-        dynamoDb.createAvsAccount("Billy Smith", child);
-
-        // Start servers.
-        checkMyAge.run("server", Resources.get("config-check-my-age.yaml"));
-        crackle.run("server", Resources.get("config-crackle.yaml"));
-        pop.run("server", Resources.get("config-pop.yaml"));
-    }
-
-    /** Tears down the demo. */
-    private static void tearDown() throws Exception {
-        dynamoDb.afterAll(null);
-        System.exit(0);
+    /** Logs a value as pretty-printed JSON. */
+    public static void logJson(Object value) throws IOException {
+        String json = writer.writeValueAsString(value);
+        System.out.println(json);
     }
 
     private Demo() {} // static class

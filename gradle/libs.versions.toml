@@ -30,6 +30,7 @@ plugins-spotless-palantir = "2.75.0"
 # Docker image
 dockerImages-alpine = "3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
 dockerImages-dynamoDb = "3.1.0@sha256:7ef4a2c45b58c2901e70a4f28e0953a422c2c631baaaf5e2c15e0805740c7752"
+dockerImages-gradle = "9.1.0-jdk21-noble@sha256:9e68fdb0bfe567a882f182561bbbff77c092ff2e80fba6a70ec659f2d89d1473"
 dockerImages-redis = "8.2.1@sha256:5fa2edb1e408fa8235e6db8fab01d1afaaae96c9403ba67b70feceb8661e8621"
 dockerImages-temurinJre = "21-jre-noble@sha256:a29160fa56fad2b32e3e605bd468a7bb280a096b1c2339a70a31752c3463ba20"
 
