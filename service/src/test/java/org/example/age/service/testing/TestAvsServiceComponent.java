@@ -8,11 +8,12 @@ import java.util.Map;
 import java.util.function.Supplier;
 import org.example.age.avs.endpoint.AvsEndpointConfig;
 import org.example.age.avs.endpoint.AvsEndpointModule;
+import org.example.age.avs.provider.accountstore.test.TestAvsAccountStoreModule;
+import org.example.age.avs.provider.certificatesigner.test.TestCertificateSignerModule;
+import org.example.age.avs.provider.userlocalizer.test.TestAvsUserLocalizerModule;
 import org.example.age.common.api.AgeThresholds;
-import org.example.age.module.crypto.test.TestAvsCryptoModule;
+import org.example.age.common.provider.pendingstore.test.TestPendingStoreModule;
 import org.example.age.module.request.test.TestRequestModule;
-import org.example.age.module.store.test.TestAvsAccountStoreModule;
-import org.example.age.module.store.test.TestPendingStoreModule;
 import org.example.age.site.api.client.SiteApi;
 
 /** Dagger component for {@link TestAvsService}. */
@@ -22,7 +23,8 @@ import org.example.age.site.api.client.SiteApi;
             TestRequestModule.class,
             TestAvsAccountStoreModule.class,
             TestPendingStoreModule.class,
-            TestAvsCryptoModule.class,
+            TestAvsUserLocalizerModule.class,
+            TestCertificateSignerModule.class,
         })
 @Singleton
 public interface TestAvsServiceComponent extends Supplier<TestAvsService> {

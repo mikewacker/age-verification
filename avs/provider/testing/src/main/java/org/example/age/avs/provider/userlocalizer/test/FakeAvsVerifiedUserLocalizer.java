@@ -1,4 +1,4 @@
-package org.example.age.module.crypto.test;
+package org.example.age.avs.provider.userlocalizer.test;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -11,11 +11,15 @@ import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.api.crypto.Localization;
 import org.example.age.common.api.crypto.SecureId;
 
-/** Fake implementation of {@link AvsVerifiedUserLocalizer}. It has two sites with IDs of "site1" and "site2". */
+/** Fake implementation of {@link AvsVerifiedUserLocalizer}. Uses seeded keys. */
 @Singleton
 final class FakeAvsVerifiedUserLocalizer implements AvsVerifiedUserLocalizer {
 
-    private final Map<String, SecureId> keys = Map.of("site", SecureId.generate(), "other-site", SecureId.generate());
+    private final Map<String, SecureId> keys = Map.of(
+            "site",
+            SecureId.fromString("pER-dDPdsvdvcP9szpckd6GHHc1qg44Rt70LTUqHTpY"),
+            "other-site",
+            SecureId.fromString("W1zah29NMWEOEsd8VNFX6E3Vo8Z-HLNQ5cDH3-9KyVg"));
 
     @Inject
     public FakeAvsVerifiedUserLocalizer() {}
