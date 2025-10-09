@@ -9,7 +9,7 @@
 
 **I just want to jump into the code.**
 
-See [`SiteService`](/service/src/main/java/org/example/age/service/SiteService.java)/[`AvsService`](/service/src/main/java/org/example/age/service/AvsService.java), [`SiteApp`](/app/src/main/java/org/example/age/app/SiteApp.java)/[`AvsApp`](/app/src/main/java/org/example/age/app/AvsApp.java), or [`Demo`](/demo/src/main/java/org/example/age/demo/Demo.java).
+See [`SiteEndpoint`](/site/endpoint/src/main/java/org/example/age/site/endpoint/SiteEndpoint.java)/[`AvsEndpoint`](/avs/endpoint/src/main/java/org/example/age/avs/endpoint/AvsEndpoint.java), [`SiteApp`](/site/app/src/main/java/org/example/age/site/app/SiteApp.java)/[`AvsApp`](/avs/app/src/main/java/org/example/age/avs/app/AvsApp.java), or [`Demo`](/demo/src/main/java/org/example/age/demo/Demo.java).
 
 ## Tech Stack
 
@@ -21,9 +21,9 @@ See [`SiteService`](/service/src/main/java/org/example/age/service/SiteService.j
 
 Go POJO: Plain Old Java Object. Getting things done is easier when you work with POJO interfaces.
 
-- **[JAX-RS](https://jakarta.ee/specifications/restful-ws/4.0/):** Creates web APIs as POJO interfaces with a few annotations. ([Generated](/buildSrc/src/main/kotlin/openapi-java.gradle.kts) from the OpenAPI YAML.)
-- **[Retrofit](https://square.github.io/retrofit/):** Creates web clients as POJO interfaces with a few annotations. (Generated from the OpenAPI YAML.)
-- **[Immutables](https://immutables.github.io/) + [Jackson](https://github.com/FasterXML/jackson):** Creates value types for JSON data as POJO interfaces with a few annotations.
+- **[JAX-RS](https://jakarta.ee/specifications/restful-ws/4.0/):** Creates web APIs as annotated POJO interfaces. ([Generated](/buildSrc/src/main/kotlin/openapi-java.gradle.kts) from the OpenAPI YAML.)
+- **[Retrofit](https://square.github.io/retrofit/):** Creates web clients as annotated POJO interfaces. (Generated from the OpenAPI YAML.)
+- **[Immutables](https://immutables.github.io/) + [Jackson](https://github.com/FasterXML/jackson):** Creates value types for JSON data as annotated POJO interfaces.
 
 **Java Web Applications**
 
@@ -37,112 +37,106 @@ Go POJO: Plain Old Java Object. Getting things done is easier when you work with
 
 ## Detailed Design
 
+Gradle is the build system. The code is split into multiple subprojects (e.g., `:site:api`, `:site:endpoint`).
+
 ### Project Structure
 
-Gradle is the build system. The code is split into multiple Gradle modules (e.g., `:api`, `:service`).
+<img src="architecture.png" alt="architecture diagram" width="50%" />
 
-**Interfaces**
+- Only `app` depends on Dropwizard; no knowledge of Dropwizard is needed to understand the other components.
+- `endpoint`, `client`, and `provider` all contain JSON configuration.
+- (Dagger, not `META-INF`, will be used to provide implementations of the SPIs.)
 
-- The OpenAPI YAML file, as well as the corresponding JAX-RS and Retrofit interfaces, can be found in `:api`.
-- Components such as stores are abstracted away as interfaces; these interfaces are defined in `:service:module`.
-    - The idea is similar to a DAO, but it is expanded to also cover, e.g., calls to another service.
+**API Layer**
 
-**Implementations**
+- `api`: the OpenAPI YAML file, as well as the corresponding model types, JAX-RS interface, and Retrofit interface
 
-- Implementations of the JAX-RS interfaces can be found in `:service`.
-- Implementations of the interfaces in `:service:module` can be found in `:module:*` (e.g., `:module:store-redis`).
-    - Many modules come with configuration, which is defined via Immutables + Jackson.
-    - Many modules depend on [`LiteEnv`](/module/common/src/main/java/org/example/age/module/common/LiteEnv.java), a lightweight facade for the Dropwizard `Environment`.
-- Since this is a proof-of-concept, some modules in `:module:*` have "demo" implementations.
+**Endpoint Layer**
 
-**Web Applications**
+- `spi`: service provider interfaces that abstract away data stores (i.e., DAOs) and cryptographic operations
+- `endpoint`: implementation of the JAX-RS interface that only contains pure business logic
 
-- The web applications can be found in `:app`.
-- A Dropwizard app only needs to implement one method: `void run(T configuration, Environment environment)`.
-    - The configuration class (`T extends Configuration`) is a [container](/app/src/main/java/org/example/age/app/config/SiteAppConfig.java) for all the module-specific configuration.
-    - An [implementation](/module/common/src/main/java/org/example/age/module/common/DropwizardLiteEnv.java) of the `LiteEnv` facade is provided using the Dropwizard `Environment`.
+**Application Layer**
+
+- `env`: [`LiteEnv`](/common/env/src/main/java/org/example/age/common/env/LiteEnv.java), a lightweight facade for the Dropwizard `Environment`, and some related utilities
+- `client`: clients for other endpoints and data stores
+- `provider`: implementations of the SPIs
+- `app`: web application
+
+A Dropwizard `Application` only needs to implement one method: `void run(T configuration, Environment environment)`.
+
+- The configuration class is a [container](/site/app/src/main/java/org/example/age/site/app/config/SiteAppConfig.java) for all the configuration from `endpoint`, `client`, and `provider`.
+- `app` includes an [implementation](/common/app/src/main/java/org/example/age/common/app/env/DropwizardLiteEnv.java) of the `LiteEnv` facade using the Dropwizard `Environment`.
 - Since a proof-of-concept is not deployed to production, ops features are excluded: health checks, metrics, logging, etc.
 
 ### Testability
 
-Most of the test coverage comes from unit tests.
+- A key component of quality is thorough unit tests.
+- Testability is downstream of the architecture.
 
-**Unit Testing `:service`**
+**Unit Tests**
 
-- Very lightweight fakes for the interfaces in `:service:module` can be found in `:module:test`.
-    - These fakes can be built quickly and are self-contained. 
-    - In turn, they may not implement expiration logic, use preset accounts, hard-code configuration, etc.
-- Services in `:service` can be unit tested in a hermetic, ephemeral environment by using `:module:test`.
-- ([Test](/app/src/testFixtures/java/org/example/age/app/TestSiteApp.java) [applications](/app/src/testFixtures/java/org/example/age/app/TestAvsApp.java) can also be quickly stood up and [tested end-to-end](/app/src/test/java/org/example/age/app/TestAppVerificationTest.java) using `:module:test`.)
+- `endpoint` only contains pure business logic, but providers for `spi` are needed to test it.
+    - Very lightweight, self-contained fakes for `spi` can be found in `:common|site|avs:provider:testing`.
+    - In turn, these fakes may not implement expiration logic, use preset accounts, hard-code configuration, etc.
+- An implementation of `LiteEnv` is needed to test `client` and `provider`.
+    - A self-contained [test implementation](/testing/src/main/java/org/example/age/testing/env/TestLiteEnv.java) of `LiteEnv` can be found in `:testing`.
+- Test templates for `spi` can be found in `:common|site|avs:spi-testing`; consumers will provide an implementation of the SPI.
 
-**Unit Testing `:module:*`**
+**Integration Tests**
 
-- The interfaces in `:service:module` come with test templates. ([example](/service/module/src/testFixtures/java/org/example/age/service/module/store/testing/AvsAccountStoreTestTemplate.java))
-- A self-contained [test implementation](/module/common/src/testFixtures/java/org/example/age/module/common/testing/TestLiteEnvModule.java) of `LiteEnv` is provided by `:module:common`.
-- Docker runs stores such as Redis and DynamoDB in containers; unit tests for stores depend on these containers.
-    - The modules for stores come with test fixtures that clean the container and set up tests. ([example](/module/store-dynamodb/src/testFixtures/java/org/example/age/module/store/dynamodb/testing/DynamoDbTestContainer.java))
+- A [test template](/integration-testing/testing/src/main/java/org/example/age/testing/integration/VerificationTestTemplate.java) can be found in `:integration-testing:testing`; consumers will provide the clients.
+- In `:integration-testing:app`, these clients are pointed at Docker containers running the applications.
+- In `:integration-testing:endpoint`, these clients are pointed at endpoint objects (that use the fakes for `spi`).
+
+**Test Infrastructure**
+
+- Dropwizard and Retrofit provide great test infrastructure.
+- Docker containers are used to run DynamoDB and Redis.
+    - Each subproject that uses DynamoDB and/or Redis has its own `docker-compose-test.yml`.
+- Additional test infrastructure can be found in `:testing`. It's fairly lightweight and minimal.
 
 ## Architectural Complications
 
-### Custom OpenAPI Java Plugin
+**OpenAPI: Duplicate Types**
 
-**Convention Plugin**
-
-**Problem:** The [convention plugin](/buildSrc/src/main/kotlin/org.example.age.java-conventions.gradle.kts) (Spotless, ErrorProne, `-Werror`, etc.) is not compatible with generated code.
-
-- `:api` contains types that are generated from an OpenAPI YAML file; this code does not always follow the conventions.
-- `:api` also contains a few hand-coded types (e.g., `SecureId`); conventions should apply to this code.
-- Putting generated and hand-coded types in separate Gradle modules would create a circular dependency between modules.
- 
-**Solution:** Apply conventions to `:api` on a best-effort basis.
-
-- Spotless and ErrorProne have options to exclude files by path; this can be used to exclude generated code.
-- `-Werror` is still enforced, but a few `-Xlint` warnings are disabled.
-
-**Duplicate Types**
-
-**Problem:** The custom OpenAPI Java plugin generates two versions of the code for both models and APIs.
+*Problem:* OpenAPI generates two versions of the code for both the models and the APIs.
 
 - The OpenAPI generator is called twice: once for the server (JAX-RS), and once for the client (Retrofit).
 
-**Solution:** Deduplicate models, but not the APIs.
+*Solution:* Deduplicate models, but not the APIs.
 
-- Separate client and server APIs make sense, but add [`AsyncCalls`](/common/src/main/java/org/example/age/common/AsyncCalls.java) as an adapter between them. See: square/retrofit#573
+- Separate client and server APIs make sense, but add [`AsyncCalls`](/common/api/src/main/java/org/example/age/common/api/client/AsyncCalls.java) as an adapter between them. See: square/retrofit#573
 - The models should be deduplicated, however. The generated model types for JAX-RS should be reused for Retrofit.
 - **Downside**: In `build.gradle.kts`, the `openApiJava` block must manually list out all the schemas (`dedupSchemas`).
 
-### Dagger
+**OpenAPI: Java Conventions**
 
-**Request Context**
+*Problem:* The [convention plugin](/buildSrc/src/main/kotlin/buildlogic.java-conventions.gradle.kts) (Spotless, ErrorProne, `-Werror`, etc.) is not compatible with generated code.
 
-**Problem:** How do I access the HTTP headers for a request? We cannot add a `@Context HttpHeaders` arg to...
+- `api` contains types that are generated from an OpenAPI YAML file; this code does not always follow the conventions.
+- `api` also contains a few hand-coded types (e.g., `SecureId`); conventions should apply to this code.
+- Putting generated and hand-coded types in separate Gradle projects would create a circular dependency between projects.
 
-- the `@Inject`'ed constructor. The Dagger component produces singleton-scoped services that are registered with Jersey.
+*Solution:* Apply conventions to `api` on a best-effort basis.
+
+- Spotless and ErrorProne have options to exclude files by path; this can be used to exclude generated code.
+
+**Request Context: Dagger, Dropwizard, and OpenAPI**
+
+*Problem:* How do I access the HTTP headers for a request? We cannot add a `@Context HttpHeaders` arg to...
+
+- the `@Inject`'ed constructor. The Dagger component produces a singleton-scoped endpoint that is registered with Jersey.
 - the methods of the JAX-RS interface. This interface is generated from the OpenAPI YAML file.
+    - This solution is not ideal anyway, since the headers are used for cross-cutting concerns.
 
-**Solution:** [DARC](https://github.com/mikewacker/darc)
+*Solution:* [DARC](https://github.com/mikewacker/darc)
 
-### Testability
+**Unit Testing an Endpoint**
 
-**Unit Testing a Service**
-
-**Problem:** What is the difference between throwing `NotFoundException` and returning it in a failed `CompletionStage`?
+*Problem:* What is the difference between throwing `NotFoundException` and returning it in a failed `CompletionStage`?
 
 - End-to-end, both would result would in a 404 error.
-- When unit testing a service class, those are two different outcomes.
+- When unit testing an endpoint object, those are two different outcomes.
 
-**Solution:** For unit tests, use a decorator to convert uncaught exceptions to a failed `CompletionStage`. See: [`TestSiteService`](/service/src/test/java/org/example/age/service/testing/TestSiteService.java)
-
-- **Downside:** You will have to write a small amount of boilerplate code.
-
-**Cleaning Docker Containers**
-
-**Problem:** Using Docker containers for stores such as Redis and DynamoDB can lead to cross-test pollution.
-
-- The containers are started before tests are run and stay up.
-
-**Solution:** Create a JUnit Jupiter extension that cleans a container before all and after all tests in a test class.
-
-- Cross-test pollution is manageable within a single test class, so it cleans after all tests instead of after each test.
-- It also cleans before all tests in case another test class didn't properly clean the container.
-- **Downside:** You have to implement cleaning logic for each store, though it's not a lot of work in practice.
+*Solution:* Create a proxy that converts an uncaught exception to a failed `CompletionStage`. See: [`TestAsyncEndpoints`](/testing/src/main/java/org/example/age/testing/client/TestAsyncEndpoints.java)
