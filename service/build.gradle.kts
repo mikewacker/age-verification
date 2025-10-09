@@ -10,6 +10,8 @@ dependencies {
     testImplementation(project(":avs:spi"))
     testImplementation(project(":site:endpoint"))
     testImplementation(project(":avs:endpoint"))
+    testImplementation(project(":common:provider:testing"))
+    testImplementation(project(":avs:provider:testing"))
     testImplementation(project(":module:test"))
     testImplementation(libs.retrofit.mock)
 }

@@ -1,4 +1,4 @@
-package org.example.age.module.store.test;
+package org.example.age.avs.provider.accountstore.test;
 
 import dagger.Component;
 import jakarta.inject.Singleton;

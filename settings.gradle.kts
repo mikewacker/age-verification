@@ -17,6 +17,9 @@ include(
     "site:endpoint",
     "avs:endpoint",
     "service",
+    "common:provider:testing",
+    "avs:provider:testing",
+    "module:test",
 
     "common:env",
 
@@ -37,9 +40,6 @@ include(
     "avs:provider:accountstore-redis",
     "avs:provider:certificatesigner-demo",
     "avs:provider:userlocalizer-demo",
-    "module:common",
-    "module:store-dynamodb",
-    "module:test",
 
     "common:app",
     "site:app",
@@ -48,5 +48,7 @@ include(
 
     "testing",
 
+    "module:common",
+    "module:store-dynamodb",
     "demo",
 )
