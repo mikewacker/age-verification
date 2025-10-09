@@ -27,7 +27,7 @@ public interface TestSiteServiceComponent extends Supplier<TestSiteService> {
 
     static TestSiteService create(AvsApi avsClient) {
         SiteEndpointConfig config = SiteEndpointConfig.builder()
-                .id("site1")
+                .id("site")
                 .verifiedAccountExpiresIn(Duration.ofDays(30))
                 .build();
         return DaggerTestSiteServiceComponent.factory()

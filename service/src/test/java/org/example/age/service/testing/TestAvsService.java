@@ -7,7 +7,7 @@ import org.example.age.avs.api.AvsApi;
 import org.example.age.common.api.VerificationRequest;
 import org.example.age.common.api.crypto.SecureId;
 import org.example.age.module.request.test.TestAccountId;
-import org.example.age.testing.client.WebStageTesting;
+import org.example.age.testing.client.TestAsyncEndpoints;
 
 /**
  * Decorator for {@link AvsApi} that converts uncaught exceptions to failed futures.
@@ -21,23 +21,23 @@ public final class TestAvsService implements AvsApi {
 
     @Inject
     TestAvsService(AvsApi delegate, TestAccountId accountId) {
-        this.delegate = delegate;
+        this.delegate = TestAsyncEndpoints.test(delegate, AvsApi.class);
         this.accountId = accountId;
     }
 
     @Override
     public CompletionStage<VerificationRequest> createVerificationRequestForSite(String siteId) {
-        return WebStageTesting.wrapExceptions(() -> delegate.createVerificationRequestForSite(siteId));
+        return delegate.createVerificationRequestForSite(siteId);
     }
 
     @Override
     public CompletionStage<Void> linkVerificationRequest(SecureId requestId) {
-        return WebStageTesting.wrapExceptions(() -> delegate.linkVerificationRequest(requestId));
+        return delegate.linkVerificationRequest(requestId);
     }
 
     @Override
     public CompletionStage<Void> sendAgeCertificate() {
-        return WebStageTesting.wrapExceptions(delegate::sendAgeCertificate);
+        return delegate.sendAgeCertificate();
     }
 
     public void setAccountId(String accountId) {

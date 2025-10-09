@@ -24,7 +24,7 @@ public final class DemoAvsUserLocalizerTest extends AvsUserLocalizerTestTemplate
 
         static AvsVerifiedUserLocalizer create() {
             AvsLocalizationKeysConfig config = AvsLocalizationKeysConfig.builder()
-                    .keys(Map.of("site1", SecureId.generate(), "site2", SecureId.generate()))
+                    .keys(Map.of("site", SecureId.generate(), "other-site", SecureId.generate()))
                     .build();
             return DaggerDemoAvsUserLocalizerTest_TestComponent.factory()
                     .create(config)

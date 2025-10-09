@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.example.age.common.api.AgeRange;
+import org.example.age.common.api.crypto.SecureId;
 import org.junit.jupiter.api.Test;
 
 public final class TestObjectMapperTest {
@@ -14,6 +15,14 @@ public final class TestObjectMapperTest {
         ObjectMapper mapper = TestObjectMapper.get();
         assertThat(mapper).isNotNull();
         assertThat(mapper).isSameAs(TestObjectMapper.get());
+    }
+
+    @Test
+    public void serializeThenDeserialize() {
+        SecureId id = SecureId.generate();
+        String json = TestObjectMapper.serialize(id);
+        SecureId rtId = TestObjectMapper.deserialize(json, SecureId.class);
+        assertThat(rtId).isEqualTo(id);
     }
 
     @Test

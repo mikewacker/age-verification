@@ -30,7 +30,7 @@ public interface TestAvsServiceComponent extends Supplier<TestAvsService> {
     static TestAvsService create(Map<String, SiteApi> siteClients) {
         AvsEndpointConfig config = AvsEndpointConfig.builder()
                 .verificationRequestExpiresIn(Duration.ofMinutes(5))
-                .ageThresholds(Map.of("site1", AgeThresholds.of(18), "site2", AgeThresholds.of(18)))
+                .ageThresholds(Map.of("site", AgeThresholds.of(18), "other-site", AgeThresholds.of(18)))
                 .build();
         return DaggerTestAvsServiceComponent.factory()
                 .create(siteClients, config)
