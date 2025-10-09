@@ -1,0 +1,45 @@
+####
+# Tracked files
+####
+
+# Git
+.gitattributes
+.gitignore
+.github
+
+# Docker
+Dockerfile*
+**/docker-compose*.yml
+
+# Test (and demo) sources
+**/src/test
+**/*testing/*
+!integration-testing/*
+integration-testing/*/*
+demo/*
+
+# Documentation
+docs
+LICENSE
+README.md
+
+####
+# Untracked files
+####
+
+# Gradle
+**/.gradle
+**/build
+**/.kotlin
+
+# Git
+.git
+
+# IntelliJ IDEA
+.idea
+
+# VS Code
+.vscode
+
+# MacOS
+**/.DS_Store

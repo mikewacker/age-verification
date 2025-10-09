@@ -3,7 +3,7 @@
 # For CI testing, the local OS+JDK is noble+temurin, consistent with Dockerfile. See: .github/workflows/build.yml
 # (Using Dockerfile for CI testing would build the code twice: once locally, and once in a Docker container.)
 
-# Assumes that the artifacts have been built (./gradlew installDist). See: integration-test/app/build.gradle.kts
+# Assumes that the artifacts have been built (./gradlew installDist). See: integration-testing/app/build.gradle.kts
 
 ARG TEMURIN_JRE_TAG
 

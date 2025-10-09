@@ -5,14 +5,9 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(libs.dropwizard.bom))
     implementation(project(":site:api"))
     implementation(project(":avs:api"))
-    implementation(project(":site:app"))
-    implementation(project(":avs:app"))
     implementation(project(":testing"))
-    implementation(testFixtures(project(":module:store-dynamodb")))
-    implementation(libs.dropwizard.core)
 }
 
 application {
@@ -21,4 +16,9 @@ application {
 
 dockerCompose {
     isRequiredBy(tasks.run)
+    environment.put("ALPINE_TAG", libs.versions.dockerImages.alpine)
+    environment.put("DYNAMODB_TAG", libs.versions.dockerImages.dynamoDb)
+    environment.put("GRADLE_TAG", libs.versions.dockerImages.gradle)
+    environment.put("REDIS_TAG", libs.versions.dockerImages.redis)
+    environment.put("TEMURIN_JRE_TAG", libs.versions.dockerImages.temurinJre)
 }

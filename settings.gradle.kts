@@ -49,7 +49,5 @@ include(
     "testing",
     "integration-testing:testing",
 
-    "module:common",
-    "module:store-dynamodb",
     "demo",
 )

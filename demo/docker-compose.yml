@@ -1,0 +1,140 @@
+services:
+  crackle:
+    image: mikewacker/age-verification-site
+    command: server /config/config.yml
+    build:
+      context: ..
+      target: site
+      args:
+        GRADLE_TAG: ${GRADLE_TAG}
+        TEMURIN_JRE_TAG: ${TEMURIN_JRE_TAG}
+    networks:
+      - public
+      - crackle-private
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src/main/resources/crackle/config:/config:ro
+    depends_on:
+      - crackle-dynamodb
+      - crackle-redis
+
+  crackle-dynamodb:
+    image: amazon/dynamodb-local:${DYNAMODB_TAG}
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    networks:
+      - crackle-private
+    volumes:
+      - crackle-dynamodb-data:/data
+    depends_on:
+      crackle-dynamodb-seed:
+        condition: service_completed_successfully
+
+  crackle-dynamodb-seed:
+    image: alpine:${ALPINE_TAG}
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
+    volumes:
+      - ./src/main/resources/crackle/data/dynamodb:/seed-data:ro
+      - crackle-dynamodb-data:/data
+
+  crackle-redis:
+    image: redis:${REDIS_TAG}
+    networks:
+      - crackle-private
+
+  pop:
+    image: mikewacker/age-verification-site
+    command: server /config/config.yml
+    build:
+      context: ..
+      target: site
+      args:
+        GRADLE_TAG: ${GRADLE_TAG}
+        TEMURIN_JRE_TAG: ${TEMURIN_JRE_TAG}
+    networks:
+      - public
+      - pop-private
+    ports:
+      - "8081:80"
+    volumes:
+      - ./src/main/resources/pop/config:/config:ro
+    depends_on:
+      - pop-dynamodb
+      - pop-redis
+
+  pop-dynamodb:
+    image: amazon/dynamodb-local:${DYNAMODB_TAG}
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    networks:
+      - pop-private
+    volumes:
+      - pop-dynamodb-data:/data
+    depends_on:
+      pop-dynamodb-seed:
+        condition: service_completed_successfully
+
+  pop-dynamodb-seed:
+    image: alpine:${ALPINE_TAG}
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
+    volumes:
+      - ./src/main/resources/pop/data/dynamodb:/seed-data:ro
+      - pop-dynamodb-data:/data
+
+  pop-redis:
+    image: redis:${REDIS_TAG}
+    networks:
+      - pop-private
+
+  checkmyage:
+    image: mikewacker/age-verification-avs
+    command: server /config/config.yml
+    build:
+      context: ..
+      target: avs
+      args:
+        GRADLE_TAG: ${GRADLE_TAG}
+        TEMURIN_JRE_TAG: ${TEMURIN_JRE_TAG}
+    networks:
+      - public
+      - checkmyage-private
+    ports:
+      - "9090:80"
+    volumes:
+      - ./src/main/resources/checkmyage/config:/config:ro
+    depends_on:
+      - checkmyage-dynamodb
+      - checkmyage-redis
+
+  checkmyage-dynamodb:
+    image: amazon/dynamodb-local:${DYNAMODB_TAG}
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    networks:
+      - checkmyage-private
+    volumes:
+      - checkmyage-dynamodb-data:/data
+    depends_on:
+      checkmyage-dynamodb-seed:
+        condition: service_completed_successfully
+
+  checkmyage-dynamodb-seed:
+    image: alpine:${ALPINE_TAG}
+    command: sh -c "cp -r /seed-data/* /data && chmod -R a+rw /data"
+    volumes:
+      - ./src/main/resources/checkmyage/data/dynamodb:/seed-data:ro
+      - checkmyage-dynamodb-data:/data
+
+  checkmyage-redis:
+    image: redis:${REDIS_TAG}
+    networks:
+      - checkmyage-private
+
+networks:
+  public:
+  crackle-private:
+  pop-private:
+  checkmyage-private:
+
+volumes:
+  crackle-dynamodb-data:
+  pop-dynamodb-data:
+  checkmyage-dynamodb-data:
