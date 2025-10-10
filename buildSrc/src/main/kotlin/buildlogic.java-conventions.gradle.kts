@@ -1,3 +1,4 @@
+import com.diffplug.spotless.LineEnding
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.accessors.dm.LibrariesForLibs
 
@@ -43,6 +44,7 @@ spotless {
     java {
         palantirJavaFormat(libs.versions.plugins.spotless.palantir.get())
     }
+    lineEndings = LineEnding.UNIX
 }
 
 tasks.withType<JavaCompile> {

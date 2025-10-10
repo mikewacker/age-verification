@@ -1,4 +1,6 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import org.openapitools.generator.gradle.plugin.tasks.ValidateTask
 
 plugins {
     `java-library`
@@ -31,7 +33,7 @@ fun buildDirPath(relativePath: String): Provider<String> =
     layout.buildDirectory.dir(relativePath).map { it.asFile.absolutePath }
 
 // Create a task to validate the OpenAPI YAML.
-tasks.register<org.openapitools.generator.gradle.plugin.tasks.ValidateTask>("openApiJavaValidate") {
+tasks.register<ValidateTask>("openApiJavaValidate") {
     group = "OpenAPI Java"
     description = "Validates the OpenAPI YAML."
 
@@ -48,7 +50,7 @@ val commonGenerateConfigOptions = mapOf(
     "useJakartaEe" to "true",
 )
 
-tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiJavaGenerateServerTmp") {
+tasks.register<GenerateTask>("openApiJavaGenerateServerTmp") {
     logging.captureStandardOutput(LogLevel.INFO)
 
     generatorName = "jaxrs-spec"
@@ -83,13 +85,7 @@ tasks.register<Copy>("openApiJavaGenerateServer") {
 }
 
 // Create a task to generate Retrofit clients from the Open API YAML.
-fun createOpenApiGeneratorIgnore(outputDirPath: String, vararg lines: String) {
-    val ignoreFile = layout.buildDirectory.file("$outputDirPath/.openapi-generator-ignore").get().asFile
-    val contents = lines.joinToString("") { "$it\n" }
-    ignoreFile.writeText(contents)
-}
-
-tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiJavaGenerateClient") {
+tasks.register<GenerateTask>("openApiJavaGenerateClient") {
     group = "OpenAPI Java"
     description = "Generates Retrofit clients from the OpenAPI YAML."
     logging.captureStandardOutput(LogLevel.INFO)
@@ -119,15 +115,18 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
         "modelTests" to "false",
     )
 
+    val ignoreFile = layout.buildDirectory.file("$outputDirPath/.openapi-generator-ignore")
     doFirst {
         // Excluding everything and then including things can be finicky with ignore files, but this works.
         val clientPackagePath = clientPackageName.get().replace('.', '/')
-        createOpenApiGeneratorIgnore(outputDirPath,
+        val lines = listOf(
             "**",
             "!$clientPackagePath/*.java",
             "!$clientPackagePath/util/CollectionFormats.java",
             "!$clientPackagePath/util/StringUtil.java",
         )
+        val contents = lines.joinToString("") { "$it\n" }
+        ignoreFile.get().asFile.writeText(contents)
     }
 }
 

@@ -22,3 +22,7 @@ dockerCompose {
     environment.put("ALPINE_TAG", libs.versions.dockerImages.alpine)
     environment.put("DYNAMODB_TAG", libs.versions.dockerImages.dynamoDb)
 }
+
+tasks.named("composeUp") {
+    notCompatibleWithConfigurationCache("avast/gradle-docker-compose-plugin#486")
+}
