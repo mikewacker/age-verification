@@ -25,17 +25,23 @@ public abstract class SiteAccountStoreTestTemplate {
         assertThat(maybeConflictingAccountId).isEmpty();
 
         VerificationState state = await(store().load("username1"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.VERIFIED);
-        assertThat(state.getUser()).isEqualTo(user);
-        assertThat(state.getExpiration()).isEqualTo(expiration);
+        VerificationState expectedState = VerificationState.builder()
+                .id("username1")
+                .status(VerificationStatus.VERIFIED)
+                .user(user)
+                .expiration(expiration)
+                .build();
+        assertThat(state).isEqualTo(expectedState);
     }
 
     @Test
     public void unverified() {
         VerificationState state = await(store().load("username2"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.UNVERIFIED);
-        assertThat(state.getUser()).isNull();
-        assertThat(state.getExpiration()).isNull();
+        VerificationState expectedState = VerificationState.builder()
+                .id("username2")
+                .status(VerificationStatus.UNVERIFIED)
+                .build();
+        assertThat(state).isEqualTo(expectedState);
     }
 
     @Test
@@ -73,9 +79,12 @@ public abstract class SiteAccountStoreTestTemplate {
 
         Thread.sleep(4);
         VerificationState state = await(store().load("username6"));
-        assertThat(state.getStatus()).isEqualTo(VerificationStatus.EXPIRED);
-        assertThat(state.getUser()).isNull();
-        assertThat(state.getExpiration()).isEqualTo(expiration);
+        VerificationState expectedState = VerificationState.builder()
+                .id("username6")
+                .status(VerificationStatus.EXPIRED)
+                .expiration(expiration)
+                .build();
+        assertThat(state).isEqualTo(expectedState);
     }
 
     @Test

@@ -2,24 +2,23 @@ package org.example.age.testing.site.spi;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.age.testing.client.WebStageTesting.await;
+import static org.example.age.testing.client.WebStageTesting.awaitErrorCode;
 
-import java.util.Optional;
 import org.example.age.avs.spi.AvsVerifiedAccountStore;
-import org.example.age.common.api.VerifiedUser;
+import org.example.age.avs.spi.VerifiedAccount;
 import org.junit.jupiter.api.Test;
 
 public abstract class AvsAccountStoreTestTemplate {
 
     @Test
-    public void load_Present() {
-        Optional<VerifiedUser> maybeUser = await(store().tryLoad("person"));
-        assertThat(maybeUser).isPresent();
+    public void load() {
+        VerifiedAccount account = await(store().load("person"));
+        assertThat(account.id()).isEqualTo("person");
     }
 
     @Test
-    public void load_Empty() {
-        Optional<VerifiedUser> maybeUser = await(store().tryLoad("unverified-person"));
-        assertThat(maybeUser).isEmpty();
+    public void error_UnverifiedAccount() {
+        awaitErrorCode(store().load("unverified-person"), 403);
     }
 
     protected abstract AvsVerifiedAccountStore store();

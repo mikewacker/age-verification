@@ -21,9 +21,6 @@ import org.example.age.site.spi.SiteVerifiedAccountStore;
 @Singleton
 final class FakeSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
-    private static final VerificationState UNVERIFIED =
-            VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
-
     private final Map<String, VerificationState> store = new HashMap<>();
 
     @Inject
@@ -31,7 +28,13 @@ final class FakeSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     @Override
     public CompletionStage<VerificationState> load(String accountId) {
-        VerificationState state = store.getOrDefault(accountId, UNVERIFIED);
+        VerificationState state = store.get(accountId);
+        if (state == null) {
+            state = VerificationState.builder()
+                    .id(accountId)
+                    .status(VerificationStatus.UNVERIFIED)
+                    .build();
+        }
         return CompletableFuture.completedFuture(state);
     }
 
@@ -42,6 +45,7 @@ final class FakeSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
         }
 
         VerificationState state = VerificationState.builder()
+                .id(accountId)
                 .status(VerificationStatus.VERIFIED)
                 .user(user)
                 .expiration(expiration)

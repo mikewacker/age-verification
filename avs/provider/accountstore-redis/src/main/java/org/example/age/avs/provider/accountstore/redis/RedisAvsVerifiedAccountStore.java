@@ -2,10 +2,10 @@ package org.example.age.avs.provider.accountstore.redis;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.Optional;
+import jakarta.ws.rs.ForbiddenException;
 import java.util.concurrent.CompletionStage;
 import org.example.age.avs.spi.AvsVerifiedAccountStore;
-import org.example.age.common.api.VerifiedUser;
+import org.example.age.avs.spi.VerifiedAccount;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import redis.clients.jedis.JedisPooled;
@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPooled;
 @Singleton
 final class RedisAvsVerifiedAccountStore implements AvsVerifiedAccountStore {
 
-    private static final String REDIS_KEY_PREFIX = "age:user";
+    private static final String REDIS_KEY_PREFIX = "age:account";
 
     private final JedisPooled client;
     private final JsonMapper mapper;
@@ -28,13 +28,17 @@ final class RedisAvsVerifiedAccountStore implements AvsVerifiedAccountStore {
     }
 
     @Override
-    public CompletionStage<Optional<VerifiedUser>> tryLoad(String accountId) {
-        return worker.dispatch(() -> tryLoadSync(accountId));
+    public CompletionStage<VerifiedAccount> load(String accountId) {
+        return worker.dispatch(() -> loadSync(accountId));
     }
 
-    private Optional<VerifiedUser> tryLoadSync(String accountId) {
+    private VerifiedAccount loadSync(String accountId) {
         String redisKey = String.format("%s:%s", REDIS_KEY_PREFIX, accountId);
-        String json = client.get(redisKey);
-        return (json != null) ? Optional.of(mapper.deserialize(json, VerifiedUser.class)) : Optional.empty();
+        String accountJson = client.get(redisKey);
+        if (accountJson == null) {
+            throw new ForbiddenException();
+        }
+
+        return mapper.deserialize(accountJson, VerifiedAccount.class);
     }
 }

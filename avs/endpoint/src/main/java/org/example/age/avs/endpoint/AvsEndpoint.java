@@ -2,7 +2,6 @@ package org.example.age.avs.endpoint;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
@@ -17,6 +16,7 @@ import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.spi.AgeCertificateSigner;
 import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.avs.spi.AvsVerifiedUserLocalizer;
+import org.example.age.avs.spi.VerifiedAccount;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.AgeThresholds;
 import org.example.age.common.api.SignedAgeCertificate;
@@ -102,10 +102,7 @@ final class AvsEndpoint implements AvsApi {
     /** Loads a verified account. */
     private CompletionStage<VerifiedAccount> loadVerifiedAccount() {
         String accountId = accountIdContext.getForRequest();
-        return accountStore
-                .tryLoad(accountId)
-                .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new))
-                .thenApply(user -> new VerifiedAccount(accountId, user));
+        return accountStore.load(accountId);
     }
 
     /** Localizes a {@link VerifiedUser} for the site. */
@@ -162,7 +159,4 @@ final class AvsEndpoint implements AvsApi {
                 ? new InternalServerErrorException(t)
                 : t;
     }
-
-    /** Account with a {@link VerifiedUser}. */
-    private record VerifiedAccount(String id, VerifiedUser user) {}
 }

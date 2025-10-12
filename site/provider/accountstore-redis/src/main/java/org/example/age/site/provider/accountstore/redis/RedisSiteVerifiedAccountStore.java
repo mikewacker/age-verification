@@ -24,8 +24,6 @@ import redis.clients.jedis.params.SetParams;
 final class RedisSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     private static final String REDIS_KEY_PREFIX = "age:verification";
-    private static final VerificationState UNVERIFIED =
-            VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final JedisPooled client;
     private final JsonMapper mapper;
@@ -63,13 +61,17 @@ final class RedisSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
         // Process the responses.
         String rawExpiration = rawExpirationResponse.get();
         if (rawExpiration == null) {
-            return UNVERIFIED;
+            return VerificationState.builder()
+                    .id(accountId)
+                    .status(VerificationStatus.UNVERIFIED)
+                    .build();
         }
 
         OffsetDateTime expiration = parseTime(rawExpiration);
         String userJson = userJsonResponse.get();
         if (userJson == null) {
             return VerificationState.builder()
+                    .id(accountId)
                     .status(VerificationStatus.EXPIRED)
                     .expiration(expiration)
                     .build();
@@ -77,6 +79,7 @@ final class RedisSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
         VerifiedUser user = mapper.deserialize(userJson, VerifiedUser.class);
         return VerificationState.builder()
+                .id(accountId)
                 .status(VerificationStatus.VERIFIED)
                 .user(user)
                 .expiration(expiration)

@@ -57,6 +57,9 @@ components:
       description: Current state of an account for age verification.
       type: object
       properties:
+        id:
+          description: Account ID.
+          type: string
         status:
           description: Verification status.
           $ref: '#/components/schemas/VerificationStatus'
@@ -67,7 +70,7 @@ components:
           description: Time when an account's verified status expired or will expire.
           type: string
           format: date-time
-      required: [status]
+      required: [id, status]
 
     VerificationStatus:
       description: Verification status of an account.

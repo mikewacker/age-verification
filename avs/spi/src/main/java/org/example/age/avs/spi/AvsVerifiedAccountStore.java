@@ -1,12 +1,11 @@
 package org.example.age.avs.spi;
 
-import java.util.Optional;
+import jakarta.ws.rs.ForbiddenException;
 import java.util.concurrent.CompletionStage;
-import org.example.age.common.api.VerifiedUser;
 
-/** Persistent store that retrieves the pseudonymous verified user linked to each person. */
+/** Persistent store that retrieves the pseudonymous user data for verified accounts. */
 public interface AvsVerifiedAccountStore {
 
-    /** Loads the {@link VerifiedUser} for the person, if present. */
-    CompletionStage<Optional<VerifiedUser>> tryLoad(String accountId);
+    /** Loads the pseudonymous user data for a verified account, or throws {@link ForbiddenException} */
+    CompletionStage<VerifiedAccount> load(String accountId);
 }

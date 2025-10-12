@@ -25,8 +25,6 @@ final class DynamoDbSiteVerifiedAccountStore implements SiteVerifiedAccountStore
 
     private static final String ACCOUNT_TABLE_NAME = "Age.Verification.Account";
     private static final String PSEUDONYM_TABLE_NAME = "Age.Verification.Pseudonym";
-    private static final VerificationState UNVERIFIED =
-            VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final DynamoDbClient client;
     private final JsonMapper mapper;
@@ -58,12 +56,16 @@ final class DynamoDbSiteVerifiedAccountStore implements SiteVerifiedAccountStore
                 .build();
         AttributeValue stateS = client.getItem(accountRequest).item().get("State");
         if (stateS == null) {
-            return UNVERIFIED;
+            return VerificationState.builder()
+                    .id(accountId)
+                    .status(VerificationStatus.UNVERIFIED)
+                    .build();
         }
 
         VerificationState state = mapper.deserialize(stateS.s(), VerificationState.class);
         if (state.getExpiration().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
             return VerificationState.builder()
+                    .id(accountId)
                     .status(VerificationStatus.EXPIRED)
                     .expiration(state.getExpiration())
                     .build();
@@ -80,6 +82,7 @@ final class DynamoDbSiteVerifiedAccountStore implements SiteVerifiedAccountStore
         }
 
         VerificationState state = VerificationState.builder()
+                .id(accountId)
                 .status(VerificationStatus.VERIFIED)
                 .user(user)
                 .expiration(expiration)
