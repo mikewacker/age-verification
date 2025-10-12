@@ -7,7 +7,7 @@ import org.example.age.common.api.VerifiedUser;
 import org.example.age.site.api.VerificationState;
 
 /** Persistent store that retrieves the verification state for each account on a site. */
-public interface SiteVerificationStore {
+public interface SiteVerifiedAccountStore {
 
     /** Loads the {@link VerificationState} for the account. */
     CompletionStage<VerificationState> load(String accountId);

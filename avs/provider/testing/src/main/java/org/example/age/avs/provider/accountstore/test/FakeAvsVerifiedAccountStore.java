@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.common.api.AgeRange;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.api.crypto.SecureId;
 
-/** Fake, in-memory implementation of {@link AvsVerifiedUserStore}. Uses seeded data. */
+/** Fake, in-memory implementation of {@link AvsVerifiedAccountStore}. Uses seeded data. */
 @Singleton
-final class FakeAvsVerifiedUserStore implements AvsVerifiedUserStore {
+final class FakeAvsVerifiedAccountStore implements AvsVerifiedAccountStore {
 
     private final Map<String, VerifiedUser> users = Map.of(
             "person",
@@ -23,7 +23,7 @@ final class FakeAvsVerifiedUserStore implements AvsVerifiedUserStore {
                     .build());
 
     @Inject
-    public FakeAvsVerifiedUserStore() {}
+    public FakeAvsVerifiedAccountStore() {}
 
     @Override
     public CompletionStage<Optional<VerifiedUser>> tryLoad(String accountId) {

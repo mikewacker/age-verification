@@ -4,7 +4,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.env.TestEnvModule;
@@ -13,19 +13,19 @@ import software.amazon.awssdk.regions.Region;
 
 public final class DynamoDbAvsAccountStoreTest extends AvsAccountStoreTestTemplate {
 
-    private static final AvsVerifiedUserStore store = TestComponent.create();
+    private static final AvsVerifiedAccountStore store = TestComponent.create();
 
     @Override
-    protected AvsVerifiedUserStore store() {
+    protected AvsVerifiedAccountStore store() {
         return store;
     }
 
-    /** Dagger component for {@link AvsVerifiedUserStore}. */
+    /** Dagger component for {@link AvsVerifiedAccountStore}. */
     @Component(modules = {DynamoDbAvsAccountStoreModule.class, TestEnvModule.class})
     @Singleton
-    interface TestComponent extends Supplier<AvsVerifiedUserStore> {
+    interface TestComponent extends Supplier<AvsVerifiedAccountStore> {
 
-        static AvsVerifiedUserStore create() {
+        static AvsVerifiedAccountStore create() {
             DynamoDbClientConfig config = DynamoDbClientConfig.builder()
                     .region(Region.US_EAST_1.toString())
                     .testEndpointOverride(TestClient.localhostUri(8000))

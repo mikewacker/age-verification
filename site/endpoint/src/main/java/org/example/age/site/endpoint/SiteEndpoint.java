@@ -23,7 +23,7 @@ import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.spi.AgeCertificateVerifier;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 import retrofit2.Call;
 
@@ -33,7 +33,7 @@ final class SiteEndpoint implements SiteApi {
 
     private final AccountIdContext accountIdContext;
     private final AvsApi avsClient;
-    private final SiteVerificationStore verificationStore;
+    private final SiteVerifiedAccountStore accountStore;
     private final PendingStore<String> pendingRequestStore;
     private final AgeCertificateVerifier ageCertificateVerifier;
     private final SiteVerifiedUserLocalizer userLocalizer;
@@ -43,14 +43,14 @@ final class SiteEndpoint implements SiteApi {
     public SiteEndpoint(
             AccountIdContext accountIdContext,
             AvsApi avsClient,
-            SiteVerificationStore verificationStore,
+            SiteVerifiedAccountStore accountStore,
             PendingStoreRepository pendingStores,
             AgeCertificateVerifier ageCertificateVerifier,
             SiteVerifiedUserLocalizer userLocalizer,
             SiteEndpointConfig config) {
         this.accountIdContext = accountIdContext;
         this.avsClient = avsClient;
-        this.verificationStore = verificationStore;
+        this.accountStore = accountStore;
         this.pendingRequestStore = pendingStores.get("request", String.class);
         this.ageCertificateVerifier = ageCertificateVerifier;
         this.userLocalizer = userLocalizer;
@@ -60,7 +60,7 @@ final class SiteEndpoint implements SiteApi {
     @Override
     public CompletionStage<VerificationState> getVerificationState() {
         String accountId = accountIdContext.getForRequest();
-        return verificationStore.load(accountId);
+        return accountStore.load(accountId);
     }
 
     @Override
@@ -120,7 +120,7 @@ final class SiteEndpoint implements SiteApi {
     /** Verifies the account with the localized {@link VerifiedUser}, unless a duplicate verification occurs. */
     private CompletionStage<Void> verifyAccount(String accountId, VerifiedUser localizedUser) {
         OffsetDateTime expiration = OffsetDateTime.now(ZoneOffset.UTC).plus(config.verifiedAccountExpiresIn());
-        return verificationStore
+        return accountStore
                 .trySave(accountId, localizedUser, expiration)
                 .thenAccept(maybeDuplicateAccountId -> maybeDuplicateAccountId.ifPresent(a -> {
                     throw new ClientErrorException(409);

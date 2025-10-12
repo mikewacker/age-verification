@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.client.redis.RedisClientConfig;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import org.example.age.testing.api.TestModels;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.env.TestEnvModule;
@@ -20,7 +20,7 @@ import redis.clients.jedis.JedisPooled;
 
 public final class RedisSiteAccountStoreTest extends SiteAccountStoreTestTemplate {
 
-    private static final SiteVerificationStore store = TestComponent.create();
+    private static final SiteVerifiedAccountStore store = TestComponent.create();
 
     @Test
     public void redisKeys() {
@@ -39,16 +39,16 @@ public final class RedisSiteAccountStoreTest extends SiteAccountStoreTestTemplat
     }
 
     @Override
-    protected SiteVerificationStore store() {
+    protected SiteVerifiedAccountStore store() {
         return store;
     }
 
-    /** Dagger component for {@link SiteVerificationStore}. */
+    /** Dagger component for {@link SiteVerifiedAccountStore}. */
     @Component(modules = {RedisSiteAccountStoreModule.class, TestEnvModule.class})
     @Singleton
-    interface TestComponent extends Supplier<SiteVerificationStore> {
+    interface TestComponent extends Supplier<SiteVerifiedAccountStore> {
 
-        static SiteVerificationStore create() {
+        static SiteVerifiedAccountStore create() {
             RedisClientConfig config = RedisClientConfig.builder()
                     .url(TestClient.localhostUrl(6379))
                     .build();

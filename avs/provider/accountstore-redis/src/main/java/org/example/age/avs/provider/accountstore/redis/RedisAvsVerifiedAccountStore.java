@@ -4,15 +4,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import redis.clients.jedis.JedisPooled;
 
-/** Implementation of {@link AvsVerifiedUserStore} that is backed by Redis. */
+/** Implementation of {@link AvsVerifiedAccountStore} that is backed by Redis. */
 @Singleton
-final class RedisAvsVerifiedUserStore implements AvsVerifiedUserStore {
+final class RedisAvsVerifiedAccountStore implements AvsVerifiedAccountStore {
 
     private static final String REDIS_KEY_PREFIX = "age:user";
 
@@ -21,7 +21,7 @@ final class RedisAvsVerifiedUserStore implements AvsVerifiedUserStore {
     private final Worker worker;
 
     @Inject
-    public RedisAvsVerifiedUserStore(JedisPooled client, JsonMapper mapper, Worker worker) {
+    public RedisAvsVerifiedAccountStore(JedisPooled client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;

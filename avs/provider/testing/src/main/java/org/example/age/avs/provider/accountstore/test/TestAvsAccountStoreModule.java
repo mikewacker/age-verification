@@ -2,10 +2,10 @@ package org.example.age.avs.provider.accountstore.test;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 
 /**
- * Dagger modules that binds {@link AvsVerifiedUserStore}.
+ * Dagger modules that binds {@link AvsVerifiedAccountStore}.
  * <p>
  * Uses seeded data.
  */
@@ -13,7 +13,7 @@ import org.example.age.avs.spi.AvsVerifiedUserStore;
 public abstract class TestAvsAccountStoreModule {
 
     @Binds
-    abstract AvsVerifiedUserStore bindAvsVerifiedUserStore(FakeAvsVerifiedUserStore impl);
+    abstract AvsVerifiedAccountStore bindAvsVerifiedAccountStore(FakeAvsVerifiedAccountStore impl);
 
     TestAvsAccountStoreModule() {}
 }

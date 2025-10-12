@@ -11,15 +11,15 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 
 /**
- * Fake, in-memory implementation of {@link SiteVerificationStore}.
+ * Fake, in-memory implementation of {@link SiteVerifiedAccountStore}.
  * It does not check for duplicate or expired verifications,
  * though a duplicate verification can be triggered if the account ID is "duplicate".
  */
 @Singleton
-final class FakeSiteVerificationStore implements SiteVerificationStore {
+final class FakeSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     private static final VerificationState UNVERIFIED =
             VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
@@ -27,7 +27,7 @@ final class FakeSiteVerificationStore implements SiteVerificationStore {
     private final Map<String, VerificationState> store = new HashMap<>();
 
     @Inject
-    public FakeSiteVerificationStore() {}
+    public FakeSiteVerifiedAccountStore() {}
 
     @Override
     public CompletionStage<VerificationState> load(String accountId) {

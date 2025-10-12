@@ -13,15 +13,15 @@ import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import redis.clients.jedis.AbstractTransaction;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.params.SetParams;
 
-/** Implementation of {@link SiteVerificationStore} that is backed by Redis. */
+/** Implementation of {@link SiteVerifiedAccountStore} that is backed by Redis. */
 @Singleton
-final class RedisSiteVerificationStore implements SiteVerificationStore {
+final class RedisSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     private static final String REDIS_KEY_PREFIX = "age:verification";
     private static final VerificationState UNVERIFIED =
@@ -32,7 +32,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
     private final Worker worker;
 
     @Inject
-    public RedisSiteVerificationStore(JedisPooled client, JsonMapper mapper, Worker worker) {
+    public RedisSiteVerifiedAccountStore(JedisPooled client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;

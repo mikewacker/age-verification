@@ -6,10 +6,10 @@ import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.client.dynamodb.DynamoDbClientModule;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 
 /**
- * Dagger module that binds {@link SiteVerificationStore}.
+ * Dagger module that binds {@link SiteVerifiedAccountStore}.
  * <p>
  * Depends on an unbound...
  * <ul>
@@ -21,7 +21,7 @@ import org.example.age.site.spi.SiteVerificationStore;
 public abstract class DynamoDbSiteAccountStoreModule {
 
     @Binds
-    abstract SiteVerificationStore bindSiteVerificationStore(DynamoDbSiteVerificationStore impl);
+    abstract SiteVerifiedAccountStore bindSiteVerifiedAccountStore(DynamoDbSiteVerifiedAccountStore impl);
 
     DynamoDbSiteAccountStoreModule() {}
 }

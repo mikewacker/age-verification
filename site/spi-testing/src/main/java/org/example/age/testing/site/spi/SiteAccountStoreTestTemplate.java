@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.example.age.common.api.VerifiedUser;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import org.example.age.testing.api.TestModels;
 import org.junit.jupiter.api.Test;
 
@@ -101,5 +101,5 @@ public abstract class SiteAccountStoreTestTemplate {
         return OffsetDateTime.now(ZoneOffset.UTC).plus(duration).truncatedTo(ChronoUnit.MILLIS);
     }
 
-    protected abstract SiteVerificationStore store();
+    protected abstract SiteVerifiedAccountStore store();
 }

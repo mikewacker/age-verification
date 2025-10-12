@@ -8,7 +8,7 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.example.age.common.api.VerifiedUser;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import org.example.age.testing.api.TestModels;
 import org.example.age.testing.site.spi.SiteAccountStoreTestTemplate;
 import org.junit.jupiter.api.Disabled;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 public final class TestSiteAccountStoreTest extends SiteAccountStoreTestTemplate {
 
-    private static final SiteVerificationStore store = TestComponent.create();
+    private static final SiteVerifiedAccountStore store = TestComponent.create();
 
     @Test
     @Override
@@ -37,16 +37,16 @@ public final class TestSiteAccountStoreTest extends SiteAccountStoreTestTemplate
     public void expired() {}
 
     @Override
-    protected SiteVerificationStore store() {
+    protected SiteVerifiedAccountStore store() {
         return store;
     }
 
-    /** Dagger component for {@link SiteVerificationStore}. */
+    /** Dagger component for {@link SiteVerifiedAccountStore}. */
     @Component(modules = TestSiteAccountStoreModule.class)
     @Singleton
-    interface TestComponent extends Supplier<SiteVerificationStore> {
+    interface TestComponent extends Supplier<SiteVerifiedAccountStore> {
 
-        static SiteVerificationStore create() {
+        static SiteVerifiedAccountStore create() {
             return DaggerTestSiteAccountStoreTest_TestComponent.create().get();
         }
     }
