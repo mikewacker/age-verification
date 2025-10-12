@@ -12,28 +12,26 @@ import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
-/** Implementation of {@link SiteVerificationStore} that is backed by DynamoDB. */
+/** Implementation of {@link SiteVerifiedAccountStore} that is backed by DynamoDB. */
 @Singleton
-final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
+final class DynamoDbSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     private static final String ACCOUNT_TABLE_NAME = "Age.Verification.Account";
     private static final String PSEUDONYM_TABLE_NAME = "Age.Verification.Pseudonym";
-    private static final VerificationState UNVERIFIED =
-            VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final DynamoDbClient client;
     private final JsonMapper mapper;
     private final Worker worker;
 
     @Inject
-    public DynamoDbSiteVerificationStore(DynamoDbClient client, JsonMapper mapper, Worker worker) {
+    public DynamoDbSiteVerifiedAccountStore(DynamoDbClient client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;
@@ -58,12 +56,16 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
                 .build();
         AttributeValue stateS = client.getItem(accountRequest).item().get("State");
         if (stateS == null) {
-            return UNVERIFIED;
+            return VerificationState.builder()
+                    .id(accountId)
+                    .status(VerificationStatus.UNVERIFIED)
+                    .build();
         }
 
         VerificationState state = mapper.deserialize(stateS.s(), VerificationState.class);
         if (state.getExpiration().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
             return VerificationState.builder()
+                    .id(accountId)
                     .status(VerificationStatus.EXPIRED)
                     .expiration(state.getExpiration())
                     .build();
@@ -80,6 +82,7 @@ final class DynamoDbSiteVerificationStore implements SiteVerificationStore {
         }
 
         VerificationState state = VerificationState.builder()
+                .id(accountId)
                 .status(VerificationStatus.VERIFIED)
                 .user(user)
                 .expiration(expiration)

@@ -13,26 +13,24 @@ import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import redis.clients.jedis.AbstractTransaction;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.params.SetParams;
 
-/** Implementation of {@link SiteVerificationStore} that is backed by Redis. */
+/** Implementation of {@link SiteVerifiedAccountStore} that is backed by Redis. */
 @Singleton
-final class RedisSiteVerificationStore implements SiteVerificationStore {
+final class RedisSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     private static final String REDIS_KEY_PREFIX = "age:verification";
-    private static final VerificationState UNVERIFIED =
-            VerificationState.builder().status(VerificationStatus.UNVERIFIED).build();
 
     private final JedisPooled client;
     private final JsonMapper mapper;
     private final Worker worker;
 
     @Inject
-    public RedisSiteVerificationStore(JedisPooled client, JsonMapper mapper, Worker worker) {
+    public RedisSiteVerifiedAccountStore(JedisPooled client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;
@@ -63,13 +61,17 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
         // Process the responses.
         String rawExpiration = rawExpirationResponse.get();
         if (rawExpiration == null) {
-            return UNVERIFIED;
+            return VerificationState.builder()
+                    .id(accountId)
+                    .status(VerificationStatus.UNVERIFIED)
+                    .build();
         }
 
         OffsetDateTime expiration = parseTime(rawExpiration);
         String userJson = userJsonResponse.get();
         if (userJson == null) {
             return VerificationState.builder()
+                    .id(accountId)
                     .status(VerificationStatus.EXPIRED)
                     .expiration(expiration)
                     .build();
@@ -77,6 +79,7 @@ final class RedisSiteVerificationStore implements SiteVerificationStore {
 
         VerifiedUser user = mapper.deserialize(userJson, VerifiedUser.class);
         return VerificationState.builder()
+                .id(accountId)
                 .status(VerificationStatus.VERIFIED)
                 .user(user)
                 .expiration(expiration)

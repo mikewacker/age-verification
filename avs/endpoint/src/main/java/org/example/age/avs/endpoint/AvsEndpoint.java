@@ -2,7 +2,6 @@ package org.example.age.avs.endpoint;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
@@ -15,8 +14,9 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import org.example.age.avs.api.AvsApi;
 import org.example.age.avs.spi.AgeCertificateSigner;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.avs.spi.AvsVerifiedUserLocalizer;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.VerifiedAccount;
 import org.example.age.common.api.AgeCertificate;
 import org.example.age.common.api.AgeThresholds;
 import org.example.age.common.api.SignedAgeCertificate;
@@ -36,7 +36,7 @@ final class AvsEndpoint implements AvsApi {
 
     private final AccountIdContext accountIdContext;
     private final Map<String, SiteApi> siteClients;
-    private final AvsVerifiedUserStore userStore;
+    private final AvsVerifiedAccountStore accountStore;
     private final PendingStore<VerificationRequest> pendingUnlinkedRequestStore;
     private final PendingStore<VerificationRequest> pendingLinkedRequestStore;
     private final AgeCertificateSigner ageCertificateSigner;
@@ -47,14 +47,14 @@ final class AvsEndpoint implements AvsApi {
     public AvsEndpoint(
             AccountIdContext accountIdContext,
             Map<String, SiteApi> siteClients,
-            AvsVerifiedUserStore userStore,
+            AvsVerifiedAccountStore accountStore,
             PendingStoreRepository pendingStores,
             AgeCertificateSigner ageCertificateSigner,
             AvsVerifiedUserLocalizer userLocalizer,
             AvsEndpointConfig config) {
         this.accountIdContext = accountIdContext;
         this.siteClients = siteClients;
-        this.userStore = userStore;
+        this.accountStore = accountStore;
         this.pendingUnlinkedRequestStore = pendingStores.get("unlinked-request", VerificationRequest.class);
         this.pendingLinkedRequestStore = pendingStores.get("linked-request", VerificationRequest.class);
         this.ageCertificateSigner = ageCertificateSigner;
@@ -102,10 +102,7 @@ final class AvsEndpoint implements AvsApi {
     /** Loads a verified account. */
     private CompletionStage<VerifiedAccount> loadVerifiedAccount() {
         String accountId = accountIdContext.getForRequest();
-        return userStore
-                .tryLoad(accountId)
-                .thenApply(maybeUser -> maybeUser.orElseThrow(ForbiddenException::new))
-                .thenApply(user -> new VerifiedAccount(accountId, user));
+        return accountStore.load(accountId);
     }
 
     /** Localizes a {@link VerifiedUser} for the site. */
@@ -162,7 +159,4 @@ final class AvsEndpoint implements AvsApi {
                 ? new InternalServerErrorException(t)
                 : t;
     }
-
-    /** Account with a {@link VerifiedUser}. */
-    private record VerifiedAccount(String id, VerifiedUser user) {}
 }

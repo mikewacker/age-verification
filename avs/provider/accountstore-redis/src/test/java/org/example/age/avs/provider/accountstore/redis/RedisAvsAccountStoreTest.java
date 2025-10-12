@@ -4,7 +4,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import java.util.function.Supplier;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.common.client.redis.RedisClientConfig;
 import org.example.age.testing.client.TestClient;
 import org.example.age.testing.env.TestEnvModule;
@@ -12,19 +12,19 @@ import org.example.age.testing.site.spi.AvsAccountStoreTestTemplate;
 
 public final class RedisAvsAccountStoreTest extends AvsAccountStoreTestTemplate {
 
-    private static final AvsVerifiedUserStore store = TestComponent.create();
+    private static final AvsVerifiedAccountStore store = TestComponent.create();
 
     @Override
-    protected AvsVerifiedUserStore store() {
+    protected AvsVerifiedAccountStore store() {
         return store;
     }
 
-    /** Dagger component for {@link AvsVerifiedUserStore}. */
+    /** Dagger component for {@link AvsVerifiedAccountStore}. */
     @Component(modules = {RedisAvsAccountStoreModule.class, TestEnvModule.class})
     @Singleton
-    interface TestComponent extends Supplier<AvsVerifiedUserStore> {
+    interface TestComponent extends Supplier<AvsVerifiedAccountStore> {
 
-        static AvsVerifiedUserStore create() {
+        static AvsVerifiedAccountStore create() {
             RedisClientConfig config = RedisClientConfig.builder()
                     .url(TestClient.localhostUrl(6379))
                     .build();

@@ -7,7 +7,7 @@ import org.example.age.common.spi.AccountIdContext;
 import org.example.age.common.spi.PendingStoreRepository;
 import org.example.age.site.api.SiteApi;
 import org.example.age.site.spi.AgeCertificateVerifier;
-import org.example.age.site.spi.SiteVerificationStore;
+import org.example.age.site.spi.SiteVerifiedAccountStore;
 import org.example.age.site.spi.SiteVerifiedUserLocalizer;
 
 /**
@@ -17,7 +17,7 @@ import org.example.age.site.spi.SiteVerifiedUserLocalizer;
  * <ul>
  *     <li>{@link AccountIdContext}
  *     <li>{@link AvsApi}
- *     <li>{@link SiteVerificationStore}
+ *     <li>{@link SiteVerifiedAccountStore}
  *     <li>{@link PendingStoreRepository}
  *     <li>{@link AgeCertificateVerifier}
  *     <li>{@link SiteVerifiedUserLocalizer}

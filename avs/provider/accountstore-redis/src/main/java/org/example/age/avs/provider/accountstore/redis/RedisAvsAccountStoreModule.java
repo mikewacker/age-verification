@@ -2,14 +2,14 @@ package org.example.age.avs.provider.accountstore.redis;
 
 import dagger.Binds;
 import dagger.Module;
-import org.example.age.avs.spi.AvsVerifiedUserStore;
+import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.common.client.redis.RedisClientConfig;
 import org.example.age.common.client.redis.RedisClientModule;
 import org.example.age.common.env.BaseEnvModule;
 import org.example.age.common.env.LiteEnv;
 
 /**
- * Dagger module that binds {@link AvsVerifiedUserStore}.
+ * Dagger module that binds {@link AvsVerifiedAccountStore}.
  * <p>
  * Depends on an unbound...
  * <ul>
@@ -21,7 +21,7 @@ import org.example.age.common.env.LiteEnv;
 public abstract class RedisAvsAccountStoreModule {
 
     @Binds
-    abstract AvsVerifiedUserStore bindAvsVerifiedUserStore(RedisAvsVerifiedUserStore impl);
+    abstract AvsVerifiedAccountStore bindAvsVerifiedAccountStore(RedisAvsVerifiedAccountStore impl);
 
     RedisAvsAccountStoreModule() {}
 }
