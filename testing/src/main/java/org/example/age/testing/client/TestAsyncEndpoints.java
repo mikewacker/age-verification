@@ -33,7 +33,7 @@ public final class TestAsyncEndpoints {
 
     /** Creates a client for the endpoint. */
     @SuppressWarnings("unchecked")
-    public static <C> C client(Supplier<Object> endpointRef, Class<?> apiType, Class<C> clientType) {
+    public static <C> C client(Supplier<?> endpointRef, Class<?> apiType, Class<C> clientType) {
         return (C) Proxy.newProxyInstance(
                 clientType.getClassLoader(),
                 new Class<?>[] {clientType},
@@ -56,8 +56,7 @@ public final class TestAsyncEndpoints {
     }
 
     /** Converts the asynchronous stage to a Retrofit call. */
-    private record ClientInvocationHandler(Supplier<Object> endpointRef, Class<?> apiType)
-            implements InvocationHandler {
+    private record ClientInvocationHandler(Supplier<?> endpointRef, Class<?> apiType) implements InvocationHandler {
 
         @SuppressWarnings("unchecked")
         @Override
