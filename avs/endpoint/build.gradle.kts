@@ -8,6 +8,7 @@ plugins {
 dependencies {
     implementation(project(":avs:spi"))
     implementation(project(":site:api"))
+    implementation(libs.guava.guava)
 
     testImplementation(project(":common:provider:testing"))
     testImplementation(project(":avs:provider:testing"))
