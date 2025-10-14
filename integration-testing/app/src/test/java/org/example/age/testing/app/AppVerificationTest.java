@@ -8,7 +8,7 @@ import org.example.age.testing.integration.VerificationTestTemplate;
 public final class AppVerificationTest extends VerificationTestTemplate {
 
     private static final SiteApi siteClient = createClient(8080, "username", SiteApi.class);
-    private static final AvsApi avsClient = createClient(9090, "person", AvsApi.class);
+    private static final AvsApi avsClient = createClient(8081, "person", AvsApi.class);
 
     @Override
     protected SiteApi siteClient() {

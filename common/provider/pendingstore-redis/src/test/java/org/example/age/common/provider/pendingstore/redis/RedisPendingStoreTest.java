@@ -23,7 +23,7 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
     @Test
     public void redisKeys() {
         await(store().put("key-redis", 1, expiration()));
-        try (JedisPooled client = new JedisPooled(TestClient.localhostUri(6379))) {
+        try (JedisPooled client = new JedisPooled(TestClient.localhostUri(2020))) {
             String value = client.get("age:pending:name:key-redis");
             assertThat(value).isEqualTo("1");
         }
@@ -41,7 +41,7 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
         static PendingStoreRepository create() {
             RedisClientConfig config = RedisClientConfig.builder()
-                    .url(TestClient.localhostUrl(6379))
+                    .url(TestClient.localhostUrl(2020))
                     .build();
             return DaggerRedisPendingStoreTest_TestComponent.factory()
                     .create(config)

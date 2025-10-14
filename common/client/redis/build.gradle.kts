@@ -15,7 +15,3 @@ dockerCompose {
     useComposeFiles = listOf("docker-compose-test.yml")
     environment.put("REDIS_TAG", libs.versions.dockerImages.redis)
 }
-
-tasks.named("composeUp") {
-    notCompatibleWithConfigurationCache("avast/gradle-docker-compose-plugin#486")
-}

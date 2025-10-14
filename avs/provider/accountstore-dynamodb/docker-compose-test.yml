@@ -3,7 +3,7 @@ services:
     image: amazon/dynamodb-local:${DYNAMODB_TAG}
     command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
     ports:
-      - "8000:8000"
+      - "4000:8000"
     volumes:
       - dynamodb-data:/data
     depends_on:

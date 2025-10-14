@@ -13,8 +13,8 @@ import retrofit2.Response;
 /** Runs the demo. */
 public final class Demo {
 
-    private static final AvsApi parentAvsClient = createClient(9090, "John Smith", AvsApi.class);
-    private static final AvsApi childAvsClient = createClient(9090, "Billy Smith", AvsApi.class);
+    private static final AvsApi parentAvsClient = createClient(8082, "John Smith", AvsApi.class);
+    private static final AvsApi childAvsClient = createClient(8082, "Billy Smith", AvsApi.class);
     private static final SiteApi parentCrackleClient = createClient(8080, "publius", SiteApi.class);
     private static final SiteApi childCrackleClient = createClient(8080, "publius-jr", SiteApi.class);
     private static final SiteApi parentPopClient = createClient(8081, "JohnS", SiteApi.class);

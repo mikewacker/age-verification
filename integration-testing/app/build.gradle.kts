@@ -20,7 +20,3 @@ dockerCompose {
 tasks.named("composeBuild") {
     dependsOn(":site:app:installDist", ":avs:app:installDist")
 }
-
-tasks.named("composeUp") {
-    notCompatibleWithConfigurationCache("avast/gradle-docker-compose-plugin#486")
-}
