@@ -98,7 +98,7 @@ services:
       - public
       - checkmyage-private
     ports:
-      - "9090:80"
+      - "8082:80"
     volumes:
       - ./src/main/resources/checkmyage/config:/config:ro
     depends_on:

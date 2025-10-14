@@ -2,4 +2,4 @@ services:
   dynamodb:
     image: amazon/dynamodb-local:${DYNAMODB_TAG}
     ports:
-      - "8000:8000"
+      - "2000:8000"

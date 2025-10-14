@@ -16,7 +16,3 @@ dockerCompose {
     useComposeFiles = listOf("docker-compose-test.yml")
     environment.put("DYNAMODB_TAG", libs.versions.dockerImages.dynamoDb)
 }
-
-tasks.named("composeUp") {
-    notCompatibleWithConfigurationCache("avast/gradle-docker-compose-plugin#486")
-}

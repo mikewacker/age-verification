@@ -55,7 +55,7 @@ services:
       - public
       - avs-private
     ports:
-      - "9090:80"
+      - "8081:80"
     volumes:
       - ./src/test/resources/avs/config:/config:ro
     depends_on:

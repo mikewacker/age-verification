@@ -22,7 +22,3 @@ dockerCompose {
     environment.put("REDIS_TAG", libs.versions.dockerImages.redis)
     environment.put("TEMURIN_JRE_TAG", libs.versions.dockerImages.temurinJre)
 }
-
-tasks.named("composeUp") {
-    notCompatibleWithConfigurationCache("avast/gradle-docker-compose-plugin#486")
-}

@@ -28,7 +28,7 @@ public final class DynamoDbAvsAccountStoreTest extends AvsAccountStoreTestTempla
         static AvsVerifiedAccountStore create() {
             DynamoDbClientConfig config = DynamoDbClientConfig.builder()
                     .region(Region.US_EAST_1.toString())
-                    .testEndpointOverride(TestClient.localhostUri(8000))
+                    .testEndpointOverride(TestClient.localhostUri(4000))
                     .build();
             return DaggerDynamoDbAvsAccountStoreTest_TestComponent.factory()
                     .create(config)

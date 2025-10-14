@@ -2,7 +2,7 @@ services:
   redis:
     image: redis:${REDIS_TAG}
     ports:
-      - "6379:6379"
+      - "4010:6379"
     volumes:
       - redis-data:/data
     depends_on:

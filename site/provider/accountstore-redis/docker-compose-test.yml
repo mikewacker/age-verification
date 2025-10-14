@@ -2,4 +2,4 @@ services:
   redis:
     image: redis:${REDIS_TAG}
     ports:
-      - "6379:6379"
+      - "3010:6379"
