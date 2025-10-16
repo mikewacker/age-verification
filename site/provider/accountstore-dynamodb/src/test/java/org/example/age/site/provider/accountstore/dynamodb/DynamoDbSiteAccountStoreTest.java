@@ -28,7 +28,7 @@ public final class DynamoDbSiteAccountStoreTest extends SiteAccountStoreTestTemp
         static SiteVerifiedAccountStore create() {
             DynamoDbClientConfig config = DynamoDbClientConfig.builder()
                     .region(Region.US_EAST_1.toString())
-                    .testEndpointOverride(TestClient.localhostUri(3000))
+                    .testEndpointOverride(TestClient.dockerUri("dynamodb", 8000))
                     .build();
             return DaggerDynamoDbSiteAccountStoreTest_TestComponent.factory()
                     .create(config)

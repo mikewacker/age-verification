@@ -28,7 +28,7 @@ public final class RedisClientTest {
 
         static JedisPooled create() {
             RedisClientConfig config = RedisClientConfig.builder()
-                    .url(TestClient.localhostUrl(2010))
+                    .url(TestClient.dockerUrl("redis", 6379))
                     .build();
             return DaggerRedisClientTest_TestComponent.factory().create(config).get();
         }

@@ -12,7 +12,7 @@ services:
       - public
       - crackle-private
     ports:
-      - "8080:80"
+      - "80"
     volumes:
       - ./src/main/resources/crackle/config:/config:ro
     depends_on:
@@ -55,7 +55,7 @@ services:
       - public
       - pop-private
     ports:
-      - "8081:80"
+      - "80"
     volumes:
       - ./src/main/resources/pop/config:/config:ro
     depends_on:
@@ -98,7 +98,7 @@ services:
       - public
       - checkmyage-private
     ports:
-      - "8082:80"
+      - "80"
     volumes:
       - ./src/main/resources/checkmyage/config:/config:ro
     depends_on:

@@ -2,6 +2,7 @@ package org.example.age.demo;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
+import java.net.URL;
 import org.example.age.avs.api.client.AvsApi;
 import org.example.age.common.api.VerificationRequest;
 import org.example.age.site.api.VerificationState;
@@ -13,12 +14,12 @@ import retrofit2.Response;
 /** Runs the demo. */
 public final class Demo {
 
-    private static final AvsApi parentAvsClient = createClient(8082, "John Smith", AvsApi.class);
-    private static final AvsApi childAvsClient = createClient(8082, "Billy Smith", AvsApi.class);
-    private static final SiteApi parentCrackleClient = createClient(8080, "publius", SiteApi.class);
-    private static final SiteApi childCrackleClient = createClient(8080, "publius-jr", SiteApi.class);
-    private static final SiteApi parentPopClient = createClient(8081, "JohnS", SiteApi.class);
-    private static final SiteApi childPopClient = createClient(8081, "BillyS", SiteApi.class);
+    private static final AvsApi parentAvsClient = createClient("checkmyage", "John Smith", AvsApi.class);
+    private static final AvsApi childAvsClient = createClient("checkmyage", "Billy Smith", AvsApi.class);
+    private static final SiteApi parentCrackleClient = createClient("crackle", "publius", SiteApi.class);
+    private static final SiteApi childCrackleClient = createClient("crackle", "publius-jr", SiteApi.class);
+    private static final SiteApi parentPopClient = createClient("crackle", "JohnS", SiteApi.class);
+    private static final SiteApi childPopClient = createClient("crackle", "BillyS", SiteApi.class);
 
     private static final String AVS_NAME = "CheckMyAge";
 
@@ -68,8 +69,9 @@ public final class Demo {
     }
 
     /** Creates a client for an account. */
-    private static <A> A createClient(int port, String accountId, Class<A> apiType) {
-        return TestClient.api(port, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
+    private static <A> A createClient(String service, String accountId, Class<A> apiType) {
+        URL url = TestClient.dockerUrl(service, 80);
+        return TestClient.api(url, requestBuilder -> requestBuilder.header("Account-Id", accountId), apiType);
     }
 
     /** Gets the result of a successful response. */
