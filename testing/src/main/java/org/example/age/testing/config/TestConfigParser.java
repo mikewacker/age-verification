@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import org.example.age.testing.json.TestObjectMapper;
 
 /** Parses and validates individual pieces of configuration. */
-public final class TestConfigFactory<T> {
+public final class TestConfigParser<T> {
 
     private static final Validator validator = Validators.newValidator();
     private static final ConfigurationSourceProvider configResourceProvider = new ResourceConfigurationSourceProvider();
@@ -20,25 +20,25 @@ public final class TestConfigFactory<T> {
     private final ConfigurationFactory<T> configFactory;
 
     /** Creates a configuration parser for the provided configuration class. */
-    public static <T> TestConfigFactory<T> forClass(Class<T> configClass) {
+    public static <T> TestConfigParser<T> forClass(Class<T> configClass) {
         ConfigurationFactory<T> configFactory =
                 new YamlConfigurationFactory<>(configClass, validator, TestObjectMapper.get(), "dw");
-        return new TestConfigFactory<>(configFactory);
+        return new TestConfigParser<>(configFactory);
     }
 
-    /** Builds configuration from lines of YAML. */
-    public T build(String... lines) throws Exception {
+    /** Parses configuration from lines of YAML. */
+    public T parseLines(String... lines) throws Exception {
         String yaml = String.join("\n", lines);
         ConfigurationSourceProvider configSourceProvider = new StringConfigurationSourceProvider(yaml);
         return configFactory.build(configSourceProvider, "");
     }
 
-    /** Builds configuration from a resource file. */
-    public T buildFromResource(String path) throws Exception {
+    /** Parses configuration from a resource file. */
+    public T parseResource(String path) throws Exception {
         return configFactory.build(configResourceProvider, path);
     }
 
-    private TestConfigFactory(ConfigurationFactory<T> configFactory) {
+    private TestConfigParser(ConfigurationFactory<T> configFactory) {
         this.configFactory = configFactory;
     }
 

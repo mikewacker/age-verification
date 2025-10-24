@@ -1,7 +1,6 @@
 package org.example.age.common.provider.signingkey.demo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.math.BigInteger;
 import org.example.age.common.annotation.ValueStyle;
 import org.immutables.value.Value;
@@ -9,7 +8,6 @@ import org.immutables.value.Value;
 /** Configuration for a private key using elliptic-curve cryptography. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableEcPrivateKeyConfig.class)
 public interface EcPrivateKeyConfig {
 

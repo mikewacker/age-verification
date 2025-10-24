@@ -1,7 +1,6 @@
 package org.example.age.avs.app.config;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.avs.client.site.SiteClientsConfig;
 import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
@@ -11,7 +10,6 @@ import org.immutables.value.Value;
 /** Configuration for the clients. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableAvsClientsConfig.class)
 public interface AvsClientsConfig {
 

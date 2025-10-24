@@ -1,16 +1,13 @@
 package org.example.age.site.provider.userlocalizer.demo;
 
-import java.io.IOException;
-import org.example.age.common.api.crypto.SecureId;
-import org.example.age.testing.json.JsonTesting;
+import org.example.age.testing.config.TestConfigParser;
 import org.junit.jupiter.api.Test;
 
 public final class SiteLocalizationKeyConfigTest {
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        SiteLocalizationKeyConfig config =
-                SiteLocalizationKeyConfig.builder().key(SecureId.generate()).build();
-        JsonTesting.serializeThenDeserialize(config, SiteLocalizationKeyConfig.class);
+    public void parse() throws Exception {
+        TestConfigParser.forClass(SiteLocalizationKeyConfig.class)
+                .parseLines("key: NWKnDAiC7iM_hqothKM5Lnaor0xS77DzV9q9QpSeJLc");
     }
 }

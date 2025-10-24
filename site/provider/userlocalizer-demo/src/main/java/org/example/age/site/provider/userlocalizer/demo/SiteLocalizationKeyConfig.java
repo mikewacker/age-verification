@@ -1,7 +1,6 @@
 package org.example.age.site.provider.userlocalizer.demo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.api.crypto.SecureId;
 import org.immutables.value.Value;
@@ -9,7 +8,6 @@ import org.immutables.value.Value;
 /** Configuration for the localization key. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableSiteLocalizationKeyConfig.class)
 public interface SiteLocalizationKeyConfig {
 
