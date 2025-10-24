@@ -69,6 +69,7 @@ junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 
 # test: libraries
 assertj-core = { module = "org.assertj:assertj-core" }
+dropwizard-config = { module = "io.dropwizard:dropwizard-configuration" }
 dropwizard-jackson = { module = "io.dropwizard:dropwizard-jackson" }
 dropwizard-jersey = { module = "io.dropwizard:dropwizard-jersey" }
 dropwizard-testing = { module = "io.dropwizard:dropwizard-testing" }
