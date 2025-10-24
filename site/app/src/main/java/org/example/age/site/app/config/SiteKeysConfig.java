@@ -1,7 +1,6 @@
 package org.example.age.site.app.config;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.provider.signingkey.demo.EcPublicKeyConfig;
 import org.example.age.site.provider.userlocalizer.demo.SiteLocalizationKeyConfig;
@@ -10,7 +9,6 @@ import org.immutables.value.Value;
 /** Configuration for the keys. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableSiteKeysConfig.class)
 public interface SiteKeysConfig {
 

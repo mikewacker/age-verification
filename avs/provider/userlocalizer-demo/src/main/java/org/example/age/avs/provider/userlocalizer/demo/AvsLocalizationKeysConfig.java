@@ -1,7 +1,6 @@
 package org.example.age.avs.provider.userlocalizer.demo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Map;
 import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.api.crypto.SecureId;
@@ -10,7 +9,6 @@ import org.immutables.value.Value;
 /** Configuration for the localization keys. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableAvsLocalizationKeysConfig.class)
 public interface AvsLocalizationKeysConfig {
 

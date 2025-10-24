@@ -1,19 +1,13 @@
 package org.example.age.avs.endpoint;
 
-import java.io.IOException;
-import java.time.Duration;
-import org.example.age.common.api.AgeThresholds;
-import org.example.age.testing.json.JsonTesting;
+import org.example.age.testing.config.TestConfigParser;
 import org.junit.jupiter.api.Test;
 
 public final class AvsEndpointConfigTest {
 
     @Test
-    public void serializeThenDeserialize() throws IOException {
-        AvsEndpointConfig config = AvsEndpointConfig.builder()
-                .verificationRequestExpiresIn(Duration.ofMinutes(5))
-                .putAgeThresholds("site", AgeThresholds.of(18))
-                .build();
-        JsonTesting.serializeThenDeserialize(config, AvsEndpointConfig.class);
+    public void parse() throws Exception {
+        TestConfigParser.forClass(AvsEndpointConfig.class)
+                .parseLines("verificationRequestExpiresIn: PT5M", "ageThresholds:", "  site: [13, 18]");
     }
 }

@@ -1,7 +1,6 @@
 package org.example.age.site.app.config;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.example.age.common.annotation.ValueStyle;
 import org.example.age.common.client.dynamodb.DynamoDbClientConfig;
 import org.example.age.common.client.redis.RedisClientConfig;
@@ -11,7 +10,6 @@ import org.immutables.value.Value;
 /** Configuration for the clients. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableSiteClientsConfig.class)
 public interface SiteClientsConfig {
 

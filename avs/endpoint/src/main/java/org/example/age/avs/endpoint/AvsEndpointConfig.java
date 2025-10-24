@@ -1,7 +1,6 @@
 package org.example.age.avs.endpoint;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.Duration;
 import java.util.Map;
 import org.example.age.avs.api.AvsApi;
@@ -12,7 +11,6 @@ import org.immutables.value.Value;
 /** Configuration for the {@link AvsApi} endpoint. */
 @Value.Immutable
 @ValueStyle
-@JsonSerialize
 @JsonDeserialize(as = ImmutableAvsEndpointConfig.class)
 public interface AvsEndpointConfig {
 

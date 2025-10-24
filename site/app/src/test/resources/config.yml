@@ -1,0 +1,19 @@
+endpoint:
+  id: site
+  verifiedAccountExpiresIn: P30D
+
+clients:
+  avs:
+    url: http://avs
+  dynamoDb:
+    region: us-east-1
+    testEndpointOverride: http://site-dynamodb:8000
+  redis:
+    url: http://site-redis:6379
+
+keys:
+  signing:
+    wX: 61340499596180719707288738669477306360190613239883629564918816825111167687915
+    wY: 38000387743223524528339467703153930999010297887656121516318277573781881204945
+  localization:
+    key: NWKnDAiC7iM_hqothKM5Lnaor0xS77DzV9q9QpSeJLc
