@@ -2,8 +2,8 @@ package org.example.age.testing.config;
 
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.configuration.ConfigurationSourceProvider;
+import io.dropwizard.configuration.DefaultConfigurationFactoryFactory;
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
-import io.dropwizard.configuration.YamlConfigurationFactory;
 import io.dropwizard.jersey.validation.Validators;
 import jakarta.validation.Validator;
 import java.io.ByteArrayInputStream;
@@ -21,8 +21,8 @@ public final class TestConfigParser<T> {
 
     /** Creates a configuration parser for the provided configuration class. */
     public static <T> TestConfigParser<T> forClass(Class<T> configClass) {
-        ConfigurationFactory<T> configFactory =
-                new YamlConfigurationFactory<>(configClass, validator, TestObjectMapper.get(), "dw");
+        ConfigurationFactory<T> configFactory = new DefaultConfigurationFactoryFactory<T>()
+                .create(configClass, validator, TestObjectMapper.get(), "dw");
         return new TestConfigParser<>(configFactory);
     }
 
