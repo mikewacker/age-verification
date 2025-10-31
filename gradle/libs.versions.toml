@@ -18,7 +18,7 @@ assertj = "3.27.6"
 junit = "5.13.4"
 
 # plugin
-plugins-dockerCompose = "0.17.18"
+plugins-dockerCompose = "0.17.19"
 plugins-errorprone = "4.3.0"
 plugins-openapi = "7.16.0"
 plugins-spotless = "8.0.0"

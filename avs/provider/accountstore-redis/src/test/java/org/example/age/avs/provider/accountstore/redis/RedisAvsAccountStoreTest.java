@@ -26,7 +26,7 @@ public final class RedisAvsAccountStoreTest extends AvsAccountStoreTestTemplate 
 
         static AvsVerifiedAccountStore create() {
             RedisClientConfig config = RedisClientConfig.builder()
-                    .url(TestClient.localhostUrl(4010))
+                    .url(TestClient.dockerUrl("redis", 6379))
                     .build();
             return DaggerRedisAvsAccountStoreTest_TestComponent.factory()
                     .create(config)

@@ -27,9 +27,9 @@ public final class TestClient {
     }
 
     /** Creates an API client. */
-    public static <A> A api(int port, Consumer<Request.Builder> requestInterceptor, Class<A> apiType) {
+    public static <A> A api(URL url, Consumer<Request.Builder> requestInterceptor, Class<A> apiType) {
         return new Retrofit.Builder()
-                .baseUrl(localhostUrl(port))
+                .baseUrl(url)
                 .client(http(requestInterceptor))
                 .addConverterFactory(jsonConverterFactory)
                 .build()
@@ -48,6 +48,28 @@ public final class TestClient {
     /** Creates a URI for localhost. */
     public static URI localhostUri(int port) {
         return URI.create(String.format("http://localhost:%d", port));
+    }
+
+    /** Creates a URL for a Docker service. */
+    public static URL dockerUrl(String service, int port) {
+        try {
+            return dockerUri(service, port).toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Creates a URI for a Docker service. */
+    public static URI dockerUri(String service, int port) {
+        String property = String.format("%s.tcp.%s", service, port);
+        String propertyValue = System.getProperty(property);
+        if (propertyValue == null) {
+            String message = String.format("Docker port mapping not found for %s:%d", service, port);
+            throw new IllegalArgumentException(message);
+        }
+
+        int exposedPort = Integer.parseInt(propertyValue);
+        return localhostUri(exposedPort);
     }
 
     /** Creates an HTTP client that intercepts the request. */

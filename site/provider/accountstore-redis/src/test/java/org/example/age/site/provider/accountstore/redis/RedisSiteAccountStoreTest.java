@@ -27,7 +27,7 @@ public final class RedisSiteAccountStoreTest extends SiteAccountStoreTestTemplat
         VerifiedUser user = TestModels.createVerifiedUser();
         Optional<String> maybeConflictingAccountId = await(store().trySave("username-redis", user, expiration()));
         assertThat(maybeConflictingAccountId).isEmpty();
-        try (JedisPooled client = new JedisPooled(TestClient.localhostUri(3010))) {
+        try (JedisPooled client = new JedisPooled(TestClient.dockerUri("redis", 6379))) {
             String userValue = client.get("{age:verification:account:username-redis}:user");
             assertThat(userValue).isNotNull();
             String expirationValue = client.get("{age:verification:account:username-redis}:expiration");
@@ -50,7 +50,7 @@ public final class RedisSiteAccountStoreTest extends SiteAccountStoreTestTemplat
 
         static SiteVerifiedAccountStore create() {
             RedisClientConfig config = RedisClientConfig.builder()
-                    .url(TestClient.localhostUrl(3010))
+                    .url(TestClient.dockerUrl("redis", 6379))
                     .build();
             return DaggerRedisSiteAccountStoreTest_TestComponent.factory()
                     .create(config)

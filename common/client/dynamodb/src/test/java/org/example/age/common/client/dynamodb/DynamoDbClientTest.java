@@ -45,7 +45,7 @@ public final class DynamoDbClientTest {
         static DynamoDbClient create() {
             DynamoDbClientConfig config = DynamoDbClientConfig.builder()
                     .region(Region.US_EAST_1.toString())
-                    .testEndpointOverride(TestClient.localhostUri(2000))
+                    .testEndpointOverride(TestClient.dockerUri("dynamodb", 8000))
                     .build();
             return DaggerDynamoDbClientTest_TestComponent.factory()
                     .create(config)
