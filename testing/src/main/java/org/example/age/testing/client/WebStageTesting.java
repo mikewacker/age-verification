@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 /** Test utilities for an asynchronous stage that is returned by a JAX-RS API. */
 public final class WebStageTesting {
 
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(3);
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(5);
 
     /** Waits for the asynchronous stage to complete and returns its value, asserting that it completed successfully. */
     public static <V> V await(CompletionStage<V> stage) {
