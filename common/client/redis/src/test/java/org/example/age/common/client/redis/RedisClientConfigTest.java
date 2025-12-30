@@ -7,6 +7,6 @@ public final class RedisClientConfigTest {
 
     @Test
     public void parse() throws Exception {
-        TestConfigParser.forClass(RedisClientConfig.class).parseLines("url: http://localhost:6379");
+        TestConfigParser.forClass(RedisClientConfig.class).parseLines("uri: http://localhost:6379");
     }
 }

@@ -9,20 +9,20 @@ import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import org.example.age.common.spi.PendingStore;
 import org.example.age.common.spi.PendingStoreRepository;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 
 /** Implementation of {@link PendingStoreRepository} that is backed by Redis. */
 @Singleton
 final class RedisPendingStoreRepository implements PendingStoreRepository {
 
-    private final JedisPooled client;
+    private final RedisClient client;
     private final JsonMapper mapper;
     private final Worker worker;
 
     private final Map<String, PendingStore<?>> stores = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    public RedisPendingStoreRepository(JedisPooled client, JsonMapper mapper, Worker worker) {
+    public RedisPendingStoreRepository(RedisClient client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;

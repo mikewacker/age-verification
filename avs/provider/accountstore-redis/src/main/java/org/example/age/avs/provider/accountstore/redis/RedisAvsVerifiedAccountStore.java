@@ -8,7 +8,7 @@ import org.example.age.avs.spi.AvsVerifiedAccountStore;
 import org.example.age.avs.spi.VerifiedAccount;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 
 /** Implementation of {@link AvsVerifiedAccountStore} that is backed by Redis. */
 @Singleton
@@ -16,12 +16,12 @@ final class RedisAvsVerifiedAccountStore implements AvsVerifiedAccountStore {
 
     private static final String REDIS_KEY_PREFIX = "age:account";
 
-    private final JedisPooled client;
+    private final RedisClient client;
     private final JsonMapper mapper;
     private final Worker worker;
 
     @Inject
-    public RedisAvsVerifiedAccountStore(JedisPooled client, JsonMapper mapper, Worker worker) {
+    public RedisAvsVerifiedAccountStore(RedisClient client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;

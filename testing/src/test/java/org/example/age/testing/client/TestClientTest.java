@@ -20,7 +20,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -56,7 +56,7 @@ public final class TestClientTest {
     @Test
     public void docker() {
         URI uri = TestClient.dockerUri("redis", 6379);
-        try (JedisPooled client = new JedisPooled(uri)) {
+        try (RedisClient client = RedisClient.create(uri)) {
             client.set("key", "value");
             String value = client.get("key");
             assertThat(value).isEqualTo("value");

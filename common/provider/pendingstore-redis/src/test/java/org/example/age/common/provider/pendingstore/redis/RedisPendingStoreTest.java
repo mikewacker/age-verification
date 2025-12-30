@@ -14,7 +14,7 @@ import org.example.age.testing.client.TestClient;
 import org.example.age.testing.common.spi.PendingStoreTestTemplate;
 import org.example.age.testing.env.TestEnvModule;
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 
 public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
@@ -23,7 +23,7 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
     @Test
     public void redisKeys() {
         await(store().put("key-redis", 1, expiration()));
-        try (JedisPooled client = new JedisPooled(TestClient.dockerUri("redis", 6379))) {
+        try (RedisClient client = RedisClient.create(TestClient.dockerUri("redis", 6379))) {
             String value = client.get("age:pending:name:key-redis");
             assertThat(value).isEqualTo("1");
         }
@@ -41,7 +41,7 @@ public final class RedisPendingStoreTest extends PendingStoreTestTemplate {
 
         static PendingStoreRepository create() {
             RedisClientConfig config = RedisClientConfig.builder()
-                    .url(TestClient.dockerUrl("redis", 6379))
+                    .uri(TestClient.dockerUri("redis", 6379))
                     .build();
             return DaggerRedisPendingStoreTest_TestComponent.factory()
                     .create(config)

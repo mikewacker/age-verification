@@ -18,16 +18,15 @@ public final class Demo {
     private static final AvsApi childAvsClient = createClient("checkmyage", "Billy Smith", AvsApi.class);
     private static final SiteApi parentCrackleClient = createClient("crackle", "publius", SiteApi.class);
     private static final SiteApi childCrackleClient = createClient("crackle", "publius-jr", SiteApi.class);
-    private static final SiteApi parentPopClient = createClient("crackle", "JohnS", SiteApi.class);
-    private static final SiteApi childPopClient = createClient("crackle", "BillyS", SiteApi.class);
+    private static final SiteApi parentPopClient = createClient("pop", "JohnS", SiteApi.class);
+    private static final SiteApi childPopClient = createClient("pop", "BillyS", SiteApi.class);
 
     private static final String AVS_NAME = "CheckMyAge";
 
     private static final ObjectWriter writer = TestObjectMapper.get().writerWithDefaultPrettyPrinter();
 
     /** Main method. */
-    @SuppressWarnings("CatchAndPrintStackTrace")
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try {
             verifyAge(parentCrackleClient, parentAvsClient, "Crackle", "publius", "John Smith", true);
             verifyAge(childCrackleClient, childAvsClient, "Crackle", "publius-jr", "Billy Smith", false);
@@ -35,6 +34,7 @@ public final class Demo {
             verifyAge(childPopClient, childAvsClient, "Pop", "BillyS", "Billy Smith", false);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
