@@ -13,7 +13,7 @@ clients:
     region: us-east-1
     testEndpointOverride: http://checkmyage-dynamodb:8000
   redis:
-    url: http://checkmyage-redis:6379
+    uri: http://checkmyage-redis:6379
 
 keys:
   signing:

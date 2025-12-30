@@ -8,27 +8,27 @@ import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 import org.example.age.testing.client.TestClient;
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 
 public final class RedisClientTest {
 
     @Test
     public void useClient() {
-        try (JedisPooled client = TestComponent.create()) {
+        try (RedisClient client = TestComponent.create()) {
             client.set("key", "value");
             String value = client.get("key");
             assertThat(value).isEqualTo("value");
         }
     }
 
-    /** Dagger component for {@link JedisPooled}. */
+    /** Dagger component for {@link RedisClient}. */
     @Component(modules = RedisClientModule.class)
     @Singleton
-    interface TestComponent extends Supplier<JedisPooled> {
+    interface TestComponent extends Supplier<RedisClient> {
 
-        static JedisPooled create() {
+        static RedisClient create() {
             RedisClientConfig config = RedisClientConfig.builder()
-                    .url(TestClient.dockerUrl("redis", 6379))
+                    .uri(TestClient.dockerUri("redis", 6379))
                     .build();
             return DaggerRedisClientTest_TestComponent.factory().create(config).get();
         }

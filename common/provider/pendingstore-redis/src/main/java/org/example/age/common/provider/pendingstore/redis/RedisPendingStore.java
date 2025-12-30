@@ -6,8 +6,8 @@ import java.util.concurrent.CompletionStage;
 import org.example.age.common.env.JsonMapper;
 import org.example.age.common.env.Worker;
 import org.example.age.common.spi.PendingStore;
-import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.params.SetParams;
 
@@ -16,13 +16,13 @@ final class RedisPendingStore<V> implements PendingStore<V> {
 
     private static final String REDIS_KEY_PREFIX = "age:pending";
 
-    private final JedisPooled client;
+    private final RedisClient client;
     private final String name;
     private final Class<V> valueType;
     private final JsonMapper mapper;
     private final Worker worker;
 
-    public RedisPendingStore(JedisPooled client, String name, Class<V> valueType, JsonMapper mapper, Worker worker) {
+    public RedisPendingStore(RedisClient client, String name, Class<V> valueType, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.name = name;
         this.valueType = valueType;

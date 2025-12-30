@@ -3,10 +3,10 @@ package org.example.age.common.client.redis;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 
 /**
- * Dagger module that binds {@link JedisPooled}.
+ * Dagger module that binds {@link RedisClient}.
  * <p>
  * Depends on an unbound {@link RedisClientConfig}.
  */
@@ -15,8 +15,8 @@ public abstract class RedisClientModule {
 
     @Provides
     @Singleton
-    static JedisPooled bindJedisPooled(RedisClientConfig config) {
-        return new JedisPooled(config.url().toString());
+    static RedisClient bindRedisClient(RedisClientConfig config) {
+        return RedisClient.create(config.uri());
     }
 
     RedisClientModule() {}

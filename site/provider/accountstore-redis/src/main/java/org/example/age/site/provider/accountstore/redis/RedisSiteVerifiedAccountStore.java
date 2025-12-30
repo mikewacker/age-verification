@@ -15,7 +15,7 @@ import org.example.age.site.api.VerificationState;
 import org.example.age.site.api.VerificationStatus;
 import org.example.age.site.spi.SiteVerifiedAccountStore;
 import redis.clients.jedis.AbstractTransaction;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.params.SetParams;
 
@@ -25,12 +25,12 @@ final class RedisSiteVerifiedAccountStore implements SiteVerifiedAccountStore {
 
     private static final String REDIS_KEY_PREFIX = "age:verification";
 
-    private final JedisPooled client;
+    private final RedisClient client;
     private final JsonMapper mapper;
     private final Worker worker;
 
     @Inject
-    public RedisSiteVerifiedAccountStore(JedisPooled client, JsonMapper mapper, Worker worker) {
+    public RedisSiteVerifiedAccountStore(RedisClient client, JsonMapper mapper, Worker worker) {
         this.client = client;
         this.mapper = mapper;
         this.worker = worker;

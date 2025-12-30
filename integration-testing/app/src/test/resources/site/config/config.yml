@@ -9,7 +9,7 @@ clients:
     region: us-east-1
     testEndpointOverride: http://site-dynamodb:8000
   redis:
-    url: http://site-redis:6379
+    uri: http://site-redis:6379
 
 keys:
   signing:

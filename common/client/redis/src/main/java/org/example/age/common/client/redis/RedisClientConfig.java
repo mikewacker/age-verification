@@ -1,7 +1,7 @@
 package org.example.age.common.client.redis;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.net.URL;
+import java.net.URI;
 import org.example.age.common.annotation.ValueStyle;
 import org.immutables.value.Value;
 
@@ -16,8 +16,8 @@ public interface RedisClientConfig {
         return new Builder();
     }
 
-    /** URL of Redis. */
-    URL url();
+    /** URI of Redis. */
+    URI uri();
 
     /** Builder for the configuration. */
     final class Builder extends ImmutableRedisClientConfig.Builder {
