@@ -1,16 +1,16 @@
 [versions]
 # main
-aws = "2.39.0"
+aws = "2.40.17"
 dagger = "2.57.2"
 darc = "0.1.1"
 dropwizard = "5.0.0"
 guava = "33.5.0-jre"
-immutables = "2.11.7"
+immutables = "2.12.0"
 jackson = "2.20.1"
 jakartaAnnotation = "3.0.0"
 jakartaValidation = "3.1.1"
 jaxRs = "4.0.0"
-jedis = "7.0.0"
+jedis = "7.1.0"
 retrofit = "3.0.0"
 
 # test
@@ -20,18 +20,18 @@ junit = "6.0.1"
 # plugin
 plugins-dockerCompose = "0.17.20"
 plugins-errorprone = "4.3.0"
-plugins-openapi = "7.16.0"
+plugins-openapi = "7.18.0"
 plugins-spotless = "8.1.0"
 
 # static analysis
-errorprone = "2.44.0"
-plugins-spotless-palantir = "2.82.0"
+errorprone = "2.45.0"
+plugins-spotless-palantir = "2.83.0"
 
 # Docker image
 dockerImages-alpine = "3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412"
 dockerImages-dynamoDb = "3.1.0@sha256:7ef4a2c45b58c2901e70a4f28e0953a422c2c631baaaf5e2c15e0805740c7752"
 dockerImages-gradle = "9.2.1-jdk21-noble@sha256:105f4423a690be340bdef02ea2efd80060c3e714e4afba9ea41e7a38ba484e01"
-dockerImages-redis = "8.4.0@sha256:43355efd22490e31ca14b9d569367d05121e2be61fd8e47937563ae2a80952ae"
+dockerImages-redis = "8.4.0@sha256:47200b04138293fae39737e50878a238b13ec0781083126b1b0c63cf5d992e8d"
 dockerImages-temurinJre = "21-jre-noble@sha256:67fc762eabacb56e5444b367889e04ce8c839b8f4b3d8ef3e459c5579fbefd8a"
 
 [libraries]
