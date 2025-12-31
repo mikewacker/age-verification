@@ -18,6 +18,7 @@ dependencies {
     implementation(platform(libs.jackson.bom))
     implementation(libs.jacksonCore.databind)
     implementation(libs.jakartaAnnotation.api)
+    implementation(libs.jakartaValidation.api)
 
     annotationProcessor(platform(libs.immutables.bom))
     annotationProcessor(libs.immutables.value)

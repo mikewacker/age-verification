@@ -6,12 +6,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":avs:spi"))
+    api(project(":common:env"))
     api(project(":common:client:dynamodb"))
-
-    implementation(platform(libs.aws.bom))
-    implementation(project(":avs:spi"))
-    implementation(project(":common:env"))
-    implementation(libs.aws.dynamoDb)
 
     testImplementation(project(":avs:spi-testing"))
 }

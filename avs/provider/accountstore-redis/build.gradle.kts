@@ -6,11 +6,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":avs:spi"))
+    api(project(":common:env"))
     api(project(":common:client:redis"))
-
-    implementation(project(":avs:spi"))
-    implementation(project(":common:env"))
-    implementation(libs.jedis.jedis)
 
     testImplementation(project(":avs:spi-testing"))
 }

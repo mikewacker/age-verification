@@ -7,8 +7,8 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(libs.aws.bom))
-    implementation(libs.aws.dynamoDb)
+    api(platform(libs.aws.bom))
+    api(libs.aws.dynamoDb)
 }
 
 dockerCompose {

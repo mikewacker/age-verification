@@ -6,10 +6,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":avs:spi"))
+    api(project(":common:env"))
     api(project(":common:provider:signingkey-demo"))
-
-    implementation(project(":avs:spi"))
-    implementation(project(":common:env"))
 
     testImplementation(project(":avs:spi-testing"))
 }

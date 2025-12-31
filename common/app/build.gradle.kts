@@ -5,9 +5,9 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(libs.dropwizard.bom))
-    implementation(project(":common:env"))
-    implementation(libs.dropwizard.core)
+    api(platform(libs.dropwizard.bom))
+    api(project(":common:env"))
+    api(libs.dropwizard.core)
 
     testImplementation(project(":common:api"))
     testImplementation(libs.dropwizard.testing)

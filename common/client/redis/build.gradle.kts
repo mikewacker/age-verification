@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.jedis.jedis)
+    api(libs.jedis.jedis)
 }
 
 dockerCompose {

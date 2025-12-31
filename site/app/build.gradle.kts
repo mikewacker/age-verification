@@ -6,7 +6,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":site:api"))
     implementation(project(":site:endpoint"))
     implementation(project(":common:provider:account-demo"))
     implementation(project(":site:client:avs"))
@@ -15,19 +14,10 @@ dependencies {
     implementation(project(":site:provider:certificateverifier-demo"))
     implementation(project(":site:provider:userlocalizer-demo"))
     implementation(project(":common:app"))
-    implementation(platform(libs.dropwizard.bom))
-    implementation(libs.dropwizard.core)
-    implementation(libs.jakartaValidation.api)
 
     // Dagger component
-    implementation(platform(libs.aws.bom))
-    implementation(project(":avs:api"))
-    implementation(project(":site:spi"))
-    implementation(project(":common:env"))
     implementation(project(":common:client:api"))
-    implementation(libs.aws.dynamoDb)
     implementation(libs.darc.darc)
-    implementation(libs.jedis.jedis)
 }
 
 application {

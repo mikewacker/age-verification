@@ -6,9 +6,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":common:api"))
-
-    implementation(project(":avs:spi"))
+    api(project(":avs:spi"))
 
     testImplementation(project(":avs:spi-testing"))
 }
