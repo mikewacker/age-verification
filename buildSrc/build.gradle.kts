@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.pluginLibs.dockerCompose)
     implementation(libs.pluginLibs.errorprone)
     implementation(libs.pluginLibs.openapi)
     implementation(libs.pluginLibs.spotless)
