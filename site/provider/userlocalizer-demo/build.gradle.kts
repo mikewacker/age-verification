@@ -6,9 +6,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":common:api"))
-
-    implementation(project(":site:spi"))
+    api(project(":site:spi"))
 
     testImplementation(project(":site:spi-testing"))
 }

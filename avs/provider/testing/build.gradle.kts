@@ -5,7 +5,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":avs:spi"))
+    api(project(":avs:spi"))
+    api(project(":common:provider:testing")) // include all testing providers in a single project
 
     testImplementation(project(":avs:spi-testing"))
 }

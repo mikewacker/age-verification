@@ -6,7 +6,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":avs:api"))
+    api(project(":avs:api"))
+    api(project(":common:env"))
+
     implementation(project(":common:client:api"))
 
     testImplementation(platform(libs.dropwizard.bom))

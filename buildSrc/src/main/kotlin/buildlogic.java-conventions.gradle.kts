@@ -18,7 +18,16 @@ dependencies {
     errorprone(libs.errorprone.core)
 
     implementation(libs.jaxRs.api)
-    if (project.path.endsWith("testing")) {
+
+    if (!project.name.endsWith("testing")) {
+        testImplementation(platform(libs.assertj.bom))
+        testImplementation(platform(libs.junit.bom))
+        testImplementation(libs.assertj.core)
+        testImplementation(libs.junitJupiter.api)
+        if (project.path != ":testing") {
+            testImplementation(project(":testing"))
+        }
+    } else {
         implementation(platform(libs.assertj.bom))
         implementation(platform(libs.junit.bom))
         implementation(libs.assertj.core)
@@ -26,14 +35,6 @@ dependencies {
         if (project.path != ":testing") {
             implementation(project(":testing"))
         }
-    }
-
-    testImplementation(platform(libs.assertj.bom))
-    testImplementation(platform(libs.junit.bom))
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.junitJupiter.api)
-    if (project.path != ":testing") {
-        testImplementation(project(":testing"))
     }
 
     testRuntimeOnly(libs.junitJupiter.engine)

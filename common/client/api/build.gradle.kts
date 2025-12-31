@@ -5,8 +5,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":common:env"))
+
     implementation(platform(libs.retrofit.bom))
-    implementation(project(":common:env"))
     implementation(libs.retrofit.converterJackson)
     implementation(libs.retrofit.retrofit)
 

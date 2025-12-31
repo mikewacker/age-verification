@@ -5,7 +5,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":common:spi"))
+    api(project(":common:spi"))
+
     implementation(libs.darc.darc)
 
     testImplementation(platform(libs.dropwizard.bom))

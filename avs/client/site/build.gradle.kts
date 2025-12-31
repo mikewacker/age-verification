@@ -6,7 +6,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":site:api"))
+    api(project(":site:api"))
+    api(project(":common:env"))
+
     implementation(project(":common:client:api"))
     implementation(libs.guava.guava)
 
